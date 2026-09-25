@@ -1,0 +1,16 @@
+# Large/binary artifacts - keep out of git
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.gguf
+models/
+ComfyUI/models/
+**/output/*.png
+**/output/*.mp4
+__pycache__/
+*.pyc
+.venv/
+venv/
+# Keep text debug output syncable
+!debug/**
