@@ -2770,7 +2770,9 @@ video (`WanFirstLastFrameToVideo`, live peak 13453 MiB). Legacy
           mask) holds identity through 24 frames; softness and late-clip
           drift on head turns remain. 2026-09-26a: a video face-detail pass
           (denoise 0.5) improves late frames with no added flicker; faces stay
-          soft at 768x448 (face ~60 px).
+          soft at 768x448 (face ~60 px). 2026-09-26g: FaceID Plus V2 installed
+          (approved); FaceID only in the detail pass is the best balance (ArcFace
+          identity 0.173 vs 0.040, scene/body unchanged); operator to judge likeness.
           2026-09-26d: operator decision — FaceID Plus v2 SDXL weights
           (on disk since 00:55) confirmed, and option (a) Wan 2.2 Animate
           14B approved for download (18.4 GB fp8 e4m3fn scaled KJ).

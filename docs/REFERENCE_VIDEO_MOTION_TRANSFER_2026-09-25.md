@@ -293,6 +293,34 @@ size. Cost: the whole prompt 527–557 s for 24 frames (vs ~300 s without).
 Softness is now a resolution problem, not an identity one: a larger output
 (upscale then detail; VRAM-limited at 16-frame context) or a download.
 
+### 6g. IP-Adapter FaceID Plus V2 (operator-approved download; CHANGELOG 2026-09-26g)
+
+Installed: `ip-adapter-faceid-plusv2_sdxl.bin` (`ComfyUI-Shared/models/ipadapter/`),
+`ip-adapter-faceid-plusv2_sdxl_lora.safetensors` (`…/loras/`), InsightFace `buffalo_l`
+(`ComfyUI/models/insightface/models/buffalo_l/`), and `insightface` 2.0 + `onnx`
+1.23.0 + `ml_dtypes` 0.6.0 in the ComfyUI venv (all hash-verified; **non-commercial
+research licence** for the FaceID weights and InsightFace models). InsightFace runs
+on CPU (onnxruntime here is CPU-only), and only for the reference image.
+
+Identity score = ArcFace (buffalo_l w600k_r50) cosine between the reference face and
+the man's face in each of 24 frames (all detected). **Caveat:** this is the embedding
+family FaceID is conditioned on, so it is not an independent judge, and every value is
+below usual same-person thresholds because the face is ~60 px.
+
+| configuration | mean | f1–12 | f13–24 | min | look |
+|---|---|---|---|---|---|
+| PLUS FACE, full-body reference (§6d) | −0.017 | 0.025 | −0.059 | −0.148 | drifts to another person |
+| PLUS FACE, face crop + mask (§6e) | 0.029 | 0.044 | 0.015 | −0.058 | natural, consistent, not Kent by ArcFace |
+| + PLUS FACE detail 0.5 (§6f) | 0.040 | 0.043 | 0.036 | −0.059 | as above, older late face |
+| FaceID main (w 0.8, LoRA 0.6) + FaceID detail | **0.219** | 0.200 | 0.237 | 0.148 | receding hairline right; head oversized, long hair from f14, caricature at f24, scene restyled |
+| FaceID main (w 0.6, LoRA 0.4) + FaceID detail | 0.121 | 0.069 | 0.173 | 0.009 | same problems, milder |
+| **PLUS FACE main + FaceID only in the detail pass** | **0.173** | 0.178 | 0.169 | 0.071 | body, hair and scene unchanged (main pass pixel-identical to §6f); rounder face, receding hairline; slight cartoonish eyes f14–20 |
+
+Recommended configuration for this approach: PLUS FACE on the main pass (face crop +
+character mask), FaceID Plus V2 only inside the video face-detail pass (denoise 0.5).
+Flicker in the head region: 8.88 vs 8.74 undetailed. Likeness acceptance is the
+operator's.
+
 ## 7. What a real `render_video_from_reference` still needs (not built)
 
 1. An operator decision on §3c: approve the ~17 GB Wan 2.2 Animate download

@@ -352,6 +352,8 @@ def seed_implementations(graph_bytes: bytes | None = None) -> list[ToolImplement
                     "and 24-frame multi-window clips render; identity holds with a "
                     "face-cropped reference (2026-09-25v); a video face-detail pass helps "
                     "late frames without flicker, faces stay soft at 768x448 (2026-09-26a); "
+                    "FaceID Plus V2 in the detail pass raises identity similarity ~4x "
+                    "(2026-09-26g); "
                     "no pinned API template and no local VRAM profile yet"),
             provenance=("https://github.com/Kosinkadink/ComfyUI-AnimateDiff-Evolved",
                         "https://github.com/Fannovel16/comfyui_controlnet_aux",

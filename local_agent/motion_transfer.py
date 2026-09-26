@@ -150,7 +150,12 @@ APPROACHES: list[dict[str, Any]] = [
                 "clip, softening near the end (CHANGELOG 2026-09-25v). An Impact Pack video "
                 "face-detail pass (DetailerForEachPipeForAnimateDiff, denoise 0.5) pulls the "
                 "late frames toward the reference without adding flicker, but faces stay "
-                "soft: at 768x448 a face is ~60 px (CHANGELOG 2026-09-26a)."),
+                "soft: at 768x448 a face is ~60 px (CHANGELOG 2026-09-26a). IP-Adapter "
+                "FaceID Plus V2 SDXL is installed (operator-approved, non-commercial "
+                "licence); used only inside the face-detail pass it raises ArcFace "
+                "similarity to the reference ~4x without changing body, hair or scene; "
+                "used on the main pass it scores highest but enlarges the head and "
+                "caricatures the face (CHANGELOG 2026-09-26g)."),
         "nodes": ("ComfyUI-AnimateDiff-Evolved", "comfyui_controlnet_aux",
                   "comfyui_ipadapter_plus", "ComfyUI-VideoHelperSuite",
                   "ComfyUI-Advanced-ControlNet"),

@@ -203,6 +203,36 @@ _BLOCKED_SPECIALIST_NARRATION_RE = re.compile(
     r"story[-_\s]?images?|scene[-\s]+start|storyboards?|clips?\s+\d|comfy\s*ui|comfyui|"
     r"story_image_job_status|render_story_image|plan_story_image)\b",
     re.I)
+# GVD tool router calls whose honest-failure statuses must reach the operator
+# as a question, not as a machine-readable code the model paraphrases away
+# (2026-09-26f).  The router's statuses (NEEDS_MANIFEST_REVIEW,
+# PROFILE_REQUIRED, NO_COMPATIBLE_TOOL, RESOURCE_BLOCKED,
+# UNAVAILABLE_CAPABILITY, plus 26b's ENGINE_FALLBACK_WAN and the
+# QA_GATE_BLOCKED live gate) existed only inside
+# gvd_tool_router/{planner,router,schema,service}.py; nothing in this file
+# turned any of them into a reply, so the operator saw whatever the model made
+# of a JSON blob pruned to MAX_TOOL_RESULT_CONTEXT_CHARS.
+_GVD_ROUTER_TOOLS = frozenset({
+    "gvd_plan_shot", "gvd_route_shot",
+    "execute_narrative_scene", "execute_continuous_take",
+    "execute_montage_morph", "execute_fast_action",
+})
+_GVD_ASK_STATUSES = frozenset({"needs_manifest_review", "blocked"})
+_GVD_MANIFEST_QUESTIONS = {
+    "continuous_requires_start_or_context":
+        "A continuous take needs a start frame or a context video to continue "
+        "from. Which file?",
+    "morph_requires_prompt_schedule":
+        "A morph needs at least two prompt keyframes with their times. What are "
+        "they?",
+    "identity_requires_character_state":
+        "A character-consistent scene needs the character named with a reference "
+        "image. Who, and which image?",
+    "missing_shot_id": "The shot has no id. What should it be called?",
+    "non_positive_duration": "The duration must be positive. How many seconds?",
+    "invalid_dimensions": "The frame size is invalid. What width and height?",
+    "invalid_timebase": "The frame rate is invalid. What fps?",
+}
 _SPECIALIST_START_TOOLS = frozenset({
     "render_story_image", "render_story_image_batch", "plan_story_image",
     "prepare_chat_render", "start_current_chat_render", "start_batch_render",
@@ -1626,6 +1656,240 @@ def _narrates_blocked_specialist_work(reply: str) -> bool:
                 or _BLOCKED_SPECIALIST_NARRATION_RE.search(text))
 
 
+def _gvd_ask_payload(parsed: dict) -> dict | None:
+    """The part of a GVD tool result that carries an ask-status, or None.
+
+    gvd_plan_shot nests the route decision under ``route``; execute_* nest it
+    under ``decision`` beside their own reason codes; gvd_route_shot returns
+    the decision itself (plus missing_capabilities / blocked_candidates)."""
+    if not isinstance(parsed, dict):
+        return None
+    status = str(parsed.get("status") or "")
+    if status in _GVD_ASK_STATUSES:
+        merged: dict = {}
+        if isinstance(parsed.get("decision"), dict):
+            merged.update(parsed["decision"])
+        merged.update(parsed)
+        return merged
+    route = parsed.get("route")
+    if isinstance(route, dict) and str(route.get("status") or "") in _GVD_ASK_STATUSES:
+        merged = dict(route)
+        if isinstance(parsed.get("manifest"), dict):
+            merged.setdefault("manifest", parsed["manifest"])
+        return merged
+    return None
+
+
+def _gvd_operator_notice(parsed) -> str | None:
+    """A router engine notice on a GVD result (Wan chosen as a resource
+    fallback, 2026-09-26b) that the operator must see verbatim."""
+    if not isinstance(parsed, dict):
+        return None
+    for holder in (parsed, parsed.get("route"), parsed.get("decision")):
+        if isinstance(holder, dict) and holder.get("operator_notice"):
+            return str(holder["operator_notice"])
+    return None
+
+
+def _gvd_router_question(tool: str, parsed: dict,
+                         shot_hint: str | None = None) -> str | None:
+    """Fixed operator-facing question for one GVD honest-failure result.
+
+    Built only from the tool's own fields (status, reason codes, rejection
+    log, missing capabilities, blocked candidates, operator notice), never
+    from model prose, for the same reason as _blocked_specialist_scope_reply
+    (2026-09-25p): free text after a refused or blocked tool described work
+    that never happened."""
+    d = _gvd_ask_payload(parsed)
+    if d is None:
+        return None
+    status = str(d.get("status") or "")
+    codes = [str(c) for c in (d.get("reason_codes") or [])]
+    manifest = d.get("manifest") if isinstance(d.get("manifest"), dict) else {}
+    shot = str(d.get("shot_id") or manifest.get("shot_id")
+               or parsed.get("shot_id") or shot_hint or "this shot")
+    lines = [
+        f"No video tool was chosen or run for {shot} ({tool} returned "
+        f"{status}). Nothing was rendered, queued, downloaded or installed."
+    ]
+    asked = False
+    if status == "needs_manifest_review" or "NEEDS_MANIFEST_REVIEW" in codes:
+        note = str(d.get("note") or "")
+        hard = [str(h) for h in (manifest.get("hard_requirements") or [])]
+        low = {str(k): v for k, v in (manifest.get("inferred_confidence") or {}).items()
+               if isinstance(v, (int, float)) and v < 0.5}
+        detail = [c for c in codes if c != "NEEDS_MANIFEST_REVIEW"]
+        if hard and low:
+            lines.append(
+                "The request was read as needing " + ", ".join(hard)
+                + " but with low confidence ("
+                + ", ".join(f"{k} {v:.2f}" for k, v in sorted(low.items()))
+                + "). Confirm which of those you actually need, or say none of them.")
+        elif "unknown interpretation" in note or not detail:
+            lines.append(
+                "I could not tell what kind of shot this is, so I did not guess the "
+                "fastest tool. Which one is it: (a) a continuous take that continues "
+                "a start frame or an earlier clip, (b) a morph or montage between "
+                "prompts, (c) a scene with a named character who must stay the same, "
+                "or (d) an independent action clip? Also give the length in seconds "
+                "and the frame size if not 4 s at 1280x720.")
+        else:
+            lines.append(
+                "The shot manifest could not be read (" + ", ".join(detail)
+                + "). Restate the shot in plain words: what happens, how long, and "
+                "whether it continues an earlier frame or clip.")
+        asked = True
+    for code in codes:
+        if code in _GVD_MANIFEST_QUESTIONS:
+            lines.append(_GVD_MANIFEST_QUESTIONS[code])
+            asked = True
+        elif code.startswith("unknown_requested_engine:"):
+            lines.append(
+                f"'{code.split(':', 1)[1]}' is not a video engine here. MiniMax is "
+                "the default and Wan is available if you ask for it. Which one?")
+            asked = True
+    if "ENGINE_FALLBACK_WAN" in codes:
+        lines.append(_gvd_operator_notice(d) or
+                     "MiniMax did not fit this shot; Wan is the only remaining "
+                     "implementation.")
+        lines.append(
+            "Say 'acknowledge the Wan fallback' to render it with Wan, ask for Wan "
+            "outright, or change the shot so a MiniMax implementation fits.")
+        asked = True
+    if "QA_GATE_BLOCKED" in codes:
+        lines.append(
+            "A live video submission needs your explicit approval "
+            "(operator_approved_i2v). Say 'approved for video' to submit this shot, "
+            "or ask for the plan only.")
+        asked = True
+    if any(c in codes for c in ("NO_COMPATIBLE_TOOL", "UNAVAILABLE_CAPABILITY",
+                                "RESOURCE_BLOCKED")):
+        log = [e for e in (d.get("rejection_log") or [])
+               if isinstance(e, dict) and not e.get("ok")]
+
+        def _ids(marker: str) -> list[str]:
+            return sorted({str(e.get("implementation_id")) for e in log
+                           if any(str(r).startswith(marker)
+                                  for r in (e.get("reasons") or []))})
+
+        missing = [str(m) for m in (d.get("missing_capabilities") or [])]
+        cands = [c for c in (d.get("blocked_candidates") or []) if isinstance(c, dict)]
+        resource = _ids("RESOURCE_BLOCKED")
+        profile = sorted(set(_ids("PROFILE_REQUIRED")) | set(_ids("unknown_vram")))
+        approval = _ids("operator_approval_required")
+        if missing:
+            lines.append("No active tool offers: " + ", ".join(missing) + ".")
+            if cands:
+                shown = []
+                for c in cands[:6]:
+                    why = str(c.get("disabled_reason") or "").strip()
+                    shown.append(f"{c.get('implementation_id')} ({c.get('status')}"
+                                 + (f"; {why[:140]}" if why else "") + ")")
+                lines.append("Cataloged implementations that could supply it, none "
+                             "active: " + "; ".join(shown) + ".")
+                lines.append("Approve enabling or installing one of them (each still "
+                             "needs its weights, a pinned template and a measured VRAM "
+                             "profile before it can run), or change the request so it "
+                             "no longer needs " + ", ".join(missing) + ".")
+            else:
+                lines.append("Nothing in the catalog supplies it either; say if you "
+                             "want a workflow discovery search for it.")
+            asked = True
+        if resource:
+            lines.append(
+                "These fit the shot but not the free VRAM right now: "
+                + ", ".join(resource) + ". Free the GPU (let the running render finish "
+                "or stop it, unload the chat model) and ask again, or say explicitly "
+                "that you approve the resource override.")
+            asked = True
+        elif "RESOURCE_BLOCKED" in codes:
+            detail = [c for c in codes if c != "RESOURCE_BLOCKED"]
+            lines.append("The GPU is held by another job"
+                         + (" (" + "; ".join(detail) + ")" if detail else "")
+                         + ". Wait for it to finish or stop it, then ask again.")
+            asked = True
+        if profile:
+            lines.append(
+                "These have no measured local VRAM profile yet: " + ", ".join(profile)
+                + ". They cannot be offered until measured (apply_profile.py). Approve "
+                "a measurement run, or pick another approach.")
+            asked = True
+        if approval:
+            lines.append(", ".join(approval) + " may only be used with your explicit "
+                         "approval. Approve it, or choose another.")
+            asked = True
+        if not asked:
+            tool_name = str(d.get("tool_name") or parsed.get("tool_name")
+                            or "this shot type")
+            lines.append(
+                f"No active implementation is registered for {tool_name}"
+                + (" (" + ", ".join(codes) + ")" if codes else "")
+                + ". Say if you want a workflow discovery search, or describe the "
+                "shot differently.")
+            asked = True
+    if not asked:
+        lines.append("Reason codes: " + (", ".join(codes) or "none")
+                     + ". Tell me how to proceed.")
+    lines.append("I will not pick an option for you.")
+    return " ".join(lines)
+
+
+def _gvd_shot_hint(args) -> str | None:
+    """The shot id the model asked about, from the call's own arguments."""
+    if not isinstance(args, dict):
+        return None
+    manifest = args.get("manifest")
+    if isinstance(manifest, dict) and manifest.get("shot_id"):
+        return str(manifest["shot_id"])
+    if args.get("shot_id"):
+        return str(args["shot_id"])
+    return None
+
+
+def _gvd_router_questions(executed: list[tuple[str, str]],
+                          plans: list[tuple[str, dict]] | None = None) -> str | None:
+    """Fixed reply when every tool in a hop was a GVD router call and at least
+    one came back with an ask-status.  None when any other tool ran (the
+    model then has a real result to stand on), when a call errored, or when
+    every router call selected or planned a tool."""
+    if not executed or any(name not in _GVD_ROUTER_TOOLS for name, _ in executed):
+        return None
+    questions: list[str] = []
+    fine: list[str] = []
+    hints = [_gvd_shot_hint(args) for _name, args in (plans or [])]
+    for index, (name, result) in enumerate(executed):
+        if str(result).startswith("ERROR"):
+            return None
+        try:
+            parsed = json.loads(result)
+        except (TypeError, ValueError, json.JSONDecodeError):
+            return None
+        question = _gvd_router_question(
+            name, parsed, shot_hint=hints[index] if index < len(hints) else None)
+        if question:
+            questions.append(question)
+        else:
+            fine.append(name)
+    if not questions:
+        return None
+    text = "\n\n".join(questions)
+    if fine:
+        text += ("\n\nThe other call(s) this turn (" + ", ".join(sorted(set(fine)))
+                 + ") returned a selected or planned route and are not affected.")
+    return text
+
+
+def _append_gvd_notices(reply: str, notices: list[str]) -> str:
+    """A router engine notice (Wan chosen as a fallback, 2026-09-26b) is
+    appended verbatim unless the reply already carries it; the model may not
+    paraphrase it away."""
+    text = str(reply or "")
+    extra = [n for n in dict.fromkeys(notices) if n and n not in text]
+    if not extra:
+        return text
+    return (text.rstrip() + "\n\nRouter notice: " + " ".join(extra)).strip()
+
+
 def _blocked_specialist_scope_reply(blocked: list[str]) -> str:
     """Fixed operator-facing reply when the stale-scope guard refused every
     specialist-project call in a hop.  States what did not happen.  Never
@@ -2690,6 +2954,9 @@ def answer(history: list[dict],
         # Any hop in which a tool actually ran resets it.  While it is set,
         # the model's free text is not allowed to narrate that work.
         specialist_block_pending: list[str] = []
+        # Router engine notices (2026-09-26b) seen on selected/planned GVD
+        # results this turn; appended verbatim to the final reply (26f).
+        gvd_notices_pending: list[str] = []
 
         def apply_hop_profile(route) -> str:
             """Recompute advertised schemas + msgs[0] from this hop's Decision."""
@@ -3158,6 +3425,8 @@ def answer(history: list[dict],
                                  "a permitted tool result confirming that action. "
                                  "I can explain the next safe step or perform it only through "
                                  "an available tool.")
+                    if gvd_notices_pending:
+                        reply = _append_gvd_notices(reply, gvd_notices_pending)
                     if cid:
                         agentic_state.finish_turn(cid, reply)
                     return _trace_return(reply)
@@ -3288,6 +3557,14 @@ def answer(history: list[dict],
                 for (name, args), result in zip(plans, results):
                     _emit_tool_result(emit, name, result)
                     executed.append((name, result))
+                    if name in _GVD_ROUTER_TOOLS and not str(result).startswith("ERROR"):
+                        try:
+                            _gvd_parsed = json.loads(result)
+                        except (TypeError, ValueError, json.JSONDecodeError):
+                            _gvd_parsed = None
+                        _gvd_notice = _gvd_operator_notice(_gvd_parsed)
+                        if _gvd_notice and _gvd_ask_payload(_gvd_parsed) is None:
+                            gvd_notices_pending.append(_gvd_notice)
                     if cid:
                         agentic_state.observe_tool(cid, name, args, result)
 
@@ -3469,6 +3746,22 @@ def answer(history: list[dict],
                     if cid:
                         agentic_state.finish_turn(cid, final)
                     return _trace_return(final, specialist_block_reply=True)
+
+                # GVD tool router honest-failure statuses (needs_manifest_review /
+                # blocked: NEEDS_MANIFEST_REVIEW, PROFILE_REQUIRED, NO_COMPATIBLE_TOOL,
+                # RESOURCE_BLOCKED, UNAVAILABLE_CAPABILITY, ENGINE_FALLBACK_WAN,
+                # QA_GATE_BLOCKED) end the turn with a fixed, specific question built
+                # from the tool's own fields.  Before 2026-09-26f these reached the
+                # model as a JSON blob (pruned for context) and the operator saw
+                # whatever the model made of it.  Same rule as the guards below: no
+                # model prose after a call that did not do the work.
+                gvd_question = _gvd_router_questions(executed, plans)
+                if gvd_question is not None:
+                    emit("note", "gvd router: honest-failure status returned as a fixed "
+                                 "clarifying question; nothing was rendered or queued")
+                    if cid:
+                        agentic_state.finish_turn(cid, gvd_question)
+                    return _trace_return(gvd_question, gvd_router_question=True)
 
                 # A documentation placeholder is not a recoverable tool-result problem.
                 # Letting the model take another turn after this error led it to promise
