@@ -1,0 +1,16 @@
+{
+  "id": "bed56f0c77934337",
+  "title": "You are working directly in the local-agent repo…",
+  "created": 1788369035.5812423,
+  "updated": 1788369251.692924,
+  "model": "gpt-oss-20b-heretic:latest",
+  "workspace": "auto",
+  "messages": [
+    {
+      "role": "user",
+      "content": "You are working directly in the local-agent repository. Complete this as an evidence-backed file task, not a planning answer.\n\nRepository:\n`A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09`\n\nFirst, verify you have desktop write and code-execution permission. If you do not, say exactly which permission is missing and stop—do not claim work was completed.\n\nRead these files before editing:\n- `CLAUDE.md`\n- `TODO.md`\n- `tools/powerinfer/README.md`\n- `tools/powerinfer/STATUS.md` if it exists\n- `work/POWERINFER_STATUS_2026-08-30.md`\n- the newest `docs/LOCAL_AGENT_CURRENT_HANDOFF_*.md`\n- the existing PowerInfer calibration protocol, validator, and its tests\n\n## Hard boundary\n\nTurboSparse-Mistral is parked. This task is review-only dataset preparation. \n\nDo not start or load a model, use the GPU, start ComfyUI, run predictor generation, modify weights, modify checkpoints, convert GGUFs, register a model, alter router/Ollama settings, alter the production registry, or overwrite evidence.\n\nBefore the first edit, call the available GPU/status tool and record the result. After all tests, call it again. If either check shows a new workload started by you, stop and report the failure.\n\n## Deliverable\n\nCreate this new isolated directory only:\n`review-only/turbosparse-mistral-projected-abliteration/`\n\nCreate exactly these four files:\n1. `draft-calibration-32-pairs.UNAPPROVED.2026-09-01.jsonl`\n2. `reviewer-worksheet.md`\n3. `DRAFT-NOT-OPERATOR-APPROVED.md`\n4. `validation-report.2026-09-01.txt`\n\nThe JSONL must format the provided 32 matched A/B pairs (64 prompts total) using the project's exact calibration schema. Every record must strictly have:\n```json\n{\n  \"operator_approved\": false,\n  \"approval_id\": null\n}",
+      "at": 1788369035.5998466,
+      "source": "desktop"
+    }
+  ]
+}

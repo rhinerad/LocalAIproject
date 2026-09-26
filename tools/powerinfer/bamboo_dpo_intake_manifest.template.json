@@ -1,0 +1,60 @@
+{
+  "schema_version": "powerinfer-bamboo-intake-v1",
+  "candidate_id": "bamboo-dpo-7b",
+  "intake_state": "blocked_provenance",
+  "candidate_scope": "candidate_only",
+  "operator_approved": false,
+  "operator_approval_id": null,
+  "approved_at": null,
+  "architecture": {
+    "declared_model_type": "bamboo",
+    "activation_topology": "unverified",
+    "activation_evidence_file": null,
+    "chat_template_status": "unverified",
+    "chat_template_evidence_file": null
+  },
+  "lineage": {
+    "original": {
+      "logical_repo": "PowerInfer/Bamboo-DPO-v0_1",
+      "resolved_repo": "Tiiny/Bamboo-DPO-v0_1",
+      "full_revision": "200c173716a059eaa29d6820a09b3bde76a727ed",
+      "license": "apache-2.0",
+      "remote_metadata_lock": "tools/powerinfer/bamboo_dpo_remote_metadata_2026-08-30.json",
+      "files_sha256": {}
+    },
+    "predictor": {
+      "logical_repo": "PowerInfer/Bamboo-DPO-v0.1-predictor",
+      "resolved_repo": "Tiiny/Bamboo-DPO-v0.1-predictor",
+      "full_revision": "13bd167368ef19e3edcacf523909973c78027a98",
+      "license": "apache-2.0",
+      "remote_metadata_lock": "tools/powerinfer/bamboo_dpo_remote_metadata_2026-08-30.json",
+      "files_sha256": {}
+    },
+    "powerinfer_gguf": {
+      "logical_repo": "PowerInfer/Bamboo-DPO-v0.1-gguf",
+      "resolved_repo": "Tiiny/Bamboo-DPO-v0.1-gguf",
+      "full_revision": "c3847e080bd8664f2ea299400f74665ca5b13824",
+      "license": "apache-2.0",
+      "remote_metadata_lock": "tools/powerinfer/bamboo_dpo_remote_metadata_2026-08-30.json",
+      "files_sha256": {}
+    },
+    "activation_statistics": {
+      "source_build_id": null,
+      "files_sha256": {}
+    }
+  },
+  "validation": {
+    "namespace_alias_verified": false,
+    "full_revisions_verified": false,
+    "source_predictor_activation_lineage_verified": false,
+    "all_required_hashes_verified": false,
+    "mechanical_gate": "not_run",
+    "quality_gate": "not_run",
+    "registry_status": "unregistered"
+  },
+  "notes": [
+    "Discovery saw original v0_1, while predictor and logical GGUF use v0.1. The dated remote metadata lock resolves the current hosting aliases and revisions.",
+    "No dReLU claim is accepted without frozen configuration evidence.",
+    "This template does not authorize a download, GPU work, model loading, serving, or registration."
+  ]
+}

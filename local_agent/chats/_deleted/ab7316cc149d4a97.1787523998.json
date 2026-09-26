@@ -1,0 +1,18 @@
+{
+  "id": "ab7316cc149d4a97",
+  "title": "Show me the generated prompt text for clip 00A",
+  "created": 1787120995.975972,
+  "updated": 1787121025.3472543,
+  "messages": [
+    {
+      "role": "user",
+      "content": "Show me the generated prompt text for clip 00A",
+      "at": 1787120995.9939723
+    },
+    {
+      "role": "assistant",
+      "content": "The generated prompt text for clip 00A is provided above, detailing the subject definitions, summary, retention analysis, detailed description of the shot, overall soundscape, and non-diegetic music information for the scene. The prompt describes a specific shot with the Narrator and a receptionist in a 1960s waiting room setting, adhering to the specified format and requirements for the film.",
+      "at": 1787121025.3467364
+    }
+  ]
+}

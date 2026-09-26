@@ -1,0 +1,5 @@
+﻿# 2026-09-24m - first-bot morning watch status sync
+
+Inspect-sync only (Keep-projects-moving) at 2026-09-24 ~10:27 AM ET. The workstation and tree were reachable. Listener present on :8760 owned by python PID 52396 (started 2026-09-24 ~1:54 AM ET); GET /api/status timed out twice (3s then 8s), so APP_REVISION could not be confirmed this watch. Change vs the 2026-09-21 evening sync (21v): process is back on the port after days of no listener (last known live was PID 34792 / r98). farm_status.json (local_agent/worker_farm/farm_status.json) still last updated 2026-09-16 12:32 AM ET: broker reachable, status=no_workers, zero workers responding, latency 1837.9 ms; snapshot is stale for this watch. Disk since 21v already had CHANGELOG/2026-09-22* through 2026-09-24l (other sessions; newest 24l ~10:26 AM ET — no collide), then this 24m. Stop-until-go remains; no first-bot go found; no tests, downloads, or other execution started.
+
+Evidence: CHANGELOG/2026-09-24m_first_bot_watch_status_sync.md.

@@ -1,0 +1,22 @@
+{
+  "profile_id": "fast_draft",
+  "label": "RTX 5080 starting profile — FastH3 draft (placeholder)",
+  "gpu_class": "rtx_5080",
+  "starting_point_only": true,
+  "measured_guarantee": false,
+  "width": 864,
+  "height": 480,
+  "frames": 81,
+  "steps": 8,
+  "sampler_name": "res_multistep",
+  "scheduler": "simple",
+  "denoise": 1.0,
+  "family": "FastH3",
+  "backend": "FastH3",
+  "backend_profile": "h3_distilled",
+  "fps": 24.0,
+  "placeholder": true,
+  "compatibility_warning": "FastH3 requires ComfyUI >= 0.36; production server may still be on 0.34. Do not enable until server version is confirmed.",
+  "warning": "FastH3 placeholder — needs ComfyUI>=0.36; server may be 0.34",
+  "notes": "Draft-speed placeholder only. Keep distilled H3 sampling until FastH3 is available on the render host."
+}

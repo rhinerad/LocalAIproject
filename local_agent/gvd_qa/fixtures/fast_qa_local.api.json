@@ -1,0 +1,13 @@
+{
+  "1": {"class_type": "LoadImage", "inputs": {"image": "CANDIDATE_UPLOAD.png"}},
+  "90": {
+    "class_type": "GVDMetricReport",
+    "inputs": {
+      "clip_text": "0",
+      "clip_text_unit": "torchmetrics_clipscore_0_100",
+      "attempt_id": "ATTEMPT_ID",
+      "image_sha256": "CANDIDATE_SHA256",
+      "profile_id": "LOCKED_METRICS_PROFILE"
+    }
+  }
+}

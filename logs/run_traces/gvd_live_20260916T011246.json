@@ -1,0 +1,253 @@
+{
+  "saved": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\models\\dspy_compiled\\generalized_video_director_mipro_2row.json",
+  "optimizer": "mipro",
+  "mock": false,
+  "auto": null,
+  "trials": 1,
+  "trainset": 2,
+  "ids": "GVD-B01,GVD-D01",
+  "last_feedback": "{\"mock\": false, \"clip_id\": \"GVD-B01\", \"category\": \"backrooms\", \"hparams\": {\"cfg_scale\": 5.5, \"denoise\": 0.9, \"step_count\": 28.0}, \"step_count_int\": 28, \"scores\": null, \"mean\": null, \"minimum\": null, \"threshold\": null, \"passes_curriculum\": false, \"mipro\": 0.0, \"error\": \"ComfyAPIError: ComfyUI /history unreadable: timed out\", \"video_path\": null, \"positive_prompt\": \"Unlocked handheld camera. Include handheld walking momentum, first-person camcorder tracking, heavy VHS artifacting, a continuous unbroken shot, realistic camera shake, and 1990s home video aesthetic. No actor face or torso, no apartment furniture, no readable text.\", \"vram_trace\": [{\"label\": \"after_prepare_comfy\", \"ts\": 1789533770.6285868, \"used_mib\": 7292, \"free_mib\": 8686, \"total_mib\": 16303, \"owner\": {\"owner\": \"comfyui\", \"reason\": \"Wan 2.1 generation\", \"since\": 1789533770.6285868}}]}",
+  "history_n": 4,
+  "history": [
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 4.5,
+        "denoise": 0.75,
+        "step_count": 30.0
+      },
+      "step_count_int": 30,
+      "scores": {
+        "text_video_alignment": 0.0,
+        "temporal_consistency": 0.0,
+        "aesthetic_quality": 0.0
+      },
+      "mean": 0.0,
+      "minimum": 0.0,
+      "threshold": 0.6,
+      "iteration": 0,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "reasons": [
+        "minimum score 0.00 below curriculum threshold 0.60"
+      ],
+      "hparam_warnings": [],
+      "video_path": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\gvd_GVD-D01_5ef4b17fed_00001.mp4",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789530011.8932652,
+          "used_mib": 5927,
+          "free_mib": 10051,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789530011.8932652
+          }
+        },
+        {
+          "label": "after_wan",
+          "ts": 1789530904.9877362,
+          "used_mib": 9955,
+          "free_mib": 6023,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789530011.8932652
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789530907.2931955,
+          "used_mib": 483,
+          "free_mib": 15495,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789530905.0787814
+          }
+        },
+        {
+          "label": "after_prepare_vlm",
+          "ts": 1789530907.3345275,
+          "used_mib": 483,
+          "free_mib": 15495,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789530907.333853
+          }
+        },
+        {
+          "label": "after_vlm",
+          "ts": 1789531050.1824195,
+          "used_mib": 11114,
+          "free_mib": 4864,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789530907.333853
+          }
+        },
+        {
+          "label": "after_release_vlm",
+          "ts": 1789531054.8765833,
+          "used_mib": 483,
+          "free_mib": 15495,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Qwen2.5-VL complete",
+            "since": 1789531054.8755858
+          }
+        }
+      ],
+      "vlm_raw": "{\n  \"text_video_alignment\": 0.00,\n  \"temporal_consistency\": 0.00,\n  \"aesthetic_quality\": 0.00,\n  \"rationale\": {\n    \"text_video_alignment\": \"The frames contain no ocean, cliffs, seabirds, spray, or drone shot; instead, they show an abstract, glitchy, multicolored pattern with no recognizable elements from the prompt.\",\n    \"temporal_consistency\": \"The frames are static and identical, showing no motion or progression, which contradicts the prompt's request for a dynamic, continuous drone shot.\",\n    \"aesthetic_quality\": \"The frames are heavily distorted with chromatic aberration, pixelation, and a lack of focus, resulting in a low-quality, artifact-ridden image that fails to meet cinematic standards.\"\n  }\n}"
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 5.5,
+        "denoise": 0.9,
+        "step_count": 28.0
+      },
+      "step_count_int": 28,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "error": "PipelineDispatchError: prompt_id 19d88d22-d966-4ea9-bec6-3fb7e5c2ebf6 not finished within 1800s",
+      "video_path": null,
+      "positive_prompt": "Handheld first-person camcorder walk down a damp yellow Level 0 Backrooms hallway; fluorescent rectangles repeat into the distance over wet brown-beige carpet and sickly wallpaper. A continuous unbroken shot with handheld walking momentum, first-person camcorder tracking, heavy VHS artifacting, realistic camera shake, and 1990s home video aesthetic. No actor face or torso, no apartment furniture, no readable text.",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789531111.0439947,
+          "used_mib": 484,
+          "free_mib": 15494,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789531111.0439947
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789532991.105712,
+          "used_mib": 576,
+          "free_mib": 15402,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789532990.8384087
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 0.75,
+        "step_count": 24.0
+      },
+      "step_count_int": 24,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "error": "PipelineDispatchError: prompt_id 4a2b46b9-e83d-4b4b-b6f7-9fa8078b50d4 not finished within 600s",
+      "video_path": null,
+      "positive_prompt": "A cinematic drone shot flies in from the open ocean toward sheer Atlantic cliffs at golden hour, revealing nested seabirds and white spray against black basalt. The camera should smoothly transition through the aerial movement, maintaining a dynamic and smooth motion. The shot should capture the beauty of the natural environment, including the seabirds and the contrast between the ocean and the cliffs. The lighting should be at golden hour, enhancing the natural colors and textures.",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789533063.9647412,
+          "used_mib": 571,
+          "free_mib": 15407,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789533063.9637406
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789533702.0213873,
+          "used_mib": 572,
+          "free_mib": 15406,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789533665.6661038
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 5.5,
+        "denoise": 0.9,
+        "step_count": 28.0
+      },
+      "step_count_int": 28,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "error": "ComfyAPIError: ComfyUI /history unreadable: timed out",
+      "video_path": null,
+      "positive_prompt": "Unlocked handheld camera. Include handheld walking momentum, first-person camcorder tracking, heavy VHS artifacting, a continuous unbroken shot, realistic camera shake, and 1990s home video aesthetic. No actor face or torso, no apartment furniture, no readable text.",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789533770.6285868,
+          "used_mib": 7292,
+          "free_mib": 8686,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789533770.6285868
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789535566.60159,
+          "used_mib": 9986,
+          "free_mib": 5992,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Wan 2.1 complete; VRAM headroom wait timed out",
+            "since": 1789535566.6005864
+          }
+        }
+      ]
+    }
+  ]
+}

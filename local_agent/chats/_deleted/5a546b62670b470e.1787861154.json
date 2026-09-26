@@ -1,0 +1,24 @@
+{
+  "id": "5a546b62670b470e",
+  "title": "Work from the current repository state at: `A:\\U…",
+  "created": 1787858959.2188542,
+  "updated": 1787859198.5937183,
+  "model": "huihui_ai/qwen3-abliterated:14b",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Work from the current repository state at:\n\n`A:\\Users\\rhine\\Documents\\Codex\\2026-08-27\\referenced-chatgpt-conversation-this-is-an\\outputs\\harmontown_ai_project`\n\nCurrent HEAD is `db17c21`. Treat the repository as the source of truth and inspect the current README, PIPELINE.md, voice-review workflow, attendance workflow, downloader, schemas, and tests.\n\nImplement the next step: a reusable golden voice-anchor registry.\n\nRequirements:\n\n1. Add a script that builds a proposed anchor registry from:\n   - `references/voice_reviews/*.jsonl`\n   - validated human attendance decisions under `data/gold/attendance/`\n   - available local review clips\n2. The registry must track, per proposed person:\n   - person name\n   - episode and clip IDs\n   - anonymous speaker IDs\n   - clip paths\n   - quality and delivery notes\n   - reviewer/evidence status\n   - anchor status: proposed, human_verified, rejected, needs_more_samples\n3. Only clips marked `clean` may be proposed as clean voice anchors.\n4. Mixed/overlap, altered/imitation, short/backchannel, unclear, music, crowd, and uncertain clips must never enter the clean-anchor set.\n5. Require at least two independent clean clips before an anchor can be marked `human_verified`.\n6. Do not infer identity from anonymous speaker IDs, embeddings, transcript mentions, or episode attendance alone.\n7. Never write:\n   - transcript text\n   - timestamps\n   - diarization labels\n   - `lora_training_eligible: true`\n8. Write the registry only under:\n   `data/metadata/voice_anchor_registry.json`\n9. Add a report showing:\n   - proposed anchors\n   - verified anchors\n   - rejected clips\n   - people needing more clean samples\n10. Add tests for:\n    - Jeff’s clean Episode 1 clip\n    - Dan’s clean clips\n    - Adam Goldberg remaining context-only\n    - mixed and imitation clips being rejected\n    - insufficient clean-sample counts\n    - forbidden speaker-label/LoRA fields\n11. Update README.md, PIPELINE.md, and docs/SPEAKER_ATTRIBUTION_GUIDE.md to explain that this registry is a reusable project asset for later embedding comparison and diarization review, not an automatic labeling authority.\n12. Add a validation/self-check section confirming raw transcripts, audio, machine attribution, and human voice-review seeds remain unchanged.\n\nRun the full test suite and report the exact commit hash and test count. Do not download audio or rerun diarization automatically.",
+      "at": 1787858959.225382,
+      "source": "desktop"
+    },
+    {
+      "role": "assistant",
+      "content": "\n\n_[stopped]_",
+      "at": 1787859198.5849226,
+      "retrieved_exemplar_ids": [],
+      "tool_evidence": [],
+      "source": "desktop"
+    }
+  ],
+  "last_tier": "cpu"
+}

@@ -1,0 +1,26 @@
+# Import Huihui MiniCPM-V 4.6 Thinking (abliterated) into Ollama as a vision model.
+#
+# Source: mradermacher/Huihui-MiniCPM-V-4.6-Thinking-abliterated-GGUF on HuggingFace
+# Base:   huihui-ai/Huihui-MiniCPM-V-4.6-Thinking-abliterated (1B, BF16, 2.6 GB)
+#
+# Files to download before running this Modelfile:
+#   Q8_0 weights : Huihui-MiniCPM-V-4.6-Thinking-abliterated.Q8_0.gguf        (812 MB)
+#   mmproj Q8_0  : Huihui-MiniCPM-V-4.6-Thinking-abliterated.mmproj-Q8_0.gguf (812 MB)
+#
+# Download from:
+#   https://huggingface.co/mradermacher/Huihui-MiniCPM-V-4.6-Thinking-abliterated-GGUF
+#
+# Place both files in:
+#   A:\Users\rhine\ComfyUI-Shared\models\LLM\GGUF\mradermacher\Huihui-MiniCPM-V-4.6-Thinking-abliterated-GGUF\
+#
+# Then create the Ollama model (run from this directory, GPU server on :11434):
+#   ollama create huihui-minicpm-v-4.6-abliterated:q8_0 -f local_agent\Modelfile.huihui-minicpm-v-4.6-abliterated
+#
+# Confirm vision is retained:
+#   ollama show huihui-minicpm-v-4.6-abliterated:q8_0    # capabilities must list: vision
+#
+# VRAM: ~2.5 GB including KV cache at 32768 ctx — much less than the 7.5 GB MiniCPM-V 2.6 8B.
+# Inference is faster; quality on dense multi-image action logs may differ from the 8B.
+
+FROM A:\Users\rhine\ComfyUI-Shared\models\LLM\GGUF\mradermacher\Huihui-MiniCPM-V-4.6-Thinking-abliterated-GGUF\Huihui-MiniCPM-V-4.6-Thinking-abliterated.Q8_0.gguf
+FROM A:\Users\rhine\ComfyUI-Shared\models\LLM\GGUF\mradermacher\Huihui-MiniCPM-V-4.6-Thinking-abliterated-GGUF\Huihui-MiniCPM-V-4.6-Thinking-abliterated.mmproj-Q8_0.gguf

@@ -1,0 +1,21 @@
+{
+  "still_backend": "flux",
+  "reject_sdxl": true,
+  "aspect": "4:3",
+  "aspect_ratio": "4:3",
+  "default_clip_duration_s": 10.0,
+  "fps": 24,
+  "require_all_stills_approved": true,
+  "native_minimax_voice": true,
+  "no_music": true,
+  "needs_canvas_qualification": false,
+  "canvas_policy": "Qualified EmptyLatentImage 1152x864 (true 4:3) with flux1-dev-fp8; do not use Comfy Flux preset 1152x896 (9:7).",
+  "override_resolution": "EDITOR OVERRIDES Rule 0 Flux: still_backend=flux beats any SDXL model labels, SDXL LoRA paths (BacHal_...), and weighted SDXL prompt syntax in body text. Preserve source_* fields; do not load SDXL LoRA for Flux.",
+  "source_has_flux_override": true,
+  "qualified_canvas": {
+    "width": 1152,
+    "height": 864,
+    "aspect_ratio": "4:3",
+    "checkpoint": "flux1-dev-fp8.safetensors"
+  }
+}

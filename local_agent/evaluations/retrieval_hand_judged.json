@@ -1,0 +1,180 @@
+{
+  "version": 1,
+  "title": "Hand-judged local-docs retrieval eval",
+  "description": "18 real questions this project has actually needed answered. Each relevant_chunk_id was read in the live index and contains the answer, not merely a topical mention. top_k=5 is search_docs' default; a relevant chunk at rank 6-50 is the FlashRank signal (Stage 3 only reorders Hybrid's fused head). A miss entirely outside the scorer pool is a Stage 4 rewrite problem, not a reranker problem. TODO.md and RAG_EVALUATION.md are not in SOURCE_GLOBS — ground truth is only indexed files.",
+  "index_built_at_at_judgment": "2026-09-03T07:17:36Z",
+  "chunk_count_at_judgment": 940,
+  "top_k": 5,
+  "rerank_window": 50,
+  "queries": [
+    {
+      "id": "changelog_letter_convention",
+      "query": "How do parallel agents pick the next changelog filename letter?",
+      "kind": "paraphrase",
+      "intent": "2026-09-02w collision: two agents both chose u. Need YYYY-MM-DDx plus scripts/next_changelog_id.py.",
+      "relevant_chunk_ids": [
+        "CHANGELOG/2026-09-02w_changelog_letter_convention.md:0"
+      ]
+    },
+    {
+      "id": "source_citation_contract",
+      "query": "What must a factual claim from project documents cite?",
+      "kind": "paraphrase",
+      "intent": "Agent citation rules: path and heading, not a generic 'cite sources' lecture.",
+      "relevant_chunk_ids": [
+        "CHANGELOG/2026-09-02b_source_citation_contract.md:0"
+      ]
+    },
+    {
+      "id": "hybrid_is_default",
+      "query": "Is FlashRank the default docs search now?",
+      "kind": "paraphrase",
+      "intent": "Default is HybridScorer; FlashRank was deferred and not installed.",
+      "relevant_chunk_ids": [
+        "CHANGELOG/2026-09-02ab_phase2_hybrid_default.md:0",
+        "CHANGELOG/2026-09-02ab_phase2_hybrid_default.md:1"
+      ]
+    },
+    {
+      "id": "flashrank_catalog_names",
+      "query": "Which FlashRank model names are actually in the catalog?",
+      "kind": "paraphrase",
+      "intent": "TinyBERT-L-2-v2 and MiniLM-L-12-v2. L-6-v2 is not in the catalog — 2026-09-02m named it wrongly.",
+      "relevant_chunk_ids": [
+        "CHANGELOG/2026-09-03c_docs_flashrank_todo_arch.md:0",
+        "docs/hybrid_scorer_proposal.md:1"
+      ]
+    },
+    {
+      "id": "search_docs_thread_safety",
+      "query": "Why can search_docs run from several threads in the same hop?",
+      "kind": "paraphrase",
+      "intent": "CONCURRENCY_SAFE_TOOLS plus the unlocked _INDEX_CACHE race that 2026-08-31d fixed.",
+      "relevant_chunk_ids": [
+        "CHANGELOG/2026-08-31d_search_docs_index_cache_race.md:0"
+      ]
+    },
+    {
+      "id": "agentic_search_not_concurrency_safe",
+      "query": "Is agentic_search_docs safe to run in parallel with search_docs?",
+      "kind": "paraphrase",
+      "intent": "Separate tool, PROJECT_ONLY_TOOLS, not CONCURRENCY_SAFE_TOOLS because it calls the model.",
+      "relevant_chunk_ids": [
+        "CHANGELOG/2026-09-02ab_phase2_hybrid_default.md:1",
+        "CHANGELOG/2026-09-02l_rag_stage4_agentic_self_correction.md:1"
+      ]
+    },
+    {
+      "id": "agentic_retry_loop",
+      "query": "What local-docs tool retries with rewritten queries when the first hits are weak?",
+      "kind": "paraphrase",
+      "intent": "agentic_search_docs: retrieve, model-grade, retry up to MAX_ROUNDS=3, strip invented citations.",
+      "relevant_chunk_ids": [
+        "CHANGELOG/2026-09-02l_rag_stage4_agentic_self_correction.md:0"
+      ]
+    },
+    {
+      "id": "farm_status_snapshot",
+      "query": "Where can I read farm worker liveness without calling Celery inspect live?",
+      "kind": "paraphrase",
+      "intent": "farm_status.json snapshot daemon, not a live inspect() on every read.",
+      "relevant_chunk_ids": [
+        "CHANGELOG/2026-09-02v_farm_status_daemon.md:0"
+      ]
+    },
+    {
+      "id": "phase1_stay_on_ollama",
+      "query": "Did we stay on Ollama or switch the agent to PowerInfer?",
+      "kind": "paraphrase",
+      "intent": "Phase 1 closed: stay on Qwen/gpt-oss via Ollama. No PowerInfer route, no TinyChatEngine intake now.",
+      "relevant_chunk_ids": [
+        "CHANGELOG/2026-09-02j_rag_embedding_scorer_and_phase1_close.md:0"
+      ]
+    },
+    {
+      "id": "empty_search_means_unsupported",
+      "query": "If search_docs returns nothing, may the agent answer from training anyway?",
+      "kind": "paraphrase",
+      "intent": "Empty fused pool means local docs do not establish the claim. MIN_EMBED_SIMILARITY=0.35 exists so RRF cannot return 'closest anyway'.",
+      "relevant_chunk_ids": [
+        "CHANGELOG/2026-09-02j_rag_embedding_scorer_and_phase1_close.md:1"
+      ]
+    },
+    {
+      "id": "duration_ladder_not_seed",
+      "query": "Speech came back slurred — should I reroll the seed or change the duration?",
+      "kind": "paraphrase",
+      "intent": "Gibberish/mispronunciation → duration ladder, seed held fixed. Seed is the wrong-voice knob only.",
+      "relevant_chunk_ids": [
+        "docs/H3_PROMPT_RULES.md:8",
+        "CHANGELOG/2026-08-18_duration_ladder.md:0"
+      ]
+    },
+    {
+      "id": "compaction_prefetch_threshold",
+      "query": "At what context fill fraction does compaction prefetch start?",
+      "kind": "paraphrase",
+      "intent": "PROACTIVE_THRESHOLD = 0.80 of num_ctx, not at overflow.",
+      "relevant_chunk_ids": [
+        "CHANGELOG/2026-09-02u_compaction_prefetch.md:2",
+        "docs/ARCHITECTURE.md:2"
+      ]
+    },
+    {
+      "id": "gpu_idle_but_cpu_8b",
+      "query": "Why did GPU chat fall back to the CPU 8B when VRAM was almost empty?",
+      "kind": "paraphrase",
+      "intent": "GPU Ollama :11434 was down (Case B). VRAM 73 MB was below VRAM_BUSY_MB=2500; routing itself was correct.",
+      "relevant_chunk_ids": [
+        "CHANGELOG/2026-08-25_gpu_routing_fix.md:0"
+      ]
+    },
+    {
+      "id": "judge_not_registered",
+      "query": "Why did the first judge_transcript batch fail as NotRegistered?",
+      "kind": "lexical",
+      "intent": "Mac worker_farm code predated 2026-09-02c; old tasks.py had no judge_transcript.",
+      "relevant_chunk_ids": [
+        "CHANGELOG/2026-09-02d_judge_evaluation_end_to_end_verified.md:1"
+      ]
+    },
+    {
+      "id": "farm_embed_no_celery_import",
+      "query": "How does the workstation send embed jobs to the farm without importing Celery?",
+      "kind": "paraphrase",
+      "intent": "farm_offload spawns worker_farm/.venv Python running _farm_submit_wait.py; returns None, never raises.",
+      "relevant_chunk_ids": [
+        "CHANGELOG/2026-09-02s_farm_offload_routing.md:0",
+        "docs/ARCHITECTURE.md:1"
+      ]
+    },
+    {
+      "id": "wireguard_icmp_not_health",
+      "query": "If ping to the WireGuard hub fails, is the farm down?",
+      "kind": "paraphrase",
+      "intent": "ICMP to 10.90.90.1 can fail on Windows firewall while TCP/SSH/Celery work. Do not treat ping as the health signal.",
+      "relevant_chunk_ids": [
+        "docs/FARM_HEALTH_RUNBOOK.md:2"
+      ]
+    },
+    {
+      "id": "relullama_not_promotable",
+      "query": "Is ReluLLaMA eligible for the production model picker?",
+      "kind": "paraphrase",
+      "intent": "Failed 9/10 instruction-format cases; diagnostic-only, not registry/picker/routing.",
+      "relevant_chunk_ids": [
+        "CHANGELOG/2026-09-02e_phase1_engine_evaluation_progress.md:0",
+        "CHANGELOG/2026-08-30_powerinfer_bounded_predictor_calibration.md:5"
+      ]
+    },
+    {
+      "id": "tinyengine_is_mcu",
+      "query": "Can the literal tinyengine package run on the RTX 5080?",
+      "kind": "paraphrase",
+      "intent": "mit-han-lab/tinyengine is microcontroller-only. The desktop sibling is TinyChatEngine; that was inferred, not stated.",
+      "relevant_chunk_ids": [
+        "CHANGELOG/2026-09-02f_tinychatengine_intake_plan.md:0"
+      ]
+    }
+  ]
+}

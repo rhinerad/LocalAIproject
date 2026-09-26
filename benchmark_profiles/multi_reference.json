@@ -1,0 +1,21 @@
+{
+  "profile_id": "multi_reference",
+  "label": "RTX 5080 starting profile — multi-reference",
+  "gpu_class": "rtx_5080",
+  "starting_point_only": true,
+  "measured_guarantee": false,
+  "width": 864,
+  "height": 480,
+  "frames": 81,
+  "steps": 20,
+  "sampler_name": "res_multistep",
+  "scheduler": "simple",
+  "denoise": 1.0,
+  "family": "minimax_h3",
+  "backend_profile": "h3_distilled",
+  "ref_mode": "Ref2VA",
+  "ref_image_size": "match",
+  "fps": 24.0,
+  "notes": "Ref2VA multi-reference path. ref_image_size=match. Start small (low res / fewer frames) before scaling up.",
+  "warning": "Start small with Ref2VA; identity/wardrobe refs must match canvas aspect."
+}

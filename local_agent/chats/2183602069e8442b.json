@@ -1,0 +1,15 @@
+{
+  "id": "2183602069e8442b",
+  "title": "open sonic pi",
+  "created": 1787878621.1801114,
+  "updated": 1787878621.1886218,
+  "model": "huihui_ai/qwen3-abliterated:8b",
+  "messages": [
+    {
+      "role": "user",
+      "content": "open sonic pi",
+      "at": 1787878621.1886218,
+      "source": "desktop"
+    }
+  ]
+}

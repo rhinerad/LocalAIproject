@@ -1,0 +1,88 @@
+{
+  "entries": [
+    {
+      "id": "ending_revised_vs_body_attack",
+      "clips": [
+        "C069",
+        "C070",
+        "C071",
+        "C072",
+        "C073",
+        "C074",
+        "C075",
+        "C076",
+        "C077",
+        "C078",
+        "C079",
+        "C080",
+        "C081",
+        "C082",
+        "C083",
+        "C084",
+        "C085",
+        "C086",
+        "C087",
+        "C088",
+        "C089",
+        "C090",
+        "C091",
+        "C092",
+        "C093",
+        "C094",
+        "C095",
+        "C096",
+        "C097",
+        "C098",
+        "C099",
+        "C100",
+        "C101",
+        "C102"
+      ],
+      "status": "unresolved_creative",
+      "summary": "Introduction says revised C069–C102 supersedes the original, but parsed bodies may still contain attack/static/mirroring progression alongside appended revised story material. Do not infer a replacement 34-shot ending without an explicit operator choice."
+    },
+    {
+      "id": "static_transition_scope",
+      "clips": [
+        "C069",
+        "C070",
+        "C071"
+      ],
+      "status": "explicit_override",
+      "summary": "EDITOR OVERRIDES Rule 6 permits only a brief static transition at C069. C070/C071 continuing or holding static needs an explicit exception if retained; C102 final cutoff likewise."
+    },
+    {
+      "id": "improvisation_lines",
+      "clips": [
+        "C007"
+      ],
+      "status": "unresolved_creative",
+      "summary": "Some lines are directions to improvise rather than exact dialogue (e.g. C007/C009). Marked improvisation_permitted=True with exact_text=None; exact-transcript QA cannot validate unspecified words."
+    },
+    {
+      "id": "handheld_vs_external_fullbody_post_fall",
+      "clips": [
+        "C015",
+        "C016"
+      ],
+      "status": "unresolved_creative",
+      "summary": "Actor handheld camcorder POV conflicts with any post-fall description that requires an external full-body view. Compile camera ownership and visible-body constraints per shot including landing and pickup."
+    },
+    {
+      "id": "c102_you_can_talk",
+      "clips": [
+        "C102"
+      ],
+      "status": "unresolved_creative",
+      "summary": "C102 \"You can talk?\" follows earlier entity dialogue. Determine whether this is intentional comedy or a stale-ending inconsistency."
+    },
+    {
+      "id": "appendix_stripping_risks",
+      "clips": [],
+      "status": "explicit_override",
+      "summary": "Generic appendix stripping can discard character-bible/story-rule information. Extract and version the bible before separating clip bodies. Separate appended agent reports and conversation debris from story authority.",
+      "note": "Source contains APPENDIX / Character Bible markers; parser truncates at appendix (appendix_present=True)."
+    }
+  ],
+  "count": 6
+}

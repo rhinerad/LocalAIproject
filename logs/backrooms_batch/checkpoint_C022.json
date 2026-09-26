@@ -1,0 +1,19 @@
+{
+  "id": "C022",
+  "injected": {
+    "start": "Corridor continues; a dark side opening on the left. First-person camcorder tracking, heavy VHS artifacting, handheld walking momentum, continuous unbroken shot, realistic camera shake, and 1990s home video aesthetic.",
+    "end": "The side opening slides past. Heavy VHS artifacting, continuous unbroken shot, and 1990s home video aesthetic. First-person camcorder tracking, handheld walking momentum, and realistic camera shake.",
+    "motion": "[Tracking] Walk past the dark alcove without entering. Heavy VHS artifacting, continuous unbroken shot, and 1990s home video aesthetic. First-person camcorder tracking, handheld walking momentum, and realistic camera shake."
+  },
+  "stage": "complete",
+  "start_png": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\br24_C022_start_00001_.png",
+  "end_png": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\br24_C022_end_00001_.png",
+  "mp4": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\br24_C022_00001.mp4",
+  "video_prompt_id": "467ab196-4fee-4c65-8fad-d66911fbed91",
+  "photoreal_mp4": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\photoreal_video_C022.mp4",
+  "raw_photoreal_mp4": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\photoreal_video_C022_00001.mp4",
+  "tile_prompt_id": "9cee22ac-89ac-4684-b64e-5fb8e8ff9b49",
+  "photoreal_bytes": 520919,
+  "sha256": "edef795d013aa54f9a4e5f0193de57550acdfdb2902c48ec0d86877a5279c17c",
+  "completed_at": 1789460522.8696856
+}

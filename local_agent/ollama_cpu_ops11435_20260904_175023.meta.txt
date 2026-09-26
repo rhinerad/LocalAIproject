@@ -1,0 +1,16 @@
+launch_utc=2026-09-04T17:50:23.0253956-04:00
+ollama=A:\Users\rhine\AppData\Local\Programs\Ollama\ollama.exe
+stdout=A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\local_agent\ollama_cpu_ops11435_20260904_175023.log
+stderr=A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\local_agent\ollama_cpu_ops11435_20260904_175023.err.log
+parent_pid=37952
+parent_env_at_launch:
+  CUDA_VISIBLE_DEVICES=-1
+  OLLAMA_HOST=127.0.0.1:11435
+  OLLAMA_VULKAN=
+  GGML_VK_VISIBLE_DEVICES=
+  OLLAMA_NUM_PARALLEL=1
+  OLLAMA_MAX_LOADED_MODELS=1
+  OLLAMA_KEEP_ALIVE=30m
+  OLLAMA_LLM_LIBRARY=
+child_pid=44208
+child_start=2026-09-04T17:50:23.0840405-04:00

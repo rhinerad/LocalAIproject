@@ -1,0 +1,126 @@
+{
+  "1": {
+    "class_type": "UnetLoaderGGUF",
+    "inputs": {
+      "unet_name": "LTX-2.3-distilled-Q3_K_S.gguf"
+    }
+  },
+  "2": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": ["1", 0],
+      "lora_name": "ltx-2.3-22b-distilled-lora-384-1.1.safetensors",
+      "strength_model": 0.5
+    }
+  },
+  "3": {
+    "class_type": "EmptyLTXVLatentVideo",
+    "inputs": {
+      "width": 480,
+      "height": 256,
+      "length": 9,
+      "batch_size": 1
+    }
+  },
+  "4": {
+    "class_type": "ModelSamplingLTXV",
+    "inputs": {
+      "model": ["2", 0],
+      "max_shift": 2.05,
+      "base_shift": 0.95,
+      "latent": ["3", 0]
+    }
+  },
+  "5": {
+    "class_type": "LTXAVTextEncoderLoader",
+    "inputs": {
+      "text_encoder": "gemma_3_12B_it_fp4_mixed.safetensors",
+      "ckpt_name": "ltx-2.3-22b-dev-fp8.safetensors",
+      "device": "cpu"
+    }
+  },
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "a handheld camera walks down an empty yellow corridor, fluorescent lights, no people",
+      "clip": ["5", 0]
+    }
+  },
+  "7": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "people, text, watermark, cartoon",
+      "clip": ["5", 0]
+    }
+  },
+  "8": {
+    "class_type": "LTXVConditioning",
+    "inputs": {
+      "positive": ["6", 0],
+      "negative": ["7", 0],
+      "frame_rate": 24.0
+    }
+  },
+  "9": {
+    "class_type": "LTXVScheduler",
+    "inputs": {
+      "steps": 8,
+      "max_shift": 2.05,
+      "base_shift": 0.95,
+      "stretch": true,
+      "terminal": 0.1,
+      "latent": ["3", 0]
+    }
+  },
+  "10": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 1
+    }
+  },
+  "11": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "euler"
+    }
+  },
+  "12": {
+    "class_type": "CFGGuider",
+    "inputs": {
+      "model": ["4", 0],
+      "positive": ["8", 0],
+      "negative": ["8", 1],
+      "cfg": 1.0
+    }
+  },
+  "13": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": ["10", 0],
+      "guider": ["12", 0],
+      "sampler": ["11", 0],
+      "sigmas": ["9", 0],
+      "latent_image": ["3", 0]
+    }
+  },
+  "14": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "LTX23_video_vae_bf16.safetensors"
+    }
+  },
+  "15": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": ["13", 0],
+      "vae": ["14", 0]
+    }
+  },
+  "16": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "gvd_tool_router/ltx23_smoke",
+      "images": ["15", 0]
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "id": "9b149b89a5014fa9",
+  "title": "How many clips are currently recorded in the aud…",
+  "created": 1787444113.152174,
+  "updated": 1787444247.701388,
+  "messages": [
+    {
+      "role": "user",
+      "content": "How many clips are currently recorded in the audio pass manifest? Use the project state tool.",
+      "at": 1787444113.1571755
+    },
+    {
+      "role": "assistant",
+      "content": "The audio pass manifest currently has **0 clips recorded**. This is confirmed by the `soundtrack_manifest_records` field in the project state, which explicitly states there are no clip records in the manifest. The audio gate is blocked until voices are chosen, preventing unapproved masters from being baked into renders.",
+      "at": 1787444247.701388
+    }
+  ]
+}

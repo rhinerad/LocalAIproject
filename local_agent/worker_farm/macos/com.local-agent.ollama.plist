@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.local-agent.ollama</string>
+	<key>UserName</key>
+	<string>rhineduran</string>
+	<key>GroupName</key>
+	<string>staff</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/usr/local/bin/ollama</string>
+		<string>serve</string>
+	</array>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>HOME</key>
+		<string>/Users/rhineduran</string>
+		<key>USER</key>
+		<string>rhineduran</string>
+		<key>LOGNAME</key>
+		<string>rhineduran</string>
+		<key>PATH</key>
+		<string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+		<key>OLLAMA_HOST</key>
+		<string>127.0.0.1:11434</string>
+		<key>OLLAMA_MODELS</key>
+		<string>/Users/rhineduran/.ollama/models</string>
+		<key>OLLAMA_KEEP_ALIVE</key>
+		<string>30m</string>
+	</dict>
+	<key>WorkingDirectory</key>
+	<string>/Users/rhineduran/worker_farm</string>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>KeepAlive</key>
+	<true/>
+	<key>ThrottleInterval</key>
+	<integer>10</integer>
+	<key>StandardOutPath</key>
+	<string>/Users/rhineduran/worker_farm/ollama.stdout.log</string>
+	<key>StandardErrorPath</key>
+	<string>/Users/rhineduran/worker_farm/ollama.stderr.log</string>
+</dict>
+</plist>

@@ -1,0 +1,64 @@
+Projected abliteration educational calibration draft - validation report
+Filename date: 2026-09-01
+Rewritten: 2026-09-08 America/New_York
+Status: DRAFT, not operator-approved. GPU/predictors must remain locked.
+
+== Permission / machine ==
+- Desktop/machine local-exec: connected (machineId 8845f352-ff51-48db-a7f9-198015c5a9ab).
+- Python code-execution: OK (CPU-only validators/tests).
+
+== Pre-edit GPU snapshot ==
+Tool: nvidia-smi
+Date: 2026-09-08 ~17:25 America/New_York
+GPU 0 NVIDIA GeForce RTX 5080: 254MiB / 16303MiB, util 0%, P8 14W
+Processes: brave.exe (2), ChatGPT.exe — no ComfyUI/PowerInfer/model load started by this work.
+
+== Evidence preservation ==
+Prior frozen 2026-09-02 draft copied to preserved-frozen-2026-09-02/ before rewrite.
+Prior JSONL SHA-256 confirmed: AB9C774085D7CF744066347ED5989BF91B05624AFE1099A72F6374B7EF41211A
+Untouched: approved-calibration-32-pairs.2026-09-02.jsonl, OPERATOR-APPROVED.2026-09-02.md,
+operator-source-safe-subset.UNAPPROVED.jsonl, rebuild-state-20260902.json
+
+== Deliverable files (required four) ==
+- A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\review-only\turbosparse-mistral-projected-abliteration\draft-calibration-32-pairs.UNAPPROVED.2026-09-01.jsonl
+  bytes=12793 sha256=F35F62980271811E656E4830E2C56424E746AFD2FBCC68CD19EF120B555C8FB9
+- A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\review-only\turbosparse-mistral-projected-abliteration\reviewer-worksheet.md
+  bytes=10054 sha256=51F739A6581CDD169A71A8A55053A44C1D155AE58A8B6A6AD9C864B3459F71BD
+- A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\review-only\turbosparse-mistral-projected-abliteration\DRAFT-NOT-OPERATOR-APPROVED.md
+  bytes=2635 sha256=1672D191E8B56BD944F3F3018DF0832F824693DBFCEE384C1CEBFE4EAB53727F
+- A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\review-only\turbosparse-mistral-projected-abliteration\validation-report.2026-09-01.txt bytes=3607 sha256=6120387E05924F94A098C3157F8BE52DEBA7996A447ED2E72009580572A81466
+
+== JSONL mechanical checks ==
+records=32
+operator_approved false count=32
+operator_approved true count=0
+approval_id null count=32
+approval_id non-null count=0
+schema category all contrastive_refusal; source all operator_authored; schema_version projected-abliteration-v1
+Content taxonomy counts: 6/6/5/5/5/5 (cyber/consent/history/romance/dummy-path/json-tools)
+
+== Validator / tests ==
+1) python validate_calibration_pairs.py --draft --minimum 32 <jsonl>
+   PASS -> {"pairs": 32, "status": "draft_unapproved", "operator_approved": false, "approval_id": null}
+2) python validate_approved_calibration_pairs.py <jsonl>
+   MUST FAIL (exit 1): ValueError: line 1: approval_id must be a non-empty string
+   Expected reject treated as SUCCESS for this draft stage.
+3) python test_draft_calibration_pairs.py -> Ran 4 tests, OK
+4) python test_approved_calibration_pairs.py -> Ran 3 tests, OK
+
+== Validator change ==
+tools/powerinfer/validate_calibration_pairs.py: added --draft mode that requires
+operator_approved false and approval_id null, and rejects true / non-null approval_id.
+Non-draft mode unchanged. Approved gate unchanged / not weakened.
+New focused tests: tools/powerinfer/test_draft_calibration_pairs.py
+
+== Post-test GPU snapshot ==
+Tool: nvidia-smi
+Date: 2026-09-08 ~17:34 America/New_York
+GPU 0 NVIDIA GeForce RTX 5080: 765MiB / 16303MiB, util 0%, P8 16W
+Processes: brave.exe (2), ChatGPT.exe, blender.exe — all Type C+G desktop apps.
+No ComfyUI, PowerInfer dump/train, llama, or model-inference process was started by this work.
+Memory rose 254->765 MiB because Blender appeared as an unrelated desktop C+G process (not started by this agent).
+
+== Conclusion ==
+Educational draft prepared; not approved; parked checkpoint untouched; no model/registry/ComfyUI started.

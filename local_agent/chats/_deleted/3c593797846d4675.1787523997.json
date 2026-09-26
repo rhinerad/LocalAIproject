@@ -1,0 +1,18 @@
+{
+  "id": "3c593797846d4675",
+  "title": "What does this file say? --- attached: notes.txt…",
+  "created": 1787109435.2774606,
+  "updated": 1787109444.6354532,
+  "messages": [
+    {
+      "role": "user",
+      "content": "What does this file say?\n\n--- attached: notes.txt ---\nThe quick brown fox jumped over the lazy dog. This is a test file.",
+      "at": 1787109435.3124573
+    },
+    {
+      "role": "assistant",
+      "content": "This file says \"The quick brown fox jumped over the lazy dog. This is a test file.\"",
+      "at": 1787109444.6354532
+    }
+  ]
+}

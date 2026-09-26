@@ -1,0 +1,18 @@
+{
+  "id": "2fc483fad02441e9",
+  "title": "Search the web for: what is the Qwen3 MoE model …",
+  "created": 1787121386.002879,
+  "updated": 1787121451.2582443,
+  "messages": [
+    {
+      "role": "user",
+      "content": "Search the web for: what is the Qwen3 MoE model architecture",
+      "at": 1787121386.0098786
+    },
+    {
+      "role": "assistant",
+      "content": "Qwen3 is the latest version of the Qwen model family, which includes large language models (LLMs) designed to advance performance, efficiency, and multilingual capabilities. The Qwen3 series consists of both dense and Mixture-of-Expert (MoE) architectures, with parameter scales ranging from 0.6 billion to 235 billion parameters. A key innovation in Qwen3 is the combination of dense models, which are traditional and established, with computationally efficient MoE designs that allow for more efficient use of resources.\n\nThe MoE architecture within Qwen3 allows for different sub-models (experts) to handle different parts of the input, leading to better performance and efficiency. This approach is particularly beneficial in scenarios where the model needs to process a wide range of tasks or languages, as each expert can be specialized for a specific task or language.\n\nQwen3 also introduces hybrid thinking modes, which enable the model to switch between different modes of operation based on the input context, further enhancing its capabilities. The model's multilingual capabilities have been significantly improved, allowing it to handle a wide range of languages with high proficiency.\n\nOverall, Qwen3 represents a significant advancement in the field of AI models, offering improved performance, efficiency, and multilingual capabilities through its innovative architecture and design principles.",
+      "at": 1787121451.2577147
+    }
+  ]
+}

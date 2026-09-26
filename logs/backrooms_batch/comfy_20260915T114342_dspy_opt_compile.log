@@ -1,0 +1,1052 @@
+[32m[INFO][0m setup plugin alembic.autogenerate.schemas
+[32m[INFO][0m setup plugin alembic.autogenerate.tables
+[32m[INFO][0m setup plugin alembic.autogenerate.types
+[32m[INFO][0m setup plugin alembic.autogenerate.constraints
+[32m[INFO][0m setup plugin alembic.autogenerate.defaults
+[32m[INFO][0m setup plugin alembic.autogenerate.comments
+[1m[33m[WARNING][0m On windows we are currently forcing single GPU mode in ComfyUI due to a Nvidia related issue, if you want to disable this use: --cuda-device all
+[32m[INFO][0m Adding extra search path checkpoints A:\Users\rhine\ComfyUI-Shared\models\checkpoints
+[32m[INFO][0m Adding extra search path loras A:\Users\rhine\ComfyUI-Shared\models\loras
+[32m[INFO][0m Adding extra search path controlnet A:\Users\rhine\ComfyUI-Shared\models\controlnet
+[32m[INFO][0m Adding extra search path clip_vision A:\Users\rhine\ComfyUI-Shared\models\clip_vision
+[32m[INFO][0m Adding extra search path ipadapter A:\Users\rhine\ComfyUI-Shared\models\ipadapter
+[32m[INFO][0m Adding extra search path text_encoders A:\Users\rhine\ComfyUI-Shared\models\text_encoders
+[32m[INFO][0m Adding extra search path insightface A:\Users\rhine\ComfyUI-Shared\models\insightface
+[32m[INFO][0m Adding extra search path liveportrait A:\Users\rhine\ComfyUI-Shared\models\liveportrait
+[32m[INFO][0m Adding extra search path ultralytics A:\Users\rhine\ComfyUI-Shared\models\ultralytics
+[32m[INFO][0m Adding extra search path ultralytics_bbox A:\Users\rhine\ComfyUI-Shared\models\ultralytics\bbox
+[32m[INFO][0m Adding extra search path ultralytics_segm A:\Users\rhine\ComfyUI-Shared\models\ultralytics\segm
+[32m[INFO][0m Adding extra search path unet A:\Users\rhine\ComfyUI-Shared\models\unet
+[32m[INFO][0m Adding extra search path unet A:\Users\rhine\ComfyUI-Shared\models\diffusion_models
+[32m[INFO][0m Adding extra search path vae A:\Users\rhine\ComfyUI-Shared\models\vae
+[32m[INFO][0m Adding extra search path diffusion_models A:\Users\rhine\Downloads\minimax and realprovisualXL
+[32m[INFO][0m Adding extra search path checkpoints A:\Users\rhine\Downloads\minimax and realprovisualXL
+[32m[INFO][0m Adding extra search path controlnet A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_controlnet_aux\ckpts\hr16\ControlNet-HandRefiner-pruned
+[32m[INFO][0m Prestartup Skipping ComfyUI-Easy-Use due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Prestartup Skipping comfyui-manager due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Prestartup Skipping rgthree-comfy due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Found comfy_kitchen backend hip: {'available': False, 'disabled': False, 'unavailable_reason': 'PyTorch ROCm/HIP runtime not available', 'capabilities': []}
+[32m[INFO][0m Found comfy_kitchen backend cuda: {'available': True, 'disabled': False, 'unavailable_reason': None, 'capabilities': ['adaln', 'apply_rope', 'apply_rope1', 'apply_rope1_', 'apply_rope_', 'apply_rope_split_half', 'apply_rope_split_half1', 'apply_rope_split_half1_', 'apply_rope_split_half_', 'convrot_w4a4_linear', 'dequantize_convrot_w4a4_weight', 'dequantize_int8_convrot_weight', 'dequantize_int8_convrot_weight_dtype', 'dequantize_int8_simple', 'dequantize_int8_simple_dtype', 'dequantize_nvfp4', 'dequantize_per_tensor_fp8', 'dequantize_w4a8_int8_weight', 'gemv_awq_w4a16', 'int8_linear', 'na3d', 'prepare_int4_weight_for_int8_linear', 'quantize_and_rotate_rowwise', 'quantize_convrot_w4a4_weight', 'quantize_int8_convrot_weight', 'quantize_int8_rowwise', 'quantize_int8_tensorwise', 'quantize_mxfp8', 'quantize_nvfp4', 'quantize_per_tensor_fp8', 'quantize_svdquant_w4a4', 'quantize_w4a8_int8_weight', 'rms_adaln', 'rms_rope', 'rms_rope1', 'rms_rope1_', 'rms_rope_', 'rms_rope_split_half', 'rms_rope_split_half1', 'rms_rope_split_half1_', 'rms_rope_split_half_', 'rotate_int8_convrot_weight', 'scaled_mm_nvfp4', 'scaled_mm_svdquant_w4a4', 'stochastic_rounding_fp8', 'w4a8_int8_linear']}
+[32m[INFO][0m Found comfy_kitchen backend eager: {'available': True, 'disabled': False, 'unavailable_reason': None, 'capabilities': ['adaln', 'apply_rope', 'apply_rope1', 'apply_rope1_', 'apply_rope_', 'apply_rope_split_half', 'apply_rope_split_half1', 'apply_rope_split_half1_', 'apply_rope_split_half_', 'convrot_w4a4_linear', 'dequantize_convrot_w4a4_weight', 'dequantize_int8_convrot_weight', 'dequantize_int8_convrot_weight_dtype', 'dequantize_int8_embedding', 'dequantize_int8_simple', 'dequantize_int8_simple_dtype', 'dequantize_mxfp8', 'dequantize_nvfp4', 'dequantize_per_tensor_fp8', 'dequantize_w4a8_int8_weight', 'gemv_awq_w4a16', 'int8_linear', 'na3d', 'prepare_int4_weight_for_int8_linear', 'quantize_and_rotate_rowwise', 'quantize_convrot_w4a4_weight', 'quantize_int8_convrot_weight', 'quantize_int8_rowwise', 'quantize_int8_tensorwise', 'quantize_mxfp8', 'quantize_nvfp4', 'quantize_per_tensor_fp8', 'quantize_svdquant_w4a4', 'quantize_w4a8_int8_weight', 'rms_adaln', 'rms_rope', 'rms_rope1', 'rms_rope1_', 'rms_rope_', 'rms_rope_split_half', 'rms_rope_split_half1', 'rms_rope_split_half1_', 'rms_rope_split_half_', 'rotate_int8_convrot_weight', 'scaled_mm_mxfp8', 'scaled_mm_nvfp4', 'scaled_mm_svdquant_w4a4', 'stochastic_rounding_fp8', 'w4a8_int8_linear']}
+[32m[INFO][0m Found comfy_kitchen backend triton: {'available': True, 'disabled': True, 'unavailable_reason': None, 'capabilities': ['adaln', 'apply_rope', 'apply_rope1', 'apply_rope1_', 'apply_rope_', 'apply_rope_split_half', 'apply_rope_split_half1', 'apply_rope_split_half1_', 'apply_rope_split_half_', 'dequantize_nvfp4', 'dequantize_per_tensor_fp8', 'int8_linear', 'na3d', 'quantize_and_rotate_rowwise', 'quantize_int8_rowwise', 'quantize_mxfp8', 'quantize_nvfp4', 'quantize_per_tensor_fp8', 'rms_adaln', 'rms_rope', 'rms_rope1', 'rms_rope1_', 'rms_rope_', 'rms_rope_split_half', 'rms_rope_split_half1', 'rms_rope_split_half1_', 'rms_rope_split_half_', 'w4a8_int8_linear']}
+[32m[INFO][0m Checkpoint files will always be loaded safely.
+[32m[INFO][0m Total VRAM 16303 MB, total RAM 31621 MB
+[32m[INFO][0m pytorch version: 2.10.0+cu130
+[32m[INFO][0m Set vram state to: NORMAL_VRAM
+[32m[INFO][0m Device: cuda:0 NVIDIA GeForce RTX 5080 : cudaMallocAsync
+[32m[INFO][0m Using async weight offloading with 2 streams
+[32m[INFO][0m Enabled pinned memory 12648.0
+[32m[INFO][0m working around nvidia conv3d memory bug.
+[32m[INFO][0m Using pytorch attention
+[32m[INFO][0m aimdo: src-win/cuda-detour.c:38:INFO:aimdo_setup_hooks: installing 6 hooks
+[32m[INFO][0m aimdo: src/control.c:262:INFO:comfy-aimdo NVML pressure enabled
+[32m[INFO][0m aimdo: src-win/shmem-detect.c:80:INFO:comfy-aimdo WDDM adapter match: NVIDIA GeForce RTX 5080 runtime_luid=00000000:00011502 dxgi_luid=00000000:00011502
+[32m[INFO][0m aimdo: src/control.c:277:INFO:comfy-aimdo inited for GPU: NVIDIA GeForce RTX 5080 (VRAM: 16302 MB)
+[32m[INFO][0m DynamicVRAM support detected and enabled
+[32m[INFO][0m Python version: 3.13.12 (main, Feb 12 2026, 00:38:53) [MSC v.1944 64 bit (AMD64)]
+[32m[INFO][0m ComfyUI version: 0.34.0
+[32m[INFO][0m comfy-aimdo version: 0.5.1
+[32m[INFO][0m comfy-kitchen version: 0.2.31
+[32m[INFO][0m comfyui-frontend-package version: 1.51.9
+[32m[INFO][0m comfyui-workflow-templates version: 0.11.54
+[32m[INFO][0m comfyui-embedded-docs version: 0.5.10
+[32m[INFO][0m comfy-kitchen version: 0.2.31
+[32m[INFO][0m comfy-aimdo version: 0.5.1
+[32m[INFO][0m [Prompt Server] web root: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\comfyui_frontend_package\static
+[32m[INFO][0m Asset seeder disabled
+[32m[INFO][0m No OpenGL_accelerate module loaded: No module named 'OpenGL_accelerate'
+[32m[INFO][0m Skipping cg-use-everywhere due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfy-image-saver due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfy-pilot due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyLiterals due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-advancedliveportrait due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-agent-panel due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-art-venture due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-AutoCropFaces due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-custom-scripts due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-DaSiWa-Nodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-DBZ-Voice due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-dream-project due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-Easy-Use due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping Comfyui-ergouzi-Nodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-feihou-easy-h3 due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-find-perfect-resolution due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-florence2 due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-frame-interpolation due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-FramePackWrapper due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-FreeMemory due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m ComfyUI-GGUF: Allowing full torch compile
+[32m[INFO][0m Skipping ComfyUI-GIMM-VFI due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-Hunyuan3DWrapper due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-image-saver due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m ### Loading: ComfyUI-Impact-Pack (V8.28.3)
+[1m[33m[WARNING][0m 
+----------------------------------------------------------------------------
+[Impact Pack] The SAM2 functionality is unavailable because the `facebook/sam2` dependency is not installed.
+
+Installation command:
+A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Scripts\python.exe -m pip install git+https://github.com/facebookresearch/sam2
+----------------------------------------------------------------------------
+
+[1m[33m[WARNING][0m 
+----------------------------------------------------------------------------
+[Impact Pack] The SAM2 functionality is unavailable because the `facebook/sam2` dependency is not installed.
+
+Installation command:
+A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Scripts\python.exe -m pip install git+https://github.com/facebookresearch/sam2
+----------------------------------------------------------------------------
+
+[1m[33m[WARNING][0m [Impact Pack] custom_wildcards path not found: A:\Users\rhine\Documents\ComfyUI\custom_nodes\comfyui-impact-pack\custom_wildcards. Using default path.
+[32m[INFO][0m [Impact Pack] Wildcard total size (0.00 MB) is within cache limit (50.00 MB). Using full cache mode.
+[32m[INFO][0m ### Loading: ComfyUI-Impact-Subpack (V1.3.5)
+[32m[INFO][0m [Impact Pack] Wildcards loading done.
+[32m[INFO][0m [Impact Pack/Subpack] Using folder_paths to determine whitelist path: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\user\default\ComfyUI-Impact-Subpack\model-whitelist.txt
+[32m[INFO][0m [Impact Pack/Subpack] Ensured whitelist directory exists: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\user\default\ComfyUI-Impact-Subpack
+[32m[INFO][0m [Impact Pack/Subpack] Loaded 0 model(s) from whitelist: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\user\default\ComfyUI-Impact-Subpack\model-whitelist.txt
+[32m[INFO][0m [Impact Subpack] ultralytics_bbox: A:\Users\rhine\ComfyUI-Shared\models\ultralytics\bbox, A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\models\ultralytics\bbox
+[32m[INFO][0m [Impact Subpack] ultralytics_segm: A:\Users\rhine\ComfyUI-Shared\models\ultralytics\segm, A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\models\ultralytics\segm
+[32m[INFO][0m Skipping ComfyUI-Inpaint-CropAndStitch due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-K3NK-ComfyUI-Nodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-kjnodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-levelpixel due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-LTXVideo due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-ltxvideo-registry-mattabyte due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-manager due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-MaxedOut due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-mcp-throwaway-probe due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-MediaMixer due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-MelBandRoFormer due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping Comfyui-Memory_Cleanup due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-mickmumpitz-nodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-MiniMax-H3-Turbo due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-mmaudio due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-mmaudio-suite due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-mxtoolkit due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-NovaSR due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-Olm-DragCrop due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-PainterI2V due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-PainterLongVideo due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-pause due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-preview-text-fix due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-ProportionChanger due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-propost due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-QwenVL-Mod due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-RIFE-TensorRT-Auto due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-rvtools_v2 due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-SeedVR2_VideoUpscaler due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-SUPIR due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-tara-llm-integration due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-unload-model due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-Upscaler-Tensorrt due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-various due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-VFI due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-vslinx-nodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-WanMoeKSampler due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-WanVideoWrapper due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-wd14-tagger due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-Whisper due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-workflow-encrypt due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui_audio_sanitizer due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui_birefnet_ll due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI_Comfyroll_CustomNodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui_controlnet_aux due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui_essentials due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui_ipadapter_plus due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI_JPS-Nodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI_KokoroTTS_MW due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui_layerstyle due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui_nvidia_rtx_nodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI_pose_inter due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI_ProPainter_Nodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI_SeedVR2_Tiler due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI_Selectors due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI_Sonic due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI_tinyterraNodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui_ultimatesdupscale due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping demonalone-nodes-comfyui due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping derfuu_comfyui_moddednodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping efficiency-nodes-comfyui due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping feihou-toolbox due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping focus_nodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping gguf due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping HF-Flux-ComfyUI due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping model_attention_backend_compat due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ostris_nodes_comfyui due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping RES4LYF due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping rgthree-comfy due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping smartmodelloaders-mxd due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping wan22fmlf due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping was-extras due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping was-node-suite-comfyui due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping was-ns due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping websocket_image_save.py due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping whiterabbit due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping zz_sage_dtype_compat due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m 
+Import times for custom nodes:
+[32m[INFO][0m    0.3 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-GGUF
+[32m[INFO][0m    1.1 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-impact-pack
+[32m[INFO][0m    1.2 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-impact-subpack
+[32m[INFO][0m    2.1 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-VideoHelperSuite
+[32m[INFO][0m 
+[32m[INFO][0m Context impl SQLiteImpl.
+[32m[INFO][0m Will assume non-transactional DDL.
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m Starting server
+
+[32m[INFO][0m To see the GUI go to: http://127.0.0.1:8188
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:57<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:57<27:54, 57.75s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<27:54, 57.75s/it]                                     7%|▋         | 2/30 [00:00<00:06,  4.50it/s] 10%|█         | 3/30 [00:00<00:04,  6.51it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.84it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.67it/s] 20%|██        | 6/30 [00:01<00:03,  6.37it/s] 23%|██▎       | 7/30 [00:01<00:03,  6.89it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.64it/s] 30%|███       | 9/30 [00:01<00:03,  6.16it/s] 33%|███▎      | 10/30 [00:01<00:02,  6.97it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.95it/s] 40%|████      | 12/30 [00:01<00:02,  6.65it/s] 43%|████▎     | 13/30 [00:02<00:02,  6.57it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.77it/s] 50%|█████     | 15/30 [00:02<00:02,  6.47it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.48it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.90it/s] 60%|██████    | 18/30 [00:02<00:01,  6.33it/s] 63%|██████▎   | 19/30 [00:03<00:01,  6.97it/s] 67%|██████▋   | 20/30 [00:03<00:01,  6.46it/s] 70%|███████   | 21/30 [00:03<00:01,  6.55it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.80it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.75it/s] 80%|████████  | 24/30 [00:03<00:00,  6.51it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.74it/s] 87%|████████▋ | 26/30 [00:04<00:00,  6.40it/s] 90%|█████████ | 27/30 [00:04<00:00,  6.82it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.41it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.82it/s]100%|██████████| 30/30 [00:04<00:00,  6.56it/s]100%|██████████| 30/30 [00:04<00:00,  6.43it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 92.80 seconds[0m
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:51<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:51<24:45, 51.22s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<24:45, 51.22s/it]                                     7%|▋         | 2/30 [00:00<00:04,  5.70it/s] 10%|█         | 3/30 [00:00<00:04,  6.55it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.85it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.48it/s] 20%|██        | 6/30 [00:00<00:03,  6.75it/s] 23%|██▎       | 7/30 [00:01<00:03,  6.60it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.47it/s] 30%|███       | 9/30 [00:01<00:03,  6.55it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.40it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.85it/s] 40%|████      | 12/30 [00:01<00:02,  6.87it/s] 43%|████▎     | 13/30 [00:02<00:02,  6.58it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.43it/s] 50%|█████     | 15/30 [00:02<00:02,  6.79it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.53it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.55it/s] 60%|██████    | 18/30 [00:02<00:01,  6.40it/s] 63%|██████▎   | 19/30 [00:02<00:01,  7.03it/s] 67%|██████▋   | 20/30 [00:03<00:01,  6.75it/s] 70%|███████   | 21/30 [00:03<00:01,  6.63it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.41it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.34it/s] 80%|████████  | 24/30 [00:03<00:00,  6.99it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.48it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.75it/s] 90%|█████████ | 27/30 [00:04<00:00,  6.57it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.81it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.42it/s]100%|██████████| 30/30 [00:04<00:00,  6.52it/s]100%|██████████| 30/30 [00:04<00:00,  6.54it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 88.80 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m Found quantization metadata version 1
+[32m[INFO][0m Using MixedPrecisionOps for text encoder
+[32m[INFO][0m Requested to load WanTEModel
+[32m[INFO][0m loaded completely;  6419.48 MB loaded, full load: True
+[32m[INFO][0m CLIP/text encoder model load device: cpu, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load WanVAE
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[32m[INFO][0m gguf qtypes: F16 (694), Q4_K (280), Q6_K (120), F32 (1)
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type FLOW
+[32m[INFO][0m Requested to load WAN21
+[32m[INFO][0m loaded completely; 11834.62 MB usable, 9337.18 MB loaded, full load: True
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:02<00:08,  2.95s/it] 50%|█████     | 2/4 [00:04<00:04,  2.33s/it] 75%|███████▌  | 3/4 [00:07<00:02,  2.30s/it]100%|██████████| 4/4 [00:09<00:00,  2.14s/it]100%|██████████| 4/4 [00:09<00:00,  2.25s/it]
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for pix_fmt has been set to yuv420p
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for crf has been set to 19
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for save_metadata has been set to True
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for trim_to_audio has been set to False
+[32m[INFO][0m [32mPrompt executed in 462.75 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:34<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:34<16:34, 34.28s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<16:34, 34.28s/it]                                    10%|█         | 3/30 [00:00<00:03,  8.53it/s] 13%|█▎        | 4/30 [00:00<00:04,  6.14it/s] 17%|█▋        | 5/30 [00:00<00:03,  7.04it/s] 20%|██        | 6/30 [00:00<00:03,  6.76it/s] 23%|██▎       | 7/30 [00:01<00:03,  6.63it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.50it/s] 30%|███       | 9/30 [00:01<00:03,  6.88it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.47it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.46it/s] 40%|████      | 12/30 [00:01<00:02,  6.89it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.59it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.37it/s] 50%|█████     | 15/30 [00:02<00:02,  7.07it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.34it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.86it/s] 60%|██████    | 18/30 [00:02<00:01,  6.63it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.53it/s] 67%|██████▋   | 20/30 [00:03<00:01,  6.43it/s] 70%|███████   | 21/30 [00:03<00:01,  6.88it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.62it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.75it/s] 80%|████████  | 24/30 [00:03<00:00,  6.47it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.61it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.42it/s] 90%|█████████ | 27/30 [00:04<00:00,  6.79it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.55it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.45it/s]100%|██████████| 30/30 [00:04<00:00,  6.89it/s]100%|██████████| 30/30 [00:04<00:00,  6.60it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 53.11 seconds[0m
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:14<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:14<06:52, 14.23s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<06:52, 14.23s/it]                                     7%|▋         | 2/30 [00:00<00:02,  9.65it/s] 10%|█         | 3/30 [00:00<00:04,  6.74it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.59it/s] 17%|█▋        | 5/30 [00:00<00:03,  7.00it/s] 20%|██        | 6/30 [00:00<00:03,  6.43it/s] 23%|██▎       | 7/30 [00:00<00:03,  6.58it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.77it/s] 30%|███       | 9/30 [00:01<00:03,  6.58it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.58it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.35it/s] 40%|████      | 12/30 [00:01<00:02,  6.40it/s] 43%|████▎     | 13/30 [00:01<00:02,  7.04it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.58it/s] 50%|█████     | 15/30 [00:02<00:02,  6.54it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.79it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.52it/s] 60%|██████    | 18/30 [00:02<00:01,  6.55it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.81it/s] 67%|██████▋   | 20/30 [00:02<00:01,  6.46it/s] 70%|███████   | 21/30 [00:03<00:01,  6.77it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.16it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.81it/s] 80%|████████  | 24/30 [00:03<00:00,  6.89it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.61it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.39it/s] 90%|█████████ | 27/30 [00:03<00:00,  6.92it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.41it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.95it/s]100%|██████████| 30/30 [00:04<00:00,  6.33it/s]100%|██████████| 30/30 [00:04<00:00,  6.76it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 31.66 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m Found quantization metadata version 1
+[32m[INFO][0m Using MixedPrecisionOps for text encoder
+[32m[INFO][0m Requested to load WanTEModel
+[32m[INFO][0m loaded completely;  6419.48 MB loaded, full load: True
+[32m[INFO][0m CLIP/text encoder model load device: cpu, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load WanVAE
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[32m[INFO][0m gguf qtypes: F16 (694), Q4_K (280), Q6_K (120), F32 (1)
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type FLOW
+[32m[INFO][0m Requested to load WAN21
+[32m[INFO][0m loaded completely; 11768.62 MB usable, 9337.18 MB loaded, full load: True
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:02<00:06,  2.11s/it] 50%|█████     | 2/4 [00:03<00:03,  1.98s/it] 75%|███████▌  | 3/4 [00:05<00:01,  1.94s/it]100%|██████████| 4/4 [00:07<00:00,  1.92s/it]100%|██████████| 4/4 [00:07<00:00,  1.94s/it]
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for pix_fmt has been set to yuv420p
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for crf has been set to 19
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for save_metadata has been set to True
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for trim_to_audio has been set to False
+[32m[INFO][0m [32mPrompt executed in 406.62 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:34<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:34<16:32, 34.23s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<16:32, 34.23s/it]                                     7%|▋         | 2/30 [00:00<00:03,  7.04it/s] 10%|█         | 3/30 [00:00<00:03,  6.98it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.64it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.29it/s] 20%|██        | 6/30 [00:00<00:03,  6.76it/s] 23%|██▎       | 7/30 [00:01<00:03,  6.64it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.75it/s] 30%|███       | 9/30 [00:01<00:03,  6.47it/s] 33%|███▎      | 10/30 [00:01<00:02,  6.83it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.43it/s] 40%|████      | 12/30 [00:01<00:02,  6.45it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.97it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.49it/s] 50%|█████     | 15/30 [00:02<00:02,  6.81it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.55it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.51it/s] 60%|██████    | 18/30 [00:02<00:01,  6.82it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.47it/s] 67%|██████▋   | 20/30 [00:02<00:01,  6.94it/s] 70%|███████   | 21/30 [00:03<00:01,  6.48it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.81it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.14it/s] 80%|████████  | 24/30 [00:03<00:00,  7.08it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.72it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.45it/s] 90%|█████████ | 27/30 [00:04<00:00,  6.60it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.86it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.39it/s]100%|██████████| 30/30 [00:04<00:00,  6.82it/s]100%|██████████| 30/30 [00:04<00:00,  6.67it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 53.00 seconds[0m
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:21<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:21<10:21, 21.43s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<10:21, 21.43s/it]                                    10%|█         | 3/30 [00:00<00:03,  8.97it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.58it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.57it/s] 20%|██        | 6/30 [00:00<00:03,  6.79it/s] 23%|██▎       | 7/30 [00:01<00:03,  6.43it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.43it/s] 30%|███       | 9/30 [00:01<00:03,  6.91it/s] 33%|███▎      | 10/30 [00:01<00:02,  6.90it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.52it/s] 40%|████      | 12/30 [00:01<00:02,  6.38it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.89it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.58it/s] 50%|█████     | 15/30 [00:02<00:02,  6.54it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.82it/s] 57%|█████▋    | 17/30 [00:02<00:02,  6.48it/s] 60%|██████    | 18/30 [00:02<00:01,  6.51it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.95it/s] 67%|██████▋   | 20/30 [00:03<00:01,  6.36it/s] 70%|███████   | 21/30 [00:03<00:01,  6.53it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.83it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.41it/s] 80%|████████  | 24/30 [00:03<00:00,  6.76it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.59it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.87it/s] 90%|█████████ | 27/30 [00:04<00:00,  6.48it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.48it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.93it/s]100%|██████████| 30/30 [00:04<00:00,  6.50it/s]100%|██████████| 30/30 [00:04<00:00,  6.64it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 40.15 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m Found quantization metadata version 1
+[32m[INFO][0m Using MixedPrecisionOps for text encoder
+[32m[INFO][0m Requested to load WanTEModel
+[32m[INFO][0m loaded completely;  6419.48 MB loaded, full load: True
+[32m[INFO][0m CLIP/text encoder model load device: cpu, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load WanVAE
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[32m[INFO][0m gguf qtypes: F16 (694), Q4_K (280), Q6_K (120), F32 (1)
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type FLOW
+[32m[INFO][0m Requested to load WAN21
+[32m[INFO][0m loaded completely; 11768.62 MB usable, 9337.18 MB loaded, full load: True
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:02<00:06,  2.02s/it] 50%|█████     | 2/4 [00:03<00:03,  1.94s/it] 75%|███████▌  | 3/4 [00:05<00:01,  1.91s/it]100%|██████████| 4/4 [00:07<00:00,  1.91s/it]100%|██████████| 4/4 [00:07<00:00,  1.92s/it]
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for pix_fmt has been set to yuv420p
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for crf has been set to 19
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for save_metadata has been set to True
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for trim_to_audio has been set to False
+[32m[INFO][0m [32mPrompt executed in 398.66 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:31<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:31<15:10, 31.39s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<15:10, 31.39s/it]                                     7%|▋         | 2/30 [00:00<00:03,  9.14it/s] 10%|█         | 3/30 [00:00<00:03,  8.86it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.53it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.41it/s] 20%|██        | 6/30 [00:00<00:03,  6.73it/s] 23%|██▎       | 7/30 [00:00<00:03,  6.94it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.40it/s] 30%|███       | 9/30 [00:01<00:03,  6.48it/s] 33%|███▎      | 10/30 [00:01<00:02,  6.90it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.53it/s] 40%|████      | 12/30 [00:01<00:02,  6.81it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.45it/s] 47%|████▋     | 14/30 [00:01<00:02,  6.78it/s] 50%|█████     | 15/30 [00:02<00:02,  6.53it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.53it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.80it/s] 60%|██████    | 18/30 [00:02<00:01,  6.62it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.32it/s] 67%|██████▋   | 20/30 [00:02<00:01,  6.42it/s] 70%|███████   | 21/30 [00:03<00:01,  7.03it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.76it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.56it/s] 80%|████████  | 24/30 [00:03<00:00,  6.49it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.84it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.51it/s] 90%|█████████ | 27/30 [00:03<00:00,  6.92it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.50it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.47it/s]100%|██████████| 30/30 [00:04<00:00,  6.41it/s]100%|██████████| 30/30 [00:04<00:00,  6.79it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 49.48 seconds[0m
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:25<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:25<12:23, 25.64s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<12:23, 25.64s/it]                                     7%|▋         | 2/30 [00:00<00:07,  3.94it/s] 10%|█         | 3/30 [00:00<00:04,  6.34it/s] 13%|█▎        | 4/30 [00:00<00:03,  7.15it/s] 17%|█▋        | 5/30 [00:00<00:04,  6.22it/s] 20%|██        | 6/30 [00:01<00:03,  6.85it/s] 23%|██▎       | 7/30 [00:01<00:03,  6.49it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.98it/s] 30%|███       | 9/30 [00:01<00:03,  6.71it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.44it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.53it/s] 40%|████      | 12/30 [00:02<00:02,  6.81it/s] 43%|████▎     | 13/30 [00:02<00:02,  6.51it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.54it/s] 50%|█████     | 15/30 [00:02<00:02,  6.97it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.43it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.82it/s] 60%|██████    | 18/30 [00:02<00:01,  6.61it/s] 63%|██████▎   | 19/30 [00:03<00:01,  6.68it/s] 67%|██████▋   | 20/30 [00:03<00:01,  6.53it/s] 70%|███████   | 21/30 [00:03<00:01,  6.72it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.38it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.93it/s] 80%|████████  | 24/30 [00:03<00:00,  6.55it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.42it/s] 87%|████████▋ | 26/30 [00:04<00:00,  6.96it/s] 90%|█████████ | 27/30 [00:04<00:00,  6.53it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.79it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.49it/s]100%|██████████| 30/30 [00:04<00:00,  6.41it/s]100%|██████████| 30/30 [00:04<00:00,  6.34it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 43.55 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m Found quantization metadata version 1
+[32m[INFO][0m Using MixedPrecisionOps for text encoder
+[32m[INFO][0m Requested to load WanTEModel
+[32m[INFO][0m loaded completely;  6419.48 MB loaded, full load: True
+[32m[INFO][0m CLIP/text encoder model load device: cpu, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load WanVAE
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[32m[INFO][0m gguf qtypes: F16 (694), Q4_K (280), Q6_K (120), F32 (1)
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type FLOW
+[32m[INFO][0m Requested to load WAN21
+[32m[INFO][0m loaded completely; 11768.62 MB usable, 9337.18 MB loaded, full load: True
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:02<00:06,  2.10s/it] 50%|█████     | 2/4 [00:03<00:03,  1.97s/it] 75%|███████▌  | 3/4 [00:05<00:01,  1.93s/it]100%|██████████| 4/4 [00:07<00:00,  1.92s/it]100%|██████████| 4/4 [00:07<00:00,  1.94s/it]
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for pix_fmt has been set to yuv420p
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for crf has been set to 19
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for save_metadata has been set to True
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for trim_to_audio has been set to False
+[32m[INFO][0m [32mPrompt executed in 354.91 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:34<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:34<16:31, 34.19s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<16:31, 34.19s/it]                                     7%|▋         | 2/30 [00:00<00:03,  8.22it/s] 10%|█         | 3/30 [00:00<00:02,  9.38it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.79it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.51it/s] 20%|██        | 6/30 [00:00<00:03,  6.58it/s] 23%|██▎       | 7/30 [00:00<00:03,  6.83it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.52it/s] 30%|███       | 9/30 [00:01<00:03,  6.53it/s] 33%|███▎      | 10/30 [00:01<00:02,  6.89it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.53it/s] 40%|████      | 12/30 [00:01<00:02,  6.45it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.80it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.55it/s] 50%|█████     | 15/30 [00:02<00:02,  6.33it/s] 53%|█████▎    | 16/30 [00:02<00:01,  7.10it/s] 57%|█████▋    | 17/30 [00:02<00:02,  6.43it/s] 60%|██████    | 18/30 [00:02<00:01,  6.80it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.46it/s] 67%|██████▋   | 20/30 [00:02<00:01,  6.58it/s] 70%|███████   | 21/30 [00:03<00:01,  6.96it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.55it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.47it/s] 80%|████████  | 24/30 [00:03<00:00,  6.92it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.58it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.40it/s] 90%|█████████ | 27/30 [00:03<00:00,  6.97it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.53it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.51it/s]100%|██████████| 30/30 [00:04<00:00,  6.73it/s]100%|██████████| 30/30 [00:04<00:00,  6.79it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 52.81 seconds[0m
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:09<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:09<04:28,  9.26s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<04:28,  9.26s/it]                                     7%|▋         | 2/30 [00:00<00:03,  8.84it/s] 10%|█         | 3/30 [00:00<00:02,  9.17it/s] 13%|█▎        | 4/30 [00:00<00:04,  6.44it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.56it/s] 20%|██        | 6/30 [00:00<00:03,  6.84it/s] 23%|██▎       | 7/30 [00:00<00:03,  6.40it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.93it/s] 30%|███       | 9/30 [00:01<00:03,  6.38it/s] 33%|███▎      | 10/30 [00:01<00:02,  6.87it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.78it/s] 40%|████      | 12/30 [00:01<00:02,  6.38it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.56it/s] 47%|████▋     | 14/30 [00:01<00:02,  6.95it/s] 50%|█████     | 15/30 [00:02<00:02,  6.55it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.39it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.84it/s] 60%|██████    | 18/30 [00:02<00:01,  6.47it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.49it/s] 67%|██████▋   | 20/30 [00:02<00:01,  6.85it/s] 70%|███████   | 21/30 [00:03<00:01,  6.52it/s] 73%|███████▎  | 22/30 [00:03<00:01,  7.06it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.32it/s] 80%|████████  | 24/30 [00:03<00:00,  6.92it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.56it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.53it/s] 90%|█████████ | 27/30 [00:03<00:00,  6.89it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.49it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.76it/s]100%|██████████| 30/30 [00:04<00:00,  6.40it/s]100%|██████████| 30/30 [00:04<00:00,  6.80it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 26.14 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m Found quantization metadata version 1
+[32m[INFO][0m Using MixedPrecisionOps for text encoder
+[32m[INFO][0m Requested to load WanTEModel
+[32m[INFO][0m loaded completely;  6419.48 MB loaded, full load: True
+[32m[INFO][0m CLIP/text encoder model load device: cpu, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load WanVAE
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[32m[INFO][0m gguf qtypes: F16 (694), Q4_K (280), Q6_K (120), F32 (1)
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type FLOW
+[32m[INFO][0m Requested to load WAN21
+[32m[INFO][0m loaded completely; 11768.62 MB usable, 9337.18 MB loaded, full load: True
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:02<00:06,  2.04s/it] 50%|█████     | 2/4 [00:03<00:03,  1.95s/it] 75%|███████▌  | 3/4 [00:05<00:01,  1.92s/it]100%|██████████| 4/4 [00:07<00:00,  1.91s/it]100%|██████████| 4/4 [00:07<00:00,  1.93s/it]
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for pix_fmt has been set to yuv420p
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for crf has been set to 19
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for save_metadata has been set to True
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for trim_to_audio has been set to False
+[32m[INFO][0m [32mPrompt executed in 370.21 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:31<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:31<15:10, 31.38s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<15:10, 31.38s/it]                                     7%|▋         | 2/30 [00:00<00:03,  7.87it/s] 10%|█         | 3/30 [00:00<00:04,  6.46it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.89it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.40it/s] 20%|██        | 6/30 [00:00<00:03,  6.48it/s] 23%|██▎       | 7/30 [00:01<00:03,  6.87it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.54it/s] 30%|███       | 9/30 [00:01<00:03,  6.92it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.41it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.80it/s] 40%|████      | 12/30 [00:01<00:02,  6.47it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.71it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.47it/s] 50%|█████     | 15/30 [00:02<00:02,  6.49it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.39it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.96it/s] 60%|██████    | 18/30 [00:02<00:01,  6.51it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.43it/s] 67%|██████▋   | 20/30 [00:02<00:01,  6.81it/s] 70%|███████   | 21/30 [00:03<00:01,  6.53it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.32it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.60it/s] 80%|████████  | 24/30 [00:03<00:00,  6.47it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.41it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.87it/s] 90%|█████████ | 27/30 [00:04<00:00,  6.43it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.49it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.88it/s]100%|██████████| 30/30 [00:04<00:00,  6.56it/s]100%|██████████| 30/30 [00:04<00:00,  6.66it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 51.61 seconds[0m
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:30<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:30<14:40, 30.38s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<14:40, 30.38s/it]                                     7%|▋         | 2/30 [00:00<00:02,  9.92it/s] 10%|█         | 3/30 [00:00<00:03,  8.03it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.65it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.81it/s] 20%|██        | 6/30 [00:00<00:03,  6.51it/s] 23%|██▎       | 7/30 [00:00<00:03,  6.71it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.63it/s] 30%|███       | 9/30 [00:01<00:03,  6.51it/s] 33%|███▎      | 10/30 [00:01<00:02,  6.88it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.46it/s] 40%|████      | 12/30 [00:01<00:02,  6.86it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.39it/s] 47%|████▋     | 14/30 [00:01<00:02,  6.49it/s] 50%|█████     | 15/30 [00:02<00:02,  7.04it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.32it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.98it/s] 60%|██████    | 18/30 [00:02<00:01,  6.45it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.84it/s] 67%|██████▋   | 20/30 [00:02<00:01,  6.52it/s] 70%|███████   | 21/30 [00:03<00:01,  6.56it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.84it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.48it/s] 80%|████████  | 24/30 [00:03<00:00,  6.47it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.85it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.51it/s] 90%|█████████ | 27/30 [00:03<00:00,  6.93it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.35it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.56it/s]100%|██████████| 30/30 [00:04<00:00,  6.95it/s]100%|██████████| 30/30 [00:04<00:00,  6.83it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 61.30 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m Found quantization metadata version 1
+[32m[INFO][0m Using MixedPrecisionOps for text encoder
+[32m[INFO][0m Requested to load WanTEModel
+[32m[INFO][0m loaded completely;  6419.48 MB loaded, full load: True
+[32m[INFO][0m CLIP/text encoder model load device: cpu, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load WanVAE
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[32m[INFO][0m gguf qtypes: F16 (694), Q4_K (280), Q6_K (120), F32 (1)
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type FLOW
+[32m[INFO][0m Requested to load WAN21
+[32m[INFO][0m loaded completely; 11768.62 MB usable, 9337.18 MB loaded, full load: True
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:02<00:06,  2.12s/it] 50%|█████     | 2/4 [00:03<00:03,  1.98s/it] 75%|███████▌  | 3/4 [00:05<00:01,  1.94s/it]100%|██████████| 4/4 [00:07<00:00,  1.92s/it]100%|██████████| 4/4 [00:07<00:00,  1.94s/it]
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for pix_fmt has been set to yuv420p
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for crf has been set to 19
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for save_metadata has been set to True
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for trim_to_audio has been set to False
+[32m[INFO][0m [32mPrompt executed in 401.40 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:39<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:39<19:12, 39.76s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<19:12, 39.76s/it]                                     7%|▋         | 2/30 [00:00<00:03,  7.98it/s] 10%|█         | 3/30 [00:00<00:03,  6.84it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.52it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.54it/s] 20%|██        | 6/30 [00:00<00:03,  6.83it/s] 23%|██▎       | 7/30 [00:01<00:03,  6.54it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.76it/s] 30%|███       | 9/30 [00:01<00:03,  6.50it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.56it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.91it/s] 40%|████      | 12/30 [00:01<00:02,  6.45it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.83it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.58it/s] 50%|█████     | 15/30 [00:02<00:02,  6.61it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.48it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.86it/s] 60%|██████    | 18/30 [00:02<00:01,  6.44it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.88it/s] 67%|██████▋   | 20/30 [00:02<00:01,  6.52it/s] 70%|███████   | 21/30 [00:03<00:01,  6.56it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.50it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.89it/s] 80%|████████  | 24/30 [00:03<00:00,  6.46it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.87it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.56it/s] 90%|█████████ | 27/30 [00:04<00:00,  6.52it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.95it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.57it/s]100%|██████████| 30/30 [00:04<00:00,  6.45it/s]100%|██████████| 30/30 [00:04<00:00,  6.71it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 60.21 seconds[0m
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:09<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:09<04:48,  9.94s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<04:48,  9.94s/it]                                     7%|▋         | 2/30 [00:00<00:07,  3.72it/s] 10%|█         | 3/30 [00:00<00:04,  6.56it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.66it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.76it/s] 20%|██        | 6/30 [00:01<00:03,  6.40it/s] 23%|██▎       | 7/30 [00:01<00:03,  6.83it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.51it/s] 30%|███       | 9/30 [00:01<00:03,  6.77it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.56it/s] 37%|███▋      | 11/30 [00:01<00:03,  6.30it/s] 40%|████      | 12/30 [00:02<00:02,  7.09it/s] 43%|████▎     | 13/30 [00:02<00:02,  6.31it/s] 47%|████▋     | 14/30 [00:02<00:02,  7.09it/s] 50%|█████     | 15/30 [00:02<00:02,  6.30it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.85it/s] 57%|█████▋    | 17/30 [00:02<00:02,  6.39it/s] 60%|██████    | 18/30 [00:02<00:01,  6.87it/s] 63%|██████▎   | 19/30 [00:03<00:01,  6.51it/s] 67%|██████▋   | 20/30 [00:03<00:01,  6.80it/s] 70%|███████   | 21/30 [00:03<00:01,  6.77it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.55it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.57it/s] 80%|████████  | 24/30 [00:03<00:00,  6.27it/s] 83%|████████▎ | 25/30 [00:04<00:00,  6.63it/s] 87%|████████▋ | 26/30 [00:04<00:00,  7.03it/s] 90%|█████████ | 27/30 [00:04<00:00,  6.60it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.57it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.53it/s]100%|██████████| 30/30 [00:04<00:00,  6.76it/s]100%|██████████| 30/30 [00:04<00:00,  6.30it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 27.77 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m Found quantization metadata version 1
+[32m[INFO][0m Using MixedPrecisionOps for text encoder
+[32m[INFO][0m Requested to load WanTEModel
+[32m[INFO][0m loaded completely;  6419.48 MB loaded, full load: True
+[32m[INFO][0m CLIP/text encoder model load device: cpu, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load WanVAE
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[32m[INFO][0m gguf qtypes: F16 (694), Q4_K (280), Q6_K (120), F32 (1)
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type FLOW
+[32m[INFO][0m Requested to load WAN21
+[32m[INFO][0m loaded completely; 11768.62 MB usable, 9337.18 MB loaded, full load: True
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:02<00:06,  2.08s/it] 50%|█████     | 2/4 [00:03<00:03,  1.96s/it] 75%|███████▌  | 3/4 [00:05<00:01,  1.93s/it]100%|██████████| 4/4 [00:07<00:00,  1.91s/it]100%|██████████| 4/4 [00:07<00:00,  1.93s/it]
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for pix_fmt has been set to yuv420p
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for crf has been set to 19
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for save_metadata has been set to True
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for trim_to_audio has been set to False
+[32m[INFO][0m [32mPrompt executed in 422.24 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:31<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:31<15:02, 31.14s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<15:02, 31.14s/it]                                     7%|▋         | 2/30 [00:00<00:02,  9.39it/s] 10%|█         | 3/30 [00:00<00:03,  8.47it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.80it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.47it/s] 20%|██        | 6/30 [00:00<00:03,  6.60it/s] 23%|██▎       | 7/30 [00:00<00:03,  6.79it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.52it/s] 30%|███       | 9/30 [00:01<00:03,  6.86it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.63it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.51it/s] 40%|████      | 12/30 [00:01<00:02,  6.85it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.46it/s] 47%|████▋     | 14/30 [00:01<00:02,  6.81it/s] 50%|█████     | 15/30 [00:02<00:02,  6.57it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.49it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.85it/s] 60%|██████    | 18/30 [00:02<00:01,  6.44it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.87it/s] 67%|██████▋   | 20/30 [00:02<00:01,  6.54it/s] 70%|███████   | 21/30 [00:03<00:01,  6.42it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.89it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.44it/s] 80%|████████  | 24/30 [00:03<00:00,  6.75it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.56it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.46it/s] 90%|█████████ | 27/30 [00:03<00:00,  6.78it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.49it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.85it/s]100%|██████████| 30/30 [00:04<00:00,  6.54it/s]100%|██████████| 30/30 [00:04<00:00,  6.82it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 49.64 seconds[0m
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:01<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:01<00:33,  1.14s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<00:33,  1.14s/it]                                    10%|█         | 3/30 [00:00<00:02,  9.05it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.61it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.66it/s] 20%|██        | 6/30 [00:00<00:03,  6.59it/s] 23%|██▎       | 7/30 [00:01<00:03,  6.63it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.36it/s] 30%|███       | 9/30 [00:01<00:03,  6.98it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.37it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.87it/s] 40%|████      | 12/30 [00:01<00:02,  6.60it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.46it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.45it/s] 50%|█████     | 15/30 [00:02<00:02,  7.04it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.61it/s] 57%|█████▋    | 17/30 [00:02<00:02,  6.34it/s] 60%|██████    | 18/30 [00:02<00:01,  6.81it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.45it/s] 67%|██████▋   | 20/30 [00:03<00:01,  6.52it/s] 70%|███████   | 21/30 [00:03<00:01,  6.50it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.85it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.43it/s] 80%|████████  | 24/30 [00:03<00:00,  6.87it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.52it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.85it/s] 90%|█████████ | 27/30 [00:04<00:00,  6.50it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.48it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.91it/s]100%|██████████| 30/30 [00:04<00:00,  6.29it/s]100%|██████████| 30/30 [00:04<00:00,  6.62it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 7.32 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m Found quantization metadata version 1
+[32m[INFO][0m Using MixedPrecisionOps for text encoder
+[32m[INFO][0m Requested to load WanTEModel
+[32m[INFO][0m loaded completely;  6419.48 MB loaded, full load: True
+[32m[INFO][0m CLIP/text encoder model load device: cpu, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load WanVAE
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[32m[INFO][0m gguf qtypes: F16 (694), Q4_K (280), Q6_K (120), F32 (1)
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type FLOW
+[32m[INFO][0m Requested to load WAN21
+[32m[INFO][0m loaded completely; 11768.62 MB usable, 9337.18 MB loaded, full load: True
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:02<00:06,  2.12s/it] 50%|█████     | 2/4 [00:03<00:03,  1.97s/it] 75%|███████▌  | 3/4 [00:05<00:01,  1.93s/it]100%|██████████| 4/4 [00:07<00:00,  1.91s/it]100%|██████████| 4/4 [00:07<00:00,  1.94s/it]
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for pix_fmt has been set to yuv420p
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for crf has been set to 19
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for save_metadata has been set to True
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for trim_to_audio has been set to False
+[32m[INFO][0m [32mPrompt executed in 472.37 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:35<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:35<17:22, 35.95s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<17:22, 35.95s/it]                                     7%|▋         | 2/30 [00:00<00:07,  3.72it/s] 10%|█         | 3/30 [00:00<00:04,  6.66it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.89it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.46it/s] 20%|██        | 6/30 [00:01<00:03,  6.57it/s] 23%|██▎       | 7/30 [00:01<00:03,  6.81it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.56it/s] 30%|███       | 9/30 [00:01<00:03,  6.41it/s] 33%|███▎      | 10/30 [00:01<00:02,  7.00it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.75it/s] 40%|████      | 12/30 [00:02<00:02,  6.54it/s] 43%|████▎     | 13/30 [00:02<00:02,  6.49it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.34it/s] 50%|█████     | 15/30 [00:02<00:02,  6.91it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.52it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.93it/s] 60%|██████    | 18/30 [00:02<00:01,  6.46it/s] 63%|██████▎   | 19/30 [00:03<00:01,  6.94it/s] 67%|██████▋   | 20/30 [00:03<00:01,  6.45it/s] 70%|███████   | 21/30 [00:03<00:01,  6.46it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.86it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.54it/s] 80%|████████  | 24/30 [00:03<00:00,  6.41it/s] 83%|████████▎ | 25/30 [00:03<00:00,  7.02it/s] 87%|████████▋ | 26/30 [00:04<00:00,  6.83it/s] 90%|█████████ | 27/30 [00:04<00:00,  6.49it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.63it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.71it/s]100%|██████████| 30/30 [00:04<00:00,  6.42it/s]100%|██████████| 30/30 [00:04<00:00,  6.31it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 58.35 seconds[0m
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:01<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:01<00:31,  1.09s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<00:31,  1.09s/it]                                    10%|█         | 3/30 [00:00<00:03,  8.84it/s] 13%|█▎        | 4/30 [00:00<00:04,  6.44it/s] 17%|█▋        | 5/30 [00:00<00:03,  7.03it/s] 20%|██        | 6/30 [00:00<00:03,  6.33it/s] 23%|██▎       | 7/30 [00:01<00:03,  6.89it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.58it/s] 30%|███       | 9/30 [00:01<00:03,  6.87it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.42it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.88it/s] 40%|████      | 12/30 [00:01<00:02,  6.47it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.90it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.46it/s] 50%|█████     | 15/30 [00:02<00:02,  6.85it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.44it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.79it/s] 60%|██████    | 18/30 [00:02<00:01,  6.50it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.45it/s] 67%|██████▋   | 20/30 [00:03<00:01,  6.90it/s] 70%|███████   | 21/30 [00:03<00:01,  6.42it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.85it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.45it/s] 80%|████████  | 24/30 [00:03<00:00,  6.90it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.37it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.85it/s] 90%|█████████ | 27/30 [00:04<00:00,  6.59it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.46it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.91it/s]100%|██████████| 30/30 [00:04<00:00,  6.32it/s]100%|██████████| 30/30 [00:04<00:00,  6.63it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 7.04 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m Found quantization metadata version 1
+[32m[INFO][0m Using MixedPrecisionOps for text encoder
+[32m[INFO][0m Requested to load WanTEModel
+[32m[INFO][0m loaded completely;  6419.48 MB loaded, full load: True
+[32m[INFO][0m CLIP/text encoder model load device: cpu, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load WanVAE
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[32m[INFO][0m gguf qtypes: F16 (694), Q4_K (280), Q6_K (120), F32 (1)
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type FLOW
+[32m[INFO][0m Requested to load WAN21
+[32m[INFO][0m loaded completely; 11768.62 MB usable, 9337.18 MB loaded, full load: True
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:02<00:06,  2.12s/it] 50%|█████     | 2/4 [00:04<00:03,  1.98s/it] 75%|███████▌  | 3/4 [00:05<00:01,  1.94s/it]100%|██████████| 4/4 [00:07<00:00,  1.92s/it]100%|██████████| 4/4 [00:07<00:00,  1.95s/it]
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for pix_fmt has been set to yuv420p
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for crf has been set to 19
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for save_metadata has been set to True
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for trim_to_audio has been set to False
+[32m[INFO][0m [32mPrompt executed in 410.28 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:31<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:31<15:01, 31.09s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<15:01, 31.09s/it]                                     7%|▋         | 2/30 [00:00<00:02,  9.56it/s] 10%|█         | 3/30 [00:00<00:03,  8.34it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.74it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.53it/s] 20%|██        | 6/30 [00:00<00:03,  6.80it/s] 23%|██▎       | 7/30 [00:00<00:03,  6.59it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.70it/s] 30%|███       | 9/30 [00:01<00:03,  6.44it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.55it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.69it/s] 40%|████      | 12/30 [00:01<00:02,  6.57it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.94it/s] 47%|████▋     | 14/30 [00:01<00:02,  6.31it/s] 50%|█████     | 15/30 [00:02<00:02,  6.91it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.70it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.73it/s] 60%|██████    | 18/30 [00:02<00:01,  6.39it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.89it/s] 67%|██████▋   | 20/30 [00:02<00:01,  6.54it/s] 70%|███████   | 21/30 [00:03<00:01,  6.33it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.85it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.45it/s] 80%|████████  | 24/30 [00:03<00:00,  6.61it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.96it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.38it/s] 90%|█████████ | 27/30 [00:03<00:00,  6.87it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.42it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.80it/s]100%|██████████| 30/30 [00:04<00:00,  6.42it/s]100%|██████████| 30/30 [00:04<00:00,  6.81it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 51.41 seconds[0m
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:01<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:01<00:34,  1.19s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<00:34,  1.19s/it]                                     7%|▋         | 2/30 [00:00<00:02,  9.88it/s] 10%|█         | 3/30 [00:00<00:03,  8.27it/s] 13%|█▎        | 4/30 [00:00<00:04,  6.21it/s] 17%|█▋        | 5/30 [00:00<00:03,  7.09it/s] 20%|██        | 6/30 [00:00<00:03,  6.67it/s] 23%|██▎       | 7/30 [00:00<00:03,  6.23it/s] 27%|██▋       | 8/30 [00:01<00:03,  7.02it/s] 30%|███       | 9/30 [00:01<00:03,  6.42it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.45it/s] 37%|███▋      | 11/30 [00:01<00:02,  7.04it/s] 40%|████      | 12/30 [00:01<00:02,  6.61it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.76it/s] 47%|████▋     | 14/30 [00:01<00:02,  6.48it/s] 50%|█████     | 15/30 [00:02<00:02,  6.83it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.46it/s] 57%|█████▋    | 17/30 [00:02<00:02,  6.45it/s] 60%|██████    | 18/30 [00:02<00:01,  6.98it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.60it/s] 67%|██████▋   | 20/30 [00:02<00:01,  6.59it/s] 70%|███████   | 21/30 [00:03<00:01,  6.33it/s] 73%|███████▎  | 22/30 [00:03<00:01,  7.02it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.37it/s] 80%|████████  | 24/30 [00:03<00:00,  6.93it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.23it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.96it/s] 90%|█████████ | 27/30 [00:03<00:00,  6.74it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.53it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.39it/s]100%|██████████| 30/30 [00:04<00:00,  6.52it/s]100%|██████████| 30/30 [00:04<00:00,  6.81it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 7.29 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m Found quantization metadata version 1
+[32m[INFO][0m Using MixedPrecisionOps for text encoder
+[32m[INFO][0m Requested to load WanTEModel
+[32m[INFO][0m loaded completely;  6419.48 MB loaded, full load: True
+[32m[INFO][0m CLIP/text encoder model load device: cpu, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load WanVAE
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[32m[INFO][0m gguf qtypes: F16 (694), Q4_K (280), Q6_K (120), F32 (1)
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type FLOW
+[32m[INFO][0m Requested to load WAN21
+[32m[INFO][0m loaded completely; 11768.62 MB usable, 9337.18 MB loaded, full load: True
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:04<00:12,  4.17s/it] 50%|█████     | 2/4 [00:06<00:05,  2.98s/it] 75%|███████▌  | 3/4 [00:08<00:02,  2.59s/it]100%|██████████| 4/4 [00:10<00:00,  2.43s/it]100%|██████████| 4/4 [00:10<00:00,  2.66s/it]
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for pix_fmt has been set to yuv420p
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for crf has been set to 19
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for save_metadata has been set to True
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for trim_to_audio has been set to False
+[32m[INFO][0m [32mPrompt executed in 452.03 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:33<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:33<16:05, 33.29s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<16:05, 33.29s/it]                                     7%|▋         | 2/30 [00:00<00:03,  9.01it/s] 10%|█         | 3/30 [00:00<00:03,  8.85it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.75it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.54it/s] 20%|██        | 6/30 [00:00<00:03,  6.45it/s] 23%|██▎       | 7/30 [00:00<00:03,  6.90it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.45it/s] 30%|███       | 9/30 [00:01<00:03,  6.76it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.60it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.78it/s] 40%|████      | 12/30 [00:01<00:02,  6.53it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.83it/s] 47%|████▋     | 14/30 [00:01<00:02,  6.47it/s] 50%|█████     | 15/30 [00:02<00:02,  6.61it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.84it/s] 57%|█████▋    | 17/30 [00:02<00:02,  6.43it/s] 60%|██████    | 18/30 [00:02<00:01,  6.96it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.55it/s] 67%|██████▋   | 20/30 [00:02<00:01,  6.64it/s] 70%|███████   | 21/30 [00:03<00:01,  6.55it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.87it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.52it/s] 80%|████████  | 24/30 [00:03<00:00,  6.44it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.90it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.36it/s] 90%|█████████ | 27/30 [00:03<00:00,  6.86it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.59it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.46it/s]100%|██████████| 30/30 [00:04<00:00,  6.80it/s]100%|██████████| 30/30 [00:04<00:00,  6.82it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 53.34 seconds[0m
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:01<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:01<00:33,  1.17s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<00:33,  1.17s/it]                                    10%|█         | 3/30 [00:00<00:03,  8.99it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.68it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.64it/s] 20%|██        | 6/30 [00:00<00:03,  6.68it/s] 23%|██▎       | 7/30 [00:01<00:03,  6.51it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.65it/s] 30%|███       | 9/30 [00:01<00:03,  6.60it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.55it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.94it/s] 40%|████      | 12/30 [00:01<00:02,  6.43it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.68it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.55it/s] 50%|█████     | 15/30 [00:02<00:02,  6.56it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.90it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.57it/s] 60%|██████    | 18/30 [00:02<00:01,  6.82it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.41it/s] 67%|██████▋   | 20/30 [00:03<00:01,  6.88it/s] 70%|███████   | 21/30 [00:03<00:01,  6.43it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.56it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.75it/s] 80%|████████  | 24/30 [00:03<00:00,  6.54it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.79it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.54it/s] 90%|█████████ | 27/30 [00:04<00:00,  6.80it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.61it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.78it/s]100%|██████████| 30/30 [00:04<00:00,  6.58it/s]100%|██████████| 30/30 [00:04<00:00,  6.65it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 7.22 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m Found quantization metadata version 1
+[32m[INFO][0m Using MixedPrecisionOps for text encoder
+[32m[INFO][0m Requested to load WanTEModel
+[32m[INFO][0m loaded completely;  6419.48 MB loaded, full load: True
+[32m[INFO][0m CLIP/text encoder model load device: cpu, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load WanVAE
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[32m[INFO][0m gguf qtypes: F16 (694), Q4_K (280), Q6_K (120), F32 (1)
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type FLOW
+[32m[INFO][0m Requested to load WAN21
+[32m[INFO][0m loaded completely; 11768.62 MB usable, 9337.18 MB loaded, full load: True
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:02<00:06,  2.11s/it] 50%|█████     | 2/4 [00:03<00:03,  1.98s/it] 75%|███████▌  | 3/4 [00:05<00:01,  1.94s/it]100%|██████████| 4/4 [00:07<00:00,  1.92s/it]100%|██████████| 4/4 [00:07<00:00,  1.95s/it]
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for pix_fmt has been set to yuv420p
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for crf has been set to 19
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for save_metadata has been set to True
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for trim_to_audio has been set to False
+[32m[INFO][0m [32mPrompt executed in 407.50 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:49<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:49<23:41, 49.02s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<23:41, 49.02s/it]                                    10%|█         | 3/30 [00:00<00:03,  8.98it/s] 13%|█▎        | 4/30 [00:00<00:04,  6.47it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.81it/s] 20%|██        | 6/30 [00:00<00:03,  6.56it/s] 23%|██▎       | 7/30 [00:01<00:03,  6.96it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.61it/s] 30%|███       | 9/30 [00:01<00:03,  6.49it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.42it/s] 37%|███▋      | 11/30 [00:01<00:02,  7.00it/s] 40%|████      | 12/30 [00:01<00:02,  6.50it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.86it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.28it/s] 50%|█████     | 15/30 [00:02<00:02,  7.15it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.33it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.66it/s] 60%|██████    | 18/30 [00:02<00:01,  6.88it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.44it/s] 67%|██████▋   | 20/30 [00:03<00:01,  6.44it/s] 70%|███████   | 21/30 [00:03<00:01,  6.84it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.82it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.19it/s] 80%|████████  | 24/30 [00:03<00:00,  7.10it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.42it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.84it/s] 90%|█████████ | 27/30 [00:04<00:00,  6.91it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.45it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.68it/s]100%|██████████| 30/30 [00:04<00:00,  6.48it/s]100%|██████████| 30/30 [00:04<00:00,  6.65it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 70.95 seconds[0m
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:01<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:01<00:34,  1.20s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<00:34,  1.20s/it]                                     7%|▋         | 2/30 [00:00<00:02,  9.75it/s] 10%|█         | 3/30 [00:00<00:03,  8.25it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.58it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.63it/s] 20%|██        | 6/30 [00:00<00:03,  6.38it/s] 23%|██▎       | 7/30 [00:00<00:03,  6.96it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.79it/s] 30%|███       | 9/30 [00:01<00:03,  6.55it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.45it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.89it/s] 40%|████      | 12/30 [00:01<00:02,  6.44it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.83it/s] 47%|████▋     | 14/30 [00:01<00:02,  6.66it/s] 50%|█████     | 15/30 [00:02<00:02,  6.43it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.85it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.62it/s] 60%|██████    | 18/30 [00:02<00:01,  6.43it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.90it/s] 67%|██████▋   | 20/30 [00:02<00:01,  6.41it/s] 70%|███████   | 21/30 [00:03<00:01,  6.56it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.67it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.70it/s] 80%|████████  | 24/30 [00:03<00:00,  6.65it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.46it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.58it/s] 90%|█████████ | 27/30 [00:03<00:00,  6.30it/s] 93%|█████████▎| 28/30 [00:04<00:00,  7.17it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.44it/s]100%|██████████| 30/30 [00:04<00:00,  6.37it/s]100%|██████████| 30/30 [00:04<00:00,  6.80it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 7.36 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m Found quantization metadata version 1
+[32m[INFO][0m Using MixedPrecisionOps for text encoder
+[32m[INFO][0m Requested to load WanTEModel
+[32m[INFO][0m loaded completely;  6419.48 MB loaded, full load: True
+[32m[INFO][0m CLIP/text encoder model load device: cpu, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load WanVAE
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[32m[INFO][0m gguf qtypes: F16 (694), Q4_K (280), Q6_K (120), F32 (1)
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type FLOW
+[32m[INFO][0m Requested to load WAN21
+[32m[INFO][0m loaded completely; 11768.62 MB usable, 9337.18 MB loaded, full load: True
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:02<00:06,  2.12s/it] 50%|█████     | 2/4 [00:03<00:03,  1.98s/it] 75%|███████▌  | 3/4 [00:05<00:01,  1.94s/it]100%|██████████| 4/4 [00:07<00:00,  1.92s/it]100%|██████████| 4/4 [00:07<00:00,  1.94s/it]
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for pix_fmt has been set to yuv420p
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for crf has been set to 19
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for save_metadata has been set to True
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for trim_to_audio has been set to False
+[32m[INFO][0m [32mPrompt executed in 385.04 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:31<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:31<15:11, 31.44s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<15:11, 31.44s/it]                                     7%|▋         | 2/30 [00:00<00:03,  8.98it/s] 10%|█         | 3/30 [00:00<00:04,  6.54it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.57it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.84it/s] 20%|██        | 6/30 [00:00<00:03,  6.46it/s] 23%|██▎       | 7/30 [00:00<00:03,  6.97it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.40it/s] 30%|███       | 9/30 [00:01<00:03,  6.79it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.59it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.82it/s] 40%|████      | 12/30 [00:01<00:02,  6.43it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.87it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.51it/s] 50%|█████     | 15/30 [00:02<00:02,  6.56it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.81it/s] 57%|█████▋    | 17/30 [00:02<00:02,  6.36it/s] 60%|██████    | 18/30 [00:02<00:01,  6.53it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.91it/s] 67%|██████▋   | 20/30 [00:02<00:01,  6.70it/s] 70%|███████   | 21/30 [00:03<00:01,  6.61it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.49it/s] 77%|███████▋  | 23/30 [00:03<00:00,  7.00it/s] 80%|████████  | 24/30 [00:03<00:00,  6.44it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.90it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.54it/s] 90%|█████████ | 27/30 [00:03<00:00,  6.32it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.91it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.97it/s]100%|██████████| 30/30 [00:04<00:00,  6.44it/s]100%|██████████| 30/30 [00:04<00:00,  6.76it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 49.85 seconds[0m
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:01<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:01<00:34,  1.21s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<00:34,  1.21s/it]                                    10%|█         | 3/30 [00:00<00:03,  8.88it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.63it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.38it/s] 20%|██        | 6/30 [00:00<00:03,  6.93it/s] 23%|██▎       | 7/30 [00:01<00:03,  6.75it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.78it/s] 30%|███       | 9/30 [00:01<00:03,  6.39it/s] 33%|███▎      | 10/30 [00:01<00:02,  6.88it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.62it/s] 40%|████      | 12/30 [00:01<00:02,  6.41it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.92it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.58it/s] 50%|█████     | 15/30 [00:02<00:02,  6.42it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.82it/s] 57%|█████▋    | 17/30 [00:02<00:02,  6.45it/s] 60%|██████    | 18/30 [00:02<00:01,  6.95it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.52it/s] 67%|██████▋   | 20/30 [00:03<00:01,  6.48it/s] 70%|███████   | 21/30 [00:03<00:01,  6.96it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.33it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.67it/s] 80%|████████  | 24/30 [00:03<00:00,  6.88it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.37it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.48it/s] 90%|█████████ | 27/30 [00:04<00:00,  6.86it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.75it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.61it/s]100%|██████████| 30/30 [00:04<00:00,  6.48it/s]100%|██████████| 30/30 [00:04<00:00,  6.64it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 7.27 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m Found quantization metadata version 1
+[32m[INFO][0m Using MixedPrecisionOps for text encoder
+[32m[INFO][0m Requested to load WanTEModel
+[32m[INFO][0m loaded completely;  6419.48 MB loaded, full load: True
+[32m[INFO][0m CLIP/text encoder model load device: cpu, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load WanVAE
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[32m[INFO][0m gguf qtypes: F16 (694), Q4_K (280), Q6_K (120), F32 (1)
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type FLOW
+[32m[INFO][0m Requested to load WAN21
+[32m[INFO][0m loaded completely; 11768.62 MB usable, 9337.18 MB loaded, full load: True
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:02<00:06,  2.08s/it] 50%|█████     | 2/4 [00:03<00:03,  1.96s/it] 75%|███████▌  | 3/4 [00:05<00:01,  1.92s/it]100%|██████████| 4/4 [00:07<00:00,  1.91s/it]100%|██████████| 4/4 [00:07<00:00,  1.93s/it]
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for pix_fmt has been set to yuv420p
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for crf has been set to 19
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for save_metadata has been set to True
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for trim_to_audio has been set to False
+[32m[INFO][0m [32mPrompt executed in 463.29 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:30<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:30<14:57, 30.95s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<14:57, 30.95s/it]                                     7%|▋         | 2/30 [00:00<00:03,  9.11it/s] 10%|█         | 3/30 [00:00<00:03,  8.22it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.58it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.55it/s] 20%|██        | 6/30 [00:00<00:03,  6.89it/s] 23%|██▎       | 7/30 [00:00<00:03,  6.49it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.67it/s] 30%|███       | 9/30 [00:01<00:03,  6.80it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.53it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.90it/s] 40%|████      | 12/30 [00:01<00:02,  6.48it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.81it/s] 47%|████▋     | 14/30 [00:01<00:02,  6.57it/s] 50%|█████     | 15/30 [00:02<00:02,  6.58it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.83it/s] 57%|█████▋    | 17/30 [00:02<00:02,  6.47it/s] 60%|██████    | 18/30 [00:02<00:01,  6.86it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.49it/s] 67%|██████▋   | 20/30 [00:02<00:01,  6.61it/s] 70%|███████   | 21/30 [00:03<00:01,  6.85it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.61it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.26it/s] 80%|████████  | 24/30 [00:03<00:00,  6.84it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.80it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.52it/s] 90%|█████████ | 27/30 [00:03<00:00,  6.61it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.74it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.49it/s]100%|██████████| 30/30 [00:04<00:00,  6.63it/s]100%|██████████| 30/30 [00:04<00:00,  6.81it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 49.31 seconds[0m
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:01<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:01<00:32,  1.13s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<00:32,  1.13s/it]                                    10%|█         | 3/30 [00:00<00:02,  9.01it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.64it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.46it/s] 20%|██        | 6/30 [00:00<00:03,  6.65it/s] 23%|██▎       | 7/30 [00:01<00:03,  6.97it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.54it/s] 30%|███       | 9/30 [00:01<00:03,  6.47it/s] 33%|███▎      | 10/30 [00:01<00:02,  6.86it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.55it/s] 40%|████      | 12/30 [00:01<00:02,  6.75it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.54it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.82it/s] 50%|█████     | 15/30 [00:02<00:02,  6.67it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.48it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.87it/s] 60%|██████    | 18/30 [00:02<00:01,  6.49it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.59it/s] 67%|██████▋   | 20/30 [00:02<00:01,  6.83it/s] 70%|███████   | 21/30 [00:03<00:01,  6.47it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.94it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.63it/s] 80%|████████  | 24/30 [00:03<00:00,  6.40it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.80it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.52it/s] 90%|█████████ | 27/30 [00:04<00:00,  6.56it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.81it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.47it/s]100%|██████████| 30/30 [00:04<00:00,  6.63it/s]100%|██████████| 30/30 [00:04<00:00,  6.65it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 7.20 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m Found quantization metadata version 1
+[32m[INFO][0m Using MixedPrecisionOps for text encoder
+[32m[INFO][0m Requested to load WanTEModel
+[32m[INFO][0m loaded completely;  6419.48 MB loaded, full load: True
+[32m[INFO][0m CLIP/text encoder model load device: cpu, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load WanVAE
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[32m[INFO][0m gguf qtypes: F16 (694), Q4_K (280), Q6_K (120), F32 (1)
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type FLOW
+[32m[INFO][0m Requested to load WAN21
+[32m[INFO][0m loaded completely; 11768.62 MB usable, 9337.18 MB loaded, full load: True
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:02<00:06,  2.11s/it] 50%|█████     | 2/4 [00:03<00:03,  1.97s/it] 75%|███████▌  | 3/4 [00:05<00:01,  1.93s/it]100%|██████████| 4/4 [00:07<00:00,  1.92s/it]100%|██████████| 4/4 [00:07<00:00,  1.94s/it]
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for pix_fmt has been set to yuv420p
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for crf has been set to 19
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for save_metadata has been set to True
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for trim_to_audio has been set to False
+[32m[INFO][0m [32mPrompt executed in 372.07 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:32<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:32<15:50, 32.78s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<15:50, 32.78s/it]                                     7%|▋         | 2/30 [00:00<00:03,  8.13it/s] 10%|█         | 3/30 [00:00<00:04,  6.69it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.55it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.51it/s] 20%|██        | 6/30 [00:00<00:03,  6.91it/s] 23%|██▎       | 7/30 [00:01<00:03,  6.47it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.91it/s] 30%|███       | 9/30 [00:01<00:03,  6.47it/s] 33%|███▎      | 10/30 [00:01<00:02,  6.74it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.85it/s] 40%|████      | 12/30 [00:01<00:02,  6.52it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.58it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.67it/s] 50%|█████     | 15/30 [00:02<00:02,  6.70it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.45it/s] 57%|█████▋    | 17/30 [00:02<00:02,  6.41it/s] 60%|██████    | 18/30 [00:02<00:01,  6.99it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.42it/s] 67%|██████▋   | 20/30 [00:02<00:01,  7.01it/s] 70%|███████   | 21/30 [00:03<00:01,  6.70it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.57it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.52it/s] 80%|████████  | 24/30 [00:03<00:00,  6.81it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.62it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.77it/s] 90%|█████████ | 27/30 [00:04<00:00,  6.65it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.46it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.90it/s]100%|██████████| 30/30 [00:04<00:00,  6.51it/s]100%|██████████| 30/30 [00:04<00:00,  6.73it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 53.71 seconds[0m
+[32m[INFO][0m got prompt
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:01<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:01<00:34,  1.18s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<00:34,  1.18s/it]                                     7%|▋         | 2/30 [00:00<00:02,  9.43it/s] 10%|█         | 3/30 [00:00<00:03,  8.63it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.66it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.61it/s] 20%|██        | 6/30 [00:00<00:03,  6.49it/s] 23%|██▎       | 7/30 [00:00<00:03,  6.29it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.96it/s] 30%|███       | 9/30 [00:01<00:03,  6.76it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.48it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.51it/s] 40%|████      | 12/30 [00:01<00:02,  6.99it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.36it/s] 47%|████▋     | 14/30 [00:01<00:02,  6.54it/s] 50%|█████     | 15/30 [00:02<00:02,  6.86it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.51it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.61it/s] 60%|██████    | 18/30 [00:02<00:01,  6.77it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.64it/s] 67%|██████▋   | 20/30 [00:02<00:01,  6.44it/s] 70%|███████   | 21/30 [00:03<00:01,  6.86it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.53it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.70it/s] 80%|████████  | 24/30 [00:03<00:00,  6.56it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.50it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.95it/s] 90%|█████████ | 27/30 [00:03<00:00,  6.41it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.54it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.69it/s]100%|██████████| 30/30 [00:04<00:00,  6.72it/s]100%|██████████| 30/30 [00:04<00:00,  6.81it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 7.25 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m got prompt
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m Found quantization metadata version 1
+[32m[INFO][0m Using MixedPrecisionOps for text encoder
+[32m[INFO][0m Requested to load WanTEModel
+[32m[INFO][0m loaded completely;  6419.48 MB loaded, full load: True
+[32m[INFO][0m CLIP/text encoder model load device: cpu, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load WanVAE
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[32m[INFO][0m gguf qtypes: F16 (694), Q4_K (280), Q6_K (120), F32 (1)
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type FLOW
+[32m[INFO][0m Requested to load WAN21
+[32m[INFO][0m loaded completely; 11768.62 MB usable, 9337.18 MB loaded, full load: True
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:02<00:06,  2.02s/it] 50%|█████     | 2/4 [00:03<00:03,  1.94s/it] 75%|███████▌  | 3/4 [00:05<00:01,  1.91s/it]100%|██████████| 4/4 [00:07<00:00,  1.91s/it]100%|██████████| 4/4 [00:07<00:00,  1.92s/it]
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for pix_fmt has been set to yuv420p
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for crf has been set to 19
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for save_metadata has been set to True
+[VideoHelperSuite] - [0;33mWARNING[0m - Missing input for trim_to_audio has been set to False
+[32m[INFO][0m [32mPrompt executed in 404.32 seconds[0m
+[32m[INFO][0m Disabling intermediate node cache.

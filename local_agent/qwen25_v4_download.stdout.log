@@ -1,0 +1,8 @@
+Qwen2.5-VL NSFW Caption V4 local setup
+Required download: about 6.03 GB (4.68 GB Q4_K_M model + 1.35 GB f16 projector).
+Target directory: A:\Users\rhine\ComfyUI-Shared\models\LLM\GGUF\mradermacher\Qwen2.5-VL-7B-NSFW-Caption-V4-GGUF
+  downloading Qwen2.5-VL-7B-NSFW-Caption-V4.Q4_K_M.gguf as Qwen2.5-VL-7B-NSFW-Caption-V4.Q4_K_M.local.gguf ...
+  downloading Qwen2.5-VL-7B-NSFW-Caption-V4.mmproj-f16.gguf as Qwen2.5-VL-7B-NSFW-Caption-V4.mmproj-f16.local.gguf ...
+Ready. The local-agent launcher loads both files through the CUDA llama.cpp runtime on 127.0.0.1:11436.
+Ollama import is intentionally not attempted: this GGUF needs llama.cpp compatibility patches that Ollama rejects.
+Restart START_LOCAL_AGENT_GUI.ps1 only when you are ready to reload the local agent.

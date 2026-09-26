@@ -1,0 +1,126 @@
+{
+  "saved": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\models\\dspy_compiled\\generalized_video_director_mipro.json",
+  "optimizer": "mipro",
+  "mock": false,
+  "auto": null,
+  "trials": 1,
+  "trainset": 2,
+  "ids": "GVD-B01,GVD-D01",
+  "last_feedback": "{\"mock\": false, \"clip_id\": \"GVD-D01\", \"category\": \"drone_high_kinematics\", \"hparams\": {\"cfg_scale\": 5.0, \"denoise\": 1.0, \"step_count\": 24.0}, \"step_count_int\": 24, \"scores\": null, \"mean\": null, \"minimum\": null, \"threshold\": null, \"passes_curriculum\": false, \"mipro\": 0.05, \"error\": \"TimeoutError: FLUX+MiniMax job did not complete: {'state': 'error', 'prompt_id': 'b33ae0d1-53fd-446a-9d38-dad79f2e9c85', 'source': 'websocket', 'type': 'execution_error', 'data': {'prompt_id': 'b33ae0d1-53fd-446a-9d38-dad79f2e9c85', 'node_id': '20', 'node_type': 'MiniMaxH3ImageToVideo', 'executed': ['31', '32'], 'exception_message': \\\"'int' object is not subscriptable\\\\n\\\", 'exception_type': 'TypeError', 'traceback': ['  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\execution.py\\\", line 545, in execute\\\\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\\\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\execution.py\\\", line 344, in get_output_data\\\\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\\\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\execution.py\\\", line 318, in _async_map_node_over_list\\\\n    await process_inputs(input_dict, i)\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\execution.py\\\", line 306, in process_inputs\\\\n    result = f(**inputs)\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\comfy_api\\\\\\\\internal\\\\\\\\__init__.py\\\", line 149, in wrapped_func\\\\n    return method(locked_class, **inputs)\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\comfy_api\\\\\\\\latest\\\\\\\\_io.py\\\", line 2046, in EXECUTE_NORMALIZED\\\\n    to_return = cls.execute(*args, **kwargs)\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\comfy_extras\\\\\\\\nodes_minimax_h3.py\\\", line 145, in execute\\\\n    img = _resize(first_frame[:1], width, height, \\\"disabled\\\")\\\\n                  ~~~~~~~~~~~^^^^\\\\n'], 'current_inputs': {'clip': ['<comfy.sd.CLIP object at 0x00000209C090A950>'], 'vae': ['<comfy.sd.VAE object at 0x00000207F5A02350>'], 'prompt': [\\\"A continuous aerial move from left-top corner across a wide range of landscapes: starting in front of an expansive sea with sweeping parallax to reveal towering rocks cascading into the water's edge at sunrise, bringing life back towards the ocean\\u2019s surface and drawing our eyes upward. The skies above are filled with golden hues reflecting off waves.\\\\n\\\\nNegative instructions: No still photographs or text within this clip.\\\"], 'width': [1280], 'height': [720], 'length': [192], 'first_frame': [192]}, 'current_outputs': ['5', '31', '38', '10', '25', '7', '6', '8', '3', '34', '33', '20', '32', '36', '30', '14', '39', '11', '35', '37'], 'timestamp': 1789606070903}}\", \"video_path\": null, \"positive_prompt\": \"\", \"vram_trace\": [{\"label\": \"after_prepare_comfy\", \"ts\": 1789606069.8437586, \"used_mib\": 477, \"free_mib\": 15501, \"total_mib\": 16303, \"owner\": {\"owner\": \"comfyui\", \"reason\": \"FLUX.1 + MiniMax I2V generation\", \"since\": 1789606069.8437586}}]}",
+  "history_n": 3,
+  "history": [
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 1.0,
+        "step_count": 28.0
+      },
+      "step_count_int": 28,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.05,
+      "error": "TimeoutError: FLUX+MiniMax job did not complete: {'state': 'error', 'prompt_id': '917af8b3-bfc8-44a4-8195-6fbd3cc32bd9', 'source': 'websocket', 'type': 'execution_error', 'data': {'prompt_id': '917af8b3-bfc8-44a4-8195-6fbd3cc32bd9', 'node_id': '20', 'node_type': 'MiniMaxH3ImageToVideo', 'executed': ['31', '32'], 'exception_message': \"'int' object is not subscriptable\\n\", 'exception_type': 'TypeError', 'traceback': ['  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 545, in execute\\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 344, in get_output_data\\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 318, in _async_map_node_over_list\\n    await process_inputs(input_dict, i)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 306, in process_inputs\\n    result = f(**inputs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_api\\\\internal\\\\__init__.py\", line 149, in wrapped_func\\n    return method(locked_class, **inputs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_api\\\\latest\\\\_io.py\", line 2046, in EXECUTE_NORMALIZED\\n    to_return = cls.execute(*args, **kwargs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_extras\\\\nodes_minimax_h3.py\", line 145, in execute\\n    img = _resize(first_frame[:1], width, height, \"disabled\")\\n                  ~~~~~~~~~~~^^^^\\n'], 'current_inputs': {'clip': ['<comfy.sd.CLIP object at 0x00000209C074C8D0>'], 'vae': ['<comfy.sd.VAE object at 0x00000207FA721310>'], 'prompt': [\"Aerial zoom with fluid rotations across expansive vistas towards soaring seacliffs framed by ancient basalt rock formations.\\n\\nTracking forward over vast oceanic expanses, gradually capturing intricate seabird colonies against a backdrop of golden sunlight illuminating cliffsides drenched in natural beauty. The drone's continuous motion mimics the rhythm of nature\u2019s grandeur.\\n\\nNegative instructions: ,\\ncrashed,\\ndriftwood,\\nsigns_of_humanity,\\nwatermark,\\nopposing_perspective,\"], 'width': [1280], 'height': [720], 'length': [192], 'first_frame': [192]}, 'current_outputs': ['5', '31', '38', '10', '25', '7', '6', '8', '3', '34', '33', '20', '32', '36', '30', '14', '39', '11', '35', '37'], 'timestamp': 1789606059603}}",
+      "video_path": null,
+      "positive_prompt": "",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789606058.3158524,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "FLUX.1 + MiniMax I2V generation",
+            "since": 1789606058.3158524
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789606059.644976,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789606059.6059775
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 3.0,
+        "denoise": 1.0,
+        "step_count": 28.0
+      },
+      "step_count_int": 28,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.01,
+      "error": "start_prompt or video_motion_prompt is empty; skipped GPU",
+      "video_path": null,
+      "positive_prompt": "",
+      "vram_trace": []
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 5.0,
+        "denoise": 1.0,
+        "step_count": 24.0
+      },
+      "step_count_int": 24,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.05,
+      "error": "TimeoutError: FLUX+MiniMax job did not complete: {'state': 'error', 'prompt_id': 'b33ae0d1-53fd-446a-9d38-dad79f2e9c85', 'source': 'websocket', 'type': 'execution_error', 'data': {'prompt_id': 'b33ae0d1-53fd-446a-9d38-dad79f2e9c85', 'node_id': '20', 'node_type': 'MiniMaxH3ImageToVideo', 'executed': ['31', '32'], 'exception_message': \"'int' object is not subscriptable\\n\", 'exception_type': 'TypeError', 'traceback': ['  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 545, in execute\\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 344, in get_output_data\\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 318, in _async_map_node_over_list\\n    await process_inputs(input_dict, i)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 306, in process_inputs\\n    result = f(**inputs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_api\\\\internal\\\\__init__.py\", line 149, in wrapped_func\\n    return method(locked_class, **inputs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_api\\\\latest\\\\_io.py\", line 2046, in EXECUTE_NORMALIZED\\n    to_return = cls.execute(*args, **kwargs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_extras\\\\nodes_minimax_h3.py\", line 145, in execute\\n    img = _resize(first_frame[:1], width, height, \"disabled\")\\n                  ~~~~~~~~~~~^^^^\\n'], 'current_inputs': {'clip': ['<comfy.sd.CLIP object at 0x00000209C090A950>'], 'vae': ['<comfy.sd.VAE object at 0x00000207F5A02350>'], 'prompt': [\"A continuous aerial move from left-top corner across a wide range of landscapes: starting in front of an expansive sea with sweeping parallax to reveal towering rocks cascading into the water's edge at sunrise, bringing life back towards the ocean\u2019s surface and drawing our eyes upward. The skies above are filled with golden hues reflecting off waves.\\n\\nNegative instructions: No still photographs or text within this clip.\"], 'width': [1280], 'height': [720], 'length': [192], 'first_frame': [192]}, 'current_outputs': ['5', '31', '38', '10', '25', '7', '6', '8', '3', '34', '33', '20', '32', '36', '30', '14', '39', '11', '35', '37'], 'timestamp': 1789606070903}}",
+      "video_path": null,
+      "positive_prompt": "",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789606069.8437586,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "FLUX.1 + MiniMax I2V generation",
+            "since": 1789606069.8437586
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789606070.951244,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789606070.9052434
+          }
+        }
+      ]
+    }
+  ]
+}

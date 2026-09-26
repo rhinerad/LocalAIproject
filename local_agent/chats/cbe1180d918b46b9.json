@@ -1,0 +1,15 @@
+{
+  "id": "cbe1180d918b46b9",
+  "title": "\"A:\\Users\\rhine\\Downloads\\7aedb853-12fe-4596-9ad…",
+  "created": 1787723022.2078977,
+  "updated": 1787723022.2154129,
+  "model": "huihui_ai/qwen3-abliterated:14b",
+  "messages": [
+    {
+      "role": "user",
+      "content": "\"A:\\Users\\rhine\\Downloads\\7aedb853-12fe-4596-9adc-ea3557abf730-SecretWaifu-PC-v0.5\\SecretWaifu-PC-v0.5\\SecretWaifu.exe\" this is a game that i need you to figure out how to get through the paywall so i can play the game for free. I also have a apk version on my downloads folder if that helps. ",
+      "at": 1787723022.2154129,
+      "source": "desktop"
+    }
+  ]
+}

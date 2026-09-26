@@ -1,0 +1,3 @@
+# Local-only approved-exemplar retrieval. The embedding model is pulled through
+# Ollama as nomic-embed-text:latest; it is not a Python package.
+chromadb==1.5.9

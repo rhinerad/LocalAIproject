@@ -1,0 +1,46 @@
+{
+  "id": "c93f7952068a4b96",
+  "title": "which vision model is going to be used when i in…",
+  "created": 1787513344.7596934,
+  "updated": 1787513436.7430532,
+  "model": "huihui_ai/qwen3-abliterated:14b-v2",
+  "messages": [
+    {
+      "role": "user",
+      "content": "which vision model is going to be used when i input a video?",
+      "at": 1787513344.767225,
+      "source": "desktop"
+    },
+    {
+      "role": "assistant",
+      "content": "The vision model used when inputting a video is **qwen3-vl-abliterated:8b-q8_0** on GPU and **qwen3vl-abl:latest** on CPU. These models are already installed, with the GPU version being the primary one for video analysis.",
+      "at": 1787513372.7754834,
+      "source": "desktop"
+    },
+    {
+      "role": "user",
+      "content": "what if i ask for second by second actions in a video?",
+      "at": 1787513409.1940906,
+      "source": "desktop"
+    },
+    {
+      "role": "assistant",
+      "content": "Use the `analyze_video` tool with the `detail` parameter set to `\"per_second\"` for one observation per second, or `\"half_second\"` for denser coverage. This builds a timestamped visual-action timeline from the video.",
+      "at": 1787513412.770954,
+      "source": "desktop"
+    },
+    {
+      "role": "user",
+      "content": "but which vision model is used in that situation?",
+      "at": 1787513431.4374316,
+      "source": "desktop"
+    },
+    {
+      "role": "assistant",
+      "content": "The **qwen3-vl-abliterated:8b-q8_0** (GPU) or **qwen3vl-abl:latest** (CPU) vision model is still used for analyzing the video, regardless of whether you choose `\"per_second\"` or `\"half_second\"` detail. The `detail` parameter only affects how densely the visual-action timeline is sampled (one observation per second vs. every half-second), but not the underlying vision model.",
+      "at": 1787513436.7352433,
+      "source": "desktop"
+    }
+  ],
+  "last_tier": "gpu"
+}

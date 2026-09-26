@@ -1,0 +1,15 @@
+{
+  "id": "3100397418f843ca",
+  "title": "play a house beat on sonic pi",
+  "created": 1787877455.4485323,
+  "updated": 1787877455.4590561,
+  "model": "huihui_ai/qwen3-abliterated:8b",
+  "messages": [
+    {
+      "role": "user",
+      "content": "play a house beat on sonic pi",
+      "at": 1787877455.4590561,
+      "source": "desktop"
+    }
+  ]
+}

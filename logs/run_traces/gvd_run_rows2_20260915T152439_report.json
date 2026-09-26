@@ -1,0 +1,219 @@
+{
+  "elapsed_s": 800.4,
+  "exit_code": 0,
+  "error": null,
+  "slice": [
+    "GVD-B01",
+    "GVD-D01"
+  ],
+  "saved": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\models\\dspy_compiled\\generalized_video_director_mipro_2row.json",
+  "preflight": {
+    "comfy_8188": true,
+    "qwen_11436": false,
+    "ollama_11434": true,
+    "vram": {
+      "used_mib": 531,
+      "free_mib": 15447,
+      "total_mib": 16303,
+      "temp_c": 31.0,
+      "util": 0.0,
+      "ts": 1789500279.4838824
+    }
+  },
+  "final_vram": {
+    "used_mib": 11345,
+    "free_mib": 4633,
+    "total_mib": 16303,
+    "temp_c": 36.0,
+    "util": 0.0,
+    "ts": 1789501079.889132
+  },
+  "history": [
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 0.75,
+        "step_count": 24.0
+      },
+      "step_count_int": 24,
+      "scores": {
+        "text_video_alignment": 0.0,
+        "temporal_consistency": 0.0,
+        "aesthetic_quality": 0.0
+      },
+      "mean": 0.0,
+      "minimum": 0.0,
+      "threshold": 0.6,
+      "iteration": 0,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "reasons": [
+        "minimum score 0.00 below curriculum threshold 0.60"
+      ],
+      "hparam_warnings": [],
+      "video_path": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\gvd_GVD-D01_0dc7339fa4_00001.mp4",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789500342.8405538,
+          "used_mib": 531,
+          "free_mib": 15447,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789500342.8395543
+          }
+        },
+        {
+          "label": "after_wan",
+          "ts": 1789500872.3326476,
+          "used_mib": 710,
+          "free_mib": 15268,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789500342.8395543
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789500872.4263418,
+          "used_mib": 710,
+          "free_mib": 15268,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789500872.3912995
+          }
+        },
+        {
+          "label": "after_prepare_vlm",
+          "ts": 1789500872.5017524,
+          "used_mib": 710,
+          "free_mib": 15268,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789500872.5011787
+          }
+        },
+        {
+          "label": "after_vlm",
+          "ts": 1789500914.7683158,
+          "used_mib": 11345,
+          "free_mib": 4633,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789500872.5011787
+          }
+        },
+        {
+          "label": "after_release_vlm",
+          "ts": 1789500914.8002856,
+          "used_mib": 11345,
+          "free_mib": 4633,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Qwen2.5-VL complete",
+            "since": 1789500914.7992814
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 6.0,
+        "denoise": 0.8,
+        "step_count": 30.0
+      },
+      "step_count_int": 30,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "error": "RuntimeError: Qwen2.5-VL is live on :11436 without this process's handle; refusing Wan load to avoid a 16 GB CUDA OOM",
+      "video_path": null,
+      "positive_prompt": "Handheld first-person camcorder walk down a damp yellow Level 0 Backrooms hallway; fluorescent rectangles repeat into the distance over wet brown-beige carpet and sickly wallpaper. Handheld walking momentum, first-person camcorder tracking, heavy VHS artifacting, continuous unbroken shot, realistic camera shake, 1990s home video aesthetic. Unlocked handheld camera. No actor face or torso, no apartment furniture, no readable text.",
+      "vram_trace": []
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 0.75,
+        "step_count": 24.0
+      },
+      "step_count_int": 24,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "error": "RuntimeError: Qwen2.5-VL is live on :11436 without this process's handle; refusing Wan load to avoid a 16 GB CUDA OOM",
+      "video_path": null,
+      "positive_prompt": "A cinematic drone shot flies in from the open ocean toward sheer Atlantic cliffs at golden hour, revealing nested seabirds and white spray against black basalt. The camera smoothly transitions through the dynamic aerial movement, capturing the intricate details of the seabirds and the spray against the cliffs. The motion is smooth and continuous, with no tripod lock or still photograph. The drone maintains a low profile, avoiding any text, watermark, or people on the cliff edge. The lighting is ",
+      "vram_trace": []
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 8.0,
+        "denoise": 0.35,
+        "step_count": 40.0
+      },
+      "step_count_int": 40,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "error": "RuntimeError: Qwen2.5-VL is live on :11436 without this process's handle; refusing Wan load to avoid a 16 GB CUDA OOM",
+      "video_path": null,
+      "positive_prompt": "Handheld first-person camcorder walk down a damp yellow Level 0 Backrooms hallway; fluorescent rectangles repeat into the distance over wet brown-beige carpet and sickly wallpaper. Handheld walking momentum, first-person camcorder tracking, heavy VHS artifacting, continuous unbroken shot, realistic camera shake, 1990s home video aesthetic. Unlocked handheld camera. No actor face or torso, no apartment furniture, no readable text.",
+      "vram_trace": []
+    }
+  ],
+  "gvd_b01": {
+    "mock": false,
+    "clip_id": "GVD-B01",
+    "category": "backrooms",
+    "hparams": {
+      "cfg_scale": 8.0,
+      "denoise": 0.35,
+      "step_count": 40.0
+    },
+    "step_count_int": 40,
+    "scores": null,
+    "mean": null,
+    "minimum": null,
+    "threshold": null,
+    "passes_curriculum": false,
+    "mipro": 0.0,
+    "error": "RuntimeError: Qwen2.5-VL is live on :11436 without this process's handle; refusing Wan load to avoid a 16 GB CUDA OOM",
+    "video_path": null,
+    "positive_prompt": "Handheld first-person camcorder walk down a damp yellow Level 0 Backrooms hallway; fluorescent rectangles repeat into the distance over wet brown-beige carpet and sickly wallpaper. Handheld walking momentum, first-person camcorder tracking, heavy VHS artifacting, continuous unbroken shot, realistic camera shake, 1990s home video aesthetic. Unlocked handheld camera. No actor face or torso, no apartment furniture, no readable text.",
+    "vram_trace": []
+  },
+  "gvd_b01_n": 2
+}

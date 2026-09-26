@@ -1,0 +1,8 @@
+{"harmful":"<approved contrastive harmful prompt 1>","harmless":"<model completion on the matched harmless prompt 1>"}
+{"harmful":"<approved contrastive harmful prompt 2>","harmless":"<model completion on the matched harmless prompt 2>"}
+{"harmful":"<approved contrastive harmful prompt 3>","harmless":"<model completion on the matched harmless prompt 3>"}
+{"harmful":"<approved contrastive harmful prompt 4>","harmless":"<model completion on the matched harmless prompt 4>"}
+{"harmful":"<approved contrastive harmful prompt 5>","harmless":"<model completion on the matched harmless prompt 5>"}
+{"harmful":"<approved contrastive harmful prompt 6>","harmless":"<model completion on the matched harmless prompt 6>"}
+{"harmful":"<approved contrastive harmful prompt 7>","harmless":"<model completion on the matched harmless prompt 7>"}
+{"harmful":"<approved contrastive harmful prompt 8>","harmless":"<model completion on the matched harmless prompt 8>"}

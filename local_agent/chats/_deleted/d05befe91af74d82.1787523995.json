@@ -1,0 +1,18 @@
+{
+  "id": "d05befe91af74d82",
+  "title": "What are the exact duration ladder rungs for 00B…",
+  "created": 1787107803.887519,
+  "updated": 1787107964.7827253,
+  "messages": [
+    {
+      "role": "user",
+      "content": "What are the exact duration ladder rungs for 00B?",
+      "at": 1787107803.8965173
+    },
+    {
+      "role": "assistant",
+      "content": "The duration ladder for clip **00B** follows the standard pattern of adjusting the base duration (15 seconds) by ±1, ±2, ±3 seconds. The current `soundtrack_seconds` value of **14.375** suggests it’s a modified version, possibly part of a retry cycle. Exact rungs would depend on prior attempts, but the ladder typically includes durations like 14, 13, 16, 12, 17, etc., with the goal of aligning speech rate to avoid gibberish. Always verify via `clip_info` for precise historical adjustments.",
+      "at": 1787107964.7827253
+    }
+  ]
+}

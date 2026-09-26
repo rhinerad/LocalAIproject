@@ -1,0 +1,34 @@
+{
+  "policy_id": "provisional_loop_labels_v1",
+  "metrics_profile": "unmeasured_clip",
+  "qwen_profile": "caption_v4_unmeasured",
+  "reward_profile": "imagereward_unmeasured",
+  "clip_text_min": 28.0,
+  "clip_unit": "torchmetrics_clipscore_0_100",
+  "dino_min": null,
+  "reward_min": null,
+  "required_ids": ["yellow_surfaces", "corridor"],
+  "max_attempts": 2,
+  "calibration": "provisional_loop_labels",
+  "note": "CLIP min 28 sits between rejected C017-start 26.16 and accepted generated hallway 33.49. ImageReward has no floor: an accepted still scored -0.71. Three labeled stills only. Not a production 5080 calibration.",
+  "labeled_stills": [
+    {
+      "path": "local_agent/runtime/dspy_opt/br24_C017_start_00001_.png",
+      "label": "reject",
+      "clip_text": 26.16,
+      "reasons": ["qwen:yellow_walls"]
+    },
+    {
+      "path": "local_agent/runtime/dspy_opt/br24_C017_end_00001_.png",
+      "label": "accept",
+      "clip_text": 35.73,
+      "image_reward": 1.66
+    },
+    {
+      "path": "local_agent/runtime/gvd_qa/jobs/gen_c017_end_20260921T193208Z/a70441d416754aaa9e250742532efbf9/candidate.png",
+      "label": "accept",
+      "clip_text": 33.49,
+      "image_reward": -0.705
+    }
+  ]
+}

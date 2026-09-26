@@ -1,0 +1,692 @@
+[32m[INFO][0m setup plugin alembic.autogenerate.schemas
+[32m[INFO][0m setup plugin alembic.autogenerate.tables
+[32m[INFO][0m setup plugin alembic.autogenerate.types
+[32m[INFO][0m setup plugin alembic.autogenerate.constraints
+[32m[INFO][0m setup plugin alembic.autogenerate.defaults
+[32m[INFO][0m setup plugin alembic.autogenerate.comments
+[1m[33m[WARNING][0m On windows we are currently forcing single GPU mode in ComfyUI due to a Nvidia related issue, if you want to disable this use: --cuda-device all
+[32m[INFO][0m Adding extra search path checkpoints A:\Users\rhine\ComfyUI-Shared\models\checkpoints
+[32m[INFO][0m Adding extra search path loras A:\Users\rhine\ComfyUI-Shared\models\loras
+[32m[INFO][0m Adding extra search path controlnet A:\Users\rhine\ComfyUI-Shared\models\controlnet
+[32m[INFO][0m Adding extra search path clip_vision A:\Users\rhine\ComfyUI-Shared\models\clip_vision
+[32m[INFO][0m Adding extra search path ipadapter A:\Users\rhine\ComfyUI-Shared\models\ipadapter
+[32m[INFO][0m Adding extra search path text_encoders A:\Users\rhine\ComfyUI-Shared\models\text_encoders
+[32m[INFO][0m Adding extra search path insightface A:\Users\rhine\ComfyUI-Shared\models\insightface
+[32m[INFO][0m Adding extra search path liveportrait A:\Users\rhine\ComfyUI-Shared\models\liveportrait
+[32m[INFO][0m Adding extra search path ultralytics A:\Users\rhine\ComfyUI-Shared\models\ultralytics
+[32m[INFO][0m Adding extra search path ultralytics_bbox A:\Users\rhine\ComfyUI-Shared\models\ultralytics\bbox
+[32m[INFO][0m Adding extra search path ultralytics_segm A:\Users\rhine\ComfyUI-Shared\models\ultralytics\segm
+[32m[INFO][0m Adding extra search path unet A:\Users\rhine\ComfyUI-Shared\models\unet
+[32m[INFO][0m Adding extra search path unet A:\Users\rhine\ComfyUI-Shared\models\diffusion_models
+[32m[INFO][0m Adding extra search path vae A:\Users\rhine\ComfyUI-Shared\models\vae
+[32m[INFO][0m Adding extra search path diffusion_models A:\Users\rhine\Downloads\minimax and realprovisualXL
+[32m[INFO][0m Adding extra search path checkpoints A:\Users\rhine\Downloads\minimax and realprovisualXL
+[32m[INFO][0m Adding extra search path controlnet A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_controlnet_aux\ckpts\hr16\ControlNet-HandRefiner-pruned
+[START] Security scan
+[DONE] Security scan
+## ComfyUI-Manager: installing dependencies done.
+** ComfyUI startup time: 2026-09-15 00:19:21.529
+** Platform: Windows
+** Python version: 3.13.12 (main, Feb 12 2026, 00:38:53) [MSC v.1944 64 bit (AMD64)]
+** Python executable: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Scripts\python.exe
+** ComfyUI Path: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI
+** ComfyUI Base Folder Path: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI
+** User directory: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\user
+** ComfyUI-Manager config path: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\user\__manager\config.ini
+** Log path: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\user\comfyui.log
+[32m[INFO][0m 
+Prestartup times for custom nodes:
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\rgthree-comfy
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-Easy-Use
+[32m[INFO][0m    9.7 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-manager
+[32m[INFO][0m 
+[32m[INFO][0m Found comfy_kitchen backend triton: {'available': True, 'disabled': True, 'unavailable_reason': None, 'capabilities': ['adaln', 'apply_rope', 'apply_rope1', 'apply_rope1_', 'apply_rope_', 'apply_rope_split_half', 'apply_rope_split_half1', 'apply_rope_split_half1_', 'apply_rope_split_half_', 'dequantize_nvfp4', 'dequantize_per_tensor_fp8', 'int8_linear', 'na3d', 'quantize_and_rotate_rowwise', 'quantize_int8_rowwise', 'quantize_mxfp8', 'quantize_nvfp4', 'quantize_per_tensor_fp8', 'rms_adaln', 'rms_rope', 'rms_rope1', 'rms_rope1_', 'rms_rope_', 'rms_rope_split_half', 'rms_rope_split_half1', 'rms_rope_split_half1_', 'rms_rope_split_half_', 'w4a8_int8_linear']}
+[32m[INFO][0m Found comfy_kitchen backend cuda: {'available': True, 'disabled': False, 'unavailable_reason': None, 'capabilities': ['adaln', 'apply_rope', 'apply_rope1', 'apply_rope1_', 'apply_rope_', 'apply_rope_split_half', 'apply_rope_split_half1', 'apply_rope_split_half1_', 'apply_rope_split_half_', 'convrot_w4a4_linear', 'dequantize_convrot_w4a4_weight', 'dequantize_int8_convrot_weight', 'dequantize_int8_convrot_weight_dtype', 'dequantize_int8_simple', 'dequantize_int8_simple_dtype', 'dequantize_nvfp4', 'dequantize_per_tensor_fp8', 'dequantize_w4a8_int8_weight', 'gemv_awq_w4a16', 'int8_linear', 'na3d', 'prepare_int4_weight_for_int8_linear', 'quantize_and_rotate_rowwise', 'quantize_convrot_w4a4_weight', 'quantize_int8_convrot_weight', 'quantize_int8_rowwise', 'quantize_int8_tensorwise', 'quantize_mxfp8', 'quantize_nvfp4', 'quantize_per_tensor_fp8', 'quantize_svdquant_w4a4', 'quantize_w4a8_int8_weight', 'rms_adaln', 'rms_rope', 'rms_rope1', 'rms_rope1_', 'rms_rope_', 'rms_rope_split_half', 'rms_rope_split_half1', 'rms_rope_split_half1_', 'rms_rope_split_half_', 'rotate_int8_convrot_weight', 'scaled_mm_nvfp4', 'scaled_mm_svdquant_w4a4', 'stochastic_rounding_fp8', 'w4a8_int8_linear']}
+[32m[INFO][0m Found comfy_kitchen backend hip: {'available': False, 'disabled': False, 'unavailable_reason': 'PyTorch ROCm/HIP runtime not available', 'capabilities': []}
+[32m[INFO][0m Found comfy_kitchen backend eager: {'available': True, 'disabled': False, 'unavailable_reason': None, 'capabilities': ['adaln', 'apply_rope', 'apply_rope1', 'apply_rope1_', 'apply_rope_', 'apply_rope_split_half', 'apply_rope_split_half1', 'apply_rope_split_half1_', 'apply_rope_split_half_', 'convrot_w4a4_linear', 'dequantize_convrot_w4a4_weight', 'dequantize_int8_convrot_weight', 'dequantize_int8_convrot_weight_dtype', 'dequantize_int8_embedding', 'dequantize_int8_simple', 'dequantize_int8_simple_dtype', 'dequantize_mxfp8', 'dequantize_nvfp4', 'dequantize_per_tensor_fp8', 'dequantize_w4a8_int8_weight', 'gemv_awq_w4a16', 'int8_linear', 'na3d', 'prepare_int4_weight_for_int8_linear', 'quantize_and_rotate_rowwise', 'quantize_convrot_w4a4_weight', 'quantize_int8_convrot_weight', 'quantize_int8_rowwise', 'quantize_int8_tensorwise', 'quantize_mxfp8', 'quantize_nvfp4', 'quantize_per_tensor_fp8', 'quantize_svdquant_w4a4', 'quantize_w4a8_int8_weight', 'rms_adaln', 'rms_rope', 'rms_rope1', 'rms_rope1_', 'rms_rope_', 'rms_rope_split_half', 'rms_rope_split_half1', 'rms_rope_split_half1_', 'rms_rope_split_half_', 'rotate_int8_convrot_weight', 'scaled_mm_mxfp8', 'scaled_mm_nvfp4', 'scaled_mm_svdquant_w4a4', 'stochastic_rounding_fp8', 'w4a8_int8_linear']}
+[32m[INFO][0m Checkpoint files will always be loaded safely.
+[32m[INFO][0m Total VRAM 16303 MB, total RAM 31621 MB
+[32m[INFO][0m pytorch version: 2.10.0+cu130
+[32m[INFO][0m Set vram state to: NORMAL_VRAM
+[32m[INFO][0m Device: cuda:0 NVIDIA GeForce RTX 5080 : cudaMallocAsync
+[32m[INFO][0m Using async weight offloading with 2 streams
+[32m[INFO][0m Enabled pinned memory 12648.0
+[32m[INFO][0m working around nvidia conv3d memory bug.
+[32m[INFO][0m Using pytorch attention
+[32m[INFO][0m aimdo: src-win/cuda-detour.c:38:INFO:aimdo_setup_hooks: installing 6 hooks
+[32m[INFO][0m aimdo: src/control.c:262:INFO:comfy-aimdo NVML pressure enabled
+[32m[INFO][0m aimdo: src-win/shmem-detect.c:80:INFO:comfy-aimdo WDDM adapter match: NVIDIA GeForce RTX 5080 runtime_luid=00000000:00011e4e dxgi_luid=00000000:00011e4e
+[32m[INFO][0m aimdo: src/control.c:277:INFO:comfy-aimdo inited for GPU: NVIDIA GeForce RTX 5080 (VRAM: 16302 MB)
+[32m[INFO][0m DynamicVRAM support detected and enabled
+[32m[INFO][0m Python version: 3.13.12 (main, Feb 12 2026, 00:38:53) [MSC v.1944 64 bit (AMD64)]
+[32m[INFO][0m ComfyUI version: 0.34.0
+[32m[INFO][0m comfy-aimdo version: 0.5.1
+[32m[INFO][0m comfy-kitchen version: 0.2.31
+[32m[INFO][0m comfyui-frontend-package version: 1.51.9
+[32m[INFO][0m comfyui-workflow-templates version: 0.11.54
+[32m[INFO][0m comfyui-embedded-docs version: 0.5.10
+[32m[INFO][0m comfy-kitchen version: 0.2.31
+[32m[INFO][0m comfy-aimdo version: 0.5.1
+[32m[INFO][0m [Prompt Server] web root: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\comfyui_frontend_package\static
+[32m[INFO][0m Asset seeder disabled
+[32m[INFO][0m No OpenGL_accelerate module loaded: No module named 'OpenGL_accelerate'
+[32m[INFO][0m [comfy-pilot] Routes registered successfully
+Web extensions folder found at A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\web\extensions\ComfyLiterals
+[comfyui-mcp-panel] panel assets given a cache policy where the host set none (Cache-Control: no-store)
+[comfyui-mcp-panel] agent panel routes registered (read-only; orchestrator runs out-of-band)
+Adding A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes to sys.path
+[36mEfficiency Nodes:[0m Attempting to add Control Net options to the 'HiRes-Fix Script' Node (comfyui_controlnet_aux add-on)...[92mSuccess![0m
+Loaded Efficiency nodes from A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\efficiency-nodes-comfyui
+Loaded ControlNetPreprocessors nodes from A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_controlnet_aux
+Could not find AdvancedControlNet nodes
+Could not find AnimateDiff nodes
+Could not find IPAdapter nodes
+Loaded VideoHelperSuite from A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-VideoHelperSuite
+Could not load ImpactPack nodes Could not find ImpactPack nodes
+[1m[33m[WARNING][0m Traceback (most recent call last):
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\nodes.py", line 2264, in load_custom_node
+    module_spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1023, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-dream-project\__init__.py", line 19, in <module>
+    from .calculate import *
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-dream-project\calculate.py", line 4, in <module>
+    from evalidate import Expr, EvalException, base_eval_model
+ModuleNotFoundError: No module named 'evalidate'
+
+[1m[33m[WARNING][0m Cannot import A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-dream-project module for custom nodes: No module named 'evalidate'
+[34m[ComfyUI-Easy-Use] server: [0mv1.3.7 [92mLoaded[0m
+[34m[ComfyUI-Easy-Use] web root: [0mA:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-Easy-Use\web_version/v2 [92mLoaded[0m
+Requirement already satisfied: pilgram in A:\Users\rhine\AppData\Local\Programs\Python\Python312\Lib\site-packages (2.0.0)
+Requirement already satisfied: numpy>=1.21.0 in A:\Users\rhine\AppData\Local\Programs\Python\Python312\Lib\site-packages (from pilgram) (2.5.2)
+Requirement already satisfied: pillow>=10.3.0 in A:\Users\rhine\AppData\Local\Programs\Python\Python312\Lib\site-packages (from pilgram) (12.3.0)
+ComfyUI-FreeMemory nodes loaded: Image, Latent, Model, CLIP, and String versions available.
+[32m[INFO][0m ComfyUI-GGUF: Allowing full torch compile
+[1m[33m[WARNING][0m Traceback (most recent call last):
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\nodes.py", line 2264, in load_custom_node
+    module_spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1023, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-GIMM-VFI\__init__.py", line 1, in <module>
+    from .nodes import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-GIMM-VFI\nodes.py", line 13, in <module>
+    from .gimmvfi.generalizable_INR.gimmvfi_r import GIMMVFI_R
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-GIMM-VFI\gimmvfi\generalizable_INR\gimmvfi_r.py", line 31, in <module>
+    from .modules.softsplat import softsplat
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-GIMM-VFI\gimmvfi\generalizable_INR\modules\softsplat.py", line 12, in <module>
+    import cupy
+ModuleNotFoundError: No module named 'cupy'
+
+[1m[33m[WARNING][0m Cannot import A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-GIMM-VFI module for custom nodes: No module named 'cupy'
+[32m[INFO][0m ### Loading: ComfyUI-Impact-Pack (V8.28.3)
+[1m[33m[WARNING][0m 
+----------------------------------------------------------------------------
+[Impact Pack] The SAM2 functionality is unavailable because the `facebook/sam2` dependency is not installed.
+
+Installation command:
+A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Scripts\python.exe -m pip install git+https://github.com/facebookresearch/sam2
+----------------------------------------------------------------------------
+
+[1m[33m[WARNING][0m 
+----------------------------------------------------------------------------
+[Impact Pack] The SAM2 functionality is unavailable because the `facebook/sam2` dependency is not installed.
+
+Installation command:
+A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Scripts\python.exe -m pip install git+https://github.com/facebookresearch/sam2
+----------------------------------------------------------------------------
+
+[1m[33m[WARNING][0m [Impact Pack] custom_wildcards path not found: A:\Users\rhine\Documents\ComfyUI\custom_nodes\comfyui-impact-pack\custom_wildcards. Using default path.
+[32m[INFO][0m [Impact Pack] Wildcard total size (0.00 MB) is within cache limit (50.00 MB). Using full cache mode.
+[32m[INFO][0m [Impact Pack] Wildcards loading done.
+[32m[INFO][0m ### Loading: ComfyUI-Impact-Subpack (V1.3.5)
+[32m[INFO][0m [Impact Pack/Subpack] Using folder_paths to determine whitelist path: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\user\default\ComfyUI-Impact-Subpack\model-whitelist.txt
+[32m[INFO][0m [Impact Pack/Subpack] Ensured whitelist directory exists: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\user\default\ComfyUI-Impact-Subpack
+[32m[INFO][0m [Impact Pack/Subpack] Loaded 0 model(s) from whitelist: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\user\default\ComfyUI-Impact-Subpack\model-whitelist.txt
+[32m[INFO][0m [Impact Subpack] ultralytics_bbox: A:\Users\rhine\ComfyUI-Shared\models\ultralytics\bbox, A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\models\ultralytics\bbox
+[32m[INFO][0m [Impact Subpack] ultralytics_segm: A:\Users\rhine\ComfyUI-Shared\models\ultralytics\segm, A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\models\ultralytics\segm
+✅ K3NK Image Grab (WanVideoWrapper frame groups): Loaded
+   - anchor_frame_index: selects a specific frame from the anchor file
+   - batch_start_frame: starting FRAME GROUP index (0=first group, 1=second group, etc.)
+   - batch_end_frame: FRAME GROUPS to remove from END (0=none, 1=remove last group, etc.)
+   - max_batch_frames: maximum number of frames (0=ignored)
+   - WanVideoWrapper uses groups of 4 frames - parameters work with frame groups
+   - Example: batch_start_frame=1 skips the first 4 frames
+   - Example: batch_end_frame=1 removes the last 4 frames
+   - frame_stride: applies to frames inside .latent files when latent_frame_stride=True
+[1m[33m[WARNING][0m Traceback (most recent call last):
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\nodes.py", line 2264, in load_custom_node
+    module_spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1023, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-levelpixel\__init__.py", line 29, in <module>
+    imported_module = importlib.import_module(f".nodes.{module_name}", __name__)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\standalone-env\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1023, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-levelpixel\nodes\text\text_utils_LP.py", line 4, in <module>
+    import wordninja
+ModuleNotFoundError: No module named 'wordninja'
+
+[1m[33m[WARNING][0m Cannot import A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-levelpixel module for custom nodes: No module named 'wordninja'
+[1m[33m[WARNING][0m Traceback (most recent call last):
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\nodes.py", line 2264, in load_custom_node
+    module_spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1023, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-LTXVideo\__init__.py", line 13, in <module>
+    from .gemma_encoder import LTXVGemmaCLIPModelLoader, LTXVGemmaEnhancePrompt
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-LTXVideo\gemma_encoder.py", line 23, in <module>
+    from .text_embeddings_connectors import load_text_embeddings_pipeline
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-LTXVideo\text_embeddings_connectors.py", line 18, in <module>
+    from .embeddings_connector import (
+    ...<3 lines>...
+    )
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-LTXVideo\embeddings_connector.py", line 7, in <module>
+    from comfy.ldm.lightricks.model import (
+    ...<7 lines>...
+    )
+ImportError: cannot import name 'interleaved_freqs_cis' from 'comfy.ldm.lightricks.model' (A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\ldm\lightricks\model.py)
+
+[1m[33m[WARNING][0m Cannot import A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-LTXVideo module for custom nodes: cannot import name 'interleaved_freqs_cis' from 'comfy.ldm.lightricks.model' (A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\ldm\lightricks\model.py)
+[32m[INFO][0m ### Loading: ComfyUI-Manager (V3.40)
+[32m[INFO][0m [ComfyUI-Manager] network_mode: public
+[32m[INFO][0m [ComfyUI-Manager] ComfyUI per-queue preview override detected (PR #11261). Manager's preview method feature is disabled. Use ComfyUI's --preview-method CLI option or 'Settings > Execution > Live preview method'.
+[32m[INFO][0m ### ComfyUI Version: v0.34.0-49-g5c23fb7b | Released on '2026-09-04'
+[32m[INFO][0m [ComfyUI-Manager] default cache updated: https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/alter-list.json
+[32m[INFO][0m [ComfyUI-Manager] default cache updated: https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/model-list.json
+[32m[INFO][0m [ComfyUI-Manager] default cache updated: https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/github-stats.json
+[32m[INFO][0m [ComfyUI-Manager] default cache updated: https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/custom-node-list.json
+[32m[INFO][0m [ComfyUI-Manager] default cache updated: https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/extension-node-map.json
+FETCH ComfyRegistry Data: 5/187
+[1m[33m[WARNING][0m Traceback (most recent call last):
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\nodes.py", line 2264, in load_custom_node
+    module_spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1023, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-propost\__init__.py", line 1, in <module>
+    from .nodes import NODE_CLASS_MAPPINGS
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-propost\nodes.py", line 8, in <module>
+    from .utils import loading as loading_utils
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-propost\utils\loading.py", line 3, in <module>
+    from colour.io.luts.iridas_cube import read_LUT_IridasCube, LUT3D, LUT3x1D
+ModuleNotFoundError: No module named 'colour'
+
+[1m[33m[WARNING][0m Cannot import A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-propost module for custom nodes: No module named 'colour'
+[QwenVL Debug] SAGE_ATTENTION_AVAILABLE: True
+[QwenVL Debug] CUDA capability: 12.0
+[QwenVL Debug] Final ATTENTION_MODES: ['auto', 'sage', 'flash_attention_2', 'sdpa']
+[QwenVL] NOTE: SageAttention option shown for testing. Install with: pip install sageattention
+Error loading module AILab_QwenVL_GGUF: No module named 'llama_cpp'
+Error loading module AILab_QwenVL_GGUF_PromptEnhancer: No module named 'llama_cpp'
+FETCH ComfyRegistry Data: 10/187
+FETCH ComfyRegistry Data: 15/187
+✅ TensorRT already installed (version: 10.15.1.29)
+[[94mComfyUI-Rife-Tensorrt[0m|[92mINFO[0m] - [92mSuccessfully loaded configuration from load_rife_config.json[0m
+[92mRvTools v2: [0mVersion: 2.5.2[0m
+Requirement already satisfied: pilgram in A:\Users\rhine\AppData\Local\Programs\Python\Python312\Lib\site-packages (2.0.0)
+Requirement already satisfied: numpy>=1.21.0 in A:\Users\rhine\AppData\Local\Programs\Python\Python312\Lib\site-packages (from pilgram) (2.5.2)
+Requirement already satisfied: pillow>=10.3.0 in A:\Users\rhine\AppData\Local\Programs\Python\Python312\Lib\site-packages (from pilgram) (12.3.0)
+⚡ SeedVR2 optimizations check: SageAttention ✅ | Flash Attention ❌ | Triton ✅
+💡 Optional: pip install flash-attn
+🔧 Conv3d workaround active: PyTorch 2.10.0, cuDNN 91200 (fixing VAE 3x memory bug)
+📊 Initial CUDA memory: 14.58GB free / 15.92GB total
+FETCH ComfyRegistry Data: 20/187
+no module 'xformers'. Processing without...
+no module 'xformers'. Processing without...
+[1m[33m[WARNING][0m Traceback (most recent call last):
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\nodes.py", line 2264, in load_custom_node
+    module_spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1023, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-tara-llm-integration\__init__.py", line 1, in <module>
+    from .py.tara_master import (
+    ...<4 lines>...
+    )
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-tara-llm-integration\py\tara_master.py", line 1, in <module>
+    import openai
+ModuleNotFoundError: No module named 'openai'
+
+[1m[33m[WARNING][0m Cannot import A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-tara-llm-integration module for custom nodes: No module named 'openai'
+[[94mComfyUI-Upscaler-Tensorrt[0m|[92mINFO[0m] - [92mSuccessfully loaded configuration from load_upscaler_config.json[0m
+[32m[INFO][0m [vsLinx] Combo type validation fix applied.
+[1m[33m[WARNING][0m WanVideoWrapper WARNING: FantasyPortrait nodes not available: No module named 'onnx'
+(pysssss:WD14Tagger) [DEBUG] Available ORT providers: AzureExecutionProvider, CPUExecutionProvider
+(pysssss:WD14Tagger) [DEBUG] Using ORT providers: CUDAExecutionProvider, CPUExecutionProvider
+### ComfyUI-Workflow-Encrypt: Copy .js from 'A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-workflow-encrypt\js\comfyui-workflow-encrypt.js' to 'A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\web\extensions\comfyui-workflow-encrypt'
+FETCH ComfyRegistry Data: 25/187
+------------------------------------------
+[34mComfyroll Studio v1.76 : [92m 175 Nodes Loaded[0m
+------------------------------------------
+** For changes, please see patch notes at https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes/blob/main/Patch_Notes.md
+** For help, please see the wiki at https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes/wiki
+------------------------------------------
+[36;20m[A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_controlnet_aux] | INFO -> Using ckpts path: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_controlnet_aux\ckpts[0m
+[36;20m[A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_controlnet_aux] | INFO -> Using symlinks: False[0m
+[36;20m[A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_controlnet_aux] | INFO -> Using ort providers: ['CUDAExecutionProvider', 'DirectMLExecutionProvider', 'OpenVINOExecutionProvider', 'ROCMExecutionProvider', 'CPUExecutionProvider', 'CoreMLExecutionProvider'][0m
+[1m[33m[WARNING][0m Traceback (most recent call last):
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\nodes.py", line 2264, in load_custom_node
+    module_spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1023, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI_KokoroTTS_MW\__init__.py", line 2, in <module>
+    from .KokoroTextToSpeech import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI_KokoroTTS_MW\KokoroTextToSpeech.py", line 1, in <module>
+    from kokoro import KPipeline, KModel
+ModuleNotFoundError: No module named 'kokoro'
+
+[1m[33m[WARNING][0m Cannot import A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI_KokoroTTS_MW module for custom nodes: No module named 'kokoro'
+[1m[33m[WARNING][0m Traceback (most recent call last):
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\nodes.py", line 2264, in load_custom_node
+    module_spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1023, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_layerstyle\__init__.py", line 63, in <module>
+    imported_module = importlib.import_module(".py.{}".format(name), __name__)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\standalone-env\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1023, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_layerstyle\py\add_grain.py", line 1, in <module>
+    from .imagefunc import *
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_layerstyle\py\imagefunc.py", line 37, in <module>
+    from .blendmodes import *
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_layerstyle\py\blendmodes.py", line 10, in <module>
+    from blend_modes import difference, normal, screen, soft_light, lighten_only, dodge, \
+                            addition, darken_only, multiply, hard_light, \
+                            grain_extract, grain_merge, divide, overlay
+ModuleNotFoundError: No module named 'blend_modes'
+
+[1m[33m[WARNING][0m Cannot import A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_layerstyle module for custom nodes: No module named 'blend_modes'
+FETCH ComfyRegistry Data: 30/187
+[94m[ComfyAssets Selectors] Loaded..[0m
+[92m[tinyterraNodes] [32mLoaded[0m
+USDU batch patches applied successfully.
+[32m[INFO][0m USDU batch patches applied successfully.
+[36mEfficiency Nodes:[0m Attempting to add Control Net options to the 'HiRes-Fix Script' Node (comfyui_controlnet_aux add-on)...[92mSuccess![0m
+onprompt handler registered
+[1m[33m[WARNING][0m Traceback (most recent call last):
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\nodes.py", line 2264, in load_custom_node
+    module_spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1023, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\RES4LYF\__init__.py", line 6, in <module>
+    from . import conditioning
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\RES4LYF\conditioning.py", line 25, in <module>
+    from .beta.constants import MAX_STEPS
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\RES4LYF\beta\__init__.py", line 2, in <module>
+    from . import rk_sampler_beta
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\RES4LYF\beta\rk_sampler_beta.py", line 19, in <module>
+    from .rk_noise_sampler_beta import RK_NoiseSampler
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\RES4LYF\beta\rk_noise_sampler_beta.py", line 12, in <module>
+    from .noise_classes import NOISE_GENERATOR_CLASSES, NOISE_GENERATOR_CLASSES_SIMPLE
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\RES4LYF\beta\noise_classes.py", line 9, in <module>
+    import pywt
+ModuleNotFoundError: No module named 'pywt'
+
+[1m[33m[WARNING][0m Cannot import A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\RES4LYF module for custom nodes: No module named 'pywt'
+
+[92m[rgthree-comfy] Loaded 48 epic nodes. 🎉[0m
+
+[33m[rgthree-comfy] ComfyUI's new Node 2.0 rendering may be incompatible with some rgthree-comfy nodes and features, breaking some rendering as well as losing the ability to access a node's properties (a vital part of many nodes). It also appears to run MUCH more slowly spiking CPU usage and causing jankiness and unresponsiveness, especially with large workflows. Personally I am not planning to use the new Nodes 2.0 and, unfortunately, am not able to invest the time to investigate and overhaul rgthree-comfy where needed. If you have issues when Nodes 2.0 is enabled, I'd urge you to switch it off as well and join me in hoping ComfyUI is not planning to deprecate the existing, stable canvas rendering all together.
+[0m
+[32m[INFO][0m ComfyUI-GGUF: Allowing full torch compile
+────────────────────────────────────────────────────────────────────────────────
+┌───────────────────────────────── WAS Extras ─────────────────────────────────┐
+│ Nodes in this repo solve specific problems and may not fit every workflow.   │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────┬──────────┬────────┬───────┐
+│ Module/File                                      │ Time (s) │ Status │ Error │
+├──────────────────────────────────────────────────┼──────────┼────────┼───────┤
+│ None                                             │     0.00 │   OK   │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.00 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\DebugThis.py     │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.00 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\cond\__init__.py │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.00 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\cond\Conditionin │          │        │       │
+│ gBlend.py                                        │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.01 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\image\__init__.p │          │        │       │
+│ y                                                │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.00 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\image\CameraMoti │          │        │       │
+│ onTrajectorySimple.py                            │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.00 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\image\ImageTileS │          │        │       │
+│ huffle.py                                        │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.00 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\image\TiledUpsca │          │        │       │
+│ leModel.py                                       │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.00 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\image\VividSharp │          │        │       │
+│ en.py                                            │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.00 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\image\VividSharp │          │        │       │
+│ enV2.py                                          │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.01 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\image\WASLUT.py  │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.00 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\image\WASWanExpo │          │        │       │
+│ sureStabilizer.py                                │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.00 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\latent\__init__. │          │        │       │
+│ py                                               │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.00 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\latent\BLVaeEnco │          │        │       │
+│ de.py                                            │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.00 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\latent\VAEEncode │          │        │       │
+│ ForInpaint.py                                    │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.00 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\latent\WASEdgeSa │          │        │       │
+│ feLatentUpscale.py                               │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.00 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\latent\WASHybrid │          │        │       │
+│ LatentUpscale.py                                 │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.00 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\latent\WASLatent │          │        │       │
+│ ContrastLimitedDetailBoost.py                    │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.00 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\lora\__init__.py │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.00 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\lora\WASLoraRewe │          │        │       │
+│ ight.py                                          │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.02 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\lora\WASPowerLor │          │        │       │
+│ aMerger.py                                       │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.00 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\sampling\__init_ │          │        │       │
+│ _.py                                             │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.01 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\sampling\WanMoES │          │        │       │
+│ ampler.py                                        │          │        │       │
+│ A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyU │     0.00 │   OK   │       │
+│ I\custom_nodes\was-extras\nodes\sampling\ksample │          │        │       │
+│ r_sequence.py                                    │          │        │       │
+└──────────────────────────────────────────────────┴──────────┴────────┴───────┘
+Totals: 24 ok, 0 failed, 24 modules.
+FETCH ComfyRegistry Data: 35/187
+[34mWAS Node Suite: [0mOpenCV Python FFMPEG support is enabled[0m
+[34mWAS Node Suite [93mWarning: [0m`ffmpeg_bin_path` is not set in `A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\was-node-suite-comfyui\was_suite_config.json` config file. Will attempt to use system ffmpeg binaries if available.[0m
+[34mWAS Node Suite: [0mFinished.[0m [32mLoaded[0m [0m217[0m [32mnodes successfully.[0m
+
+	[3m[93m"Creativity takes courage."[0m[3m - Henri Matisse[0m
+
+[34mWAS Node Suite: [0mOpenCV Python FFMPEG support is enabled[0m
+[34mWAS Node Suite: [0m`ffmpeg_bin_path` is set to: C:\Users\rhine\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.1-full_build\bin\ffmpeg.exe[0m
+[34mWAS Node Suite: [0mFinished.[0m [32mLoaded[0m [0m220[0m [32mnodes successfully.[0m
+
+	[3m[93m"Art is the bridge that connects imagination to reality."[0m[3m - Unknown[0m
+
+[1m[33m[WARNING][0m Traceback (most recent call last):
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\nodes.py", line 2264, in load_custom_node
+    module_spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1023, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\whiterabbit\__init__.py", line 11, in <module>
+    from .post_process import BatchWatermarkSingle
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\whiterabbit\post_process.py", line 16, in <module>
+    from torchlanc import lanczos_resize
+ModuleNotFoundError: No module named 'torchlanc'
+
+[1m[33m[WARNING][0m Cannot import A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\whiterabbit module for custom nodes: No module named 'torchlanc'
+[1m[33m[WARNING][0m Traceback (most recent call last):
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\nodes.py", line 2264, in load_custom_node
+    module_spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1023, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\zz_sage_dtype_compat\__init__.py", line 2, in <module>
+    from comfy.ldm.modules.attention import _install_sage_fp32_compat
+ImportError: cannot import name '_install_sage_fp32_compat' from 'comfy.ldm.modules.attention' (A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\ldm\modules\attention.py)
+
+[1m[33m[WARNING][0m Cannot import A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\zz_sage_dtype_compat module for custom nodes: cannot import name '_install_sage_fp32_compat' from 'comfy.ldm.modules.attention' (A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\ldm\modules\attention.py)
+[32m[INFO][0m 
+Import times for custom nodes:
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\Comfyui-Memory_Cleanup
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-PainterLongVideo
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-PainterI2V
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-pause
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\HF-Flux-ComfyUI
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-FreeMemory
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-preview-text-fix
+[32m[INFO][0m    0.0 seconds (IMPORT FAILED): A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\zz_sage_dtype_compat
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-GGUF
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-Upscaler-Tensorrt
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-find-perfect-resolution
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\efficiency-nodes-comfyui
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-wd14-tagger
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-WanMoeKSampler
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-K3NK-ComfyUI-Nodes
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\wan22fmlf
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI_JPS-Nodes
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-unload-model
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI_pose_inter
+[32m[INFO][0m    0.0 seconds (IMPORT FAILED): A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI_KokoroTTS_MW
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\smartmodelloaders-mxd
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\derfuu_comfyui_moddednodes
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\websocket_image_save.py
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\demonalone-nodes-comfyui
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-Olm-DragCrop
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_ipadapter_plus
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-various
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-Inpaint-CropAndStitch
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyLiterals
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-custom-scripts
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI_SeedVR2_Tiler
+[32m[INFO][0m    0.0 seconds (IMPORT FAILED): A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\whiterabbit
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-mxtoolkit
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-MiniMax-H3-Turbo
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\model_attention_backend_compat
+[32m[INFO][0m    0.0 seconds (IMPORT FAILED): A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-propost
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_audio_sanitizer
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\focus_nodes
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\cg-use-everywhere
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-impact-subpack
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-vslinx-nodes
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-mcp-throwaway-probe
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI_Selectors
+[32m[INFO][0m    0.0 seconds (IMPORT FAILED): A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-tara-llm-integration
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-AutoCropFaces
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-florence2
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-frame-interpolation
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\feihou-toolbox
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-QwenVL-Mod
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-ltxvideo-registry-mattabyte
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-MelBandRoFormer
+[32m[INFO][0m    0.1 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-VFI
+[32m[INFO][0m    0.1 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-VideoHelperSuite
+[32m[INFO][0m    0.1 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-FramePackWrapper
+[32m[INFO][0m    0.1 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-mickmumpitz-nodes
+[32m[INFO][0m    0.1 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-NovaSR
+[32m[INFO][0m    0.1 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-kjnodes
+[32m[INFO][0m    0.1 seconds (IMPORT FAILED): A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_layerstyle
+[32m[INFO][0m    0.1 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_ultimatesdupscale
+[32m[INFO][0m    0.1 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\gguf
+[32m[INFO][0m    0.1 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_essentials
+[32m[INFO][0m    0.1 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI_tinyterraNodes
+[32m[INFO][0m    0.1 seconds (IMPORT FAILED): A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\RES4LYF
+[32m[INFO][0m    0.1 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-agent-panel
+[32m[INFO][0m    0.1 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\rgthree-comfy
+[32m[INFO][0m    0.1 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_controlnet_aux
+[32m[INFO][0m    0.1 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ostris_nodes_comfyui
+[32m[INFO][0m    0.2 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-DBZ-Voice
+[32m[INFO][0m    0.2 seconds (IMPORT FAILED): A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-levelpixel
+[32m[INFO][0m    0.2 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfy-image-saver
+[32m[INFO][0m    0.2 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-ProportionChanger
+[32m[INFO][0m    0.2 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-DaSiWa-Nodes
+[32m[INFO][0m    0.2 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-image-saver
+[32m[INFO][0m    0.2 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\was-extras
+[32m[INFO][0m    0.2 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI_ProPainter_Nodes
+[32m[INFO][0m    0.2 seconds (IMPORT FAILED): A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-GIMM-VFI
+[32m[INFO][0m    0.2 seconds (IMPORT FAILED): A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-LTXVideo
+[32m[INFO][0m    0.3 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-Whisper
+[32m[INFO][0m    0.3 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-MaxedOut
+[32m[INFO][0m    0.3 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfy-pilot
+[32m[INFO][0m    0.4 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI_Sonic
+[32m[INFO][0m    0.4 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-mmaudio-suite
+[32m[INFO][0m    0.4 seconds (IMPORT FAILED): A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-dream-project
+[32m[INFO][0m    0.5 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-feihou-easy-h3
+[32m[INFO][0m    0.6 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_birefnet_ll
+[32m[INFO][0m    0.6 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-impact-pack
+[32m[INFO][0m    0.6 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI_Comfyroll_CustomNodes
+[32m[INFO][0m    0.8 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-WanVideoWrapper
+[32m[INFO][0m    0.9 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\was-ns
+[32m[INFO][0m    1.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-SeedVR2_VideoUpscaler
+[32m[INFO][0m    1.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\was-node-suite-comfyui
+[32m[INFO][0m    1.1 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-workflow-encrypt
+[32m[INFO][0m    1.1 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\Comfyui-ergouzi-Nodes
+[32m[INFO][0m    1.2 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-advancedliveportrait
+[32m[INFO][0m    1.5 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-rvtools_v2
+[32m[INFO][0m    1.8 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-MediaMixer
+[32m[INFO][0m    2.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-manager
+[32m[INFO][0m    2.5 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-mmaudio
+[32m[INFO][0m    2.9 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-SUPIR
+[32m[INFO][0m    3.6 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_nvidia_rtx_nodes
+[32m[INFO][0m    4.2 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-art-venture
+[32m[INFO][0m    4.6 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-Hunyuan3DWrapper
+[32m[INFO][0m    5.2 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-RIFE-TensorRT-Auto
+[32m[INFO][0m   13.7 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-Easy-Use
+[32m[INFO][0m 
+[32m[INFO][0m Context impl SQLiteImpl.
+[32m[INFO][0m Will assume non-transactional DDL.
+[32m[INFO][0m Using RAM pressure cache.
+[32m[INFO][0m Starting server
+
+[32m[INFO][0m To see the GUI go to: http://127.0.0.1:8188
+FETCH ComfyRegistry Data: 40/187
+FETCH ComfyRegistry Data: 45/187
+FETCH ComfyRegistry Data: 50/187
+FETCH ComfyRegistry Data: 55/187
+FETCH ComfyRegistry Data: 60/187
+FETCH ComfyRegistry Data: 65/187
+FETCH ComfyRegistry Data: 70/187
+FETCH ComfyRegistry Data: 75/187
+FETCH ComfyRegistry Data: 80/187
+FETCH ComfyRegistry Data: 85/187
+FETCH ComfyRegistry Data: 90/187
+FETCH ComfyRegistry Data: 95/187
+FETCH ComfyRegistry Data: 100/187
+FETCH ComfyRegistry Data: 105/187
+FETCH ComfyRegistry Data: 110/187
+FETCH ComfyRegistry Data: 115/187
+FETCH ComfyRegistry Data: 120/187
+FETCH ComfyRegistry Data: 125/187
+FETCH ComfyRegistry Data: 130/187
+[32m[INFO][0m got prompt
+onprompt triggered
+Exception in prompt seed update
+onprompt triggered with data
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+FETCH ComfyRegistry Data: 135/187
+FETCH ComfyRegistry Data: 140/187
+FETCH ComfyRegistry Data: 145/187
+FETCH ComfyRegistry Data: 150/187
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]FETCH ComfyRegistry Data: 155/187
+FETCH ComfyRegistry Data: 160/187
+FETCH ComfyRegistry Data: 165/187
+FETCH ComfyRegistry Data: 170/187
+FETCH ComfyRegistry Data: 175/187
+FETCH ComfyRegistry Data: 180/187
+FETCH ComfyRegistry Data: 185/187
+FETCH ComfyRegistry Data [DONE]
+[32m[INFO][0m [ComfyUI-Manager] default cache updated: https://api.comfy.org/nodes
+[1m[31m[ERROR][0m [ComfyUI-Manager] An invalid channel was used: https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main
+Exception in thread Thread-15 (<lambda>):
+Traceback (most recent call last):
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\standalone-env\Lib\threading.py", line 1044, in _bootstrap_inner
+    self.run()
+    ~~~~~~~~^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\standalone-env\Lib\threading.py", line 995, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-manager\glob\manager_server.py", line 1962, in <lambda>
+    threading.Thread(target=lambda: asyncio.run(default_cache_update())).start()
+                                    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\standalone-env\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\standalone-env\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\standalone-env\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-manager\glob\manager_server.py", line 1957, in default_cache_update
+    await core.unified_manager.get_custom_nodes(channel_url, 'remote')
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-manager\glob\manager_core.py", line 885, in get_custom_nodes
+    nodes = await self.load_nightly(channel, mode)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-manager\glob\manager_core.py", line 855, in load_nightly
+    raise InvalidChannel(channel_url)
+manager_core.InvalidChannel: https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main
+  0%|          | 0/30 [00:48<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:48<23:21, 48.31s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<23:21, 48.31s/it]                                     7%|▋         | 2/30 [00:00<00:02,  9.77it/s] 10%|█         | 3/30 [00:00<00:03,  7.63it/s] 13%|█▎        | 4/30 [00:00<00:03,  6.52it/s] 17%|█▋        | 5/30 [00:00<00:03,  6.69it/s] 20%|██        | 6/30 [00:00<00:03,  6.41it/s] 23%|██▎       | 7/30 [00:00<00:03,  6.78it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.37it/s] 30%|███       | 9/30 [00:01<00:02,  7.02it/s] 33%|███▎      | 10/30 [00:01<00:03,  6.52it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.78it/s] 40%|████      | 12/30 [00:01<00:02,  6.47it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.62it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.35it/s] 50%|█████     | 15/30 [00:02<00:02,  6.97it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.62it/s] 57%|█████▋    | 17/30 [00:02<00:01,  6.67it/s] 60%|██████    | 18/30 [00:02<00:01,  6.54it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.58it/s] 67%|██████▋   | 20/30 [00:02<00:01,  6.52it/s] 70%|███████   | 21/30 [00:03<00:01,  6.44it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.90it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.87it/s] 80%|████████  | 24/30 [00:03<00:00,  6.45it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.55it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.88it/s] 90%|█████████ | 27/30 [00:03<00:00,  6.68it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.37it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.50it/s]100%|██████████| 30/30 [00:04<00:00,  6.84it/s]100%|██████████| 30/30 [00:04<00:00,  6.80it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 71.10 seconds[0m
+[32m[INFO][0m Using RAM pressure cache.
+[32m[INFO][0m got prompt
+onprompt triggered
+Exception in prompt seed update
+onprompt triggered with data
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type EPS
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load SDXLClipModel
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Model SDXLClipModel prepared for dynamic VRAM loading. 1560MB Staged. 0 patches attached. Force pre-loaded 180 weights: 400 KB.
+[32m[INFO][0m Requested to load SDXL
+[32m[INFO][0m Model SDXL prepared for dynamic VRAM loading. 4896MB Staged. 0 patches attached. Force pre-loaded 512 weights: 1197 KB.
+  0%|          | 0/30 [00:00<?, ?it/s]  0%|          | 0/30 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/30 [00:36<?, ?it/s,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:36<17:26, 36.10s/it,  Model Initialization complete!  ]  3%|▎         | 1/30 [00:00<17:26, 36.10s/it]                                     7%|▋         | 2/30 [00:00<00:02,  9.91it/s] 10%|█         | 3/30 [00:00<00:04,  6.37it/s] 13%|█▎        | 4/30 [00:00<00:04,  6.26it/s] 17%|█▋        | 5/30 [00:00<00:03,  7.04it/s] 20%|██        | 6/30 [00:00<00:03,  6.84it/s] 23%|██▎       | 7/30 [00:00<00:03,  6.58it/s] 27%|██▋       | 8/30 [00:01<00:03,  6.37it/s] 30%|███       | 9/30 [00:01<00:03,  6.92it/s] 33%|███▎      | 10/30 [00:01<00:02,  6.67it/s] 37%|███▋      | 11/30 [00:01<00:02,  6.52it/s] 40%|████      | 12/30 [00:01<00:02,  6.85it/s] 43%|████▎     | 13/30 [00:01<00:02,  6.59it/s] 47%|████▋     | 14/30 [00:02<00:02,  6.39it/s] 50%|█████     | 15/30 [00:02<00:02,  6.78it/s] 53%|█████▎    | 16/30 [00:02<00:02,  6.12it/s] 57%|█████▋    | 17/30 [00:02<00:01,  7.08it/s] 60%|██████    | 18/30 [00:02<00:01,  6.79it/s] 63%|██████▎   | 19/30 [00:02<00:01,  6.47it/s] 67%|██████▋   | 20/30 [00:02<00:01,  6.47it/s] 70%|███████   | 21/30 [00:03<00:01,  6.74it/s] 73%|███████▎  | 22/30 [00:03<00:01,  6.59it/s] 77%|███████▋  | 23/30 [00:03<00:01,  6.46it/s] 80%|████████  | 24/30 [00:03<00:00,  7.07it/s] 83%|████████▎ | 25/30 [00:03<00:00,  6.36it/s] 87%|████████▋ | 26/30 [00:03<00:00,  6.83it/s] 90%|█████████ | 27/30 [00:03<00:00,  6.48it/s] 93%|█████████▎| 28/30 [00:04<00:00,  6.45it/s] 97%|█████████▋| 29/30 [00:04<00:00,  6.89it/s]100%|██████████| 30/30 [00:04<00:00,  6.65it/s]100%|██████████| 30/30 [00:04<00:00,  6.77it/s]
+[32m[INFO][0m Requested to load AutoencoderKL
+[32m[INFO][0m Model AutoencoderKL prepared for dynamic VRAM loading. 159MB Staged. 0 patches attached. Force pre-loaded 112 weights: 91 KB.
+[32m[INFO][0m [32mPrompt executed in 54.32 seconds[0m
+[32m[INFO][0m Using RAM pressure cache.
+[32m[INFO][0m got prompt
+onprompt triggered
+Exception in prompt seed update
+onprompt triggered with data
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m gguf qtypes: Q6_K (169), F32 (73)
+[32m[INFO][0m Attempting to recreate sentencepiece tokenizer from GGUF file metadata...
+[32m[INFO][0m Created tokenizer with vocab size of 256384
+[1m[33m[WARNING][0m Dequantizing token_embd.weight to prevent runtime OOM.
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load WanTEModel

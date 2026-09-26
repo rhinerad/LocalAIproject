@@ -1,0 +1,38 @@
+{
+  "id": "a7c5db8ae5174b17",
+  "title": "Renamed",
+  "created": 1787095370.274045,
+  "updated": 1787095371.210108,
+  "messages": [
+    {
+      "role": "user",
+      "content": "where are we?",
+      "at": 1787095370.295501
+    },
+    {
+      "role": "assistant",
+      "content": "All 124 clips will render fresh; the manifest is empty.",
+      "at": 1787095370.455811
+    },
+    {
+      "role": "user",
+      "content": "read this\n\n--- attached: n.txt ---\nCONTENT-XYZ",
+      "at": 1787095370.4861095
+    },
+    {
+      "role": "assistant",
+      "content": "All 124 clips will render fresh; the manifest is empty.",
+      "at": 1787095370.541699
+    },
+    {
+      "role": "user",
+      "content": "long",
+      "at": 1787095370.608621
+    },
+    {
+      "role": "assistant",
+      "content": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n\n_[stopped]_",
+      "at": 1787095371.2089536
+    }
+  ]
+}

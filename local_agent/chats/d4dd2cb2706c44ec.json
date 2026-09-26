@@ -1,0 +1,25 @@
+{
+  "id": "d4dd2cb2706c44ec",
+  "title": "I am testing how fast you can respond. Reply wit…",
+  "created": 1788196270.5503912,
+  "updated": 1788196467.7939138,
+  "model": "huihui_ai/qwen3-abliterated:8b",
+  "workspace": "general",
+  "messages": [
+    {
+      "role": "user",
+      "content": "I am testing how fast you can respond. Reply with one short sentence confirming the test, and do not mention unrelated earlier chats.",
+      "at": 1788196270.5570421,
+      "source": "desktop"
+    },
+    {
+      "role": "assistant",
+      "content": "I confirm the test.",
+      "at": 1788196467.526038,
+      "retrieved_exemplar_ids": [],
+      "tool_evidence": [],
+      "source": "desktop"
+    }
+  ],
+  "last_tier": "cpu"
+}

@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is the young woman in <Picture 1>, with long dark hair and a blue cardigan.
+<Subject 2> is the park setting in <Picture 2>, featuring a stone bench and autumn trees.
+<Subject 3> is the second character in <Picture 3>, a man in a grey coat.
+
+summary:
+[reference generation] The target video shows <Subject 1> and <Subject 3> meeting in <Subject 2>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1]): fully_preserved - the woman's face, hair, and cardigan are retained.
+<Subject 2> (appears in [Shot 1]): fully_preserved - the park setting is retained.
+<Subject 3> (appears in [Shot 1]): fully_preserved - the man's face and grey coat are retained.
+
+detailed_description:
+The target video is in a naturalistic cinematic style with warm afternoon light.
+[Shot 1] A wide shot of <Subject 2>. <Subject 1> sits on the bench. <Subject 3> approaches from the right and stops nearby. They exchange a brief nod. The camera holds static, slightly low angle.
+
+overall_soundscape:
+Quiet outdoor ambience — breeze and distant city sounds.
+
+non_diegetic_music:
+N/A

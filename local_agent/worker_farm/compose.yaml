@@ -1,0 +1,37 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: local-agent-phase1-redis
+    restart: unless-stopped
+    # Wrapper reapplies secondary ACL users on every container start, including
+    # `docker restart`. requirepass / default user flags are unchanged.
+    entrypoint: ["sh", "/usr/local/bin/redis-with-acl-restore.sh"]
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+      - --appendfsync
+      - everysec
+      - --requirepass
+      - ${REDIS_PASSWORD}
+      - --maxmemory-policy
+      - noeviction
+    environment:
+      # The healthcheck uses this only inside the container. It is not exposed
+      # in a port mapping, application log, or checked-in environment file.
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    ports:
+      # Intentionally local-only. Do not change to 0.0.0.0.
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis-data:/data
+      - ./redis-with-acl-restore.sh:/usr/local/bin/redis-with-acl-restore.sh:ro
+      - ./runtime/redis-acl:/acl-restore:ro
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$${REDIS_PASSWORD}\" ping | grep PONG"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  redis-data:

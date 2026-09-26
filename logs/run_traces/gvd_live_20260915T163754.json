@@ -1,0 +1,197 @@
+{
+  "saved": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\models\\dspy_compiled\\generalized_video_director_mipro.json",
+  "optimizer": "mipro",
+  "mock": false,
+  "auto": null,
+  "trials": 1,
+  "trainset": 2,
+  "ids": "GVD-B01,GVD-D01",
+  "last_feedback": "{\"mock\": false, \"clip_id\": \"GVD-B01\", \"category\": \"backrooms\", \"hparams\": {\"cfg_scale\": 8.0, \"denoise\": 0.35, \"step_count\": 40.0}, \"step_count_int\": 40, \"scores\": null, \"mean\": null, \"minimum\": null, \"threshold\": null, \"passes_curriculum\": false, \"mipro\": 0.0, \"error\": \"TimeoutError: ComfyUI is not listening on 127.0.0.1:8188\", \"video_path\": null, \"positive_prompt\": \"Handheld first-person camcorder walk down a damp yellow Level 0 Backrooms hallway; fluorescent rectangles repeat into the distance over wet brown-beige carpet and sickly wallpaper. Handheld walking momentum, first-person camcorder tracking, heavy VHS artifacting, a continuous unbroken shot, realistic camera shake, 1990s home video aesthetic. Unlocked handheld camera. No actor face or torso, no apartment furniture, no readable text.\", \"vram_trace\": [{\"label\": \"after_prepare_comfy\", \"ts\": 1789504670.6025956, \"used_mib\": 296, \"free_mib\": 15682, \"total_mib\": 16303, \"owner\": {\"owner\": \"comfyui\", \"reason\": \"Wan 2.1 generation\", \"since\": 1789504670.6015978}}]}",
+  "history_n": 4,
+  "history": [
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 0.75,
+        "step_count": 24.0
+      },
+      "step_count_int": 24,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "error": "TimeoutError: ComfyUI is not listening on 127.0.0.1:8188",
+      "video_path": null,
+      "positive_prompt": "A cinematic drone shot flies in from the open ocean toward sheer Atlantic cliffs at golden hour, revealing nested seabirds and white spray against black basalt. The camera moves with dynamic and smooth motion, capturing the beauty of the natural setting without any restrictions. The drone maintains a continuous aerial trajectory, avoiding any tripod locks or still photographs. The shot is designed to be a continuous unbroken shot, with realistic camera shake and a 1990s home video aesthetic. The",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789504618.5466623,
+          "used_mib": 296,
+          "free_mib": 15682,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789504618.5466623
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789504622.801225,
+          "used_mib": 296,
+          "free_mib": 15682,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Wan 2.1 complete",
+            "since": 1789504622.7479768
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 8.0,
+        "denoise": 0.35,
+        "step_count": 40.0
+      },
+      "step_count_int": 40,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "error": "TimeoutError: ComfyUI is not listening on 127.0.0.1:8188",
+      "video_path": null,
+      "positive_prompt": "Handheld first-person camcorder walk down a damp yellow Level 0 Backrooms hallway; fluorescent rectangles repeat into the distance over wet brown-beige carpet and sickly wallpaper. A continuous unbroken shot with handheld walking momentum, first-person camcorder tracking, heavy VHS artifacting, realistic camera shake, and 1990s home video aesthetic. No actor face or torso, no apartment furniture, no readable text.",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789504637.2463174,
+          "used_mib": 296,
+          "free_mib": 15682,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789504637.2453206
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789504641.3998437,
+          "used_mib": 296,
+          "free_mib": 15682,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Wan 2.1 complete",
+            "since": 1789504641.36216
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 0.75,
+        "step_count": 24.0
+      },
+      "step_count_int": 24,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "error": "TimeoutError: ComfyUI is not listening on 127.0.0.1:8188",
+      "video_path": null,
+      "positive_prompt": "A cinematic drone shot flies in from the open ocean toward sheer Atlantic cliffs at golden hour, revealing nested seabirds and white spray against black basalt. The camera smoothly transitions through dynamic scenes with a focus on motion smoothness, capturing the intricate details of the seabirds and the spray against the cliffs. The drone maintains a continuous aerial move, avoiding any tripod lock or still photograph. The shot is designed to be a high-speed camera, with a focus on dynamic deg",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789504652.0417287,
+          "used_mib": 296,
+          "free_mib": 15682,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789504652.0407279
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789504656.185927,
+          "used_mib": 296,
+          "free_mib": 15682,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Wan 2.1 complete",
+            "since": 1789504656.1499221
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 8.0,
+        "denoise": 0.35,
+        "step_count": 40.0
+      },
+      "step_count_int": 40,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "error": "TimeoutError: ComfyUI is not listening on 127.0.0.1:8188",
+      "video_path": null,
+      "positive_prompt": "Handheld first-person camcorder walk down a damp yellow Level 0 Backrooms hallway; fluorescent rectangles repeat into the distance over wet brown-beige carpet and sickly wallpaper. Handheld walking momentum, first-person camcorder tracking, heavy VHS artifacting, a continuous unbroken shot, realistic camera shake, 1990s home video aesthetic. Unlocked handheld camera. No actor face or torso, no apartment furniture, no readable text.",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789504670.6025956,
+          "used_mib": 296,
+          "free_mib": 15682,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789504670.6015978
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789504674.7402318,
+          "used_mib": 296,
+          "free_mib": 15682,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Wan 2.1 complete",
+            "since": 1789504674.702997
+          }
+        }
+      ]
+    }
+  ]
+}

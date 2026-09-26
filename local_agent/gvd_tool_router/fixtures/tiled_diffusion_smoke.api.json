@@ -1,0 +1,90 @@
+{
+  "1": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "RealVisXL_V5.0_fp16.safetensors"
+    }
+  },
+  "2": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "gvd_identity_ref.png"
+    }
+  },
+  "3": {
+    "class_type": "ImageScaleBy",
+    "inputs": {
+      "image": ["2", 0],
+      "upscale_method": "lanczos",
+      "scale_by": 1.5
+    }
+  },
+  "4": {
+    "class_type": "TiledDiffusion",
+    "inputs": {
+      "model": ["1", 0],
+      "method": "Mixture of Diffusers",
+      "tile_width": 512,
+      "tile_height": 512,
+      "tile_overlap": 64,
+      "tile_batch_size": 1
+    }
+  },
+  "5": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "empty yellow corridor, fluorescent lights, sharp still",
+      "clip": ["1", 1]
+    }
+  },
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "text, watermark, logo, blur",
+      "clip": ["1", 1]
+    }
+  },
+  "7": {
+    "class_type": "VAEEncodeTiled_TiledDiffusion",
+    "inputs": {
+      "pixels": ["3", 0],
+      "vae": ["1", 2],
+      "tile_size": 512,
+      "fast": true,
+      "color_fix": true
+    }
+  },
+  "8": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 1,
+      "steps": 4,
+      "cfg": 5.0,
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "denoise": 0.35,
+      "model": ["4", 0],
+      "positive": ["5", 0],
+      "negative": ["6", 0],
+      "latent_image": ["7", 0]
+    }
+  },
+  "9": {
+    "class_type": "VAEDecodeTiled",
+    "inputs": {
+      "samples": ["8", 0],
+      "vae": ["1", 2],
+      "tile_size": 512,
+      "overlap": 32,
+      "temporal_size": 8,
+      "temporal_overlap": 4
+    }
+  },
+  "10": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": ["9", 0],
+      "filename_prefix": "gvd_tool_router/tiled_smoke"
+    }
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "id": "c3c3d9f7-5234-46c2-9d2e-archive-repair-upscale",
+  "revision": 0,
+  "last_node_id": 7,
+  "last_link_id": 8,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "VHS_LoadVideo",
+      "pos": [-1120, 180],
+      "size": [340, 260],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "title": "1. Load source video — preserve source FPS and resolution",
+      "inputs": [],
+      "outputs": [
+        {"name": "IMAGE", "type": "IMAGE", "links": [1, 4]},
+        {"name": "frame_count", "type": "INT", "links": null},
+        {"name": "audio", "type": "AUDIO", "links": [8]},
+        {"name": "video_info", "type": "VHS_VIDEOINFO", "links": null}
+      ],
+      "properties": {"Node name for S&R": "VHS_LoadVideo"},
+      "widgets_values": ["", 0, 0, 0, 0, 0, 1]
+    },
+    {
+      "id": 2,
+      "type": "DownloadAndLoadFlorence2Model",
+      "pos": [-1120, -170],
+      "size": [330, 110],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "title": "2. Florence-2 base — optional semantic defect candidate",
+      "inputs": [],
+      "outputs": [{"name": "florence2_model", "type": "FL2MODEL", "links": [2]}],
+      "properties": {"Node name for S&R": "DownloadAndLoadFlorence2Model"},
+      "widgets_values": ["microsoft/Florence-2-base", "fp16"]
+    },
+    {
+      "id": 3,
+      "type": "Florence2Run",
+      "pos": [-650, 10],
+      "size": [430, 250],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "title": "3. Candidate distortion mask — inspect before repair",
+      "inputs": [
+        {"name": "image", "type": "IMAGE", "link": 1},
+        {"name": "florence2_model", "type": "FL2MODEL", "link": 2}
+      ],
+      "outputs": [
+        {"name": "image", "type": "IMAGE", "links": null},
+        {"name": "mask", "type": "MASK", "links": [3]},
+        {"name": "caption", "type": "STRING", "links": null},
+        {"name": "data", "type": "JSON", "links": null}
+      ],
+      "properties": {"Node name for S&R": "Florence2Run"},
+      "widgets_values": [
+        "horizontal video tracking line glitch, white static streak, analog tape dropout",
+        "referring_expression_segmentation",
+        true,
+        false,
+        384,
+        3,
+        false,
+        "",
+        1
+      ]
+    },
+    {
+      "id": 4,
+      "type": "GrowMask",
+      "pos": [-185, 85],
+      "size": [270, 90],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "title": "4. Expand candidate mask by 4px to include glitch edge halos",
+      "inputs": [{"name": "mask", "type": "MASK", "link": 3}],
+      "outputs": [{"name": "MASK", "type": "MASK", "links": [5]}],
+      "properties": {"Node name for S&R": "GrowMask"},
+      "widgets_values": [4, true]
+    },
+    {
+      "id": 5,
+      "type": "ProPainterInpaint",
+      "pos": [160, 65],
+      "size": [370, 310],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "title": "5. RESTORATION MODE — ProPainter temporal inpaint (bypass for AI-video upscale)",
+      "inputs": [
+        {"name": "image", "type": "IMAGE", "link": 4},
+        {"name": "mask", "type": "MASK", "link": 5}
+      ],
+      "outputs": [
+        {"name": "IMAGE", "type": "IMAGE", "links": [6]},
+        {"name": "FLOW_MASK", "type": "MASK", "links": null},
+        {"name": "MASK_DILATE", "type": "MASK", "links": null}
+      ],
+      "properties": {"Node name for S&R": "ProPainterInpaint"},
+      "widgets_values": [0, 0, 0, 0, 10, 10, 80, 20, "enable"]
+    },
+    {
+      "id": 6,
+      "type": "SUPIR_Upscale",
+      "pos": [620, 45],
+      "size": [420, 430],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "title": "6. SUPIR enhancement — low denoise preserves source identity and motion",
+      "inputs": [{"name": "image", "type": "IMAGE", "link": 6}],
+      "outputs": [{"name": "upscaled_image", "type": "IMAGE", "links": [7]}],
+      "properties": {"Node name for S&R": "SUPIR_Upscale"},
+      "widgets_values": [
+        "SELECT_SUPIR_CHECKPOINT", "SELECT_SDXL_CHECKPOINT", 123456789, "lanczos", 2.0,
+        10, 1.5, 2.0,
+        "high quality archival restoration, preserve original faces, era-accurate clothing, natural film grain, stable details",
+        "invented details, plastic skin, oversharpened, text, watermark, modern objects, flicker",
+        0, 1.0, 1.5, 0.85, "Wavelet", true, true, 512, 64,
+        "", "auto", "auto", 1, true, 1024, 512, false, false, "RestoreDPMPP2MSampler"
+      ]
+    },
+    {
+      "id": 7,
+      "type": "VHS_VideoCombine",
+      "pos": [1110, 105],
+      "size": [360, 230],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "title": "7. Final delivery — first and only video encode",
+      "inputs": [
+        {"name": "images", "type": "IMAGE", "link": 7},
+        {"name": "audio", "type": "AUDIO", "link": 8}
+      ],
+      "outputs": [{"name": "Filenames", "type": "VHS_FILENAMES", "links": null}],
+      "properties": {"Node name for S&R": "VHS_VideoCombine"},
+      "widgets_values": [0, 0, "restoration/ARCHIVE_REPAIRED", "video/h264-mp4", false, true]
+    }
+  ],
+  "links": [
+    [1, 1, 0, 3, 0, "IMAGE"],
+    [2, 2, 0, 3, 1, "FL2MODEL"],
+    [3, 3, 1, 4, 0, "MASK"],
+    [4, 1, 0, 5, 0, "IMAGE"],
+    [5, 4, 0, 5, 1, "MASK"],
+    [6, 5, 0, 6, 0, "IMAGE"],
+    [7, 6, 0, 7, 0, "IMAGE"],
+    [8, 1, 2, 7, 1, "AUDIO"]
+  ],
+  "groups": [
+    {
+      "title": "RESTORATION MODE — old home movies with tracking lines, tape dropouts, or digital tears",
+      "bounding": [-700, -40, 1235, 485],
+      "color": "#7b342f",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "title": "AI-VIDEO UPSCALE MODE — right-click ProPainterInpaint and choose Bypass; the raw tensors then feed SUPIR directly",
+      "bounding": [120, 510, 920, 100],
+      "color": "#235d4b",
+      "font_size": 20,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {"scale": 0.7, "offset": [920, 315]},
+    "workflow_notes": [
+      "Restoration mode: inspect Florence mask before queueing. It is a candidate mask; edit or supplement it if it misses thin scanlines.",
+      "AI-video mode: bypass ProPainterInpaint. This leaves the source IMAGE tensor intact through SUPIR; there is no intermediate MP4/JPG encode.",
+      "Select real SUPIR and SDXL checkpoint files in node 6 before running. Use 2x and low restoration settings first."
+    ]
+  },
+  "version": 0.4
+}

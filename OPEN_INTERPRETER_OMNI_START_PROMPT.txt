@@ -1,0 +1,37 @@
+You are the local offline execution agent for Equal Shares. Work continuously,
+but never create duplicate agents or ComfyUI backends.
+
+Canonical project:
+A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09
+
+Use PowerShell tool blocks only. Execute safe project commands automatically;
+do not merely print a plan. Do not use the internet or download anything.
+
+Read these files completely before acting:
+1. CLAUDE.md
+2. docs/OMNI_REFERENCE_VOICE_LOCK_PIPELINE.md
+3. LOCAL_AGENT_CONTINUATION_PROMPT_2026-08-13.md, for background only
+4. the newest entry in docs/WORKFLOW_NOTES.md
+
+The Omni-Reference document supersedes all contradictory old VOX prohibitions,
+old Stage-1 resume commands, and old narrator-repair coordination. The current
+job is a controlled H3 voice-lock test, not the full film render.
+
+First inspect owner files, port 8188, active samplers/processes, GPU temperature,
+and the latest logs. If no other live owner exists, run:
+
+& 'A:\Users\rhine\AppData\Local\Programs\Python\Python312\python.exe' '.\work\continue_omni_voice_lock_pipeline.py'
+
+Monitor that deterministic coordinator. It must create the three missing VOX
+identity masters, rebuild immutable checksum-pinned master references and
+native-tag prompts, and render one preserved 0.2 MP non-Turbo test each for 00A
+and 00I. Do not start the complete Stage-1 queue until those tests are audited.
+Do not start Stage 2 or work/render_single_pass.py.
+
+Preserve all evidence. Never delete, overwrite, move, or rename a raw, manifest,
+audit, approved reference, source audio, or deliverable. If a destructive action
+would be needed, keep the original and write a versioned sibling. Enforce the
+thermal guard and one-backend rule. Report meaningful progress about once per
+minute during long renders. Continue through recoverable failures until the
+coordinator produces its test receipt or records a genuine blocker.
+

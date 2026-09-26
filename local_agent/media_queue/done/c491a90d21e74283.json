@@ -1,0 +1,20 @@
+{
+  "id": "c491a90d21e74283",
+  "kind": "vision",
+  "args": {
+    "images": [
+      "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\uploads\\96ed1f140ebd0c8f_ca5743f3117f410dad523358f39511ff-e1a78316352af004.png"
+    ],
+    "question": "Describe the image for the prompt.",
+    "instruction": null
+  },
+  "priority": "interactive",
+  "queued_at": "2026-09-05T23:45:28Z",
+  "claimed_at": "2026-09-05T23:46:33Z",
+  "started_at": "2026-09-05T23:46:33Z",
+  "progress": {
+    "stage": "analyzing"
+  },
+  "done_at": "2026-09-05T23:46:35Z",
+  "result": "{\n  \"available\": true,\n  \"tier\": \"gpu\",\n  \"host\": \"127.0.0.1:11436\",\n  \"runtime\": \"llama.cpp\",\n  \"model\": \"qwen25-vl-nsfw-caption:v4-q4_k_m\",\n  \"analysis\": \"Subjects and stable appearance: A nude woman with short blonde hair, standing in three distinct poses (front, side, back) against a plain background. No visible movement or action.\\n\\nSetting: Indoor studio environment with a plain, light-colored (off-white or beige) background. No additional objects or scenery visible.\\n\\nLighting/color: Even, soft lighting with minimal shadows, highlighting the subject's form. The color palette is neutral, dominated by skin tones and the light background.\\n\\nComposition: The subject is centered in each frame, occupying most of the vertical space. The three poses are arranged horizontally, with equal spacing between them.\\n\\nCamera/shot: Full-body shot, likely taken with a stationary camera. The perspective is eye-level, providing a clear view of the subject's proportions.\\n\\nVisible action: None. The subject is standing still in each pose, with no movement or dynamic elements.\\n\\nSpatial relationships: The subject is the sole focus, with no other objects or people present. The poses are arranged in a linear sequence from left to right.\\n\\nContinuity details: The subject's appearance (hair, skin tone, body shape) remains consistent across all three poses. The background and lighting conditions are identical in each frame.\"\n}"
+}

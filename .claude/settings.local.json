@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "additionalDirectories": [
+      "A:\\Users\\rhine\\ComfyUI-Shared"
+    ],
+    "allow": [
+      "Read",
+      "Edit",
+      "Write",
+      "Glob",
+      "Grep",
+      "Bash"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/credentials*)",
+      "Bash(rm -rf:*)",
+      "Bash(Remove-Item:*)",
+      "Bash(Remove-Item -Recurse:*)",
+      "Bash(Move-Item:*)",
+      "Bash(del:*)",
+      "Bash(erase:*)",
+      "Bash(del /s:*)",
+      "Bash(rmdir /s:*)",
+      "Bash(Invoke-WebRequest:*)",
+      "Bash(Start-BitsTransfer:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(format:*)",
+      "Bash(diskpart:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean:*)",
+      "Bash(git push:*)"
+    ]
+  }
+}

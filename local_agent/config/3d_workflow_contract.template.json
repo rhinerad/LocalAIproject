@@ -1,0 +1,13 @@
+{
+  "status": "draft",
+  "approved_by": "",
+  "workflow": "",
+  "workflow_sha256": "",
+  "required_node_types": [],
+  "bindings": {
+    "prompt": {"node_id": "", "input": ""},
+    "reference_image": {"node_id": "", "input": ""},
+    "mesh_output": {"node_id": "", "input": ""}
+  },
+  "mesh_extensions": [".glb"]
+}

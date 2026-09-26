@@ -1,0 +1,20 @@
+{
+  "id": "dc1d1c5a2fab4e8e",
+  "kind": "vision",
+  "args": {
+    "images": [
+      "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\uploads\\68df742585ca907e_5b0e03cb1ee24a14b5d5e259d8bce550-1200688d4edb9c5f.png"
+    ],
+    "question": "Describe the image for the prompt.",
+    "instruction": null
+  },
+  "priority": "interactive",
+  "queued_at": "2026-09-05T23:43:35Z",
+  "claimed_at": "2026-09-05T23:46:28Z",
+  "started_at": "2026-09-05T23:46:28Z",
+  "progress": {
+    "stage": "analyzing"
+  },
+  "done_at": "2026-09-05T23:46:33Z",
+  "result": "{\n  \"available\": true,\n  \"tier\": \"gpu\",\n  \"host\": \"127.0.0.1:11436\",\n  \"runtime\": \"llama.cpp\",\n  \"model\": \"qwen25-vl-nsfw-caption:v4-q4_k_m\",\n  \"analysis\": \"**Subjects and Stable Appearance:**\\n- 3D-rendered female character (Bulma) with blue hair, red ribbon, and pencil in hair.\\n- Character is nude, standing in three poses: front, side, back.\\n- Character has a height of 165 cm, as indicated by a vertical scale on the left.\\n\\n**Setting:**\\n- Neutral gray background.\\n- Character is standing on a gray floor.\\n\\n**Lighting/Color:**\\n- Soft, even lighting with subtle shadows.\\n- Character's skin tone is light.\\n- Hair is a vibrant blue.\\n- Ribbon is red.\\n- Pencil is yellow.\\n- Color palette includes teal blue, vivid orange, crimson red, mustard yellow, sky blue, and off-white.\\n\\n**Composition:**\\n- Character is centered in the frame.\\n- Three poses are arranged horizontally: front, side, back.\\n- Text labels (\\\"FRONT,\\\" \\\"SIDE,\\\" \\\"BACK\\\") are below each pose.\\n- A vertical scale is on the left side of the image.\\n- A detail callout (close-up of hair ribbon) is in the top right corner.\\n- A color palette is in the bottom right corner.\\n\\n**Camera/Shot:**\\n- Full-body shot of the character.\\n- No visible camera equipment or perspective distortion.\\n\\n**Visible Action:**\\n- Character is standing still in each pose.\\n- No movement or dynamic action is depicted.\\n\\n**Spatial Relationships:**\\n- Character is the primary subject, occupying most of the frame.\\n- Scale is positioned to the left of the character.\\n- Detail callout and color palette are in the top right and bottom right corners, respectively.\\n- Text labels are directly below each pose.\\n\\n**Continuity Details:**\\n- Consistent character design across all three poses.\\n- Hair, ribbon, and pencil remain in the same position in each pose.\\n- Lighting and color remain consistent throughout the image.\"\n}"
+}

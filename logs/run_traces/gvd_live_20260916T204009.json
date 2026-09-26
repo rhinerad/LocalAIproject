@@ -1,0 +1,197 @@
+{
+  "saved": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\models\\dspy_compiled\\generalized_video_director_mipro.json",
+  "optimizer": "mipro",
+  "mock": false,
+  "auto": null,
+  "trials": 1,
+  "trainset": 2,
+  "ids": "GVD-B01,GVD-D01",
+  "last_feedback": "{\"mock\": false, \"clip_id\": \"GVD-B01\", \"category\": \"backrooms\", \"hparams\": {\"cfg_scale\": 5.0, \"denoise\": 1.0, \"step_count\": 24.0}, \"step_count_int\": 24, \"scores\": null, \"mean\": null, \"minimum\": null, \"threshold\": null, \"passes_curriculum\": false, \"mipro\": 0.01, \"error\": \"PipelineDispatchError: ComfyUI /prompt HTTP 400: {\\\"error\\\": {\\\"type\\\": \\\"missing_node_type\\\", \\\"message\\\": \\\"Node 'ID #_meta' has no class_type. The workflow may be corrupted or a custom node is missing.\\\", \\\"details\\\": \\\"Node ID '#_meta'\\\", \\\"extra_info\\\": {\\\"node_id\\\": \\\"_meta\\\", \\\"class_type\\\": null, \\\"node_title\\\": null}}, \\\"node_errors\\\": {}}\", \"video_path\": null, \"positive_prompt\": \"\", \"vram_trace\": [{\"label\": \"after_prepare_comfy\", \"ts\": 1789605608.6808183, \"used_mib\": 477, \"free_mib\": 15501, \"total_mib\": 16303, \"owner\": {\"owner\": \"comfyui\", \"reason\": \"FLUX.1 + MiniMax I2V generation\", \"since\": 1789605608.6798286}}]}",
+  "history_n": 4,
+  "history": [
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 4.5,
+        "denoise": 0.8,
+        "step_count": 26.0
+      },
+      "step_count_int": 26,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.01,
+      "error": "PipelineDispatchError: ComfyUI /prompt HTTP 400: {\"error\": {\"type\": \"missing_node_type\", \"message\": \"Node 'ID #_meta' has no class_type. The workflow may be corrupted or a custom node is missing.\", \"details\": \"Node ID '#_meta'\", \"extra_info\": {\"node_id\": \"_meta\", \"class_type\": null, \"node_title\": null}}, \"node_errors\": {}}",
+      "video_path": null,
+      "positive_prompt": "",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789605583.1586099,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "FLUX.1 + MiniMax I2V generation",
+            "since": 1789605583.1586099
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789605583.8042233,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789605583.7582946
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 5.0,
+        "denoise": 1.0,
+        "step_count": 32.0
+      },
+      "step_count_int": 32,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.01,
+      "error": "PipelineDispatchError: ComfyUI /prompt HTTP 400: {\"error\": {\"type\": \"missing_node_type\", \"message\": \"Node 'ID #_meta' has no class_type. The workflow may be corrupted or a custom node is missing.\", \"details\": \"Node ID '#_meta'\", \"extra_info\": {\"node_id\": \"_meta\", \"class_type\": null, \"node_title\": null}}, \"node_errors\": {}}",
+      "video_path": null,
+      "positive_prompt": "",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789605590.1280313,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "FLUX.1 + MiniMax I2V generation",
+            "since": 1789605590.127034
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789605590.6209316,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789605590.5689065
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 0.75,
+        "step_count": 28.0
+      },
+      "step_count_int": 28,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.01,
+      "error": "PipelineDispatchError: ComfyUI /prompt HTTP 400: {\"error\": {\"type\": \"missing_node_type\", \"message\": \"Node 'ID #_meta' has no class_type. The workflow may be corrupted or a custom node is missing.\", \"details\": \"Node ID '#_meta'\", \"extra_info\": {\"node_id\": \"_meta\", \"class_type\": null, \"node_title\": null}}, \"node_errors\": {}}",
+      "video_path": null,
+      "positive_prompt": "",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789605599.769283,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "FLUX.1 + MiniMax I2V generation",
+            "since": 1789605599.769283
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789605600.2733862,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789605600.2223861
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 5.0,
+        "denoise": 1.0,
+        "step_count": 24.0
+      },
+      "step_count_int": 24,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.01,
+      "error": "PipelineDispatchError: ComfyUI /prompt HTTP 400: {\"error\": {\"type\": \"missing_node_type\", \"message\": \"Node 'ID #_meta' has no class_type. The workflow may be corrupted or a custom node is missing.\", \"details\": \"Node ID '#_meta'\", \"extra_info\": {\"node_id\": \"_meta\", \"class_type\": null, \"node_title\": null}}, \"node_errors\": {}}",
+      "video_path": null,
+      "positive_prompt": "",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789605608.6808183,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "FLUX.1 + MiniMax I2V generation",
+            "since": 1789605608.6798286
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789605609.1574538,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789605609.1064491
+          }
+        }
+      ]
+    }
+  ]
+}

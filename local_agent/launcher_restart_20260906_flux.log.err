@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\local_agent\server.py", line 38, in <module>
+    import agent              # noqa: E402
+    ^^^^^^^^^^^^
+  File "A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\local_agent\agent.py", line 52, in <module>
+    import tools                          # noqa: E402
+    ^^^^^^^^^^^^
+  File "A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\local_agent\tools.py", line 2374
+    "plan_story_image": (plan_story_image, "Prepare an inspectable RealVisXL still-image graph for a general story or storyboard. If the operator asks for Flux / "using flux" / "with flux" / "via flux", set model_profile="realpro_flux" (Flux UNet path). Default remains realvisxl. There is NO tool named flux — never call a tool named flux. Read-only: never starts ComfyUI, loads a model, uses the GPU, or writes output. THIS DOES NOT GENERATE AN IMAGE by itself. After calling this, tell the operator only that a plan was prepared; call render_story_image separately (same arguments) to actually generate the file — never say an image was generated, rendered, saved, or is ready just from this call. Supports text-to-image or reference image-to-image with an uploaded filename. For best prompt adherence: put the single most important, distinguishing detail for EACH subject first in that subject's own clause (SDXL's text encoder tends to blend/average a long single-paragraph prompt, so speci
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+SyntaxError: invalid syntax. Perhaps you forgot a comma?

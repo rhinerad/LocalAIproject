@@ -1,0 +1,19 @@
+{
+  "profile_id": "base_production_trial",
+  "label": "RTX 5080 starting profile — production trial",
+  "gpu_class": "rtx_5080",
+  "starting_point_only": true,
+  "measured_guarantee": false,
+  "width": 1152,
+  "height": 640,
+  "frames_range": [124, 192],
+  "frames": 124,
+  "steps": 20,
+  "sampler_name": "res_multistep",
+  "scheduler": "simple",
+  "denoise": 1.0,
+  "family": "minimax_h3",
+  "backend_profile": "h3_distilled",
+  "fps": 24.0,
+  "notes": "Audit §12 production trial canvas. Prefer 124 frames initially; stretch toward 192 once VRAM/time allow."
+}

@@ -1,0 +1,866 @@
+Thermal preflight passed at 29 C.
+Starting guarded predictor calibration for layer 20.
+PowerInfer native Windows pipeline
+  model_id           : relu-llama-7b
+  route              : supported_sparse
+  class              : base
+  hidden/ff/layers   : 4096 / 11008 / 32
+  vocabtype          : spm
+  requires_relufy    : False
+  source             : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\source\hf
+  vault/bundle       : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829
+  PowerInfer tree    : A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer
+  CUDA combo         : VS 2022 x64 DevCmd + Ninja, -DLLAMA_CUBLAS=ON, CMAKE_CUDA_ARCHITECTURES=120 (CUDA 12.8+)
+  native source/build: A:\PowerInferNative / A:\PowerInferBuild (short paths; override with POWERINFER_NATIVE_SOURCE/BUILD)
+  server bind        : 127.0.0.1:8080  (native 127.0.0.1, not WSL2)
+  vram-budget        : (not set -- required before validate/bench)
+  train plan          : layers 20..20, samples=25000, rank=256, batch=256, epochs=2
+  execute            : True
+
+Stages (same dump/train/convert for both models):
+  setup      clone+venv+pip+cmake CUDA build
+  intake     huggingface download into bundle/source/hf (hashed, not edited)
+  relu-gate  fail closed unless hidden_act=relu and shapes match
+  calib      C4 JSONL calibration manifest
+  dump       predictor mmaps + activation/activation_L.pt
+  train      per-layer fc1/fc2 predictors
+  convert    convert.py --outtype f16  (bpe for llama31)
+  quantize   quantize.exe Q4_0
+  package    copy activation next to GGUF + manifest.json
+  validate   main.exe smoke; parse CUDA/solver/FFN-split logs
+  bench      cold+warm 20-turn acceptance_gate.json
+==== train ====
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\check_gpu_preflight.py
+{
+  "gpu": {
+    "nvidia_smi": true,
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 5080",
+        "memory_used_mb": 76,
+        "memory_total_mb": 16303,
+        "memory_free_mb": 15902
+      }
+    ],
+    "compute_apps": [
+      {
+        "pid": "3556",
+        "name": "[Insufficient Permissions]",
+        "used_memory": "[N/A]"
+      },
+      {
+        "pid": "27440",
+        "name": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+        "used_memory": "[N/A]"
+      }
+    ]
+  },
+  "ram": {
+    "total_mb": 31621.3,
+    "available_mb": 19111.4,
+    "used_mb": 12509.9,
+    "load_percent": 39
+  },
+  "owners": []
+}
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\train_predictor_layer.py --dataset A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\predictor_data --out A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw --L 20 --hidden-size 4096 --intermediate-size 11008 --N 25000 --D 256 --batch-size 256 --epochs 2 --lr 0.001
+[start] layer 20 device=cuda {'Loss': 0.37698879837989807, 'Recall': 0.5035581882681355, 'Classifier Sparsity': 5542.23798828125, 'True Sparsity': 3541.182861328125}
+[epoch 1] {'Loss': 0.29980483651161194, 'Recall': 0.7991047995871678, 'Classifier Sparsity': 5906.06376953125, 'True Sparsity': 3541.182861328125}
+[epoch 2] {'Loss': 0.2813373148441315, 'Recall': 0.8065816113896992, 'Classifier Sparsity': 5556.4046875, 'True Sparsity': 3541.182861328125}
+wrote A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw\model_20.pt
+predictor assembly deferred: 11 of 32 layer checkpoints are still missing
+Layer 20 completed.
+Thermal preflight passed at 29 C.
+Starting guarded predictor calibration for layer 21.
+PowerInfer native Windows pipeline
+  model_id           : relu-llama-7b
+  route              : supported_sparse
+  class              : base
+  hidden/ff/layers   : 4096 / 11008 / 32
+  vocabtype          : spm
+  requires_relufy    : False
+  source             : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\source\hf
+  vault/bundle       : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829
+  PowerInfer tree    : A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer
+  CUDA combo         : VS 2022 x64 DevCmd + Ninja, -DLLAMA_CUBLAS=ON, CMAKE_CUDA_ARCHITECTURES=120 (CUDA 12.8+)
+  native source/build: A:\PowerInferNative / A:\PowerInferBuild (short paths; override with POWERINFER_NATIVE_SOURCE/BUILD)
+  server bind        : 127.0.0.1:8080  (native 127.0.0.1, not WSL2)
+  vram-budget        : (not set -- required before validate/bench)
+  train plan          : layers 21..21, samples=25000, rank=256, batch=256, epochs=2
+  execute            : True
+
+Stages (same dump/train/convert for both models):
+  setup      clone+venv+pip+cmake CUDA build
+  intake     huggingface download into bundle/source/hf (hashed, not edited)
+  relu-gate  fail closed unless hidden_act=relu and shapes match
+  calib      C4 JSONL calibration manifest
+  dump       predictor mmaps + activation/activation_L.pt
+  train      per-layer fc1/fc2 predictors
+  convert    convert.py --outtype f16  (bpe for llama31)
+  quantize   quantize.exe Q4_0
+  package    copy activation next to GGUF + manifest.json
+  validate   main.exe smoke; parse CUDA/solver/FFN-split logs
+  bench      cold+warm 20-turn acceptance_gate.json
+==== train ====
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\check_gpu_preflight.py
+{
+  "gpu": {
+    "nvidia_smi": true,
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 5080",
+        "memory_used_mb": 76,
+        "memory_total_mb": 16303,
+        "memory_free_mb": 15902
+      }
+    ],
+    "compute_apps": [
+      {
+        "pid": "3556",
+        "name": "[Insufficient Permissions]",
+        "used_memory": "[N/A]"
+      },
+      {
+        "pid": "27440",
+        "name": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+        "used_memory": "[N/A]"
+      }
+    ]
+  },
+  "ram": {
+    "total_mb": 31621.3,
+    "available_mb": 19151.1,
+    "used_mb": 12470.2,
+    "load_percent": 39
+  },
+  "owners": []
+}
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\train_predictor_layer.py --dataset A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\predictor_data --out A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw --L 21 --hidden-size 4096 --intermediate-size 11008 --N 25000 --D 256 --batch-size 256 --epochs 2 --lr 0.001
+[start] layer 21 device=cuda {'Loss': 0.38464865684509275, 'Recall': 0.500112833132579, 'Classifier Sparsity': 5505.93486328125, 'True Sparsity': 3630.958154296875}
+[epoch 1] {'Loss': 0.31537977457046507, 'Recall': 0.8036548037430343, 'Classifier Sparsity': 6271.46328125, 'True Sparsity': 3630.958154296875}
+[epoch 2] {'Loss': 0.29803022742271423, 'Recall': 0.7939274728983637, 'Classifier Sparsity': 5696.100390625, 'True Sparsity': 3630.958154296875}
+wrote A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw\model_21.pt
+predictor assembly deferred: 10 of 32 layer checkpoints are still missing
+Layer 21 completed.
+Thermal preflight passed at 29 C.
+Starting guarded predictor calibration for layer 22.
+PowerInfer native Windows pipeline
+  model_id           : relu-llama-7b
+  route              : supported_sparse
+  class              : base
+  hidden/ff/layers   : 4096 / 11008 / 32
+  vocabtype          : spm
+  requires_relufy    : False
+  source             : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\source\hf
+  vault/bundle       : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829
+  PowerInfer tree    : A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer
+  CUDA combo         : VS 2022 x64 DevCmd + Ninja, -DLLAMA_CUBLAS=ON, CMAKE_CUDA_ARCHITECTURES=120 (CUDA 12.8+)
+  native source/build: A:\PowerInferNative / A:\PowerInferBuild (short paths; override with POWERINFER_NATIVE_SOURCE/BUILD)
+  server bind        : 127.0.0.1:8080  (native 127.0.0.1, not WSL2)
+  vram-budget        : (not set -- required before validate/bench)
+  train plan          : layers 22..22, samples=25000, rank=256, batch=256, epochs=2
+  execute            : True
+
+Stages (same dump/train/convert for both models):
+  setup      clone+venv+pip+cmake CUDA build
+  intake     huggingface download into bundle/source/hf (hashed, not edited)
+  relu-gate  fail closed unless hidden_act=relu and shapes match
+  calib      C4 JSONL calibration manifest
+  dump       predictor mmaps + activation/activation_L.pt
+  train      per-layer fc1/fc2 predictors
+  convert    convert.py --outtype f16  (bpe for llama31)
+  quantize   quantize.exe Q4_0
+  package    copy activation next to GGUF + manifest.json
+  validate   main.exe smoke; parse CUDA/solver/FFN-split logs
+  bench      cold+warm 20-turn acceptance_gate.json
+==== train ====
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\check_gpu_preflight.py
+{
+  "gpu": {
+    "nvidia_smi": true,
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 5080",
+        "memory_used_mb": 76,
+        "memory_total_mb": 16303,
+        "memory_free_mb": 15902
+      }
+    ],
+    "compute_apps": [
+      {
+        "pid": "3556",
+        "name": "[Insufficient Permissions]",
+        "used_memory": "[N/A]"
+      },
+      {
+        "pid": "27440",
+        "name": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+        "used_memory": "[N/A]"
+      }
+    ]
+  },
+  "ram": {
+    "total_mb": 31621.3,
+    "available_mb": 19250.4,
+    "used_mb": 12370.9,
+    "load_percent": 39
+  },
+  "owners": []
+}
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\train_predictor_layer.py --dataset A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\predictor_data --out A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw --L 22 --hidden-size 4096 --intermediate-size 11008 --N 25000 --D 256 --batch-size 256 --epochs 2 --lr 0.001
+[start] layer 22 device=cuda {'Loss': 0.3894574582576752, 'Recall': 0.4936319863802612, 'Classifier Sparsity': 5445.8275390625, 'True Sparsity': 3686.400537109375}
+[epoch 1] {'Loss': 0.3187496781349182, 'Recall': 0.8069022910339938, 'Classifier Sparsity': 6328.19990234375, 'True Sparsity': 3686.400537109375}
+[epoch 2] {'Loss': 0.3005375027656555, 'Recall': 0.8008680633763645, 'Classifier Sparsity': 5796.90107421875, 'True Sparsity': 3686.400537109375}
+wrote A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw\model_22.pt
+predictor assembly deferred: 9 of 32 layer checkpoints are still missing
+Layer 22 completed.
+Thermal preflight passed at 29 C.
+Starting guarded predictor calibration for layer 23.
+PowerInfer native Windows pipeline
+  model_id           : relu-llama-7b
+  route              : supported_sparse
+  class              : base
+  hidden/ff/layers   : 4096 / 11008 / 32
+  vocabtype          : spm
+  requires_relufy    : False
+  source             : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\source\hf
+  vault/bundle       : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829
+  PowerInfer tree    : A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer
+  CUDA combo         : VS 2022 x64 DevCmd + Ninja, -DLLAMA_CUBLAS=ON, CMAKE_CUDA_ARCHITECTURES=120 (CUDA 12.8+)
+  native source/build: A:\PowerInferNative / A:\PowerInferBuild (short paths; override with POWERINFER_NATIVE_SOURCE/BUILD)
+  server bind        : 127.0.0.1:8080  (native 127.0.0.1, not WSL2)
+  vram-budget        : (not set -- required before validate/bench)
+  train plan          : layers 23..23, samples=25000, rank=256, batch=256, epochs=2
+  execute            : True
+
+Stages (same dump/train/convert for both models):
+  setup      clone+venv+pip+cmake CUDA build
+  intake     huggingface download into bundle/source/hf (hashed, not edited)
+  relu-gate  fail closed unless hidden_act=relu and shapes match
+  calib      C4 JSONL calibration manifest
+  dump       predictor mmaps + activation/activation_L.pt
+  train      per-layer fc1/fc2 predictors
+  convert    convert.py --outtype f16  (bpe for llama31)
+  quantize   quantize.exe Q4_0
+  package    copy activation next to GGUF + manifest.json
+  validate   main.exe smoke; parse CUDA/solver/FFN-split logs
+  bench      cold+warm 20-turn acceptance_gate.json
+==== train ====
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\check_gpu_preflight.py
+{
+  "gpu": {
+    "nvidia_smi": true,
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 5080",
+        "memory_used_mb": 76,
+        "memory_total_mb": 16303,
+        "memory_free_mb": 15902
+      }
+    ],
+    "compute_apps": [
+      {
+        "pid": "3556",
+        "name": "[Insufficient Permissions]",
+        "used_memory": "[N/A]"
+      },
+      {
+        "pid": "27440",
+        "name": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+        "used_memory": "[N/A]"
+      }
+    ]
+  },
+  "ram": {
+    "total_mb": 31621.3,
+    "available_mb": 19213.1,
+    "used_mb": 12408.2,
+    "load_percent": 39
+  },
+  "owners": []
+}
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\train_predictor_layer.py --dataset A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\predictor_data --out A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw --L 23 --hidden-size 4096 --intermediate-size 11008 --N 25000 --D 256 --batch-size 256 --epochs 2 --lr 0.001
+[start] layer 23 device=cuda {'Loss': 0.40464298129081727, 'Recall': 0.5014127369838295, 'Classifier Sparsity': 5518.1310546875, 'True Sparsity': 3871.99970703125}
+[epoch 1] {'Loss': 0.33621007204055786, 'Recall': 0.8147237968551104, 'Classifier Sparsity': 6671.7828125, 'True Sparsity': 3871.99970703125}
+[epoch 2] {'Loss': 0.31809093356132506, 'Recall': 0.8081614199421593, 'Classifier Sparsity': 6139.8732421875, 'True Sparsity': 3871.99970703125}
+wrote A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw\model_23.pt
+predictor assembly deferred: 8 of 32 layer checkpoints are still missing
+Layer 23 completed.
+Thermal preflight passed at 30 C.
+Starting guarded predictor calibration for layer 24.
+PowerInfer native Windows pipeline
+  model_id           : relu-llama-7b
+  route              : supported_sparse
+  class              : base
+  hidden/ff/layers   : 4096 / 11008 / 32
+  vocabtype          : spm
+  requires_relufy    : False
+  source             : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\source\hf
+  vault/bundle       : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829
+  PowerInfer tree    : A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer
+  CUDA combo         : VS 2022 x64 DevCmd + Ninja, -DLLAMA_CUBLAS=ON, CMAKE_CUDA_ARCHITECTURES=120 (CUDA 12.8+)
+  native source/build: A:\PowerInferNative / A:\PowerInferBuild (short paths; override with POWERINFER_NATIVE_SOURCE/BUILD)
+  server bind        : 127.0.0.1:8080  (native 127.0.0.1, not WSL2)
+  vram-budget        : (not set -- required before validate/bench)
+  train plan          : layers 24..24, samples=25000, rank=256, batch=256, epochs=2
+  execute            : True
+
+Stages (same dump/train/convert for both models):
+  setup      clone+venv+pip+cmake CUDA build
+  intake     huggingface download into bundle/source/hf (hashed, not edited)
+  relu-gate  fail closed unless hidden_act=relu and shapes match
+  calib      C4 JSONL calibration manifest
+  dump       predictor mmaps + activation/activation_L.pt
+  train      per-layer fc1/fc2 predictors
+  convert    convert.py --outtype f16  (bpe for llama31)
+  quantize   quantize.exe Q4_0
+  package    copy activation next to GGUF + manifest.json
+  validate   main.exe smoke; parse CUDA/solver/FFN-split logs
+  bench      cold+warm 20-turn acceptance_gate.json
+==== train ====
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\check_gpu_preflight.py
+{
+  "gpu": {
+    "nvidia_smi": true,
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 5080",
+        "memory_used_mb": 76,
+        "memory_total_mb": 16303,
+        "memory_free_mb": 15902
+      }
+    ],
+    "compute_apps": [
+      {
+        "pid": "3556",
+        "name": "[Insufficient Permissions]",
+        "used_memory": "[N/A]"
+      },
+      {
+        "pid": "27440",
+        "name": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+        "used_memory": "[N/A]"
+      }
+    ]
+  },
+  "ram": {
+    "total_mb": 31621.3,
+    "available_mb": 19243.8,
+    "used_mb": 12377.5,
+    "load_percent": 39
+  },
+  "owners": []
+}
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\train_predictor_layer.py --dataset A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\predictor_data --out A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw --L 24 --hidden-size 4096 --intermediate-size 11008 --N 25000 --D 256 --batch-size 256 --epochs 2 --lr 0.001
+[start] layer 24 device=cuda {'Loss': 0.4059870481491089, 'Recall': 0.4976936195238911, 'Classifier Sparsity': 5454.4873046875, 'True Sparsity': 3888.054931640625}
+[epoch 1] {'Loss': 0.340633225440979, 'Recall': 0.8025862968088923, 'Classifier Sparsity': 6577.0646484375, 'True Sparsity': 3888.054931640625}
+[epoch 2] {'Loss': 0.32225289940834045, 'Recall': 0.8090787005196015, 'Classifier Sparsity': 6228.3275390625, 'True Sparsity': 3888.054931640625}
+wrote A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw\model_24.pt
+predictor assembly deferred: 7 of 32 layer checkpoints are still missing
+Layer 24 completed.
+Thermal preflight passed at 29 C.
+Starting guarded predictor calibration for layer 25.
+PowerInfer native Windows pipeline
+  model_id           : relu-llama-7b
+  route              : supported_sparse
+  class              : base
+  hidden/ff/layers   : 4096 / 11008 / 32
+  vocabtype          : spm
+  requires_relufy    : False
+  source             : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\source\hf
+  vault/bundle       : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829
+  PowerInfer tree    : A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer
+  CUDA combo         : VS 2022 x64 DevCmd + Ninja, -DLLAMA_CUBLAS=ON, CMAKE_CUDA_ARCHITECTURES=120 (CUDA 12.8+)
+  native source/build: A:\PowerInferNative / A:\PowerInferBuild (short paths; override with POWERINFER_NATIVE_SOURCE/BUILD)
+  server bind        : 127.0.0.1:8080  (native 127.0.0.1, not WSL2)
+  vram-budget        : (not set -- required before validate/bench)
+  train plan          : layers 25..25, samples=25000, rank=256, batch=256, epochs=2
+  execute            : True
+
+Stages (same dump/train/convert for both models):
+  setup      clone+venv+pip+cmake CUDA build
+  intake     huggingface download into bundle/source/hf (hashed, not edited)
+  relu-gate  fail closed unless hidden_act=relu and shapes match
+  calib      C4 JSONL calibration manifest
+  dump       predictor mmaps + activation/activation_L.pt
+  train      per-layer fc1/fc2 predictors
+  convert    convert.py --outtype f16  (bpe for llama31)
+  quantize   quantize.exe Q4_0
+  package    copy activation next to GGUF + manifest.json
+  validate   main.exe smoke; parse CUDA/solver/FFN-split logs
+  bench      cold+warm 20-turn acceptance_gate.json
+==== train ====
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\check_gpu_preflight.py
+{
+  "gpu": {
+    "nvidia_smi": true,
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 5080",
+        "memory_used_mb": 76,
+        "memory_total_mb": 16303,
+        "memory_free_mb": 15902
+      }
+    ],
+    "compute_apps": [
+      {
+        "pid": "3556",
+        "name": "[Insufficient Permissions]",
+        "used_memory": "[N/A]"
+      },
+      {
+        "pid": "27440",
+        "name": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+        "used_memory": "[N/A]"
+      }
+    ]
+  },
+  "ram": {
+    "total_mb": 31621.3,
+    "available_mb": 19222.4,
+    "used_mb": 12399.0,
+    "load_percent": 39
+  },
+  "owners": []
+}
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\train_predictor_layer.py --dataset A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\predictor_data --out A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw --L 25 --hidden-size 4096 --intermediate-size 11008 --N 25000 --D 256 --batch-size 256 --epochs 2 --lr 0.001
+[start] layer 25 device=cuda {'Loss': 0.4069583058357239, 'Recall': 0.4956534906879986, 'Classifier Sparsity': 5463.25, 'True Sparsity': 3897.76005859375}
+[epoch 1] {'Loss': 0.3414101183414459, 'Recall': 0.824827876527542, 'Classifier Sparsity': 6918.8080078125, 'True Sparsity': 3897.76005859375}
+[epoch 2] {'Loss': 0.32557302713394165, 'Recall': 0.7970562544899148, 'Classifier Sparsity': 6129.7513671875, 'True Sparsity': 3897.76005859375}
+wrote A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw\model_25.pt
+predictor assembly deferred: 6 of 32 layer checkpoints are still missing
+Layer 25 completed.
+Thermal preflight passed at 29 C.
+Starting guarded predictor calibration for layer 26.
+PowerInfer native Windows pipeline
+  model_id           : relu-llama-7b
+  route              : supported_sparse
+  class              : base
+  hidden/ff/layers   : 4096 / 11008 / 32
+  vocabtype          : spm
+  requires_relufy    : False
+  source             : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\source\hf
+  vault/bundle       : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829
+  PowerInfer tree    : A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer
+  CUDA combo         : VS 2022 x64 DevCmd + Ninja, -DLLAMA_CUBLAS=ON, CMAKE_CUDA_ARCHITECTURES=120 (CUDA 12.8+)
+  native source/build: A:\PowerInferNative / A:\PowerInferBuild (short paths; override with POWERINFER_NATIVE_SOURCE/BUILD)
+  server bind        : 127.0.0.1:8080  (native 127.0.0.1, not WSL2)
+  vram-budget        : (not set -- required before validate/bench)
+  train plan          : layers 26..26, samples=25000, rank=256, batch=256, epochs=2
+  execute            : True
+
+Stages (same dump/train/convert for both models):
+  setup      clone+venv+pip+cmake CUDA build
+  intake     huggingface download into bundle/source/hf (hashed, not edited)
+  relu-gate  fail closed unless hidden_act=relu and shapes match
+  calib      C4 JSONL calibration manifest
+  dump       predictor mmaps + activation/activation_L.pt
+  train      per-layer fc1/fc2 predictors
+  convert    convert.py --outtype f16  (bpe for llama31)
+  quantize   quantize.exe Q4_0
+  package    copy activation next to GGUF + manifest.json
+  validate   main.exe smoke; parse CUDA/solver/FFN-split logs
+  bench      cold+warm 20-turn acceptance_gate.json
+==== train ====
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\check_gpu_preflight.py
+{
+  "gpu": {
+    "nvidia_smi": true,
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 5080",
+        "memory_used_mb": 76,
+        "memory_total_mb": 16303,
+        "memory_free_mb": 15902
+      }
+    ],
+    "compute_apps": [
+      {
+        "pid": "3556",
+        "name": "[Insufficient Permissions]",
+        "used_memory": "[N/A]"
+      },
+      {
+        "pid": "27440",
+        "name": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+        "used_memory": "[N/A]"
+      }
+    ]
+  },
+  "ram": {
+    "total_mb": 31621.3,
+    "available_mb": 19001.0,
+    "used_mb": 12620.3,
+    "load_percent": 39
+  },
+  "owners": []
+}
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\train_predictor_layer.py --dataset A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\predictor_data --out A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw --L 26 --hidden-size 4096 --intermediate-size 11008 --N 25000 --D 256 --batch-size 256 --epochs 2 --lr 0.001
+[start] layer 26 device=cuda {'Loss': 0.4022879540920258, 'Recall': 0.49553968753502814, 'Classifier Sparsity': 5464.74599609375, 'True Sparsity': 3840.38046875}
+[epoch 1] {'Loss': 0.3353491723537445, 'Recall': 0.8121320326131424, 'Classifier Sparsity': 6649.96787109375, 'True Sparsity': 3840.38046875}
+[epoch 2] {'Loss': 0.3193232774734497, 'Recall': 0.8028982266364804, 'Classifier Sparsity': 6125.15810546875, 'True Sparsity': 3840.38046875}
+wrote A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw\model_26.pt
+predictor assembly deferred: 5 of 32 layer checkpoints are still missing
+Layer 26 completed.
+Thermal preflight passed at 30 C.
+Starting guarded predictor calibration for layer 27.
+PowerInfer native Windows pipeline
+  model_id           : relu-llama-7b
+  route              : supported_sparse
+  class              : base
+  hidden/ff/layers   : 4096 / 11008 / 32
+  vocabtype          : spm
+  requires_relufy    : False
+  source             : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\source\hf
+  vault/bundle       : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829
+  PowerInfer tree    : A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer
+  CUDA combo         : VS 2022 x64 DevCmd + Ninja, -DLLAMA_CUBLAS=ON, CMAKE_CUDA_ARCHITECTURES=120 (CUDA 12.8+)
+  native source/build: A:\PowerInferNative / A:\PowerInferBuild (short paths; override with POWERINFER_NATIVE_SOURCE/BUILD)
+  server bind        : 127.0.0.1:8080  (native 127.0.0.1, not WSL2)
+  vram-budget        : (not set -- required before validate/bench)
+  train plan          : layers 27..27, samples=25000, rank=256, batch=256, epochs=2
+  execute            : True
+
+Stages (same dump/train/convert for both models):
+  setup      clone+venv+pip+cmake CUDA build
+  intake     huggingface download into bundle/source/hf (hashed, not edited)
+  relu-gate  fail closed unless hidden_act=relu and shapes match
+  calib      C4 JSONL calibration manifest
+  dump       predictor mmaps + activation/activation_L.pt
+  train      per-layer fc1/fc2 predictors
+  convert    convert.py --outtype f16  (bpe for llama31)
+  quantize   quantize.exe Q4_0
+  package    copy activation next to GGUF + manifest.json
+  validate   main.exe smoke; parse CUDA/solver/FFN-split logs
+  bench      cold+warm 20-turn acceptance_gate.json
+==== train ====
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\check_gpu_preflight.py
+{
+  "gpu": {
+    "nvidia_smi": true,
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 5080",
+        "memory_used_mb": 76,
+        "memory_total_mb": 16303,
+        "memory_free_mb": 15902
+      }
+    ],
+    "compute_apps": [
+      {
+        "pid": "3556",
+        "name": "[Insufficient Permissions]",
+        "used_memory": "[N/A]"
+      },
+      {
+        "pid": "27440",
+        "name": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+        "used_memory": "[N/A]"
+      }
+    ]
+  },
+  "ram": {
+    "total_mb": 31621.3,
+    "available_mb": 18992.6,
+    "used_mb": 12628.7,
+    "load_percent": 39
+  },
+  "owners": []
+}
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\train_predictor_layer.py --dataset A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\predictor_data --out A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw --L 27 --hidden-size 4096 --intermediate-size 11008 --N 25000 --D 256 --batch-size 256 --epochs 2 --lr 0.001
+[start] layer 27 device=cuda {'Loss': 0.39888007640838624, 'Recall': 0.49757696903739884, 'Classifier Sparsity': 5477.6044921875, 'True Sparsity': 3799.406298828125}
+[epoch 1] {'Loss': 0.32985215783119204, 'Recall': 0.8155239509112758, 'Classifier Sparsity': 6616.54208984375, 'True Sparsity': 3799.406298828125}
+[epoch 2] {'Loss': 0.3136191129684448, 'Recall': 0.79998870608909, 'Classifier Sparsity': 5995.13154296875, 'True Sparsity': 3799.406298828125}
+wrote A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw\model_27.pt
+predictor assembly deferred: 4 of 32 layer checkpoints are still missing
+Layer 27 completed.
+Thermal preflight passed at 29 C.
+Starting guarded predictor calibration for layer 28.
+PowerInfer native Windows pipeline
+  model_id           : relu-llama-7b
+  route              : supported_sparse
+  class              : base
+  hidden/ff/layers   : 4096 / 11008 / 32
+  vocabtype          : spm
+  requires_relufy    : False
+  source             : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\source\hf
+  vault/bundle       : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829
+  PowerInfer tree    : A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer
+  CUDA combo         : VS 2022 x64 DevCmd + Ninja, -DLLAMA_CUBLAS=ON, CMAKE_CUDA_ARCHITECTURES=120 (CUDA 12.8+)
+  native source/build: A:\PowerInferNative / A:\PowerInferBuild (short paths; override with POWERINFER_NATIVE_SOURCE/BUILD)
+  server bind        : 127.0.0.1:8080  (native 127.0.0.1, not WSL2)
+  vram-budget        : (not set -- required before validate/bench)
+  train plan          : layers 28..28, samples=25000, rank=256, batch=256, epochs=2
+  execute            : True
+
+Stages (same dump/train/convert for both models):
+  setup      clone+venv+pip+cmake CUDA build
+  intake     huggingface download into bundle/source/hf (hashed, not edited)
+  relu-gate  fail closed unless hidden_act=relu and shapes match
+  calib      C4 JSONL calibration manifest
+  dump       predictor mmaps + activation/activation_L.pt
+  train      per-layer fc1/fc2 predictors
+  convert    convert.py --outtype f16  (bpe for llama31)
+  quantize   quantize.exe Q4_0
+  package    copy activation next to GGUF + manifest.json
+  validate   main.exe smoke; parse CUDA/solver/FFN-split logs
+  bench      cold+warm 20-turn acceptance_gate.json
+==== train ====
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\check_gpu_preflight.py
+{
+  "gpu": {
+    "nvidia_smi": true,
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 5080",
+        "memory_used_mb": 76,
+        "memory_total_mb": 16303,
+        "memory_free_mb": 15902
+      }
+    ],
+    "compute_apps": [
+      {
+        "pid": "3556",
+        "name": "[Insufficient Permissions]",
+        "used_memory": "[N/A]"
+      },
+      {
+        "pid": "27440",
+        "name": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+        "used_memory": "[N/A]"
+      }
+    ]
+  },
+  "ram": {
+    "total_mb": 31621.3,
+    "available_mb": 19082.2,
+    "used_mb": 12539.1,
+    "load_percent": 39
+  },
+  "owners": []
+}
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\train_predictor_layer.py --dataset A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\predictor_data --out A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw --L 28 --hidden-size 4096 --intermediate-size 11008 --N 25000 --D 256 --batch-size 256 --epochs 2 --lr 0.001
+[start] layer 28 device=cuda {'Loss': 0.40216570496559145, 'Recall': 0.4931360038567003, 'Classifier Sparsity': 5449.1458984375, 'True Sparsity': 3837.47734375}
+[epoch 1] {'Loss': 0.3259526193141937, 'Recall': 0.8161295129796166, 'Classifier Sparsity': 6478.77587890625, 'True Sparsity': 3837.47734375}
+[epoch 2] {'Loss': 0.3094206690788269, 'Recall': 0.8113079632391967, 'Classifier Sparsity': 6028.06240234375, 'True Sparsity': 3837.47734375}
+wrote A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw\model_28.pt
+predictor assembly deferred: 3 of 32 layer checkpoints are still missing
+Layer 28 completed.
+Thermal preflight passed at 30 C.
+Starting guarded predictor calibration for layer 29.
+PowerInfer native Windows pipeline
+  model_id           : relu-llama-7b
+  route              : supported_sparse
+  class              : base
+  hidden/ff/layers   : 4096 / 11008 / 32
+  vocabtype          : spm
+  requires_relufy    : False
+  source             : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\source\hf
+  vault/bundle       : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829
+  PowerInfer tree    : A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer
+  CUDA combo         : VS 2022 x64 DevCmd + Ninja, -DLLAMA_CUBLAS=ON, CMAKE_CUDA_ARCHITECTURES=120 (CUDA 12.8+)
+  native source/build: A:\PowerInferNative / A:\PowerInferBuild (short paths; override with POWERINFER_NATIVE_SOURCE/BUILD)
+  server bind        : 127.0.0.1:8080  (native 127.0.0.1, not WSL2)
+  vram-budget        : (not set -- required before validate/bench)
+  train plan          : layers 29..29, samples=25000, rank=256, batch=256, epochs=2
+  execute            : True
+
+Stages (same dump/train/convert for both models):
+  setup      clone+venv+pip+cmake CUDA build
+  intake     huggingface download into bundle/source/hf (hashed, not edited)
+  relu-gate  fail closed unless hidden_act=relu and shapes match
+  calib      C4 JSONL calibration manifest
+  dump       predictor mmaps + activation/activation_L.pt
+  train      per-layer fc1/fc2 predictors
+  convert    convert.py --outtype f16  (bpe for llama31)
+  quantize   quantize.exe Q4_0
+  package    copy activation next to GGUF + manifest.json
+  validate   main.exe smoke; parse CUDA/solver/FFN-split logs
+  bench      cold+warm 20-turn acceptance_gate.json
+==== train ====
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\check_gpu_preflight.py
+{
+  "gpu": {
+    "nvidia_smi": true,
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 5080",
+        "memory_used_mb": 76,
+        "memory_total_mb": 16303,
+        "memory_free_mb": 15902
+      }
+    ],
+    "compute_apps": [
+      {
+        "pid": "3556",
+        "name": "[Insufficient Permissions]",
+        "used_memory": "[N/A]"
+      },
+      {
+        "pid": "27440",
+        "name": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+        "used_memory": "[N/A]"
+      }
+    ]
+  },
+  "ram": {
+    "total_mb": 31621.3,
+    "available_mb": 18967.5,
+    "used_mb": 12653.8,
+    "load_percent": 40
+  },
+  "owners": []
+}
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\train_predictor_layer.py --dataset A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\predictor_data --out A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw --L 29 --hidden-size 4096 --intermediate-size 11008 --N 25000 --D 256 --batch-size 256 --epochs 2 --lr 0.001
+[start] layer 29 device=cuda {'Loss': 0.40656631588935854, 'Recall': 0.5003795305911776, 'Classifier Sparsity': 5508.9201171875, 'True Sparsity': 3893.77734375}
+[epoch 1] {'Loss': 0.32591776847839354, 'Recall': 0.8193161263915684, 'Classifier Sparsity': 6477.41845703125, 'True Sparsity': 3893.77734375}
+[epoch 2] {'Loss': 0.3093041658401489, 'Recall': 0.8037836812943728, 'Classifier Sparsity': 5883.20087890625, 'True Sparsity': 3893.77734375}
+wrote A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw\model_29.pt
+predictor assembly deferred: 2 of 32 layer checkpoints are still missing
+Layer 29 completed.
+Thermal preflight passed at 29 C.
+Starting guarded predictor calibration for layer 30.
+PowerInfer native Windows pipeline
+  model_id           : relu-llama-7b
+  route              : supported_sparse
+  class              : base
+  hidden/ff/layers   : 4096 / 11008 / 32
+  vocabtype          : spm
+  requires_relufy    : False
+  source             : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\source\hf
+  vault/bundle       : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829
+  PowerInfer tree    : A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer
+  CUDA combo         : VS 2022 x64 DevCmd + Ninja, -DLLAMA_CUBLAS=ON, CMAKE_CUDA_ARCHITECTURES=120 (CUDA 12.8+)
+  native source/build: A:\PowerInferNative / A:\PowerInferBuild (short paths; override with POWERINFER_NATIVE_SOURCE/BUILD)
+  server bind        : 127.0.0.1:8080  (native 127.0.0.1, not WSL2)
+  vram-budget        : (not set -- required before validate/bench)
+  train plan          : layers 30..30, samples=25000, rank=256, batch=256, epochs=2
+  execute            : True
+
+Stages (same dump/train/convert for both models):
+  setup      clone+venv+pip+cmake CUDA build
+  intake     huggingface download into bundle/source/hf (hashed, not edited)
+  relu-gate  fail closed unless hidden_act=relu and shapes match
+  calib      C4 JSONL calibration manifest
+  dump       predictor mmaps + activation/activation_L.pt
+  train      per-layer fc1/fc2 predictors
+  convert    convert.py --outtype f16  (bpe for llama31)
+  quantize   quantize.exe Q4_0
+  package    copy activation next to GGUF + manifest.json
+  validate   main.exe smoke; parse CUDA/solver/FFN-split logs
+  bench      cold+warm 20-turn acceptance_gate.json
+==== train ====
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\check_gpu_preflight.py
+{
+  "gpu": {
+    "nvidia_smi": true,
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 5080",
+        "memory_used_mb": 76,
+        "memory_total_mb": 16303,
+        "memory_free_mb": 15902
+      }
+    ],
+    "compute_apps": [
+      {
+        "pid": "3556",
+        "name": "[Insufficient Permissions]",
+        "used_memory": "[N/A]"
+      },
+      {
+        "pid": "27440",
+        "name": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+        "used_memory": "[N/A]"
+      }
+    ]
+  },
+  "ram": {
+    "total_mb": 31621.3,
+    "available_mb": 18990.5,
+    "used_mb": 12630.9,
+    "load_percent": 39
+  },
+  "owners": []
+}
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\train_predictor_layer.py --dataset A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\predictor_data --out A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw --L 30 --hidden-size 4096 --intermediate-size 11008 --N 25000 --D 256 --batch-size 256 --epochs 2 --lr 0.001
+[start] layer 30 device=cuda {'Loss': 0.41967926025390623, 'Recall': 0.4944868689666801, 'Classifier Sparsity': 5466.90927734375, 'True Sparsity': 4054.1259765625}
+[epoch 1] {'Loss': 0.3211264133453369, 'Recall': 0.8333881378081021, 'Classifier Sparsity': 6470.71533203125, 'True Sparsity': 4054.1259765625}
+[epoch 2] {'Loss': 0.3032848179340363, 'Recall': 0.8329302829751231, 'Classifier Sparsity': 6096.68125, 'True Sparsity': 4054.1259765625}
+wrote A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw\model_30.pt
+predictor assembly deferred: 1 of 32 layer checkpoints are still missing
+Layer 30 completed.
+Thermal preflight passed at 29 C.
+Starting guarded predictor calibration for layer 31.
+PowerInfer native Windows pipeline
+  model_id           : relu-llama-7b
+  route              : supported_sparse
+  class              : base
+  hidden/ff/layers   : 4096 / 11008 / 32
+  vocabtype          : spm
+  requires_relufy    : False
+  source             : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\source\hf
+  vault/bundle       : A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829
+  PowerInfer tree    : A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer
+  CUDA combo         : VS 2022 x64 DevCmd + Ninja, -DLLAMA_CUBLAS=ON, CMAKE_CUDA_ARCHITECTURES=120 (CUDA 12.8+)
+  native source/build: A:\PowerInferNative / A:\PowerInferBuild (short paths; override with POWERINFER_NATIVE_SOURCE/BUILD)
+  server bind        : 127.0.0.1:8080  (native 127.0.0.1, not WSL2)
+  vram-budget        : (not set -- required before validate/bench)
+  train plan          : layers 31..31, samples=25000, rank=256, batch=256, epochs=2
+  execute            : True
+
+Stages (same dump/train/convert for both models):
+  setup      clone+venv+pip+cmake CUDA build
+  intake     huggingface download into bundle/source/hf (hashed, not edited)
+  relu-gate  fail closed unless hidden_act=relu and shapes match
+  calib      C4 JSONL calibration manifest
+  dump       predictor mmaps + activation/activation_L.pt
+  train      per-layer fc1/fc2 predictors
+  convert    convert.py --outtype f16  (bpe for llama31)
+  quantize   quantize.exe Q4_0
+  package    copy activation next to GGUF + manifest.json
+  validate   main.exe smoke; parse CUDA/solver/FFN-split logs
+  bench      cold+warm 20-turn acceptance_gate.json
+==== train ====
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\check_gpu_preflight.py
+{
+  "gpu": {
+    "nvidia_smi": true,
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 5080",
+        "memory_used_mb": 76,
+        "memory_total_mb": 16303,
+        "memory_free_mb": 15902
+      }
+    ],
+    "compute_apps": [
+      {
+        "pid": "3556",
+        "name": "[Insufficient Permissions]",
+        "used_memory": "[N/A]"
+      },
+      {
+        "pid": "27440",
+        "name": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+        "used_memory": "[N/A]"
+      }
+    ]
+  },
+  "ram": {
+    "total_mb": 31621.3,
+    "available_mb": 19060.9,
+    "used_mb": 12560.5,
+    "load_percent": 39
+  },
+  "owners": []
+}
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\train_predictor_layer.py --dataset A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\predictor_data --out A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw --L 31 --hidden-size 4096 --intermediate-size 11008 --N 25000 --D 256 --batch-size 256 --epochs 2 --lr 0.001
+[start] layer 31 device=cuda {'Loss': 0.4705356776714325, 'Recall': 0.5010696629111488, 'Classifier Sparsity': 5496.6859375, 'True Sparsity': 4733.52978515625}
+[epoch 1] {'Loss': 0.33677478432655333, 'Recall': 0.8668466699242615, 'Classifier Sparsity': 6956.24384765625, 'True Sparsity': 4733.52978515625}
+[epoch 2] {'Loss': 0.3170962631702423, 'Recall': 0.8572529192247502, 'Classifier Sparsity': 6491.45546875, 'True Sparsity': 4733.52978515625}
+wrote A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw\model_31.pt
++ A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\external\PowerInfer\.venv\Scripts\python.exe A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\assemble_predictor.py --src A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw --dst A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor --layers 32 --sparse-threshold 0
+assembled A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor
+Layer 31 completed.
+Guarded calibration continuation completed through layer 31.

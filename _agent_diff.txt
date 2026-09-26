@@ -1,0 +1,170 @@
+78a79,98
+> 
+> # Tools whose results can locate a generated still/video (or start one). The
+> # visible "tool_result" event is clipped to 4000 chars, which cuts a story
+> # manifest (~4.4 KB alone) mid-JSON, so these also get one internal
+> # MEDIA_SOURCE_EVENT carrying the full result. server.py consumes it to build
+> # inline media cards / render watches and never forwards it to the browser;
+> # other on_event consumers (the phone bridge) ignore unknown kinds.
+> MEDIA_SOURCE_EVENT = "tool_media_source"
+> MEDIA_SOURCE_TOOLS = frozenset({
+>     "render_story_image", "render_story_image_batch", "story_image_job_status",
+>     "await_story_image_job", "comfy_generate", "comfy_job_status",
+> })
+> 
+> 
+> def _emit_tool_result(emit: Callable[[str, str], None], name: str, result: str) -> None:
+>     emit("tool_result", result[:4000])
+>     if name in MEDIA_SOURCE_TOOLS and not str(result).lstrip().startswith("ERROR"):
+>         emit(MEDIA_SOURCE_EVENT, json.dumps({"tool": name, "result": result}))
+> 
+> 
+135c155
+<     r"\bimages?\b|\bpictures?\b|\bphotos?\b|\bclips?\s+\d|\b\d{2}[A-Z]\b|"
+---
+>     r"\bclips?\s+\d|\b\d{2}[A-Z]\b|"
+137a158,171
+> # A bare image/picture/photo noun opens the scope ("make an image of ..." needs
+> # render_story_image), except when the turn only inspects an existing image:
+> # "describe this attached image" is see_image work, not the render project.
+> _SPECIALIST_IMAGE_NOUN_RE = re.compile(r"\b(?:images?|pictures?|photos?)\b", re.I)
+> _IMAGE_INSPECTION_REQUEST_RE = re.compile(
+>     r"\b(?:describe|caption|analy[sz]e|inspect|read|transcribe|ocr|identify|explain|"
+>     r"what(?:'s|\s+is)\s+(?:in|on)|look\s+at)\b.{0,60}?"
+>     r"\b(?:this|that|the|my|attached|uploaded)\s+(?:attached\s+|uploaded\s+)?"
+>     r"(?:images?|pictures?|photos?|screenshots?)\b",
+>     re.I)
+> _IMAGE_CREATION_REQUEST_RE = re.compile(
+>     r"\b(?:make|generate|create|draw|paint|produce|design|edit|upscale|redo|"
+>     r"regenerate|similar|another|new)\b",
+>     re.I)
+212a247,325
+> # Stills approval is purely a human operator action (approve_story_stills,
+> # gated on an explicit 'looks good'/'approved' phrase -- see
+> # _operator_approved_story_stills); "SELECTED" is pipeline_state vocabulary
+> # from the *video clip* pipeline (master_batch_runner.py) and never applies to
+> # a chat-rendered still. Observed in production: the model rendered a real
+> # still, then fabricated a whole QA-pipeline narrative on top of it ("the QA
+> # process confirmed... now marked as SELECTED") while the still was still
+> # sitting in pending_review, never actually approved -- and in follow-up turns
+> # that made no tool call at all. That false claim can make the operator trust
+> # an image they never actually looked at, defeating the entire review gate.
+> # Since 2026-09-24 a real, advisory automated QA verdict (creative_still_qa)
+> # is recorded with every chat-rendered still, so a QA-pass claim is only false
+> # when the recorded verdicts don't back it; a selection/approval claim is
+> # always false while review is pending.
+> _STILLS_FALSE_SELECTION_RE = re.compile(
+>     r"\bmark(?:ed)?\s+as\s+selected\b"
+>     r"|\bis\s+now\s+selected\b"
+>     r"|\bmeets\s+(?:all\s+)?(?:the\s+)?required\s+standards\b"
+>     r"|\b(?:has\s+been|is\s+now|was)\s+approved\b",
+>     re.I)
+> _STILLS_QA_PASS_CLAIM_RE = re.compile(
+>     r"\bpass(?:ed|es)\s+(?:the\s+)?qa\b"
+>     r"|\bpass(?:ed|es)\s+all\b[^.\n]{0,60}\bchecks?\b"
+>     r"|\bqa\s+(?:process|pipeline|check)\b[^.\n]{0,60}\b(?:confirm(?:ed|s)?|pass(?:ed|es)?|approve[ds]?)\b",
+>     re.I)
+> 
+> 
+> def _stills_claim_correction(reply: str, pending: dict | None, cid: str) -> str | None:
+>     """Correction text when a reply claims stills QA/selection the record doesn't back.
+> 
+>     ``pending`` is this hop's in-memory flag (set when a stills tool ran this
+>     hop); the chat's persisted review state covers follow-up turns with no
+>     tool call, which is where the observed fabrication actually happened.
+>     """
+>     selection = _STILLS_FALSE_SELECTION_RE.search(reply or "")
+>     qa_claim = _STILLS_QA_PASS_CLAIM_RE.search(reply or "")
+>     if not (selection or qa_claim):
+>         return None
+>     persisted: dict = {}
+>     if cid:
+>         try:
+>             persisted = json.loads(tools.story_stills_review_status({"__conversation_id": cid}))
+>         except Exception:
+>             persisted = {}
+>     persisted_pending = persisted.get("status") == "pending_review"
+>     if not pending and not persisted_pending:
+>         return None
+>     stills = persisted.get("stills") if persisted_pending else None
+>     recorded = isinstance(stills, list) and any(
+>         isinstance(s, dict) and isinstance(s.get("qa"), dict) for s in stills)
+>     summary = tools._story_qa_summary(stills) if recorded else None
+>     if not selection and summary and summary.get("all_passed"):
+>         return None    # a true report of the recorded QA verdict
+>     story = (pending or {}).get("story") or persisted.get("story") or "these stills"
+>     parts = [
+>         f"The stills for {story!r} have not been reviewed or approved, and nothing "
+>         "is SELECTED -- 'SELECTED' belongs to the separate video-clip pipeline. "
+>         "Approval here is a human decision only, made by the operator explicitly "
+>         "saying something like 'looks good', 'approved', or 'go ahead with video'."
+>     ]
+>     if summary:
+>         lines = []
+>         for item in summary["stills"]:
+>             reasons = "; ".join(item.get("reject_reasons") or []) or item.get("error") or ""
+>             lines.append(f"still {item['index'] + 1}: {str(item['verdict']).upper()}"
+>                          + (f" ({reasons})" if reasons else ""))
+>         parts.append(
+>             f"{len(summary['stills'])} still(s) are pending review. Recorded automated "
+>             "QA (creative_still_qa, advisory): " + "; ".join(lines) + ". "
+>             "That QA only checks for people/faces the prompt does or doesn't call for, "
+>             "plus continuity against an earlier operator-approved still; it does not "
+>             "verify that the scene or environment matches the prompt.")
+>     else:
+>         parts.append("No automated QA verdict has been recorded for these stills, so "
+>                      "there is no QA result to report.")
+>     parts.append("Please look at the rendered still(s) and say whether they are approved.")
+>     return " ".join(parts)
+> 
+> 
+990c1103
+<         emit("tool_result", result[:4000])
+---
+>         _emit_tool_result(emit, tool_name, result)
+1067c1180,1186
+<     return bool(_SPECIALIST_CONTEXT_REQUEST_RE.search(text or ""))
+---
+>     text = text or ""
+>     if _SPECIALIST_CONTEXT_REQUEST_RE.search(text):
+>         return True
+>     if not _SPECIALIST_IMAGE_NOUN_RE.search(text):
+>         return False
+>     return not (_IMAGE_INSPECTION_REQUEST_RE.search(text)
+>                 and not _IMAGE_CREATION_REQUEST_RE.search(text))
+2145a2265,2269
+>         # Same pattern, for a different observed hallucination: once stills
+>         # genuinely render and land in pending_review, nothing stopped the
+>         # model from *also* claiming a nonexistent automated QA step approved
+>         # or "SELECTED" them. See _stills_claim_correction above.
+>         stills_pending_operator_review: dict | None = None
+2598a2723,2725
+>                     elif (_stills_fix := _stills_claim_correction(
+>                             reply, stills_pending_operator_review, cid)) is not None:
+>                         reply = _stills_fix
+2724a2852
+>                 stills_pending_operator_review = None   # reset every hop; see declaration above
+2727c2855
+<                     emit("tool_result", result[:4000])
+---
+>                     _emit_tool_result(emit, name, result)
+2767a2896,2914
+>                                 stills_pending_operator_review = {
+>                                     "story": ((_parsed.get("completed") or [{}])[0] or {}).get("story"),
+>                                 }
+>                     elif name == "present_story_stills_for_review" and not is_error:
+>                         # The model can also call this directly (not only via
+>                         # render_story_image_batch's internal auto-call) --
+>                         # same false-approval risk, same tracking.
+>                         try:
+>                             _parsed = json.loads(result)
+>                         except Exception:
+>                             _parsed = None
+>                         if isinstance(_parsed, dict) and _parsed.get("pending_review"):
+>                             stills_pending_operator_review = {"story": _parsed.get("story")}
+>                     elif name == "approve_story_stills" and not is_error:
+>                         # A genuine, operator-confirmed approval just happened
+>                         # (run_one() already enforced _operator_approved_story_stills
+>                         # before letting this tool call through) -- the claim is
+>                         # true now, stop treating it as unverified.
+>                         stills_pending_operator_review = None

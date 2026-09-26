@@ -1,0 +1,38 @@
+  stopped stale media watcher (PID 7196)
+  replacing stale local-agent instance (PID 23980) ...
+  Windows refused to stop PID 23980: Cannot stop process "python (23980)" because of the following error: Access is denied
+  PID 23980 looks elevated; requesting a one-time Administrator taskkill (UAC).
+  The replacement server will still start unelevated.
+  elevated taskkill released PID 23980
+
+Routing check
+GPU busy      : False  — GPU idle (56 MB used, no foreign compute process)
+routing to    : GPU  huihui_ai/qwen3-abliterated:14b  @ 127.0.0.1:11434
+routing reason: GPU free — GPU idle (56 MB used, no foreign compute process)
+cpu server    : down  []
+gpu server    : up  ['huihui_ai/Qwen3.8-abliterated:latest', 'llama3.1:8b', 'gpt-oss-20b-heretic:latest', 'huihui_ai/qwen3-abliterated:14b', 'nomic-embed-text:latest', 'huihui_ai/qwen3-abliterated:8b', 'qwen3vl-abl:latest', 'qwen3.6:latest', 'dolphin3:latest', 'qwen3:8b', 'qwen2.5-coder:14b']
+{
+  "queue_owner": "queue owner released",
+  "comfy_port_8188": "closed",
+  "vram_used_mb": 56,
+  "compute_processes": [
+    "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.831.1445.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe",
+    "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+    "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe"
+  ],
+  "gpu_resident_ollama_models": []
+}
+
+Refreshing knowledge from current project state
+system prompt : 4.2 KB  (638 words)
+                A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\local_agent\knowledge\EQUAL_SHARES_REFERENCE.md
+state         : A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\local_agent\knowledge\PROJECT_STATE.json
+
+speakers 18 = 10 recurring + 8 one-off
+prompts 124 | manifest records 0 | auditions 0 rendered, 0 chosen
+
+retrieval index: 368 files  854 chunks  4012.9 KB
+
+Starting media queue watcher
+
+Starting the app

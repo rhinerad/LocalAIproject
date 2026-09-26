@@ -1,0 +1,7 @@
+[
+  {"launcher":"Open_MiniMax_H3_REMIX_16GB.cmd","source":"A:\\Users\\rhine\\ComfyUI-Shared\\workflows\\minimaxH3REMIXModelFeihou_v20_16gb.json","lora_nodes":["FeiHouEasyH3LoraStack"]},
+  {"launcher":"Open_MiniMax_H3_REMIX.cmd","source":"A:\\Users\\rhine\\ComfyUI-Shared\\workflows\\minimaxH3REMIXModelFeihou_v20.json","lora_nodes":["FeiHouEasyH3LoraStack"]},
+  {"launcher":"Open_MiniMax_H3_Turbo_LoRA.cmd","source":"A:\\Users\\rhine\\ComfyUI-Shared\\workflows\\minimaxH3TurboLora.json","lora_nodes":["MiniMaxH3TurboLoRA"]},
+  {"launcher":"Open_WAN22_I2V_Quad_LoRA.cmd","source":"A:\\Users\\rhine\\ComfyUI-Shared\\models\\loras\\wan22I2vQUADKsampler12_v10\\WAN2.2 QUAD KSAMPLER - WALKING FROM BEHIND ASS JIGGLES.json","lora_nodes":["LoraLoaderModelOnly","LoraLoaderModelOnly"]},
+  {"launcher":"Open_Instagirl_v23_LoRA.cmd","source":"A:\\Users\\rhine\\ComfyUI-Shared\\models\\loras\\Instagirlv2.3_workflow.json","lora_nodes":["LoraLoaderModelOnly","LoraLoaderModelOnly","LoraLoaderModelOnly","LoraLoaderModelOnly","LoraLoader"]}
+]

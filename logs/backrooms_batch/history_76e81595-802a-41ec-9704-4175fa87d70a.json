@@ -1,0 +1,152 @@
+{
+  "prompt": [
+    0,
+    "76e81595-802a-41ec-9704-4175fa87d70a",
+    {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "RealVisXL_V5.0_fp16.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Chest-height forward-facing empty yellow room, sleeve cuff visible. Heavy VHS artifacting, continuous unbroken shot, and 1990s home video aesthetic. First-person camcorder tracking, handheld walking momentum, and realistic camera shake, photorealistic, sharp focus, natural lighting, detailed texture",
+          "clip": [
+            "1",
+            1
+          ]
+        },
+        "_meta": {
+          "title": "Positive Prompt"
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "mutated hands, blurry, bad anatomy, deformed, extra fingers, fused fingers, poorly drawn face, low quality, watermark, text, logo",
+          "clip": [
+            "1",
+            1
+          ]
+        },
+        "_meta": {
+          "title": "Negative Prompt"
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 1344,
+          "height": 768,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 42,
+          "steps": 30,
+          "cfg": 7.0,
+          "sampler_name": "euler",
+          "scheduler": "normal",
+          "denoise": 1.0
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "dspy_opt/br24_C019_start"
+        }
+      }
+    },
+    {
+      "client_id": "media-pipeline-4e3cf28be432",
+      "create_time": 1789456100526
+    },
+    [
+      "7"
+    ]
+  ],
+  "outputs": {
+    "7": {
+      "images": [
+        {
+          "filename": "br24_C019_start_00001_.png",
+          "subfolder": "dspy_opt",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "76e81595-802a-41ec-9704-4175fa87d70a",
+          "timestamp": 1789456100527
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "76e81595-802a-41ec-9704-4175fa87d70a",
+          "timestamp": 1789456100528
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "76e81595-802a-41ec-9704-4175fa87d70a",
+          "timestamp": 1789456158630
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "7": {
+      "node_id": "7",
+      "display_node": "7",
+      "parent_node": null,
+      "real_node_id": "7"
+    }
+  }
+}

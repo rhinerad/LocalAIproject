@@ -1,0 +1,20 @@
+{
+  "id": "4bf26761b7f8429d",
+  "title": "thanks are you aware of this website and is it p…",
+  "created": 1787454399.7057726,
+  "updated": 1787454407.5994582,
+  "model": "qwen3:8b",
+  "messages": [
+    {
+      "role": "user",
+      "content": "thanks are you aware of this website and is it part of the persistent memery for this mini max agent? https://docs.comfy.org/tutorials/video/minimax/minimax-h3",
+      "at": 1787454399.7113013
+    },
+    {
+      "role": "assistant",
+      "content": "The URL https://docs.comfy.org/tutorials/video/minimax/minimax-h3 has been fetched and its content is accessible to me. However, **it is not part of the persistent memory** for this MiniMax agent unless the operator explicitly instructed me to remember specific facts from it (e.g., via \"remember that...\" commands). \n\nThe fetched content describes ComfyUI workflows for MiniMax H3 (T2V, I2V, R2V) and includes model file paths, resolution settings, and prompt formatting guidance. This is **not stored as durable knowledge** unless explicitly requested. Use `list_memory` to check what facts are currently remembered.",
+      "at": 1787454407.592146
+    }
+  ],
+  "last_tier": "gpu"
+}

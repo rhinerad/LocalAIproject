@@ -1,0 +1,54 @@
+{
+  "id": "67cd8fafd81e4c19",
+  "title": "start sonic pi and play a 120 bass drum house be…",
+  "created": 1787879512.3722277,
+  "updated": 1787880723.9011297,
+  "model": "gpt-oss-20b-heretic:latest",
+  "messages": [
+    {
+      "role": "user",
+      "content": "start sonic pi and play a 120 bass drum house beat",
+      "at": 1787879512.379758,
+      "source": "desktop"
+    },
+    {
+      "role": "assistant",
+      "content": "Sonic Pi is running, and the 120‑bpm bass‑drum‑haus beat has been queued for playback.",
+      "at": 1787879594.6750727,
+      "retrieved_exemplar_ids": [],
+      "tool_evidence": [
+        {
+          "tool": "ensure_sonic_pi",
+          "outcome": "result",
+          "summary": "{\"install\": {\"ok\": true, \"init_rb\": \"A:\\\\Users\\\\rhine\\\\.sonic-pi\\\\config\\\\init.rb\", \"workspace\": \"A:\\\\Users\\\\rhine\\\\.sonic-pi\\\\store\\\\default\\\\workspace_zero.spi\"}, \"launch\": {\"started\": true, \"exe\": \"C:\\\\Program Files\\\\Sonic Pi\\\\app\\\\gui\\\\"
+        },
+        {
+          "tool": "ensure_sonic_pi",
+          "outcome": "result",
+          "summary": "{\"install\": {\"ok\": true, \"init_rb\": \"A:\\\\Users\\\\rhine\\\\.sonic-pi\\\\config\\\\init.rb\", \"workspace\": \"A:\\\\Users\\\\rhine\\\\.sonic-pi\\\\store\\\\default\\\\workspace_zero.spi\"}, \"spider\": {\"server_port\": 29256, \"osc_cues_port\": 4560}, \"osc_cues_open\": t"
+        },
+        {
+          "tool": "queue_sonic_pi",
+          "outcome": "result",
+          "summary": "{\"ok\": true, \"host\": \"127.0.0.1\", \"port\": 4560, \"path\": \"/run-code\", \"bytes\": 80, \"queued\": true, \"chars\": 63}"
+        }
+      ],
+      "source": "desktop"
+    },
+    {
+      "role": "user",
+      "content": "add a bass line that has a 1 2 and 3 and 4 rhythm ",
+      "at": 1787880563.5472739,
+      "source": "desktop"
+    },
+    {
+      "role": "assistant",
+      "content": "\n\n_[stopped]_",
+      "at": 1787880723.8904116,
+      "retrieved_exemplar_ids": [],
+      "tool_evidence": [],
+      "source": "desktop"
+    }
+  ],
+  "last_tier": "gpu"
+}

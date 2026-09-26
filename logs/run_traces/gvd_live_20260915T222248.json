@@ -1,0 +1,197 @@
+{
+  "saved": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\models\\dspy_compiled\\generalized_video_director_mipro.json",
+  "optimizer": "mipro",
+  "mock": false,
+  "auto": null,
+  "trials": 1,
+  "trainset": 2,
+  "ids": "GVD-B01,GVD-D01",
+  "last_feedback": "{\"mock\": false, \"clip_id\": \"GVD-B01\", \"category\": \"backrooms\", \"hparams\": {\"cfg_scale\": 5.5, \"denoise\": 0.9, \"step_count\": 28.0}, \"step_count_int\": 28, \"scores\": null, \"mean\": null, \"minimum\": null, \"threshold\": null, \"passes_curriculum\": false, \"mipro\": 0.0, \"error\": \"TimeoutError: still start did not complete: {'state': 'error', 'prompt_id': 'f2d2851a-a0b3-4275-8d7f-e61c85f5dba3', 'source': 'websocket', 'type': 'execution_error', 'data': {'prompt_id': 'f2d2851a-a0b3-4275-8d7f-e61c85f5dba3', 'node_id': '10', 'node_type': 'CLIPTextEncode', 'executed': ['8', '1'], 'exception_message': 'VBAR allocation failed\\\\n', 'exception_type': 'MemoryError', 'traceback': ['  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\execution.py\\\", line 545, in execute\\\\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\\\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\execution.py\\\", line 344, in get_output_data\\\\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\\\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\execution.py\\\", line 318, in _async_map_node_over_list\\\\n    await process_inputs(input_dict, i)\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\execution.py\\\", line 306, in process_inputs\\\\n    result = f(**inputs)\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\nodes.py\\\", line 77, in encode\\\\n    return (clip.encode_from_tokens_scheduled(tokens), )\\\\n            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\comfy\\\\\\\\sd.py\\\", line 341, in encode_from_tokens_scheduled\\\\n    pooled_dict = self.encode_from_tokens(tokens, return_pooled=return_pooled, return_dict=True)\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\comfy\\\\\\\\sd.py\\\", line 405, in encode_from_tokens\\\\n    self.load_model(tokens)\\\\n    ~~~~~~~~~~~~~~~^^^^^^^^\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\comfy\\\\\\\\sd.py\\\", line 463, in load_model\\\\n    model_management.load_models_gpu([self.patcher], memory_required=memory_used)\\\\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\comfy\\\\\\\\model_management.py\\\", line 1008, in load_models_gpu\\\\n    loaded_model.model_load(lowvram_model_memory, force_patch_weights=force_patch_weights)\\\\n    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\comfy\\\\\\\\model_management.py\\\", line 794, in model_load\\\\n    self.model_use_more_vram(use_more_vram, force_patch_weights=force_patch_weights)\\\\n    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\comfy\\\\\\\\model_management.py\\\", line 822, in model_use_more_vram\\\\n    return self.model.partially_load(self.device, extra_memory, force_patch_weights=force_patch_weights)\\\\n           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\comfy\\\\\\\\model_patcher.py\\\", line 2153, in partially_load\\\\n    raise e\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\comfy\\\\\\\\model_patcher.py\\\", line 2150, in partially_load\\\\n    self.load(device_to, dirty=dirty)\\\\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\comfy\\\\\\\\model_patcher.py\\\", line 1873, in load\\\\n    vbar = self._vbar_get(create=True)\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\comfy\\\\\\\\model_patcher.py\\\", line 1805, in _vbar_get\\\\n    vbar = comfy_aimdo.model_vbar.ModelVBAR(self.model_size() * 10, self.load_device.index)\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\.venv\\\\\\\\Lib\\\\\\\\site-packages\\\\\\\\comfy_aimdo\\\\\\\\model_vbar.py\\\", line 54, in __init__\\\\n    raise MemoryError(\\\"VBAR allocation failed\\\")\\\\n'], 'current_inputs': {'text': ['mutated hands, blurry, bad anatomy, deformed, extra fingers, fused fingers, poorly drawn face, low quality, watermark, text, logo, cross-eyed, crossed eyes, strabismus, lazy eye, wall-eyed, misaligned pupils, asymmetrical eyes, malformed face, deformed face, duplicate face, blurry face'], 'clip': ['<comfy.sd.CLIP object at 0x000001C943A937D0>']}, 'current_outputs': [], 'timestamp': 1789525368304}}\", \"video_path\": null, \"positive_prompt\": \"Handheld first-person camcorder walk down a damp yellow Level 0 Backrooms hallway; fluorescent rectangles repeat into the distance over wet brown-beige carpet and sickly wallpaper. A continuous unbroken shot with handheld walking momentum, first-person camcorder tracking, heavy VHS artifacting, realistic camera shake, and 1990s home video aesthetic. No actor face or torso, no apartment furniture, no readable text.\", \"vram_trace\": [{\"label\": \"after_prepare_comfy\", \"ts\": 1789525314.6291716, \"used_mib\": 57, \"free_mib\": 15921, \"total_mib\": 16303, \"owner\": {\"owner\": \"comfyui\", \"reason\": \"Wan 2.1 generation\", \"since\": 1789525314.628174}}]}",
+  "history_n": 4,
+  "history": [
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 0.75,
+        "step_count": 24.0
+      },
+      "step_count_int": 24,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "error": "TimeoutError: Wan 2.1 job did not complete: {'state': 'error', 'prompt_id': '556e0409-7574-45e4-917d-3a03a83f2572', 'source': 'websocket', 'type': 'execution_error', 'data': {'prompt_id': '556e0409-7574-45e4-917d-3a03a83f2572', 'node_id': '8', 'node_type': 'WanFirstLastFrameToVideo', 'executed': ['3', '4', '2', '6', '5', '7'], 'exception_message': 'VBAR allocation failed\\n', 'exception_type': 'MemoryError', 'traceback': ['  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 545, in execute\\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 344, in get_output_data\\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 318, in _async_map_node_over_list\\n    await process_inputs(input_dict, i)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 306, in process_inputs\\n    result = f(**inputs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_api\\\\internal\\\\__init__.py\", line 149, in wrapped_func\\n    return method(locked_class, **inputs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_api\\\\latest\\\\_io.py\", line 2046, in EXECUTE_NORMALIZED\\n    to_return = cls.execute(*args, **kwargs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_extras\\\\nodes_wan.py\", line 230, in execute\\n    concat_latent_image = vae.encode(image[:, :, :, :3])\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\sd.py\", line 1390, in encode\\n    model_management.raise_non_oom(e)\\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_management.py\", line 399, in raise_non_oom\\n    raise e\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\sd.py\", line 1372, in encode\\n    model_management.load_models_gpu([self.patcher], memory_required=memory_used, force_full_load=self.disable_offload)\\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_management.py\", line 1008, in load_models_gpu\\n    loaded_model.model_load(lowvram_model_memory, force_patch_weights=force_patch_weights)\\n    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_management.py\", line 794, in model_load\\n    self.model_use_more_vram(use_more_vram, force_patch_weights=force_patch_weights)\\n    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_management.py\", line 822, in model_use_more_vram\\n    return self.model.partially_load(self.device, extra_memory, force_patch_weights=force_patch_weights)\\n           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_patcher.py\", line 2153, in partially_load\\n    raise e\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_patcher.py\", line 2150, in partially_load\\n    self.load(device_to, dirty=dirty)\\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_patcher.py\", line 1873, in load\\n    vbar = self._vbar_get(create=True)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_patcher.py\", line 1805, in _vbar_get\\n    vbar = comfy_aimdo.model_vbar.ModelVBAR(self.model_size() * 10, self.load_device.index)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\.venv\\\\Lib\\\\site-packages\\\\comfy_aimdo\\\\model_vbar.py\", line 54, in __init__\\n    raise MemoryError(\"VBAR allocation failed\")\\n'], 'current_inputs': {'positive': [\"[[tensor([[[ 0.0015,  0.0084, -0.0653,  ..., -0.0003, -0.0244, -0.0163],\\n         [ 0.0017,  0.0335, -0.1240,  ..., -0.0008,  0.0304,  0.0325],\\n         [ 0.0017, -0.0169, -0.1545,  ..., -0.0010,  0.0188, -0.1262],\\n         ...,\\n         [ 0.0000, -0.0000,  0.0000,  ..., -0.0000,  0.0000, -0.0000],\\n         [ 0.0000, -0.0000,  0.0000,  ..., -0.0000,  0.0000, -0.0000],\\n         [ 0.0000, -0.0000,  0.0000,  ..., -0.0000,  0.0000, -0.0000]]]), {'pooled_output': None}]]\"], 'negative': [\"[[tensor([[[ 1.4122e-03,  8.0127e-04,  1.2484e-01,  ..., -3.7514e-04,  3.9111e-02,  1.1753e-02],\\n         [ 2.0466e-03,  2.9154e-02, -5.9254e-02,  ..., -5.1563e-04,  1.8965e-02,  3.3515e-02],\\n         [ 2.0771e-03,  5.8812e-02,  2.5587e-02,  ..., -1.1632e-04, -6.9999e-02, -4.7212e-02],\\n         ...,\\n         [ 0.0000e+00,  0.0000e+00, -0.0000e+00,  ..., -0.0000e+00,  0.0000e+00, -0.0000e+00],\\n         [ 0.0000e+00,  0.0000e+00, -0.0000e+00,  ..., -0.0000e+00,  0.0000e+00, -0.0000e+00],\\n         [ 0.0000e+00,  0.0000e+00, -0.0000e+00,  ..., -0.0000e+00,  0.0000e+00, -0.0000e+00]]]), {'pooled_output': None}]]\"], 'vae': ['<comfy.sd.VAE object at 0x000001C9769F48A0>'], 'width': [512], 'height': [288], 'length': [17], 'batch_size': [1], 'start_image': ['tensor([[[[0.4235, 0.3961, 0.3059],\\n          [0.4235, 0.3882, 0.2941],\\n          [0.4275, 0.3843, 0.2863],\\n          ...,\\n          [0.6196, 0.7137, 0.7255],\\n          [0.6353, 0.7020, 0.7176],\\n          [0.5804, 0.6392, 0.6471]],\\n\\n         [[0.4431, 0.4314, 0.3216],\\n          [0.4431, 0.4275, 0.3333],\\n          [0.4353, 0.4118, 0.3098],\\n          ...,\\n          [0.5529, 0.6510, 0.6902],\\n          [0.5765, 0.6510, 0.6824],\\n          [0.5922, 0.6588, 0.6902]],\\n\\n         [[0.4235, 0.4118, 0.3216],\\n          [0.4549, 0.4549, 0.3647],\\n          [0.4431, 0.4275, 0.3412],\\n          ...,\\n          [0.5451, 0.6510, 0.7059],\\n          [0.5137, 0.6000, 0.6549],\\n          [0.5216, 0.6000, 0.6471]],\\n\\n         ...,\\n\\n         [[0.3608, 0.4000, 0.2000],\\n          [0.3294, 0.3843, 0.1843],\\n          [0.2941, 0.3490, 0.1725],\\n          ...,\\n          [0.0431, 0.1922, 0.2392],\\n          [0.0588, 0.2000, 0.2510],\\n          [0.0353, 0.1725, 0.2157]],\\n\\n         [[0.2941, 0.3294, 0.1451],\\n          [0.3412, 0.4000, 0.1882],\\n          [0.3137, 0.3765, 0.1843],\\n          ...,\\n          [0.0392, 0.1922, 0.2431],\\n          [0.0392, 0.1882, 0.2392],\\n          [0.0392, 0.1765, 0.2275]],\\n\\n         [[0.2667, 0.2980, 0.1373],\\n          [0.3294, 0.3725, 0.1804],\\n          [0.2863, 0.3216, 0.1529],\\n          ...,\\n          [0.0471, 0.1882, 0.2314],\\n          [0.0471, 0.1843, 0.2392],\\n          [0.0353, 0.1843, 0.2392]]]])'], 'end_image': ['tensor([[[[0.4235, 0.3961, 0.3059],\\n          [0.4235, 0.3882, 0.2941],\\n          [0.4275, 0.3843, 0.2863],\\n          ...,\\n          [0.6196, 0.7137, 0.7255],\\n          [0.6353, 0.7020, 0.7176],\\n          [0.5804, 0.6392, 0.6471]],\\n\\n         [[0.4431, 0.4314, 0.3216],\\n          [0.4431, 0.4275, 0.3333],\\n          [0.4353, 0.4118, 0.3098],\\n          ...,\\n          [0.5529, 0.6510, 0.6902],\\n          [0.5765, 0.6510, 0.6824],\\n          [0.5922, 0.6588, 0.6902]],\\n\\n         [[0.4235, 0.4118, 0.3216],\\n          [0.4549, 0.4549, 0.3647],\\n          [0.4431, 0.4275, 0.3412],\\n          ...,\\n          [0.5451, 0.6510, 0.7059],\\n          [0.5137, 0.6000, 0.6549],\\n          [0.5216, 0.6000, 0.6471]],\\n\\n         ...,\\n\\n         [[0.3608, 0.4000, 0.2000],\\n          [0.3294, 0.3843, 0.1843],\\n          [0.2941, 0.3490, 0.1725],\\n          ...,\\n          [0.0431, 0.1922, 0.2392],\\n          [0.0588, 0.2000, 0.2510],\\n          [0.0353, 0.1725, 0.2157]],\\n\\n         [[0.2941, 0.3294, 0.1451],\\n          [0.3412, 0.4000, 0.1882],\\n          [0.3137, 0.3765, 0.1843],\\n          ...,\\n          [0.0392, 0.1922, 0.2431],\\n          [0.0392, 0.1882, 0.2392],\\n          [0.0392, 0.1765, 0.2275]],\\n\\n         [[0.2667, 0.2980, 0.1373],\\n          [0.3294, 0.3725, 0.1804],\\n          [0.2863, 0.3216, 0.1529],\\n          ...,\\n          [0.0471, 0.1882, 0.2314],\\n          [0.0471, 0.1843, 0.2392],\\n          [0.0353, 0.1843, 0.2392]]]])']}, 'current_outputs': [], 'timestamp': 1789525113997}}",
+      "video_path": null,
+      "positive_prompt": "A cinematic drone shot flies in from the open ocean toward sheer Atlantic cliffs at golden hour, revealing nested seabirds and white spray against black basalt. The camera smoothly transitions through the scene, capturing the dynamic degree and motion smoothness of the aerial movement. The shot should be continuous and avoid any static or still photographs, ensuring a smooth and uninterrupted aerial journey.",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789524639.8053062,
+          "used_mib": 737,
+          "free_mib": 15241,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789524639.8053062
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789525114.2836661,
+          "used_mib": 42,
+          "free_mib": 15936,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789525114.1895328
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 6.0,
+        "denoise": 0.8,
+        "step_count": 24.0
+      },
+      "step_count_int": 24,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "error": "TimeoutError: still start did not complete: {'state': 'error', 'prompt_id': '9ff4d06b-9a72-4fd3-943c-b0ef78d0eca8', 'source': 'websocket', 'type': 'execution_error', 'data': {'prompt_id': '9ff4d06b-9a72-4fd3-943c-b0ef78d0eca8', 'node_id': '10', 'node_type': 'CLIPTextEncode', 'executed': ['8', '1'], 'exception_message': 'VBAR allocation failed\\n', 'exception_type': 'MemoryError', 'traceback': ['  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 545, in execute\\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 344, in get_output_data\\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 318, in _async_map_node_over_list\\n    await process_inputs(input_dict, i)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 306, in process_inputs\\n    result = f(**inputs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\nodes.py\", line 77, in encode\\n    return (clip.encode_from_tokens_scheduled(tokens), )\\n            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\sd.py\", line 341, in encode_from_tokens_scheduled\\n    pooled_dict = self.encode_from_tokens(tokens, return_pooled=return_pooled, return_dict=True)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\sd.py\", line 405, in encode_from_tokens\\n    self.load_model(tokens)\\n    ~~~~~~~~~~~~~~~^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\sd.py\", line 463, in load_model\\n    model_management.load_models_gpu([self.patcher], memory_required=memory_used)\\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_management.py\", line 1008, in load_models_gpu\\n    loaded_model.model_load(lowvram_model_memory, force_patch_weights=force_patch_weights)\\n    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_management.py\", line 794, in model_load\\n    self.model_use_more_vram(use_more_vram, force_patch_weights=force_patch_weights)\\n    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_management.py\", line 822, in model_use_more_vram\\n    return self.model.partially_load(self.device, extra_memory, force_patch_weights=force_patch_weights)\\n           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_patcher.py\", line 2153, in partially_load\\n    raise e\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_patcher.py\", line 2150, in partially_load\\n    self.load(device_to, dirty=dirty)\\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_patcher.py\", line 1873, in load\\n    vbar = self._vbar_get(create=True)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_patcher.py\", line 1805, in _vbar_get\\n    vbar = comfy_aimdo.model_vbar.ModelVBAR(self.model_size() * 10, self.load_device.index)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\.venv\\\\Lib\\\\site-packages\\\\comfy_aimdo\\\\model_vbar.py\", line 54, in __init__\\n    raise MemoryError(\"VBAR allocation failed\")\\n'], 'current_inputs': {'text': ['mutated hands, blurry, bad anatomy, deformed, extra fingers, fused fingers, poorly drawn face, low quality, watermark, text, logo, cross-eyed, crossed eyes, strabismus, lazy eye, wall-eyed, misaligned pupils, asymmetrical eyes, malformed face, deformed face, duplicate face, blurry face'], 'clip': ['<comfy.sd.CLIP object at 0x000001C94A6702D0>']}, 'current_outputs': [], 'timestamp': 1789525216071}}",
+      "video_path": null,
+      "positive_prompt": "Unlocked handheld camera. Include handheld walking momentum, first-person camcorder tracking, heavy VHS artifacting, a continuous unbroken shot, realistic camera shake, and 1990s home video aesthetic. No actor face or torso, no apartment furniture, no readable text.",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789525162.5790222,
+          "used_mib": 42,
+          "free_mib": 15936,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789525162.5780225
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789525216.315553,
+          "used_mib": 42,
+          "free_mib": 15936,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789525216.2672384
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 5.5,
+        "denoise": 0.85,
+        "step_count": 30.0
+      },
+      "step_count_int": 30,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "error": "TimeoutError: still start did not complete: {'state': 'error', 'prompt_id': 'e874f6b2-a93f-46ab-9bae-4d463bc2463f', 'source': 'websocket', 'type': 'execution_error', 'data': {'prompt_id': 'e874f6b2-a93f-46ab-9bae-4d463bc2463f', 'node_id': '10', 'node_type': 'CLIPTextEncode', 'executed': ['8', '1'], 'exception_message': 'VBAR allocation failed\\n', 'exception_type': 'MemoryError', 'traceback': ['  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 545, in execute\\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 344, in get_output_data\\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 318, in _async_map_node_over_list\\n    await process_inputs(input_dict, i)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 306, in process_inputs\\n    result = f(**inputs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\nodes.py\", line 77, in encode\\n    return (clip.encode_from_tokens_scheduled(tokens), )\\n            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\sd.py\", line 341, in encode_from_tokens_scheduled\\n    pooled_dict = self.encode_from_tokens(tokens, return_pooled=return_pooled, return_dict=True)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\sd.py\", line 405, in encode_from_tokens\\n    self.load_model(tokens)\\n    ~~~~~~~~~~~~~~~^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\sd.py\", line 463, in load_model\\n    model_management.load_models_gpu([self.patcher], memory_required=memory_used)\\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_management.py\", line 1008, in load_models_gpu\\n    loaded_model.model_load(lowvram_model_memory, force_patch_weights=force_patch_weights)\\n    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_management.py\", line 794, in model_load\\n    self.model_use_more_vram(use_more_vram, force_patch_weights=force_patch_weights)\\n    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_management.py\", line 822, in model_use_more_vram\\n    return self.model.partially_load(self.device, extra_memory, force_patch_weights=force_patch_weights)\\n           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_patcher.py\", line 2153, in partially_load\\n    raise e\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_patcher.py\", line 2150, in partially_load\\n    self.load(device_to, dirty=dirty)\\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_patcher.py\", line 1873, in load\\n    vbar = self._vbar_get(create=True)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_patcher.py\", line 1805, in _vbar_get\\n    vbar = comfy_aimdo.model_vbar.ModelVBAR(self.model_size() * 10, self.load_device.index)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\.venv\\\\Lib\\\\site-packages\\\\comfy_aimdo\\\\model_vbar.py\", line 54, in __init__\\n    raise MemoryError(\"VBAR allocation failed\")\\n'], 'current_inputs': {'text': ['mutated hands, blurry, bad anatomy, deformed, extra fingers, fused fingers, poorly drawn face, low quality, watermark, text, logo, cross-eyed, crossed eyes, strabismus, lazy eye, wall-eyed, misaligned pupils, asymmetrical eyes, malformed face, deformed face, duplicate face, blurry face'], 'clip': ['<comfy.sd.CLIP object at 0x000001C987F8DCD0>']}, 'current_outputs': [], 'timestamp': 1789525296941}}",
+      "video_path": null,
+      "positive_prompt": "A cinematic drone shot flies in from the open ocean toward sheer Atlantic cliffs at golden hour, revealing nested seabirds and white spray against black basalt. The camera moves smoothly and continuously, capturing the dynamic beauty of the scene. The motion is smooth and continuous, with no tripod lock or still photograph. The shot is intended to be a continuous aerial move, ensuring the viewer can fully appreciate the stunning natural landscape. The drone is not restricted by text, watermark, ",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789525242.7718654,
+          "used_mib": 42,
+          "free_mib": 15936,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789525242.7708657
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789525297.190785,
+          "used_mib": 44,
+          "free_mib": 15934,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789525297.1414928
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 5.5,
+        "denoise": 0.9,
+        "step_count": 28.0
+      },
+      "step_count_int": 28,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "error": "TimeoutError: still start did not complete: {'state': 'error', 'prompt_id': 'f2d2851a-a0b3-4275-8d7f-e61c85f5dba3', 'source': 'websocket', 'type': 'execution_error', 'data': {'prompt_id': 'f2d2851a-a0b3-4275-8d7f-e61c85f5dba3', 'node_id': '10', 'node_type': 'CLIPTextEncode', 'executed': ['8', '1'], 'exception_message': 'VBAR allocation failed\\n', 'exception_type': 'MemoryError', 'traceback': ['  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 545, in execute\\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 344, in get_output_data\\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 318, in _async_map_node_over_list\\n    await process_inputs(input_dict, i)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 306, in process_inputs\\n    result = f(**inputs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\nodes.py\", line 77, in encode\\n    return (clip.encode_from_tokens_scheduled(tokens), )\\n            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\sd.py\", line 341, in encode_from_tokens_scheduled\\n    pooled_dict = self.encode_from_tokens(tokens, return_pooled=return_pooled, return_dict=True)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\sd.py\", line 405, in encode_from_tokens\\n    self.load_model(tokens)\\n    ~~~~~~~~~~~~~~~^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\sd.py\", line 463, in load_model\\n    model_management.load_models_gpu([self.patcher], memory_required=memory_used)\\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_management.py\", line 1008, in load_models_gpu\\n    loaded_model.model_load(lowvram_model_memory, force_patch_weights=force_patch_weights)\\n    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_management.py\", line 794, in model_load\\n    self.model_use_more_vram(use_more_vram, force_patch_weights=force_patch_weights)\\n    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_management.py\", line 822, in model_use_more_vram\\n    return self.model.partially_load(self.device, extra_memory, force_patch_weights=force_patch_weights)\\n           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_patcher.py\", line 2153, in partially_load\\n    raise e\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_patcher.py\", line 2150, in partially_load\\n    self.load(device_to, dirty=dirty)\\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_patcher.py\", line 1873, in load\\n    vbar = self._vbar_get(create=True)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy\\\\model_patcher.py\", line 1805, in _vbar_get\\n    vbar = comfy_aimdo.model_vbar.ModelVBAR(self.model_size() * 10, self.load_device.index)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\.venv\\\\Lib\\\\site-packages\\\\comfy_aimdo\\\\model_vbar.py\", line 54, in __init__\\n    raise MemoryError(\"VBAR allocation failed\")\\n'], 'current_inputs': {'text': ['mutated hands, blurry, bad anatomy, deformed, extra fingers, fused fingers, poorly drawn face, low quality, watermark, text, logo, cross-eyed, crossed eyes, strabismus, lazy eye, wall-eyed, misaligned pupils, asymmetrical eyes, malformed face, deformed face, duplicate face, blurry face'], 'clip': ['<comfy.sd.CLIP object at 0x000001C943A937D0>']}, 'current_outputs': [], 'timestamp': 1789525368304}}",
+      "video_path": null,
+      "positive_prompt": "Handheld first-person camcorder walk down a damp yellow Level 0 Backrooms hallway; fluorescent rectangles repeat into the distance over wet brown-beige carpet and sickly wallpaper. A continuous unbroken shot with handheld walking momentum, first-person camcorder tracking, heavy VHS artifacting, realistic camera shake, and 1990s home video aesthetic. No actor face or torso, no apartment furniture, no readable text.",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789525314.6291716,
+          "used_mib": 57,
+          "free_mib": 15921,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789525314.628174
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789525368.5539374,
+          "used_mib": 35,
+          "free_mib": 15943,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789525368.5162609
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "95ac4ef6da2c4119",
+  "title": "Live computer-task audit 2026-09-01. List the to…",
+  "created": 1788301569.254016,
+  "updated": 1788301586.8889909,
+  "model": "huihui_ai/qwen3-abliterated:8b",
+  "workspace": "general",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Live computer-task audit 2026-09-01. List the top-level entries of A:\\Users\\rhine\\Documents using your tools and report the real names. Do the listing yourself; do not ask me to run anything.",
+      "at": 1788301586.8889909,
+      "source": "desktop"
+    }
+  ]
+}

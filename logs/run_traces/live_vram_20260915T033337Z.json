@@ -1,0 +1,183 @@
+{
+  "started_at": "2026-09-15T03:30:41.145617+00:00",
+  "comfy_url": "http://127.0.0.1:8188",
+  "vram_limit_mib": 15500,
+  "fallback": true,
+  "files": {
+    "start_png": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\flf_start_00001_.png",
+    "end_png": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\flf_end_00001_.png",
+    "mp4": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\flf_video_00001.mp4",
+    "mp4_bytes": 204228
+  },
+  "peaks_mib": {
+    "idle": 399,
+    "image": 399,
+    "video": 13453
+  },
+  "vram_after_image_free_mib": 399,
+  "video_workflow": {
+    "node": "WanFirstLastFrameToVideo",
+    "unet": "wan2.2_i2v_high_noise_14B_Q4_K_M.gguf",
+    "clip": "umt5-xxl-encoder-Q6_K.gguf",
+    "vae": "wan_2.1_vae.safetensors",
+    "width": 512,
+    "height": 288,
+    "length": 17,
+    "steps": 4,
+    "first_frame": "flf_start_00001_.png",
+    "last_frame": "flf_end_00001_.png"
+  },
+  "tripped": false,
+  "samples": [
+    {
+      "t": 1789443157.7373931,
+      "phase": "video",
+      "used_mib": 6669
+    },
+    {
+      "t": 1789443159.7836957,
+      "phase": "video",
+      "used_mib": 7053
+    },
+    {
+      "t": 1789443161.82328,
+      "phase": "video",
+      "used_mib": 7213
+    },
+    {
+      "t": 1789443163.862505,
+      "phase": "video",
+      "used_mib": 7597
+    },
+    {
+      "t": 1789443165.9023497,
+      "phase": "video",
+      "used_mib": 8045
+    },
+    {
+      "t": 1789443167.9437487,
+      "phase": "video",
+      "used_mib": 8461
+    },
+    {
+      "t": 1789443169.9878943,
+      "phase": "video",
+      "used_mib": 8877
+    },
+    {
+      "t": 1789443172.0323505,
+      "phase": "video",
+      "used_mib": 9101
+    },
+    {
+      "t": 1789443174.0974321,
+      "phase": "video",
+      "used_mib": 9485
+    },
+    {
+      "t": 1789443176.1408064,
+      "phase": "video",
+      "used_mib": 9805
+    },
+    {
+      "t": 1789443178.1875608,
+      "phase": "video",
+      "used_mib": 10221
+    },
+    {
+      "t": 1789443180.2289002,
+      "phase": "video",
+      "used_mib": 10669
+    },
+    {
+      "t": 1789443182.2766247,
+      "phase": "video",
+      "used_mib": 11021
+    },
+    {
+      "t": 1789443184.3281875,
+      "phase": "video",
+      "used_mib": 11437
+    },
+    {
+      "t": 1789443186.3773098,
+      "phase": "video",
+      "used_mib": 11597
+    },
+    {
+      "t": 1789443188.4185894,
+      "phase": "video",
+      "used_mib": 12013
+    },
+    {
+      "t": 1789443190.4700303,
+      "phase": "video",
+      "used_mib": 12269
+    },
+    {
+      "t": 1789443192.5125573,
+      "phase": "video",
+      "used_mib": 12301
+    },
+    {
+      "t": 1789443194.5613678,
+      "phase": "video",
+      "used_mib": 12525
+    },
+    {
+      "t": 1789443196.605807,
+      "phase": "video",
+      "used_mib": 12845
+    },
+    {
+      "t": 1789443198.6507325,
+      "phase": "video",
+      "used_mib": 13389
+    },
+    {
+      "t": 1789443200.695638,
+      "phase": "video",
+      "used_mib": 13389
+    },
+    {
+      "t": 1789443202.735532,
+      "phase": "video",
+      "used_mib": 13453
+    },
+    {
+      "t": 1789443204.7773345,
+      "phase": "video",
+      "used_mib": 13453
+    },
+    {
+      "t": 1789443206.8193452,
+      "phase": "video",
+      "used_mib": 12493
+    },
+    {
+      "t": 1789443208.8609912,
+      "phase": "video",
+      "used_mib": 12557
+    },
+    {
+      "t": 1789443210.8992765,
+      "phase": "video",
+      "used_mib": 12557
+    },
+    {
+      "t": 1789443212.9661632,
+      "phase": "video",
+      "used_mib": 12365
+    },
+    {
+      "t": 1789443215.0108235,
+      "phase": "video",
+      "used_mib": 12365
+    },
+    {
+      "t": 1789443217.049921,
+      "phase": "video",
+      "used_mib": 621
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "1": {
+    "class_type": "LoadAudio",
+    "inputs": {
+      "audio": "C001_master_voice.wav"
+    }
+  },
+  "2": {
+    "class_type": "VHS_AudioToVHSAudio",
+    "inputs": {
+      "audio": ["1", 0]
+    }
+  },
+  "3": {
+    "class_type": "vhs_audio_to_audio_tensor",
+    "inputs": {
+      "vhs_audio": ["2", 0],
+      "target_sample_rate": 16000,
+      "target_channels": 1
+    }
+  },
+  "4": {
+    "class_type": "whisper_to_features",
+    "inputs": {
+      "audio_tensor": ["3", 0],
+      "fps": 25
+    }
+  },
+  "5": {
+    "class_type": "UNETLoader_MuseTalk",
+    "inputs": {}
+  },
+  "6": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "vae-ft-mse-840000-ema-pruned.safetensors"
+    }
+  },
+  "7": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "gvd_identity_ref.png"
+    }
+  },
+  "8": {
+    "class_type": "RepeatImageBatch",
+    "inputs": {
+      "image": ["7", 0],
+      "amount": 4
+    }
+  },
+  "9": {
+    "class_type": "muse_talk_sampler",
+    "inputs": {
+      "model": ["5", 0],
+      "vae": ["6", 0],
+      "whisper_features": ["4", 0],
+      "images": ["8", 0],
+      "masked_images": ["8", 0],
+      "batch_size": 2,
+      "delay_frame": 0
+    }
+  },
+  "10": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": ["9", 0],
+      "filename_prefix": "gvd_tool_router/musetalk_smoke"
+    }
+  }
+}

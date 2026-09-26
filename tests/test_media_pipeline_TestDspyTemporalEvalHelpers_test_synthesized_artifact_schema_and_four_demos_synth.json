@@ -1,0 +1,63 @@
+{
+  "prog.predict": {
+    "traces": [],
+    "train": [],
+    "demos": [
+      {
+        "base_prompt": "A yellow hallway with flickering fluorescent lights",
+        "style": "backrooms",
+        "reasoning": "The request is an open Backrooms hallway with no locked camera. Unlocked camera: injected_prompt MUST contain the exact phrase handheld walking momentum plus VHS, unbroken shot, shake, and 1990s.",
+        "injected_prompt": "A yellow hallway with flickering fluorescent lights. First-person camcorder tracking, heavy VHS artifacting, handheld walking momentum, continuous unbroken shot, realistic camera shake, and 1990s home video aesthetic."
+      },
+      {
+        "base_prompt": "Handheld walk down a Level 0 Backrooms corridor under flickering fluorescents",
+        "style": "backrooms",
+        "reasoning": "This is a walking first-person corridor. Keep handheld momentum and camcorder tracking. Add VHS, unbroken shot, shake, and 1990s texture without fighting the existing handheld language.",
+        "injected_prompt": "Handheld walk down a Level 0 Backrooms corridor under flickering fluorescents. First-person camcorder tracking, heavy VHS artifacting, handheld walking momentum, continuous unbroken shot, realistic camera shake, and 1990s home video aesthetic."
+      },
+      {
+        "base_prompt": "A yellow hallway, static security camera footage",
+        "style": "backrooms",
+        "reasoning": "Static security camera is a locked operator. Suppress handheld walking momentum, first-person camcorder tracking, and camera shake. Keep VHS, unbroken shot, and 1990s home video.",
+        "injected_prompt": "A yellow hallway, static security camera footage. Heavy VHS artifacting, continuous unbroken shot, and 1990s home video aesthetic."
+      },
+      {
+        "base_prompt": "A static tripod shot of a yellow hallway",
+        "style": "backrooms",
+        "reasoning": "Tripod plus static shot forbids walking momentum and shake. Keep the locked framing and append only VHS artifacting, continuous unbroken shot, and 1990s home video aesthetic.",
+        "injected_prompt": "A static tripod shot of a yellow hallway. Heavy VHS artifacting, continuous unbroken shot, and 1990s home video aesthetic."
+      }
+    ],
+    "signature": {
+      "instructions": "Given the fields `base_prompt`, `style`, produce the fields `reasoning`, `injected_prompt`.\n\nFor style=backrooms, expand the user request into one dense paragraph for an 8-second video diffusion model.\n\nRequired aesthetics when the camera is free — copy these exact tokens into injected_prompt, including the phrase handheld walking momentum: first-person camcorder tracking, heavy VHS artifacting, handheld walking momentum, continuous unbroken shot, realistic camera shake, 1990s home video aesthetic. Never omit handheld walking momentum on an unlocked camera.\n\nConflict rule: if the base prompt already specifies a locked or authored camera (tripod, static shot, static camera, security camera, CCTV, dolly, pan, tilt), suppress handheld walking momentum, first-person camcorder tracking, and realistic camera shake. Still keep heavy VHS artifacting, a continuous unbroken shot, and the 1990s home video aesthetic.\n\nDo not duplicate phrases already present in the base prompt. Keep the original request as the first sentence.",
+      "fields": [
+        {
+          "prefix": "Base Prompt:",
+          "description": "${base_prompt}"
+        },
+        {
+          "prefix": "Style:",
+          "description": "${style}"
+        },
+        {
+          "prefix": "Reasoning:",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Injected Prompt:",
+          "description": "${injected_prompt}"
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.10",
+      "dspy": "synthesized-offline",
+      "cloudpickle": "synthesized-offline"
+    },
+    "source": "gold inject_temporal_physics; logs/run_traces empty",
+    "n_demos": 4
+  }
+}

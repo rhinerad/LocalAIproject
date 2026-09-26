@@ -1,0 +1,14 @@
+{
+  "60": {
+    "class_type": "PromptTester",
+    "inputs": {
+      "prompt": "two adults | red coat on the left | glasses on the right | overcast lighting",
+      "delimiter": " | ",
+      "include_baseline": true
+    }
+  },
+  "61": {
+    "class_type": "GVDPromptPlan",
+    "inputs": {"prompts": ["60", 0], "labels": ["60", 1]}
+  }
+}

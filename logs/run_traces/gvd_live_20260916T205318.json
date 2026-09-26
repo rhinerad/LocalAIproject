@@ -1,0 +1,197 @@
+{
+  "saved": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\models\\dspy_compiled\\generalized_video_director_mipro.json",
+  "optimizer": "mipro",
+  "mock": false,
+  "auto": null,
+  "trials": 1,
+  "trainset": 2,
+  "ids": "GVD-B01,GVD-D01",
+  "last_feedback": "{\"mock\": false, \"clip_id\": \"GVD-B01\", \"category\": \"backrooms\", \"hparams\": {\"cfg_scale\": 1.75, \"denoise\": 1.0, \"step_count\": 20.0}, \"step_count_int\": 20, \"scores\": null, \"mean\": null, \"minimum\": null, \"threshold\": null, \"passes_curriculum\": false, \"mipro\": 0.05, \"error\": \"TimeoutError: FLUX+MiniMax job did not complete: {'state': 'error', 'prompt_id': '91e96d8c-ff35-4c48-8968-d784fc644b8e', 'source': 'websocket', 'type': 'execution_error', 'data': {'prompt_id': '91e96d8c-ff35-4c48-8968-d784fc644b8e', 'node_id': '20', 'node_type': 'MiniMaxH3ImageToVideo', 'executed': ['31', '32'], 'exception_message': \\\"'int' object is not subscriptable\\\\n\\\", 'exception_type': 'TypeError', 'traceback': ['  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\execution.py\\\", line 545, in execute\\\\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\\\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\execution.py\\\", line 344, in get_output_data\\\\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\\\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\execution.py\\\", line 318, in _async_map_node_over_list\\\\n    await process_inputs(input_dict, i)\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\execution.py\\\", line 306, in process_inputs\\\\n    result = f(**inputs)\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\comfy_api\\\\\\\\internal\\\\\\\\__init__.py\\\", line 149, in wrapped_func\\\\n    return method(locked_class, **inputs)\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\comfy_api\\\\\\\\latest\\\\\\\\_io.py\\\", line 2046, in EXECUTE_NORMALIZED\\\\n    to_return = cls.execute(*args, **kwargs)\\\\n', '  File \\\"A:\\\\\\\\Users\\\\\\\\rhine\\\\\\\\ComfyUI-Installs\\\\\\\\Rockernow\\\\\\\\ComfyUI\\\\\\\\comfy_extras\\\\\\\\nodes_minimax_h3.py\\\", line 145, in execute\\\\n    img = _resize(first_frame[:1], width, height, \\\"disabled\\\")\\\\n                  ~~~~~~~~~~~^^^^\\\\n'], 'current_inputs': {'clip': ['<comfy.sd.CLIP object at 0x00000207C7B6DDD0>'], 'vae': ['<comfy.sd.VAE object at 0x00000207F4136350>'], 'prompt': ['MiniMax I2V prompt: camera physics, subject motion, temporal change only; hard rejection clauses include no actor face or torso and unenlightened fluorescent rectangles in background.\\\\n\\\\nNegative instructions: no actors/torso / any text visible on the screen/any furniture'], 'width': [1280], 'height': [720], 'length': [192], 'first_frame': [192]}, 'current_outputs': ['5', '31', '38', '10', '25', '7', '6', '8', '3', '34', '33', '20', '32', '36', '30', '14', '39', '11', '35', '37'], 'timestamp': 1789606398687}}\", \"video_path\": null, \"positive_prompt\": \"\", \"vram_trace\": [{\"label\": \"after_prepare_comfy\", \"ts\": 1789606397.631308, \"used_mib\": 477, \"free_mib\": 15501, \"total_mib\": 16303, \"owner\": {\"owner\": \"comfyui\", \"reason\": \"FLUX.1 + MiniMax I2V generation\", \"since\": 1789606397.631308}}]}",
+  "history_n": 4,
+  "history": [
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 8.0,
+        "denoise": 1.0,
+        "step_count": 40.0
+      },
+      "step_count_int": 40,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.05,
+      "error": "TimeoutError: FLUX+MiniMax job did not complete: {'state': 'error', 'prompt_id': 'e71602d3-e0bd-4fcb-a9ff-8130eef48e8a', 'source': 'websocket', 'type': 'execution_error', 'data': {'prompt_id': 'e71602d3-e0bd-4fcb-a9ff-8130eef48e8a', 'node_id': '20', 'node_type': 'MiniMaxH3ImageToVideo', 'executed': ['31', '32'], 'exception_message': \"'int' object is not subscriptable\\n\", 'exception_type': 'TypeError', 'traceback': ['  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 545, in execute\\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 344, in get_output_data\\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 318, in _async_map_node_over_list\\n    await process_inputs(input_dict, i)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 306, in process_inputs\\n    result = f(**inputs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_api\\\\internal\\\\__init__.py\", line 149, in wrapped_func\\n    return method(locked_class, **inputs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_api\\\\latest\\\\_io.py\", line 2046, in EXECUTE_NORMALIZED\\n    to_return = cls.execute(*args, **kwargs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_extras\\\\nodes_minimax_h3.py\", line 145, in execute\\n    img = _resize(first_frame[:1], width, height, \"disabled\")\\n                  ~~~~~~~~~~~^^^^\\n'], 'current_inputs': {'clip': ['<comfy.sd.CLIP object at 0x00000208265F3D50>'], 'vae': ['<comfy.sd.VAE object at 0x00000207F6572D50>'], 'prompt': ['MiniMax I2V prompt: Camera physics, subject motion, temporal change only\\n\\nNegative instructions: , no tripod lock, no still photograph, no text, no watermark, no people on the cliff edge.'], 'width': [1280], 'height': [720], 'length': [192], 'first_frame': [192]}, 'current_outputs': ['5', '31', '38', '10', '25', '7', '6', '8', '3', '34', '33', '20', '32', '36', '30', '14', '39', '11', '35', '37'], 'timestamp': 1789606371093}}",
+      "video_path": null,
+      "positive_prompt": "",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789606370.0603206,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "FLUX.1 + MiniMax I2V generation",
+            "since": 1789606370.059325
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789606371.1500623,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789606371.1139848
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 1.0,
+        "denoise": 1.0,
+        "step_count": 16.0
+      },
+      "step_count_int": 16,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.05,
+      "error": "TimeoutError: FLUX+MiniMax job did not complete: {'state': 'error', 'prompt_id': '62cfec94-9d6f-4a66-bb77-2ca2fe2e3300', 'source': 'websocket', 'type': 'execution_error', 'data': {'prompt_id': '62cfec94-9d6f-4a66-bb77-2ca2fe2e3300', 'node_id': '20', 'node_type': 'MiniMaxH3ImageToVideo', 'executed': ['31', '32'], 'exception_message': \"'int' object is not subscriptable\\n\", 'exception_type': 'TypeError', 'traceback': ['  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 545, in execute\\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 344, in get_output_data\\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 318, in _async_map_node_over_list\\n    await process_inputs(input_dict, i)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 306, in process_inputs\\n    result = f(**inputs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_api\\\\internal\\\\__init__.py\", line 149, in wrapped_func\\n    return method(locked_class, **inputs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_api\\\\latest\\\\_io.py\", line 2046, in EXECUTE_NORMALIZED\\n    to_return = cls.execute(*args, **kwargs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_extras\\\\nodes_minimax_h3.py\", line 145, in execute\\n    img = _resize(first_frame[:1], width, height, \"disabled\")\\n                  ~~~~~~~~~~~^^^^\\n'], 'current_inputs': {'clip': ['<comfy.sd.CLIP object at 0x00000209B7501550>'], 'vae': ['<comfy.sd.VAE object at 0x00000207F6572D50>'], 'prompt': ['MiniMax I2V prompt: camera physics, subject motion, temporal change only\\n\\nNegative instructions: actor face or torso, apartment furniture, readable text'], 'width': [1280], 'height': [720], 'length': [192], 'first_frame': [192]}, 'current_outputs': ['5', '31', '38', '10', '25', '7', '6', '8', '3', '34', '33', '20', '32', '36', '30', '14', '39', '11', '35', '37'], 'timestamp': 1789606380146}}",
+      "video_path": null,
+      "positive_prompt": "",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789606379.0987196,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "FLUX.1 + MiniMax I2V generation",
+            "since": 1789606379.097714
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789606380.2012465,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789606380.1652467
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 3.0,
+        "denoise": 1.0,
+        "step_count": 16.0
+      },
+      "step_count_int": 16,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.05,
+      "error": "TimeoutError: FLUX+MiniMax job did not complete: {'state': 'error', 'prompt_id': '06793575-6493-4566-af31-573523757257', 'source': 'websocket', 'type': 'execution_error', 'data': {'prompt_id': '06793575-6493-4566-af31-573523757257', 'node_id': '20', 'node_type': 'MiniMaxH3ImageToVideo', 'executed': ['31', '32'], 'exception_message': \"'int' object is not subscriptable\\n\", 'exception_type': 'TypeError', 'traceback': ['  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 545, in execute\\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 344, in get_output_data\\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 318, in _async_map_node_over_list\\n    await process_inputs(input_dict, i)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 306, in process_inputs\\n    result = f(**inputs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_api\\\\internal\\\\__init__.py\", line 149, in wrapped_func\\n    return method(locked_class, **inputs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_api\\\\latest\\\\_io.py\", line 2046, in EXECUTE_NORMALIZED\\n    to_return = cls.execute(*args, **kwargs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_extras\\\\nodes_minimax_h3.py\", line 145, in execute\\n    img = _resize(first_frame[:1], width, height, \"disabled\")\\n                  ~~~~~~~~~~~^^^^\\n'], 'current_inputs': {'clip': ['<comfy.sd.CLIP object at 0x00000207F85B97D0>'], 'vae': ['<comfy.sd.VAE object at 0x00000207F5A02350>'], 'prompt': ['MiniMax I2V prompt: camera physics, subject motion, temporal change only\\n\\nNegative instructions: no tripod lock, no still photograph, continuous aerial move, white spray against basalt cliffs, golden hour light conditions, nested seabirds in flight or nest, dynamic composition focus on cliff edge and ocean background, scene transition smoothness, camera movement towards the cliffs without stopping, reveal of black basalt ground'], 'width': [1280], 'height': [720], 'length': [192], 'first_frame': [192]}, 'current_outputs': ['5', '31', '38', '10', '25', '7', '6', '8', '3', '34', '33', '20', '32', '36', '30', '14', '39', '11', '35', '37'], 'timestamp': 1789606389545}}",
+      "video_path": null,
+      "positive_prompt": "",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789606388.4944513,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "FLUX.1 + MiniMax I2V generation",
+            "since": 1789606388.4934516
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789606389.5964677,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789606389.5609596
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 1.75,
+        "denoise": 1.0,
+        "step_count": 20.0
+      },
+      "step_count_int": 20,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.05,
+      "error": "TimeoutError: FLUX+MiniMax job did not complete: {'state': 'error', 'prompt_id': '91e96d8c-ff35-4c48-8968-d784fc644b8e', 'source': 'websocket', 'type': 'execution_error', 'data': {'prompt_id': '91e96d8c-ff35-4c48-8968-d784fc644b8e', 'node_id': '20', 'node_type': 'MiniMaxH3ImageToVideo', 'executed': ['31', '32'], 'exception_message': \"'int' object is not subscriptable\\n\", 'exception_type': 'TypeError', 'traceback': ['  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 545, in execute\\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 344, in get_output_data\\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 318, in _async_map_node_over_list\\n    await process_inputs(input_dict, i)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\execution.py\", line 306, in process_inputs\\n    result = f(**inputs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_api\\\\internal\\\\__init__.py\", line 149, in wrapped_func\\n    return method(locked_class, **inputs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_api\\\\latest\\\\_io.py\", line 2046, in EXECUTE_NORMALIZED\\n    to_return = cls.execute(*args, **kwargs)\\n', '  File \"A:\\\\Users\\\\rhine\\\\ComfyUI-Installs\\\\Rockernow\\\\ComfyUI\\\\comfy_extras\\\\nodes_minimax_h3.py\", line 145, in execute\\n    img = _resize(first_frame[:1], width, height, \"disabled\")\\n                  ~~~~~~~~~~~^^^^\\n'], 'current_inputs': {'clip': ['<comfy.sd.CLIP object at 0x00000207C7B6DDD0>'], 'vae': ['<comfy.sd.VAE object at 0x00000207F4136350>'], 'prompt': ['MiniMax I2V prompt: camera physics, subject motion, temporal change only; hard rejection clauses include no actor face or torso and unenlightened fluorescent rectangles in background.\\n\\nNegative instructions: no actors/torso / any text visible on the screen/any furniture'], 'width': [1280], 'height': [720], 'length': [192], 'first_frame': [192]}, 'current_outputs': ['5', '31', '38', '10', '25', '7', '6', '8', '3', '34', '33', '20', '32', '36', '30', '14', '39', '11', '35', '37'], 'timestamp': 1789606398687}}",
+      "video_path": null,
+      "positive_prompt": "",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789606397.631308,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "FLUX.1 + MiniMax I2V generation",
+            "since": 1789606397.631308
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789606398.7428875,
+          "used_mib": 477,
+          "free_mib": 15501,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789606398.7073755
+          }
+        }
+      ]
+    }
+  ]
+}

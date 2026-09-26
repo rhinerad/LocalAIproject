@@ -1,0 +1,17 @@
+{
+  "job_id": "fake_job_section13",
+  "layout": "audit_section_13_tiny",
+  "required_shots": [
+    "C001"
+  ],
+  "editorial_timeline": {
+    "fps": 24,
+    "shots": [
+      {
+        "shot_id": "C001",
+        "duration_frames": 124
+      }
+    ]
+  },
+  "dialogue_required_shots": []
+}

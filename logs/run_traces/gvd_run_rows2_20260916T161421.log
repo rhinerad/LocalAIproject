@@ -1,0 +1,13 @@
+2026/09/16 16:14:31 INFO dspy.teleprompt.mipro_optimizer_v2: 
+==> STEP 1: BOOTSTRAP FEWSHOT EXAMPLES <==
+2026/09/16 16:14:31 INFO dspy.teleprompt.mipro_optimizer_v2: These will be used for informing instruction proposal.
+
+2026/09/16 16:14:31 INFO dspy.teleprompt.mipro_optimizer_v2: Bootstrapping N=1 sets of demonstrations...
+Bootstrapping set 1/1
+2026/09/16 16:14:31 INFO dspy.teleprompt.mipro_optimizer_v2: 
+==> STEP 2: PROPOSE INSTRUCTION CANDIDATES <==
+2026/09/16 16:14:31 INFO dspy.teleprompt.mipro_optimizer_v2: We will use the few-shot examples from the previous step, a generated dataset summary, a summary of the program code, and a randomly selected prompting tip to propose instructions.
+2026/09/16 16:14:31 INFO dspy.teleprompt.mipro_optimizer_v2: 
+Proposing N=1 instructions...
+
+2026/09/16 16:14:32 WARNING dspy.predict.predict: Input contains fields not in signature. These fields will be ignored: ['dataset_description', 'program_code', 'module', 'program_description', 'module_description', 'tip', 'previous_instructions']. Expected fields: ['task_demos', 'basic_instruction'].

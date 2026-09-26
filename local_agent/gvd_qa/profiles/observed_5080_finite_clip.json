@@ -1,0 +1,12 @@
+{
+  "policy_id": "observed_5080_finite_clip_v1",
+  "metrics_profile": "unmeasured_clip",
+  "qwen_profile": "caption_v4_unmeasured",
+  "reward_profile": "imagereward_unmeasured",
+  "clip_text_min": 0.0,
+  "clip_unit": "torchmetrics_clipscore_0_100",
+  "required_ids": ["yellow_walls", "person_visible"],
+  "max_attempts": 1,
+  "calibration": "none",
+  "note": "CLIP floor is 0 so any finite torchmetrics score is admitted. ImageReward has no floor. Caption V4 criteria decide accept/reject. Do not copy as production 5080 calibration."
+}

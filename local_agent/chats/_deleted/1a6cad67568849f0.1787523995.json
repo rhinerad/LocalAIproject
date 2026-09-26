@@ -1,0 +1,48 @@
+{
+  "id": "1a6cad67568849f0",
+  "title": "Say hello in one sentence.",
+  "created": 1787101028.5217676,
+  "updated": 1787107689.6025527,
+  "messages": [
+    {
+      "role": "user",
+      "content": "Say hello in one sentence.",
+      "at": 1787101028.5367663
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! How can I assist you with the Equal Shares project?",
+      "at": 1787101111.351973
+    },
+    {
+      "role": "user",
+      "content": "Where are we and what runs next?",
+      "at": 1787107298.5559855
+    },
+    {
+      "role": "assistant",
+      "content": "We’re at the **voice audition stage**. The 124-clip soundtrack pass is blocked until voices are approved. Next steps:  \n1. Run `classify_voice_requirements.py` to identify which speakers need masters.  \n2. Render voice auditions via `render_voice_auditions.py` (27 takes total).  \n3. Install chosen auditions with `install_audition_winners.py`.  \n4. Sync audio config with `sync_omni_audio_config.py`.  \n5. Regenerate prompts via `build_native_r2v_prompts.py`.  \n6. Finally, render the audio pass via `render_audio_pass.py` — but only after all voices are approved.  \n\n**Blocker:** Narrator’s voice is approved, but others (e.g., Kent, Male Visitor One) are still provisional.",
+      "at": 1787107357.6904795
+    },
+    {
+      "role": "user",
+      "content": "Show me clip 27E",
+      "at": 1787107411.5231068
+    },
+    {
+      "role": "assistant",
+      "content": "Clip 27E has **3 speakers**:  \n- **Council member** (no audio reference)  \n- **Kent** (audio reference)  \n- **Ryann Sally** (audio reference)  \n\nThe clip uses the `ref2va` node (reference-to-video) and includes **3 scripted lines** with timing matching 243 frames (~10.125 seconds). The audio pass will add ~0.125 seconds of silence to align with frame count.  \n\nKey checks:  \n- Ensure Kent/Ryann Sally’s voice masters are approved (they are provisional).  \n- The Council member’s dialogue will use plain `MiniMaxH3ImageToVideo` without references.  \n- Frames: `frames/scene_027/boundary_05.png` (first) → `boundary_06.png` (last).  \n\nRender blocked until all voice masters are approved.",
+      "at": 1787107513.7763507
+    },
+    {
+      "role": "user",
+      "content": "What's the duration ladder for 00B?",
+      "at": 1787107567.7285023
+    },
+    {
+      "role": "assistant",
+      "content": "Clip **00B** has a **scripted duration of 15 seconds** (362 frames) but is rendered at **14.375 seconds** (345 frames), padded with **0.625 seconds of silence** to meet the 5 modulo 17 frame count rule.  \n\nSince the Narrator’s voice master is approved and the clip uses a reference audio (`ref2va` node), duration adjustments would only be needed if speech rate issues arise. The ladder would apply **+1, -1, +2, -2, etc. seconds** to the `soundtrack_seconds` field while keeping the seed fixed.  \n\nNo current blocker here — render as-is unless timing or pacing faults are confirmed.",
+      "at": 1787107689.60203
+    }
+  ]
+}

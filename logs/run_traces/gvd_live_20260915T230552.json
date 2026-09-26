@@ -1,0 +1,197 @@
+{
+  "saved": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\models\\dspy_compiled\\generalized_video_director_mipro_2row.json",
+  "optimizer": "mipro",
+  "mock": false,
+  "auto": null,
+  "trials": 1,
+  "trainset": 2,
+  "ids": "GVD-B01,GVD-D01",
+  "last_feedback": "{\"mock\": false, \"clip_id\": \"GVD-B01\", \"category\": \"backrooms\", \"hparams\": {\"cfg_scale\": 5.5, \"denoise\": 0.9, \"step_count\": 28.0}, \"step_count_int\": 28, \"scores\": null, \"mean\": null, \"minimum\": null, \"threshold\": null, \"passes_curriculum\": false, \"mipro\": 0.0, \"error\": \"PipelineDispatchError: ComfyUI /prompt HTTP 400: {\\\"error\\\": {\\\"type\\\": \\\"prompt_outputs_failed_validation\\\", \\\"message\\\": \\\"Prompt outputs failed validation\\\", \\\"details\\\": \\\"\\\", \\\"extra_info\\\": {}}, \\\"node_errors\\\": {\\\"1\\\": {\\\"errors\\\": [{\\\"type\\\": \\\"value_not_in_list\\\", \\\"message\\\": \\\"Value not in list\\\", \\\"details\\\": \\\"ckpt_name: 'RealVisXL_V5.0_fp16.safetensors' not in ['SD1.5\\\\\\\\\\\\\\\\DreamShaper.safetensors', 'SD1.5\\\\\\\\\\\\\\\\MeinaMix.safetensors', 'SD1.5\\\\\\\\\\\\\\\\ghostmix_v20Bakedvae.safetensors', 'SD1.5\\\\\\\\\\\\\\\\majicMIX_realistic.safetensors', 'SD1.5\\\\\\\\\\\\\\\\realisticVisionV60B1_v51VAE.safetensors']\\\", \\\"extra_info\\\": {\\\"input_name\\\": \\\"ckpt_name\\\", \\\"input_config\\\": [[\\\"SD1.5\\\\\\\\DreamShaper.safetensors\\\", \\\"SD1.5\\\\\\\\MeinaMix.safetensors\\\", \\\"SD1.5\\\\\\\\ghostmix_v20Bakedvae.safetensors\\\", \\\"SD1.5\\\\\\\\majicMIX_realistic.safetensors\\\", \\\"SD1.5\\\\\\\\realisticVisionV60B1_v51VAE.safetensors\\\"], {\\\"tooltip\\\": \\\"The name of the checkpoint (model) to load.\\\"}], \\\"received_value\\\": \\\"RealVisXL_V5.0_fp16.safetensors\\\"}}], \\\"dependent_outputs\\\": [\\\"7\\\"], \\\"class_type\\\": \\\"CheckpointLoaderSimple\\\"}}}\", \"video_path\": null, \"positive_prompt\": \"Handheld first-person camcorder walk down a damp yellow Level 0 Backrooms hallway; fluorescent rectangles repeat into the distance over wet brown-beige carpet and sickly wallpaper. Include handheld walking momentum, first-person camcorder tracking, heavy VHS artifacting, a continuous unbroken shot, realistic camera shake, and 1990s home video aesthetic. No actor face or torso, no apartment furniture, no readable text.\", \"vram_trace\": [{\"label\": \"after_prepare_comfy\", \"ts\": 1789527951.9862952, \"used_mib\": 346, \"free_mib\": 15632, \"total_mib\": 16303, \"owner\": {\"owner\": \"comfyui\", \"reason\": \"Wan 2.1 generation\", \"since\": 1789527951.9852972}}]}",
+  "history_n": 4,
+  "history": [
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 1.0,
+        "step_count": 32.0
+      },
+      "step_count_int": 32,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "error": "PipelineDispatchError: ComfyUI /prompt HTTP 400: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"1\": {\"errors\": [{\"type\": \"value_not_in_list\", \"message\": \"Value not in list\", \"details\": \"ckpt_name: 'RealVisXL_V5.0_fp16.safetensors' not in ['SD1.5\\\\\\\\DreamShaper.safetensors', 'SD1.5\\\\\\\\MeinaMix.safetensors', 'SD1.5\\\\\\\\ghostmix_v20Bakedvae.safetensors', 'SD1.5\\\\\\\\majicMIX_realistic.safetensors', 'SD1.5\\\\\\\\realisticVisionV60B1_v51VAE.safetensors']\", \"extra_info\": {\"input_name\": \"ckpt_name\", \"input_config\": [[\"SD1.5\\\\DreamShaper.safetensors\", \"SD1.5\\\\MeinaMix.safetensors\", \"SD1.5\\\\ghostmix_v20Bakedvae.safetensors\", \"SD1.5\\\\majicMIX_realistic.safetensors\", \"SD1.5\\\\realisticVisionV60B1_v51VAE.safetensors\"], {\"tooltip\": \"The name of the checkpoint (model) to load.\"}], \"received_value\": \"RealVisXL_V5.0_fp16.safetensors\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"CheckpointLoaderSimple\"}}}",
+      "video_path": null,
+      "positive_prompt": "A cinematic drone shot flies in from the open ocean toward sheer Atlantic cliffs at golden hour, revealing nested seabirds and white spray against black basalt. The camera moves smoothly and continuously, capturing the dynamic and breathtaking scene. The motion is smooth and the drone maintains a high degree of dynamic degree throughout the shot. The drone captures the intricate details of the seabirds and the spray, with a scene that is both dramatic and beautiful. The motion is smooth and cont",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789527914.1843212,
+          "used_mib": 346,
+          "free_mib": 15632,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789527914.183318
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789527914.7661295,
+          "used_mib": 346,
+          "free_mib": 15632,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789527914.714557
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 6.0,
+        "denoise": 0.85,
+        "step_count": 30.0
+      },
+      "step_count_int": 30,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "error": "PipelineDispatchError: ComfyUI /prompt HTTP 400: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"1\": {\"errors\": [{\"type\": \"value_not_in_list\", \"message\": \"Value not in list\", \"details\": \"ckpt_name: 'RealVisXL_V5.0_fp16.safetensors' not in ['SD1.5\\\\\\\\DreamShaper.safetensors', 'SD1.5\\\\\\\\MeinaMix.safetensors', 'SD1.5\\\\\\\\ghostmix_v20Bakedvae.safetensors', 'SD1.5\\\\\\\\majicMIX_realistic.safetensors', 'SD1.5\\\\\\\\realisticVisionV60B1_v51VAE.safetensors']\", \"extra_info\": {\"input_name\": \"ckpt_name\", \"input_config\": [[\"SD1.5\\\\DreamShaper.safetensors\", \"SD1.5\\\\MeinaMix.safetensors\", \"SD1.5\\\\ghostmix_v20Bakedvae.safetensors\", \"SD1.5\\\\majicMIX_realistic.safetensors\", \"SD1.5\\\\realisticVisionV60B1_v51VAE.safetensors\"], {\"tooltip\": \"The name of the checkpoint (model) to load.\"}], \"received_value\": \"RealVisXL_V5.0_fp16.safetensors\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"CheckpointLoaderSimple\"}}}",
+      "video_path": null,
+      "positive_prompt": "Unlocked handheld camera. Include handheld walking momentum, first-person camcorder tracking, heavy VHS artifacting, a continuous unbroken shot, realistic camera shake, and 1990s home video aesthetic. No actor face or torso, no apartment furniture, no readable text.",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789527923.2178304,
+          "used_mib": 346,
+          "free_mib": 15632,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789527923.2178304
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789527923.6781952,
+          "used_mib": 346,
+          "free_mib": 15632,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789527923.6411963
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 0.75,
+        "step_count": 24.0
+      },
+      "step_count_int": 24,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "error": "PipelineDispatchError: ComfyUI /prompt HTTP 400: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"1\": {\"errors\": [{\"type\": \"value_not_in_list\", \"message\": \"Value not in list\", \"details\": \"ckpt_name: 'RealVisXL_V5.0_fp16.safetensors' not in ['SD1.5\\\\\\\\DreamShaper.safetensors', 'SD1.5\\\\\\\\MeinaMix.safetensors', 'SD1.5\\\\\\\\ghostmix_v20Bakedvae.safetensors', 'SD1.5\\\\\\\\majicMIX_realistic.safetensors', 'SD1.5\\\\\\\\realisticVisionV60B1_v51VAE.safetensors']\", \"extra_info\": {\"input_name\": \"ckpt_name\", \"input_config\": [[\"SD1.5\\\\DreamShaper.safetensors\", \"SD1.5\\\\MeinaMix.safetensors\", \"SD1.5\\\\ghostmix_v20Bakedvae.safetensors\", \"SD1.5\\\\majicMIX_realistic.safetensors\", \"SD1.5\\\\realisticVisionV60B1_v51VAE.safetensors\"], {\"tooltip\": \"The name of the checkpoint (model) to load.\"}], \"received_value\": \"RealVisXL_V5.0_fp16.safetensors\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"CheckpointLoaderSimple\"}}}",
+      "video_path": null,
+      "positive_prompt": "A cinematic drone shot flies in from the open ocean toward sheer Atlantic cliffs at golden hour, revealing nested seabirds and white spray against black basalt. The camera moves smoothly and continuously, capturing the dynamic and beautiful scene. The motion is smooth and continuous, with a focus on the seabirds and the spray against the cliffs. The drone captures the scene without any tripod lock, still photograph, text, watermark, or people on the cliff edge.",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789527934.1373816,
+          "used_mib": 346,
+          "free_mib": 15632,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789527934.1373816
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789527934.629491,
+          "used_mib": 346,
+          "free_mib": 15632,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789527934.5944202
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 5.5,
+        "denoise": 0.9,
+        "step_count": 28.0
+      },
+      "step_count_int": 28,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "error": "PipelineDispatchError: ComfyUI /prompt HTTP 400: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"1\": {\"errors\": [{\"type\": \"value_not_in_list\", \"message\": \"Value not in list\", \"details\": \"ckpt_name: 'RealVisXL_V5.0_fp16.safetensors' not in ['SD1.5\\\\\\\\DreamShaper.safetensors', 'SD1.5\\\\\\\\MeinaMix.safetensors', 'SD1.5\\\\\\\\ghostmix_v20Bakedvae.safetensors', 'SD1.5\\\\\\\\majicMIX_realistic.safetensors', 'SD1.5\\\\\\\\realisticVisionV60B1_v51VAE.safetensors']\", \"extra_info\": {\"input_name\": \"ckpt_name\", \"input_config\": [[\"SD1.5\\\\DreamShaper.safetensors\", \"SD1.5\\\\MeinaMix.safetensors\", \"SD1.5\\\\ghostmix_v20Bakedvae.safetensors\", \"SD1.5\\\\majicMIX_realistic.safetensors\", \"SD1.5\\\\realisticVisionV60B1_v51VAE.safetensors\"], {\"tooltip\": \"The name of the checkpoint (model) to load.\"}], \"received_value\": \"RealVisXL_V5.0_fp16.safetensors\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"CheckpointLoaderSimple\"}}}",
+      "video_path": null,
+      "positive_prompt": "Handheld first-person camcorder walk down a damp yellow Level 0 Backrooms hallway; fluorescent rectangles repeat into the distance over wet brown-beige carpet and sickly wallpaper. Include handheld walking momentum, first-person camcorder tracking, heavy VHS artifacting, a continuous unbroken shot, realistic camera shake, and 1990s home video aesthetic. No actor face or torso, no apartment furniture, no readable text.",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789527951.9862952,
+          "used_mib": 346,
+          "free_mib": 15632,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789527951.9852972
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789527952.4621184,
+          "used_mib": 346,
+          "free_mib": 15632,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789527952.4250395
+          }
+        }
+      ]
+    }
+  ]
+}

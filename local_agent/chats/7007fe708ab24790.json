@@ -1,0 +1,35 @@
+{
+  "id": "7007fe708ab24790",
+  "title": "Start a slow house beat at 118 BPM",
+  "created": 1787877987.3425057,
+  "updated": 1787878271.562235,
+  "model": "huihui_ai/qwen3-abliterated:8b",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Start a slow house beat at 118 BPM",
+      "at": 1787877987.352547,
+      "source": "desktop"
+    },
+    {
+      "role": "assistant",
+      "content": "The slow house beat at 118 BPM is now playing in Sonic Pi. It features a steady kick drum (:bd_haus) with amplitude 2.5, a snare (:sn_haus) with amplitude 1.8 every 0.5 seconds, and a soft hi-hat (:hh_soft) with amplitude 1.2. The loop runs continuously at 118 beats per minute. Press `Stop` to end the playback.",
+      "at": 1787878271.552812,
+      "retrieved_exemplar_ids": [],
+      "tool_evidence": [
+        {
+          "tool": "ensure_sonic_pi",
+          "outcome": "result",
+          "summary": "{\"install\": {\"ok\": true, \"init_rb\": \"A:\\\\Users\\\\rhine\\\\.sonic-pi\\\\config\\\\init.rb\", \"workspace\": \"A:\\\\Users\\\\rhine\\\\.sonic-pi\\\\store\\\\default\\\\workspace_zero.spi\"}, \"spider\": {\"server_port\": 30493, \"osc_cues_port\": 4560}, \"osc_cues_open\": t"
+        },
+        {
+          "tool": "queue_sonic_pi",
+          "outcome": "result",
+          "summary": "{\"ok\": true, \"host\": \"127.0.0.1\", \"port\": 4560, \"path\": \"/run-code\", \"bytes\": 172, \"queued\": true, \"chars\": 155}"
+        }
+      ],
+      "source": "desktop"
+    }
+  ],
+  "last_tier": "cpu"
+}

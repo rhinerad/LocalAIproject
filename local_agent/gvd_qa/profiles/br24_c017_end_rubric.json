@@ -1,0 +1,4 @@
+[
+  {"id": "yellow_surfaces", "criterion": "Yellow surfaces such as carpet, curtains, wallpaper, or walls are clearly visible."},
+  {"id": "corridor", "criterion": "The camera looks down a hallway or corridor that recedes into the distance."}
+]

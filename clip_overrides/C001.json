@@ -1,0 +1,16 @@
+{
+  "id": "C001",
+  "bypass_director": true,
+  "literal_prompt": true,
+  "category": "sitcom_audition",
+  "notes": "Pre-fall normal-world sitcom audition. First-person POV literalism fix: no physical camera gear in positives; hardware banned via negative. Strong blue cluttered bedroom anchors.",
+  "start_prompt": "First-person POV looking directly at a young person sitting in a cluttered messy teenager bedroom. The viewer is the viewpoint. Cool blue daylight streaming through window blinds, dark blue walls with movie posters and band flyers, laundry pile on a chair, desk lamp with a blue shade, soda cans and homework papers on a low table, patterned navy bedspread, ordinary carpet with a taped X mark, busy lived-in teenage room with strong blue color and clutter. 1990s found-footage sitcom audition feel, 4:3 frame, mild VHS softness, warm domestic interior, subject facing the viewer",
+  "video_prompt": "First-person POV, fixed viewpoint, looking at a young person in a cluttered messy teenager bedroom with dark blue walls and movie posters. Cool blue daylight through window blinds, desk lamp glow. Quiet establishing beat, then the person steps onto the taped mark on the carpet, faces the viewer, and says: Hi, thanks for having me. Practiced sitcom smile, one hand raised in a casual greeting. Natural room tone, slight mic hiss. Continuous single take, stay in this busy blue bedroom only. The viewer is the viewpoint",
+  "negative_prompt": "camera, tripod, photographer, camcorder, recording equipment, third-person view",
+  "cfg_scale": 5.5,
+  "step_count": 28,
+  "denoise": 1.0,
+  "vlm_literal_rule": "VERIFICATION REQUIREMENT: This clip is a first-person view of a normal residential bedroom with blue walls and domestic furniture. Verify that domestic items (bed, posters, windows, furniture) are clearly visible and that a person faces the viewer.",
+  "expected_scene": "First-person view of a cluttered messy teenager bedroom with dark blue walls and movie posters; young person faces the viewer on a taped carpet mark; cool blue daylight through blinds",
+  "dialogue": "Alright, the camera is rolling. Start the audition tape."
+}

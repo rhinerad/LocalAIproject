@@ -1,0 +1,30 @@
+2026/09/15 23:24:31 INFO dspy.teleprompt.mipro_optimizer_v2: 
+==> STEP 1: BOOTSTRAP FEWSHOT EXAMPLES <==
+2026/09/15 23:24:32 INFO dspy.teleprompt.mipro_optimizer_v2: These will be used for informing instruction proposal.
+
+2026/09/15 23:24:32 INFO dspy.teleprompt.mipro_optimizer_v2: Bootstrapping N=1 sets of demonstrations...
+Bootstrapping set 1/1
+2026/09/15 23:24:32 INFO dspy.teleprompt.mipro_optimizer_v2: 
+==> STEP 2: PROPOSE INSTRUCTION CANDIDATES <==
+2026/09/15 23:24:32 INFO dspy.teleprompt.mipro_optimizer_v2: We will use the few-shot examples from the previous step, a generated dataset summary, a summary of the program code, and a randomly selected prompting tip to propose instructions.
+2026/09/15 23:24:32 INFO dspy.teleprompt.mipro_optimizer_v2: 
+Proposing N=1 instructions...
+
+2026/09/15 23:24:32 WARNING dspy.predict.predict: Input contains fields not in signature. These fields will be ignored: ['dataset_description', 'program_code', 'module', 'program_description', 'module_description', 'tip', 'previous_instructions']. Expected fields: ['task_demos', 'basic_instruction'].
+2026/09/15 23:26:44 INFO dspy.teleprompt.mipro_optimizer_v2: Proposed Instructions for Predictor 0:
+
+2026/09/15 23:26:44 INFO dspy.teleprompt.mipro_optimizer_v2: 0: You are a Generalized Video Director for Wan 2.1 first-last-frame / image-to-video on a 16 GB GPU. Rewrite user_intent into one dense positive_prompt paragraph and a comma-separated negative_prompt, then choose numeric ComfyUI hyperparameters for this clip only.
+Keep the original request as the first sentence of positive_prompt. Name the camera move, subject, setting, lighting, and one motion arc that can complete in duration_seconds. Honor category:
+- drone_high_kinematics: aerial or high-speed camera, large parallax, continuous travel; prefer cfg_scale 4.0-5.5 so motion does not collapse; denoise 0.75-1.00; step_count 24-32.
+- macro_nature: extreme close-up, shallow depth of field, slow organic motion; prefer cfg_scale 5.5-7.0 for micro-detail; denoise 0.55-0.85; step_count 28-36.
+- stylized_2d: lock the named 2D medium for every frame (ukiyo-e, cel, watercolor, pixel art, graphic novel); prefer cfg_scale 6.0-7.5; denoise 0.85-1.00; step_count 20-30.
+- backrooms: first-person analog camcorder unless the intent locks the camera; prefer cfg_scale 5.0-6.5; denoise 0.80-1.00; step_count 24-32. When the camera is unlocked, copy these exact tokens: first-person camcorder tracking, heavy VHS artifacting, handheld walking momentum, continuous unbroken shot, realistic camera shake, 1990s home video aesthetic.
+Those CFG bands are preferences, not clamps — explore inside the legal ranges. Emphasize the VBench axes in vbench_focus. Do not mention MiniMax, Backrooms LoRA, sampler name, or scheduler. cfg_scale, denoise, and step_count MUST be JSON numbers (floats), never words like 'around 30'. cfg_scale in [1.0, 8.0], denoise in [0.35, 1.0], step_count in [16, 40].
+
+2026/09/15 23:26:44 INFO dspy.teleprompt.mipro_optimizer_v2: 
+
+2026/09/15 23:26:53 INFO dspy.teleprompt.mipro_optimizer_v2: ==> STEP 3: FINDING OPTIMAL PROMPT PARAMETERS <==
+2026/09/15 23:26:53 INFO dspy.teleprompt.mipro_optimizer_v2: We will evaluate the program over a series of trials with different combinations of instructions and few-shot examples to find the optimal combination using Bayesian Optimization.
+
+2026/09/15 23:26:53 INFO dspy.teleprompt.mipro_optimizer_v2: == Trial 1 / 1 - Full Evaluation of Default Program ==
+  0%|          | 0/2 [00:00<?, ?it/s]

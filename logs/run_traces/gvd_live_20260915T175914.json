@@ -1,0 +1,401 @@
+{
+  "saved": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\models\\dspy_compiled\\generalized_video_director_mipro_2row.json",
+  "optimizer": "mipro",
+  "mock": false,
+  "auto": null,
+  "trials": 1,
+  "trainset": 2,
+  "ids": "GVD-B01,GVD-D01",
+  "last_feedback": "{\"mock\": false, \"clip_id\": \"GVD-B01\", \"category\": \"backrooms\", \"hparams\": {\"cfg_scale\": 8.0, \"denoise\": 0.35, \"step_count\": 40.0}, \"step_count_int\": 40, \"scores\": {\"text_video_alignment\": 0.0, \"temporal_consistency\": 0.0, \"aesthetic_quality\": 0.0}, \"mean\": 0.0, \"minimum\": 0.0, \"threshold\": 0.6, \"iteration\": 0, \"passes_curriculum\": false, \"mipro\": 0.0, \"reasons\": [\"minimum score 0.00 below curriculum threshold 0.60\"], \"hparam_warnings\": [], \"video_path\": \"A:\\\\Users\\\\rhine\\\\Documents\\\\Codex\\\\2026-08-07\\\\referenced-chatgpt-conversation-this-is-an-2\\\\COMFYUI_STORY_HANDOFF_2026-08-09\\\\local_agent\\\\runtime\\\\dspy_opt\\\\gvd_GVD-B01_753709dd36_00001.mp4\", \"vram_trace\": [{\"label\": \"after_prepare_comfy\", \"ts\": 1789508930.6990519, \"used_mib\": 755, \"free_mib\": 15223, \"total_mib\": 16303, \"owner\": {\"owner\": \"comfyui\", \"reason\": \"Wan 2.1 generation\", \"since\": 1789508930.698053}}, {\"label\": \"after_wan\", \"ts\": 1789509510.279921, \"used_mib\": 755, \"free_mib\": 15223, \"total_mib\": 16303, \"owner\": {\"owner\": \"comfyui\", \"reason\": \"Wan 2.1 generation\", \"since\": 1789508930.698053}}, {\"label\": \"after_release_comfy\", \"ts\": 1789509510.366323, \"used_mib\": 755, \"free_mib\": 15223, \"total_mib\": 16303, \"owner\": {\"owner\": \"idle\", \"reason\": \"ComfyUI /free called\", \"since\": 1789509510.3215008}}, {\"label\": \"after_prepare_vlm\", \"ts\": 1789509510.422719, \"used_mib\": 755, \"free_mib\": 15223, \"total_mib\": 16303, \"owner\": {\"owner\": \"vlm\", \"reason\": \"Qwen2.5-VL judge\", \"since\": 1789509510.42218}}, {\"label\": \"after_vlm\", \"ts\": 1789509549.7342188, \"used_mib\": 11390, \"free_mib\": 4588, \"total_mib\": 16303, \"owner\": {\"owner\": \"vlm\", \"reason\": \"Qwen2.5-VL judge\", \"since\": 1789509510.42218}}, {\"label\": \"after_release_vlm\", \"ts\": 1789509554.4796886, \"used_mib\": 755, \"free_mib\": 15223, \"total_mib\": 16303, \"owner\": {\"owner\": \"idle\", \"reason\": \"Qwen2.5-VL complete\", \"since\": 1789509554.4786878}}], \"vlm_raw\": \"{\\n  \\\"text_video_alignment\\\": 0.00,\\n  \\\"temporal_consistency\\\": 0.00,\\n  \\\"aesthetic_quality\\\": 0.00,\\n  \\\"rationale\\\": {\\n    \\\"text_video_alignment\\\": \\\"No subjects, setting, camera movement, or actions from the prompt are visible in the frames.\\\",\\n    \\\"temporal_consistency\\\": \\\"No consistent elements across frames; each frame is a distinct, blurry, color-shifted image.\\\",\\n    \\\"aesthetic_quality\\\": \\\"Frames are extremely blurry, lack detail, and have no discernible composition or artifacts.\\\"\\n  }\\n}\"}",
+  "history_n": 4,
+  "history": [
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 0.75,
+        "step_count": 24.0
+      },
+      "step_count_int": 24,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "error": "VLM HandoffError: Owned Qwen llama-server did not become healthy before deadline",
+      "video_path": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\gvd_GVD-D01_574ba1ac3a_00001.mp4",
+      "positive_prompt": "A cinematic drone shot flies in from the open ocean toward sheer Atlantic cliffs at golden hour, revealing nested seabirds and white spray against black basalt. The camera moves smoothly and continuously, capturing the dynamic and dramatic scene. The drone's high-speed and aerial motion creates a sense of motion and excitement, while the golden hour lighting adds a warm and atmospheric quality to the shot. The camera smoothly transitions between different angles and perspectives, highlighting th",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789506230.2596316,
+          "used_mib": 530,
+          "free_mib": 15448,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789506230.258125
+          }
+        },
+        {
+          "label": "after_wan",
+          "ts": 1789506813.6623163,
+          "used_mib": 728,
+          "free_mib": 15250,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789506230.258125
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789506813.9251802,
+          "used_mib": 728,
+          "free_mib": 15250,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789506813.730836
+          }
+        },
+        {
+          "label": "after_prepare_vlm",
+          "ts": 1789506813.9767478,
+          "used_mib": 728,
+          "free_mib": 15250,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789506813.9767478
+          }
+        },
+        {
+          "label": "after_release_vlm",
+          "ts": 1789506993.8455331,
+          "used_mib": 741,
+          "free_mib": 15237,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Qwen2.5-VL complete",
+            "since": 1789506993.8455331
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 8.0,
+        "denoise": 0.35,
+        "step_count": 40.0
+      },
+      "step_count_int": 40,
+      "scores": {
+        "text_video_alignment": 0.0,
+        "temporal_consistency": 0.0,
+        "aesthetic_quality": 0.0
+      },
+      "mean": 0.0,
+      "minimum": 0.0,
+      "threshold": 0.6,
+      "iteration": 0,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "reasons": [
+        "minimum score 0.00 below curriculum threshold 0.60"
+      ],
+      "hparam_warnings": [],
+      "video_path": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\gvd_GVD-B01_f02657f335_00001.mp4",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789507184.9265127,
+          "used_mib": 757,
+          "free_mib": 15221,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789507184.9265127
+          }
+        },
+        {
+          "label": "after_wan",
+          "ts": 1789508228.97988,
+          "used_mib": 751,
+          "free_mib": 15227,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789507184.9265127
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789508229.0672214,
+          "used_mib": 751,
+          "free_mib": 15227,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789508229.0223925
+          }
+        },
+        {
+          "label": "after_prepare_vlm",
+          "ts": 1789508229.3604867,
+          "used_mib": 751,
+          "free_mib": 15227,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789508229.3594851
+          }
+        },
+        {
+          "label": "after_vlm",
+          "ts": 1789508270.0451953,
+          "used_mib": 11386,
+          "free_mib": 4592,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789508229.3594851
+          }
+        },
+        {
+          "label": "after_release_vlm",
+          "ts": 1789508274.7843058,
+          "used_mib": 751,
+          "free_mib": 15227,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Qwen2.5-VL complete",
+            "since": 1789508274.7843058
+          }
+        }
+      ],
+      "vlm_raw": "{\n  \"text_video_alignment\": 0.00,\n  \"temporal_consistency\": 0.00,\n  \"aesthetic_quality\": 0.00,\n  \"rationale\": {\n    \"text_video_alignment\": \"No hallway, fluorescent lights, or Backrooms elements are visible; the frames show only abstract, colorful noise.\",\n    \"temporal_consistency\": \"No consistent subject or setting exists across frames; each frame is a distinct, unrelated abstract pattern.\",\n    \"aesthetic_quality\": \"Frames are extremely blurry, with no discernible details, crushed colors, and heavy artifacting, resulting in a low-quality, muddy appearance.\"\n  }\n}"
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 0.75,
+        "step_count": 24.0
+      },
+      "step_count_int": 24,
+      "scores": {
+        "text_video_alignment": 0.0,
+        "temporal_consistency": 0.0,
+        "aesthetic_quality": 0.0
+      },
+      "mean": 0.0,
+      "minimum": 0.0,
+      "threshold": 0.6,
+      "iteration": 0,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "reasons": [
+        "minimum score 0.00 below curriculum threshold 0.60"
+      ],
+      "hparam_warnings": [],
+      "video_path": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\gvd_GVD-D01_6d957deb87_00001.mp4",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789508296.680334,
+          "used_mib": 751,
+          "free_mib": 15227,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789508296.6793354
+          }
+        },
+        {
+          "label": "after_wan",
+          "ts": 1789508863.2088957,
+          "used_mib": 755,
+          "free_mib": 15223,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789508296.6793354
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789508863.2734687,
+          "used_mib": 755,
+          "free_mib": 15223,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789508863.2429373
+          }
+        },
+        {
+          "label": "after_prepare_vlm",
+          "ts": 1789508863.3135862,
+          "used_mib": 755,
+          "free_mib": 15223,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789508863.3135862
+          }
+        },
+        {
+          "label": "after_vlm",
+          "ts": 1789508903.2120044,
+          "used_mib": 11390,
+          "free_mib": 4588,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789508863.3135862
+          }
+        },
+        {
+          "label": "after_release_vlm",
+          "ts": 1789508907.916272,
+          "used_mib": 755,
+          "free_mib": 15223,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Qwen2.5-VL complete",
+            "since": 1789508907.9147172
+          }
+        }
+      ],
+      "vlm_raw": "{\n  \"text_video_alignment\": 0.00,\n  \"temporal_consistency\": 0.00,\n  \"aesthetic_quality\": 0.00,\n  \"rationale\": {\n    \"text_video_alignment\": \"The frames show no ocean, cliffs, seabirds, spray, or golden hour lighting; instead, they contain abstract, glitchy, and indistinct shapes with no recognizable elements from the prompt.\",\n    \"temporal_consistency\": \"The frames are static and lack any motion, making it impossible to assess temporal consistency.\",\n    \"aesthetic_quality\": \"The frames are heavily distorted with glitch effects, crushed details, and no clear composition, resulting in extremely poor aesthetic quality.\"\n  }\n}"
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 8.0,
+        "denoise": 0.35,
+        "step_count": 40.0
+      },
+      "step_count_int": 40,
+      "scores": {
+        "text_video_alignment": 0.0,
+        "temporal_consistency": 0.0,
+        "aesthetic_quality": 0.0
+      },
+      "mean": 0.0,
+      "minimum": 0.0,
+      "threshold": 0.6,
+      "iteration": 0,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "reasons": [
+        "minimum score 0.00 below curriculum threshold 0.60"
+      ],
+      "hparam_warnings": [],
+      "video_path": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\gvd_GVD-B01_753709dd36_00001.mp4",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789508930.6990519,
+          "used_mib": 755,
+          "free_mib": 15223,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789508930.698053
+          }
+        },
+        {
+          "label": "after_wan",
+          "ts": 1789509510.279921,
+          "used_mib": 755,
+          "free_mib": 15223,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789508930.698053
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789509510.366323,
+          "used_mib": 755,
+          "free_mib": 15223,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789509510.3215008
+          }
+        },
+        {
+          "label": "after_prepare_vlm",
+          "ts": 1789509510.422719,
+          "used_mib": 755,
+          "free_mib": 15223,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789509510.42218
+          }
+        },
+        {
+          "label": "after_vlm",
+          "ts": 1789509549.7342188,
+          "used_mib": 11390,
+          "free_mib": 4588,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789509510.42218
+          }
+        },
+        {
+          "label": "after_release_vlm",
+          "ts": 1789509554.4796886,
+          "used_mib": 755,
+          "free_mib": 15223,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Qwen2.5-VL complete",
+            "since": 1789509554.4786878
+          }
+        }
+      ],
+      "vlm_raw": "{\n  \"text_video_alignment\": 0.00,\n  \"temporal_consistency\": 0.00,\n  \"aesthetic_quality\": 0.00,\n  \"rationale\": {\n    \"text_video_alignment\": \"No subjects, setting, camera movement, or actions from the prompt are visible in the frames.\",\n    \"temporal_consistency\": \"No consistent elements across frames; each frame is a distinct, blurry, color-shifted image.\",\n    \"aesthetic_quality\": \"Frames are extremely blurry, lack detail, and have no discernible composition or artifacts.\"\n  }\n}"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "894ad4bac9ff4d7d",
+  "title": "compare the ladders for 00B and 00A",
+  "created": 1787453159.2785769,
+  "updated": 1787453171.5078354,
+  "messages": [
+    {
+      "role": "user",
+      "content": "compare the ladders for 00B and 00A",
+      "at": 1787453159.2845743
+    },
+    {
+      "role": "assistant",
+      "content": "Clip 00B's ladder starts at 14.375s (base) and decreases to 5.417s (rung 8), with deltas ranging from -0.708s to -3.542s. Clip 00A's ladder starts at 9.417s (base) and varies more widely, reaching 13.417s (rung 7) before dropping to 5.417s (rung 8). Key differences:  \n- **00B** shows a steady decline in duration across rungs.  \n- **00A** has greater variability, with some rungs extending beyond the base duration (+4.25s) before shortening.  \n- Both use the same 9-rung structure but diverge in how they adjust timing.  \n\nThe data suggests 00A’s rendering process involves more experimental duration changes compared to 00B’s consistent reduction.",
+      "at": 1787453171.4973595
+    }
+  ],
+  "last_tier": "gpu"
+}

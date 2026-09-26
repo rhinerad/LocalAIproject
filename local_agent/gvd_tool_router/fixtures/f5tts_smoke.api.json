@@ -1,0 +1,28 @@
+{
+  "1": {
+    "class_type": "LoadAudio",
+    "inputs": {
+      "audio": "C001_master_voice.wav"
+    }
+  },
+  "2": {
+    "class_type": "F5TTSAudioInputs",
+    "inputs": {
+      "sample_audio": ["1", 0],
+      "sample_text": "Alright, the camera is rolling. Start the audition tape.",
+      "speech": "The corridor is empty and the lights hum.",
+      "seed": 1,
+      "model": "F5v1",
+      "vocoder": "vocos",
+      "speed": 1.0,
+      "model_type": "F5TTS_v1_Base"
+    }
+  },
+  "3": {
+    "class_type": "SaveAudio",
+    "inputs": {
+      "audio": ["2", 0],
+      "filename_prefix": "gvd_tool_router/f5tts_smoke"
+    }
+  }
+}

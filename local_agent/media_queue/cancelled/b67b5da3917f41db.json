@@ -1,0 +1,14 @@
+{
+  "id": "b67b5da3917f41db",
+  "kind": "vision",
+  "args": {
+    "images": [
+      "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\uploads\\45c8387e32cc5578_boundary_00_v2.png"
+    ],
+    "question": "Describe only the visible scene, subject positions, lighting, and camera framing in four concise sentences.",
+    "instruction": null
+  },
+  "queued_at": "2026-08-24T15:20:06Z",
+  "cancelled_at": "2026-08-24T18:59:33Z",
+  "cancel_reason": "operator cleared media queue"
+}

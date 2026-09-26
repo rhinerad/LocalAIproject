@@ -1,0 +1,101 @@
+{
+  "id": "5c5b5b96f0e44966",
+  "title": "Generate these photos using flux --- CLIP 1 --- …",
+  "created": 1788733195.188812,
+  "updated": 1788740202.4198973,
+  "model": "huihui_ai/qwen3-abliterated:14b",
+  "routing": "",
+  "workspace": "auto",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Generate these photos using flux --- CLIP 1 ---\nSTART FRAME: First-person POV from a retro 1990s VHS camcorder. The date and time \"AUG 09 1998\" are in the bottom left corner in white VCR font. A skater wearing baggy jeans and a colorful graphic tee is in mid-air performing a board slide on a metal handrail at a sunny outdoor concrete skatepark. Heavy motion blur, amateur filming style, realistic bright sunlight.\n\nEND FRAME: First-person POV, VHS camcorder footage. Extreme close-up of ugly, moist beige carpet and bottom edge of yellow patterned wallpaper as the camera impacts the floor. Eerie 1990s liminal space aesthetic, date and time \"AUG 09 1998\" in the bottom left corner.\n\n--- CLIP 2 ---\nSTART FRAME: First-person POV, VHS camcorder footage. Extreme close-up of ugly, moist beige carpet and bottom edge of yellow patterned wallpaper as the camera impacts the floor. Eerie 1990s liminal space aesthetic, date and time \"AUG 09 1998\" in the bottom left corner.\n\nEND FRAME: First-person POV, VHS camcorder footage. Looking down an endless empty hallway with yellow patterned wallpaper, damp beige carpet, and fluorescent ceiling lights. Eerie 1990s liminal space aesthetic.\n\n--- CLIP 3 ---\nSTART FRAME: First-person POV, VHS camcorder footage. Looking down an endless empty hallway with yellow patterned wallpaper, damp beige carpet, and fluorescent ceiling lights. Eerie 1990s liminal space aesthetic.\n\nEND FRAME: First-person POV, VHS camcorder footage. A corner of a room where two yellow wallpapered walls meet the beige carpet, completely empty. Eerie 1990s liminal space aesthetic.\n\n--- CLIP 4 ---\nSTART FRAME: First-person POV, VHS camcorder footage. A corner of a room where two yellow wallpapered walls meet the beige carpet, completely empty. Eerie 1990s liminal space aesthetic.\n\nEND FRAME: First-person POV, VHS camcorder footage. The camera is slightly closer to a dark corner in the yellow wallpapered hallway. Eerie 1990s liminal space aesthetic.\n\n--- CLIP 5 ---\nSTART FRAME: First-person POV, VHS camcorder footage. The camera is slightly closer to a dark corner in the yellow wallpapered hallway. Eerie 1990s liminal space aesthetic.\n\nEND FRAME: First-person POV, VHS camcorder footage. A flat, featureless wall of yellow wallpaper blocking the path, a complete dead end. Eerie 1990s liminal space aesthetic.\n\n--- CLIP 6 ---\nSTART FRAME: First-person POV, VHS camcorder footage. A flat, featureless wall of yellow wallpaper blocking the path, a complete dead end. Eerie 1990s liminal space aesthetic.\n\nEND FRAME: First-person POV, VHS camcorder footage. Looking back down the long, identical yellow hallway. Eerie 1990s liminal space aesthetic.\n\n--- CLIP 7 ---\nSTART FRAME: First-person POV, VHS camcorder footage. Looking back down the long, identical yellow hallway. Eerie 1990s liminal space aesthetic.\n\nEND FRAME: First-person POV, VHS camcorder footage. The exact same long empty yellow hallway, but slightly dimmer as a ceiling light above falters. Eerie 1990s liminal space aesthetic.\n\n--- CLIP 8 ---\nSTART FRAME: First-person POV, VHS camcorder footage. The exact same long empty yellow hallway, but slightly dimmer as a ceiling light above falters. Eerie 1990s liminal space aesthetic.\n\nEND FRAME: First-person POV, VHS camcorder footage. The camera is pointed slightly downward at the beige carpet, shrouded in heavy shadows from the flickering light. Eerie 1990s liminal space aesthetic.\n\n--- CLIP 9 ---\nSTART FRAME: First-person POV, VHS camcorder footage. The camera is pointed slightly downward at the beige carpet, shrouded in heavy shadows from the flickering light. Eerie 1990s liminal space aesthetic.\n\nEND FRAME: First-person POV, VHS camcorder footage. Looking down a massive, impossibly long yellow hallway that seems to stretch into infinity, fading into dark shadows at the very end. Harsh fluorescent ceiling lights, damp beige carpet, eerie 1990s liminal space aesthetic.\n\n--- CLIP 10 ---\nSTART FRAME: First-person POV, VHS camcorder footage. Looking down a massive, impossibly long yellow hallway that seems to stretch into infinity, fading into dark shadows at the very end. Harsh fluorescent ceiling lights, damp beige carpet, eerie 1990s liminal space aesthetic.\n\nEND FRAME: First-person POV, VHS camcorder footage. A carpeted staircase built directly into the middle of a yellow hallway, leading up to absolutely nowhere, terminating bluntly into a flat, blank yellow ceiling. Absurd impossible geometry, harsh fluorescent lighting, liminal space horror.\n\n--- CLIP 11 ---\nSTART FRAME: First-person POV, VHS camcorder footage. A carpeted staircase built directly into the middle of a yellow hallway, leading up to absolutely nowhere, terminating bluntly into a flat, blank yellow ceiling. Absurd impossible geometry, harsh fluorescent lighting, liminal space horror.\n\nEND FRAME: First-person POV, VHS camcorder footage. Close-up of a blank, flat ceiling covered in yellow patterned wallpaper right at the top of a staircase. There is no door or hatch, just a dead end. Eerie 1990s liminal space aesthetic.\n\n--- CLIP 12 ---\nSTART FRAME: First-person POV, VHS camcorder footage. Close-up of a blank, flat ceiling covered in yellow patterned wallpaper right at the top of a staircase. There is no door or hatch, just a dead end. Eerie 1990s liminal space aesthetic.\n\nEND FRAME: First-person POV, VHS camcorder footage. Looking down from the top of a staircase into a small, claustrophobic square room with yellow wallpaper, beige carpet, and no exits. The geometry of the room looks slightly crooked and unnatural. Eerie 1990s liminal space aesthetic.",
+      "at": 1788733195.1948211,
+      "source": "desktop"
+    },
+    {
+      "role": "assistant",
+      "content": "\n\n_[stopped]_",
+      "at": 1788740202.4028673,
+      "retrieved_exemplar_ids": [],
+      "tool_evidence": [],
+      "media_artifacts": [],
+      "activity": [
+        {
+          "kind": "waiting_for_permission",
+          "state": "announced",
+          "source": "observation",
+          "label": "GPU permission is pending in the sidebar: chat reasoning model load"
+        },
+        {
+          "kind": "route",
+          "state": "result",
+          "source": "observation",
+          "tier": "cpu",
+          "model": "huihui_ai/qwen3-abliterated:8b",
+          "backend": "ollama",
+          "reason": "GPU reserved; continuing primary-Huihui chat on paired CPU fallback huihui_ai/qwen3-abliterated:8b. GPU reserved; using Huihui 8B on CPU (num_gpu=0, 4 threads). a ComfyUI backend is listening on port 8188",
+          "gpu_busy": true,
+          "capability": "image",
+          "host": "127.0.0.1:11434",
+          "label": "cpu huihui_ai/qwen3-abliterated:8b",
+          "hop": 0
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Reviewing the request and available evidence",
+          "stage": "review",
+          "hop": 0
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Deciding the next safe action",
+          "stage": "decide",
+          "hop": 0
+        },
+        {
+          "kind": "complete",
+          "state": "result",
+          "source": "observation",
+          "label": "Turn complete"
+        }
+      ],
+      "route": {
+        "tier": "cpu",
+        "host": "127.0.0.1:11434",
+        "model": "huihui_ai/qwen3-abliterated:8b",
+        "gpu_busy": true,
+        "reason": "GPU reserved; continuing primary-Huihui chat on paired CPU fallback huihui_ai/qwen3-abliterated:8b. GPU reserved; using Huihui 8B on CPU (num_gpu=0, 4 threads). a ComfyUI backend is listening on port 8188",
+        "detail": {
+          "queue_owner": "queue owner released",
+          "comfy_port_8188": "listening",
+          "capability": "image",
+          "gpu_eviction": {
+            "attempted": [],
+            "remaining": [],
+            "verified": true,
+            "reason": "GPU Ollama has no resident models"
+          },
+          "cpu_huihui_fallback": {
+            "host": "127.0.0.1:11434",
+            "model": "huihui_ai/qwen3-abliterated:8b",
+            "num_gpu": 0,
+            "num_thread": 4,
+            "reason": "reuse already-downloaded model; CPU-only request"
+          }
+        },
+        "backend": "ollama",
+        "adaptive_ctx": 16384,
+        "effective_ctx": 16384,
+        "ctx_ceiling": null,
+        "hop": 0
+      },
+      "source": "desktop"
+    }
+  ],
+  "last_tier": "cpu"
+}

@@ -1,0 +1,10 @@
+{
+  "state": "halted",
+  "reason": "operator pivot to DSPy Phase-1 optimization; batch_generate_backrooms.py stopped",
+  "clip": "C023",
+  "index": 8,
+  "total": 24,
+  "previous_pid": 55200,
+  "pid": 0,
+  "ts": 1789480000
+}

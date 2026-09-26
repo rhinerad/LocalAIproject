@@ -1,0 +1,487 @@
+[32m[INFO][0m setup plugin alembic.autogenerate.schemas
+[32m[INFO][0m setup plugin alembic.autogenerate.tables
+[32m[INFO][0m setup plugin alembic.autogenerate.types
+[32m[INFO][0m setup plugin alembic.autogenerate.constraints
+[32m[INFO][0m setup plugin alembic.autogenerate.defaults
+[32m[INFO][0m setup plugin alembic.autogenerate.comments
+[32m[INFO][0m Adding extra search path diffusion_models A:\Users\rhine\ComfyUI-Shared\models\diffusion_models
+[32m[INFO][0m Adding extra search path text_encoders A:\Users\rhine\ComfyUI-Shared\models\text_encoders
+[32m[INFO][0m Adding extra search path vae A:\Users\rhine\ComfyUI-Shared\models\vae
+[32m[INFO][0m Setting output directory to: A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\local_agent\render_jobs\5b3352e81fdb4f08\render_20260824_184105\batch_runtime\output
+[32m[INFO][0m Setting input directory to: A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\local_agent\render_jobs\5b3352e81fdb4f08\render_20260824_184105\batch_runtime\input
+[32m[INFO][0m Setting user directory to: A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\local_agent\render_jobs\5b3352e81fdb4f08\render_20260824_184105\batch_runtime\user
+[32m[INFO][0m Found comfy_kitchen backend eager: {'available': True, 'disabled': False, 'unavailable_reason': None, 'capabilities': ['adaln', 'apply_rope', 'apply_rope1', 'apply_rope1_', 'apply_rope_', 'apply_rope_split_half', 'apply_rope_split_half1', 'apply_rope_split_half1_', 'apply_rope_split_half_', 'convrot_w4a4_linear', 'dequantize_convrot_w4a4_weight', 'dequantize_int8_convrot_weight', 'dequantize_int8_convrot_weight_dtype', 'dequantize_int8_embedding', 'dequantize_int8_simple', 'dequantize_int8_simple_dtype', 'dequantize_mxfp8', 'dequantize_nvfp4', 'dequantize_per_tensor_fp8', 'gemv_awq_w4a16', 'int8_linear', 'prepare_int4_weight_for_int8_linear', 'quantize_and_rotate_rowwise', 'quantize_convrot_w4a4_weight', 'quantize_int8_convrot_weight', 'quantize_int8_rowwise', 'quantize_int8_tensorwise', 'quantize_mxfp8', 'quantize_nvfp4', 'quantize_per_tensor_fp8', 'quantize_svdquant_w4a4', 'rms_adaln', 'rms_rope', 'rms_rope1', 'rms_rope1_', 'rms_rope_', 'rms_rope_split_half', 'rms_rope_split_half1', 'rms_rope_split_half1_', 'rms_rope_split_half_', 'scaled_mm_mxfp8', 'scaled_mm_nvfp4', 'scaled_mm_svdquant_w4a4', 'stochastic_rounding_fp8']}
+[32m[INFO][0m Found comfy_kitchen backend triton: {'available': True, 'disabled': True, 'unavailable_reason': None, 'capabilities': ['adaln', 'apply_rope', 'apply_rope1', 'apply_rope1_', 'apply_rope_', 'apply_rope_split_half', 'apply_rope_split_half1', 'apply_rope_split_half1_', 'apply_rope_split_half_', 'dequantize_nvfp4', 'dequantize_per_tensor_fp8', 'int8_linear', 'quantize_and_rotate_rowwise', 'quantize_int8_rowwise', 'quantize_mxfp8', 'quantize_nvfp4', 'quantize_per_tensor_fp8', 'rms_adaln', 'rms_rope', 'rms_rope1', 'rms_rope1_', 'rms_rope_', 'rms_rope_split_half', 'rms_rope_split_half1', 'rms_rope_split_half1_', 'rms_rope_split_half_']}
+[32m[INFO][0m Found comfy_kitchen backend hip: {'available': False, 'disabled': False, 'unavailable_reason': 'PyTorch ROCm/HIP runtime not available', 'capabilities': []}
+[32m[INFO][0m Found comfy_kitchen backend cuda: {'available': True, 'disabled': False, 'unavailable_reason': None, 'capabilities': ['adaln', 'apply_rope', 'apply_rope1', 'apply_rope1_', 'apply_rope_', 'apply_rope_split_half', 'apply_rope_split_half1', 'apply_rope_split_half1_', 'apply_rope_split_half_', 'convrot_w4a4_linear', 'dequantize_convrot_w4a4_weight', 'dequantize_int8_convrot_weight', 'dequantize_int8_convrot_weight_dtype', 'dequantize_int8_simple', 'dequantize_int8_simple_dtype', 'dequantize_nvfp4', 'dequantize_per_tensor_fp8', 'gemv_awq_w4a16', 'int8_linear', 'prepare_int4_weight_for_int8_linear', 'quantize_and_rotate_rowwise', 'quantize_convrot_w4a4_weight', 'quantize_int8_convrot_weight', 'quantize_int8_rowwise', 'quantize_int8_tensorwise', 'quantize_mxfp8', 'quantize_nvfp4', 'quantize_per_tensor_fp8', 'quantize_svdquant_w4a4', 'rms_adaln', 'rms_rope', 'rms_rope1', 'rms_rope1_', 'rms_rope_', 'rms_rope_split_half', 'rms_rope_split_half1', 'rms_rope_split_half1_', 'rms_rope_split_half_', 'scaled_mm_nvfp4', 'scaled_mm_svdquant_w4a4', 'stochastic_rounding_fp8']}
+[32m[INFO][0m Checkpoint files will always be loaded safely.
+[32m[INFO][0m Total VRAM 16303 MB, total RAM 31621 MB
+[32m[INFO][0m pytorch version: 2.10.0+cu130
+[32m[INFO][0m Set vram state to: NORMAL_VRAM
+[32m[INFO][0m Device: cuda:0 NVIDIA GeForce RTX 5080 : cudaMallocAsync
+[32m[INFO][0m Using async weight offloading with 2 streams
+[32m[INFO][0m Enabled pinned memory 12648.0
+[32m[INFO][0m working around nvidia conv3d memory bug.
+[32m[INFO][0m Using sage attention
+aimdo: src-win/cuda-detour.c:38:INFO:aimdo_setup_hooks: installing 6 hooks
+aimdo: src-win/cuda-detour.c:28:DEBUG:install_hook_entries: hooks successfully installed
+aimdo: src/control.c:262:INFO:comfy-aimdo NVML pressure enabled
+aimdo: src-win/shmem-detect.c:80:INFO:comfy-aimdo WDDM adapter match: NVIDIA GeForce RTX 5080 runtime_luid=00000000:00013ab1 dxgi_luid=00000000:00013ab1
+aimdo: src/control.c:277:INFO:comfy-aimdo inited for GPU: NVIDIA GeForce RTX 5080 (VRAM: 16302 MB)
+[32m[INFO][0m DynamicVRAM support detected and enabled
+[32m[INFO][0m Python version: 3.13.12 (main, Feb 12 2026, 00:38:53) [MSC v.1944 64 bit (AMD64)]
+[32m[INFO][0m ComfyUI version: 0.30.0
+[32m[INFO][0m comfy-aimdo version: 0.4.11
+[32m[INFO][0m comfy-kitchen version: 0.2.26
+[32m[INFO][0m Setting temp directory to: A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\local_agent\render_jobs\5b3352e81fdb4f08\render_20260824_184105\batch_runtime\temp\temp
+[32m[INFO][0m comfyui-frontend-package version: 1.47.12
+[32m[INFO][0m comfyui-workflow-templates version: 0.11.27
+[32m[INFO][0m comfyui-embedded-docs version: 0.5.9
+[32m[INFO][0m comfy-kitchen version: 0.2.26
+[32m[INFO][0m comfy-aimdo version: 0.4.11
+[32m[INFO][0m [Prompt Server] web root: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\comfyui_frontend_package\static
+[32m[INFO][0m Asset seeder disabled
+[32m[INFO][0m No OpenGL_accelerate module loaded: No module named 'OpenGL_accelerate'
+[32m[INFO][0m Skipping loading of custom nodes
+[32m[INFO][0m Context impl SQLiteImpl.
+[32m[INFO][0m Will assume non-transactional DDL.
+[1m[31m[ERROR][0m Failed to initialize database. Please ensure you have installed the latest requirements. If the error persists, please report this as in future the database will be required: Could not acquire lock on database 'A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\user\comfyui.db'. Another ComfyUI process may already be using it. Use --database-url to specify a separate database file.
+[32m[INFO][0m Using RAM pressure cache.
+[32m[INFO][0m Starting server
+
+[32m[INFO][0m To see the GUI go to: http://127.0.0.1:8188
+[32m[INFO][0m got prompt
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.float32
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.float16
+[32m[INFO][0m Found quantization metadata version 1
+[32m[INFO][0m Using MixedPrecisionOps for text encoder
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load MiniMaxH3VideoVAE
+[32m[INFO][0m Model MiniMaxH3VideoVAE prepared for dynamic VRAM loading. 4965MB Staged. 0 patches attached. Force pre-loaded 128 weights: 348 KB.
+[32m[INFO][0m Model MiniMaxH3VideoVAE prepared for dynamic VRAM loading. 4965MB Staged. 0 patches attached. Force pre-loaded 128 weights: 348 KB.
+[32m[INFO][0m Model MiniMaxH3VideoVAE prepared for dynamic VRAM loading. 4965MB Staged. 0 patches attached. Force pre-loaded 128 weights: 348 KB.
+[32m[INFO][0m Requested to load MiniMaxH3TEModel_
+[32m[INFO][0m Model MiniMaxH3TEModel_ prepared for dynamic VRAM loading. 14956MB Staged. 0 patches attached. Force pre-loaded 410 weights: 4572 KB.
+[32m[INFO][0m Found quantization metadata version 1
+[32m[INFO][0m Detected mixed precision quantization
+[32m[INFO][0m Using mixed precision operations
+[32m[INFO][0m Native ops: int8_tensorwise, float8_e4m3fn, float8_e5m2, convrot_w4a4, mxfp8, nvfp4 
+[32m[INFO][0m model weight dtype torch.bfloat16, manual cast: torch.bfloat16
+[32m[INFO][0m model_type FLOW
+[32m[INFO][0m Requested to load MiniMaxH3
+[32m[INFO][0m 0 models unloaded.
+[32m[INFO][0m Model MiniMaxH3 prepared for dynamic VRAM loading. 11944MB Staged. 0 patches attached. Force pre-loaded 210 weights: 1175 KB.
+[1m[33m[WARNING][0m SM120 diagnostic: executed sageattention.sageattn -> sageattn_qk_int8_pv_fp8_cuda using compiled _qattn_sm89 sm_120a cubin; no Triton fallback
+  0%|          | 0/20 [00:00<?, ?it/s]  0%|          | 0/20 [00:00<?, ?it/s,   Model Initializing ...  ]  0%|          | 0/20 [01:03<?, ?it/s,   Model Initializing ...  ]
+[1m[31m[ERROR][0m !!! Exception during processing !!! CUDA error: out of memory
+Search for `cudaErrorMemoryAllocation' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+[1m[31m[ERROR][0m Traceback (most recent call last):
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\execution.py", line 545, in execute
+    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)
+                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\execution.py", line 344, in get_output_data
+    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\execution.py", line 318, in _async_map_node_over_list
+    await process_inputs(input_dict, i)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\execution.py", line 306, in process_inputs
+    result = f(**inputs)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy_api\internal\__init__.py", line 149, in wrapped_func
+    return method(locked_class, **inputs)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy_api\latest\_io.py", line 1935, in EXECUTE_NORMALIZED
+    to_return = cls.execute(*args, **kwargs)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy_extras\nodes_custom_sampler.py", line 1049, in execute
+    samples = guider.sample(noise.generate_noise(latent), latent_image, sampler, sigmas, denoise_mask=noise_mask, callback=callback, disable_pbar=disable_pbar, seed=noise.seed)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1333, in sample
+    output = executor.execute(noise, latent_image, sampler, sigmas, denoise_mask, callback, disable_pbar, seed, latent_shapes=latent_shapes)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\patcher_extension.py", line 113, in execute
+    return self.original(*args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1260, in outer_sample
+    output = self.inner_sample(noise, latent_image, device, sampler, sigmas, denoise_mask, callback, disable_pbar, seed, latent_shapes=latent_shapes)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1235, in inner_sample
+    samples = executor.execute(self, sigmas, extra_args, callback, noise, latent_image, denoise_mask, disable_pbar)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\patcher_extension.py", line 113, in execute
+    return self.original(*args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1005, in sample
+    samples = self.sampler_function(model_k, noise, sigmas, extra_args=extra_args, callback=k_callback, disable=disable_pbar, **self.extra_options)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\torch\utils\_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\k_diffusion\sampling.py", line 1460, in sample_res_multistep
+    return res_multistep(model, x, sigmas, extra_args=extra_args, callback=callback, disable=disable, s_noise=s_noise, noise_sampler=noise_sampler, eta=0., cfg_pp=False)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\torch\utils\_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\k_diffusion\sampling.py", line 1418, in res_multistep
+    denoised = model(x, sigmas[i] * s_in, **extra_args)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 640, in __call__
+    out = self.inner_model(x, sigma, model_options=model_options, seed=seed)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1208, in __call__
+    return self.outer_predict_noise(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1215, in outer_predict_noise
+    ).execute(x, timestep, model_options, seed)
+      ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\patcher_extension.py", line 113, in execute
+    return self.original(*args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1218, in predict_noise
+    return sampling_function(self.inner_model, x, timestep, self.conds.get("negative", None), self.conds.get("positive", None), self.cfg, model_options=model_options, seed=seed)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 620, in sampling_function
+    out = calc_cond_batch(model, conds, x, timestep, model_options)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 211, in calc_cond_batch
+    return _calc_cond_batch_outer(model, conds, x_in, timestep, model_options)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 219, in _calc_cond_batch_outer
+    return executor.execute(model, conds, x_in, timestep, model_options)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\patcher_extension.py", line 113, in execute
+    return self.original(*args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 335, in _calc_cond_batch
+    output = model.apply_model(input_x, timestep_, **c).chunk(batch_chunks)
+             ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\model_base.py", line 196, in apply_model
+    return comfy.patcher_extension.WrapperExecutor.new_class_executor(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ...<2 lines>...
+        comfy.patcher_extension.get_all_wrappers(comfy.patcher_extension.WrappersMP.APPLY_MODEL, transformer_options)
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ).execute(x, t, c_concat, c_crossattn, control, transformer_options, **kwargs)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\patcher_extension.py", line 113, in execute
+    return self.original(*args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\model_base.py", line 240, in _apply_model
+    model_output = self.diffusion_model(xc, t, context=context, control=control, transformer_options=transformer_options, **extra_conds)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\torch\nn\modules\module.py", line 1776, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\torch\nn\modules\module.py", line 1787, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\ldm\minimax\model.py", line 499, in forward
+    return comfy.patcher_extension.WrapperExecutor.new_class_executor(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ...<2 lines>...
+        comfy.patcher_extension.get_all_wrappers(comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL, transformer_options)
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ).execute(x, timestep, context, transformer_options, minimax_payload=minimax_payload, **kwargs)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\patcher_extension.py", line 113, in execute
+    return self.original(*args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\ldm\minimax\model.py", line 619, in _forward
+    comfy.model_prefetch.prefetch_queue_pop(prefetch_queue, device, block)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\model_prefetch.py", line 62, in prefetch_queue_pop
+    offload_stream = comfy.ops.cast_modules_with_vbar(comfy_modules, None, device, None, True)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\ops.py", line 228, in cast_modules_with_vbar
+    handle_pin(s, pin, xfer_source, xfer_dest, subset=subset, size=dest_size)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\ops.py", line 226, in handle_pin
+    cast_maybe_lowvram_patch(source, pin, offload_stream, xfer_dest2=dest)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\ops.py", line 217, in cast_maybe_lowvram_patch
+    comfy.model_management.cast_to_gathered(xfer_source, xfer_dest, non_blocking=non_blocking, stream=stream, r2=xfer_dest2)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\model_management.py", line 1500, in cast_to_gathered
+    if comfy.memory_management.read_tensor_file_slice_into(tensor, dest_view, stream=stream, destination2=dest2_view):
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\memory_management.py", line 21, in read_tensor_file_slice_into
+    if not read_tensor_file_slice_into(tensor._qdata,
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+                                       destination._qdata if destination is not None else None, stream=stream,
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                       destination2=(destination2._qdata if destination2 is not None else None)):
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\memory_management.py", line 70, in read_tensor_file_slice_into
+    hostbuf.read_file_slice(file_obj, info.offset, info.size,
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            offset=destination.data_ptr() - hostbuf.get_raw_address(),
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            stream=stream_ptr,
+                            ^^^^^^^^^^^^^^^^^^
+                            device_ptr=device_ptr,
+                            ^^^^^^^^^^^^^^^^^^^^^^
+                            device=None if destination2 is None else destination2.device.index)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\comfy_aimdo\host_buffer.py", line 109, in read_file_slice
+    raise RuntimeError("HostBuffer.read_file_slice failed")
+RuntimeError: HostBuffer.read_file_slice failed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\execution.py", line 550, in execute
+    comfy.model_management.reset_cast_buffers()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\model_management.py", line 1413, in reset_cast_buffers
+    offload_stream.synchronize()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\torch\cuda\streams.py", line 106, in synchronize
+    super().synchronize()
+    ~~~~~~~~~~~~~~~~~~~^^
+torch.AcceleratorError: CUDA error: out of memory
+Search for `cudaErrorMemoryAllocation' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+[32m[INFO][0m Memory summary:
+|===========================================================================|
+|                  PyTorch CUDA memory summary, device ID 0                 |
+|---------------------------------------------------------------------------|
+|            CUDA OOMs: 0            |        cudaMalloc retries: 0         |
+|===========================================================================|
+|        Metric         | Cur Usage  | Peak Usage | Tot Alloc  | Tot Freed  |
+|---------------------------------------------------------------------------|
+| Allocated memory      |   2988 MiB |  17662 MiB |      0 B   |      0 B   |
+|       from large pool |      0 MiB |      0 MiB |      0 B   |      0 B   |
+|       from small pool |      0 MiB |      0 MiB |      0 B   |      0 B   |
+|---------------------------------------------------------------------------|
+| Active memory         |   2988 MiB |  17662 MiB |      0 B   |      0 B   |
+|       from large pool |      0 MiB |      0 MiB |      0 B   |      0 B   |
+|       from small pool |      0 MiB |      0 MiB |      0 B   |      0 B   |
+|---------------------------------------------------------------------------|
+| Requested memory      |      0 B   |      0 B   |      0 B   |      0 B   |
+|       from large pool |      0 B   |      0 B   |      0 B   |      0 B   |
+|       from small pool |      0 B   |      0 B   |      0 B   |      0 B   |
+|---------------------------------------------------------------------------|
+| GPU reserved memory   |  19072 MiB |  19072 MiB |      0 B   |      0 B   |
+|       from large pool |      0 MiB |      0 MiB |      0 B   |      0 B   |
+|       from small pool |      0 MiB |      0 MiB |      0 B   |      0 B   |
+|---------------------------------------------------------------------------|
+| Non-releasable memory |      0 B   |      0 B   |      0 B   |      0 B   |
+|       from large pool |      0 B   |      0 B   |      0 B   |      0 B   |
+|       from small pool |      0 B   |      0 B   |      0 B   |      0 B   |
+|---------------------------------------------------------------------------|
+| Allocations           |       0    |       0    |       0    |       0    |
+|       from large pool |       0    |       0    |       0    |       0    |
+|       from small pool |       0    |       0    |       0    |       0    |
+|---------------------------------------------------------------------------|
+| Active allocs         |       0    |       0    |       0    |       0    |
+|       from large pool |       0    |       0    |       0    |       0    |
+|       from small pool |       0    |       0    |       0    |       0    |
+|---------------------------------------------------------------------------|
+| GPU reserved segments |       0    |       0    |       0    |       0    |
+|       from large pool |       0    |       0    |       0    |       0    |
+|       from small pool |       0    |       0    |       0    |       0    |
+|---------------------------------------------------------------------------|
+| Non-releasable allocs |       0    |       0    |       0    |       0    |
+|       from large pool |       0    |       0    |       0    |       0    |
+|       from small pool |       0    |       0    |       0    |       0    |
+|---------------------------------------------------------------------------|
+| Oversize allocations  |       0    |       0    |       0    |       0    |
+|---------------------------------------------------------------------------|
+| Oversize GPU segments |       0    |       0    |       0    |       0    |
+|===========================================================================|
+
+[1m[31m[ERROR][0m Got an OOM, unloading all loaded models.
+Exception in thread Thread-1 (prompt_worker):
+Traceback (most recent call last):
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\execution.py", line 545, in execute
+    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)
+                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\execution.py", line 344, in get_output_data
+    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\execution.py", line 318, in _async_map_node_over_list
+    await process_inputs(input_dict, i)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\execution.py", line 306, in process_inputs
+    result = f(**inputs)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy_api\internal\__init__.py", line 149, in wrapped_func
+    return method(locked_class, **inputs)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy_api\latest\_io.py", line 1935, in EXECUTE_NORMALIZED
+    to_return = cls.execute(*args, **kwargs)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy_extras\nodes_custom_sampler.py", line 1049, in execute
+    samples = guider.sample(noise.generate_noise(latent), latent_image, sampler, sigmas, denoise_mask=noise_mask, callback=callback, disable_pbar=disable_pbar, seed=noise.seed)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1333, in sample
+    output = executor.execute(noise, latent_image, sampler, sigmas, denoise_mask, callback, disable_pbar, seed, latent_shapes=latent_shapes)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\patcher_extension.py", line 113, in execute
+    return self.original(*args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1260, in outer_sample
+    output = self.inner_sample(noise, latent_image, device, sampler, sigmas, denoise_mask, callback, disable_pbar, seed, latent_shapes=latent_shapes)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1235, in inner_sample
+    samples = executor.execute(self, sigmas, extra_args, callback, noise, latent_image, denoise_mask, disable_pbar)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\patcher_extension.py", line 113, in execute
+    return self.original(*args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1005, in sample
+    samples = self.sampler_function(model_k, noise, sigmas, extra_args=extra_args, callback=k_callback, disable=disable_pbar, **self.extra_options)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\torch\utils\_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\k_diffusion\sampling.py", line 1460, in sample_res_multistep
+    return res_multistep(model, x, sigmas, extra_args=extra_args, callback=callback, disable=disable, s_noise=s_noise, noise_sampler=noise_sampler, eta=0., cfg_pp=False)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\torch\utils\_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\k_diffusion\sampling.py", line 1418, in res_multistep
+    denoised = model(x, sigmas[i] * s_in, **extra_args)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 640, in __call__
+    out = self.inner_model(x, sigma, model_options=model_options, seed=seed)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1208, in __call__
+    return self.outer_predict_noise(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1215, in outer_predict_noise
+    ).execute(x, timestep, model_options, seed)
+      ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\patcher_extension.py", line 113, in execute
+    return self.original(*args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1218, in predict_noise
+    return sampling_function(self.inner_model, x, timestep, self.conds.get("negative", None), self.conds.get("positive", None), self.cfg, model_options=model_options, seed=seed)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 620, in sampling_function
+    out = calc_cond_batch(model, conds, x, timestep, model_options)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 211, in calc_cond_batch
+    return _calc_cond_batch_outer(model, conds, x_in, timestep, model_options)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 219, in _calc_cond_batch_outer
+    return executor.execute(model, conds, x_in, timestep, model_options)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\patcher_extension.py", line 113, in execute
+    return self.original(*args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 335, in _calc_cond_batch
+    output = model.apply_model(input_x, timestep_, **c).chunk(batch_chunks)
+             ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\model_base.py", line 196, in apply_model
+    return comfy.patcher_extension.WrapperExecutor.new_class_executor(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ...<2 lines>...
+        comfy.patcher_extension.get_all_wrappers(comfy.patcher_extension.WrappersMP.APPLY_MODEL, transformer_options)
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ).execute(x, t, c_concat, c_crossattn, control, transformer_options, **kwargs)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\patcher_extension.py", line 113, in execute
+    return self.original(*args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\model_base.py", line 240, in _apply_model
+    model_output = self.diffusion_model(xc, t, context=context, control=control, transformer_options=transformer_options, **extra_conds)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\torch\nn\modules\module.py", line 1776, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\torch\nn\modules\module.py", line 1787, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\ldm\minimax\model.py", line 499, in forward
+    return comfy.patcher_extension.WrapperExecutor.new_class_executor(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ...<2 lines>...
+        comfy.patcher_extension.get_all_wrappers(comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL, transformer_options)
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ).execute(x, timestep, context, transformer_options, minimax_payload=minimax_payload, **kwargs)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\patcher_extension.py", line 113, in execute
+    return self.original(*args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\ldm\minimax\model.py", line 619, in _forward
+    comfy.model_prefetch.prefetch_queue_pop(prefetch_queue, device, block)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\model_prefetch.py", line 62, in prefetch_queue_pop
+    offload_stream = comfy.ops.cast_modules_with_vbar(comfy_modules, None, device, None, True)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\ops.py", line 228, in cast_modules_with_vbar
+    handle_pin(s, pin, xfer_source, xfer_dest, subset=subset, size=dest_size)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\ops.py", line 226, in handle_pin
+    cast_maybe_lowvram_patch(source, pin, offload_stream, xfer_dest2=dest)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\ops.py", line 217, in cast_maybe_lowvram_patch
+    comfy.model_management.cast_to_gathered(xfer_source, xfer_dest, non_blocking=non_blocking, stream=stream, r2=xfer_dest2)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\model_management.py", line 1500, in cast_to_gathered
+    if comfy.memory_management.read_tensor_file_slice_into(tensor, dest_view, stream=stream, destination2=dest2_view):
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\memory_management.py", line 21, in read_tensor_file_slice_into
+    if not read_tensor_file_slice_into(tensor._qdata,
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+                                       destination._qdata if destination is not None else None, stream=stream,
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                       destination2=(destination2._qdata if destination2 is not None else None)):
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\memory_management.py", line 70, in read_tensor_file_slice_into
+    hostbuf.read_file_slice(file_obj, info.offset, info.size,
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            offset=destination.data_ptr() - hostbuf.get_raw_address(),
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            stream=stream_ptr,
+                            ^^^^^^^^^^^^^^^^^^
+                            device_ptr=device_ptr,
+                            ^^^^^^^^^^^^^^^^^^^^^^
+                            device=None if destination2 is None else destination2.device.index)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\comfy_aimdo\host_buffer.py", line 109, in read_file_slice
+    raise RuntimeError("HostBuffer.read_file_slice failed")
+RuntimeError: HostBuffer.read_file_slice failed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\execution.py", line 550, in execute
+    comfy.model_management.reset_cast_buffers()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\model_management.py", line 1413, in reset_cast_buffers
+    offload_stream.synchronize()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\torch\cuda\streams.py", line 106, in synchronize
+    super().synchronize()
+    ~~~~~~~~~~~~~~~~~~~^^
+torch.AcceleratorError: CUDA error: out of memory
+Search for `cudaErrorMemoryAllocation' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\standalone-env\Lib\threading.py", line 1044, in _bootstrap_inner
+    self.run()
+    ~~~~~~~~^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\standalone-env\Lib\threading.py", line 995, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\main.py", line 372, in prompt_worker
+    e.execute(item[2], prompt_id, extra_data, item[4])
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\execution.py", line 728, in execute
+    asyncio.run(self.execute_async(prompt, prompt_id, extra_data, execute_outputs))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\standalone-env\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\standalone-env\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\standalone-env\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\execution.py", line 789, in execute_async
+    result, error, ex = await execute(self.server, dynamic_prompt, self.caches, node_id, extra_data, executed, prompt_id, execution_list, pending_subgraph_results, pending_async_nodes, ui_node_outputs)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\execution.py", line 645, in execute
+    comfy.model_management.unload_all_models()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\model_management.py", line 2027, in unload_all_models
+    free_memory(1e30, device)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\model_management.py", line 875, in free_memory
+    memory_to_free = 0 if device is None else memory_required - get_free_memory(device)
+                                                                ~~~~~~~~~~~~~~~^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\model_management.py", line 1747, in get_free_memory
+    mem_free_cuda, _ = torch.cuda.mem_get_info(dev)
+                       ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\torch\cuda\memory.py", line 897, in mem_get_info
+    return torch.cuda.cudart().cudaMemGetInfo(device)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+torch.AcceleratorError: CUDA error: out of memory
+Search for `cudaErrorMemoryAllocation' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+[32m[INFO][0m Global interrupt (no prompt_id specified)
+[32m[INFO][0m Global interrupt (no prompt_id specified)
+[32m[INFO][0m Global interrupt (no prompt_id specified)

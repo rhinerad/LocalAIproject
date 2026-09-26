@@ -1,0 +1,4 @@
+[
+  {"id": "pov_interior", "criterion": "The image is an interior hallway or room from a first-person or handheld camcorder point of view, consistent with a liminal backrooms-style space."},
+  {"id": "no_actor_body", "criterion": "No human face or full body is visible; only hands, arms, or legs may appear at the edge of the frame."}
+]
