@@ -123,6 +123,14 @@ def cmd_score(args) -> dict:
             "min": round(float(np.min(vals)), 3) if vals else None, "per_frame": per}
 
 
+def _frames_arg(p: argparse.ArgumentParser) -> None:
+    # Long clips: 180 absolute paths overflow the Windows command line (WinError 206,
+    # CHANGELOG 2026-09-26k), so a list file (one path per line) is accepted too.
+    g = p.add_mutually_exclusive_group(required=True)
+    g.add_argument("--frames", nargs="+")
+    g.add_argument("--frames-file")
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -130,13 +138,16 @@ def main(argv=None) -> int:
     c.add_argument("--image", required=True)
     c.add_argument("--out", required=True)
     f = sub.add_parser("faces")
-    f.add_argument("--frames", nargs="+", required=True)
+    _frames_arg(f)
     s = sub.add_parser("score")
     s.add_argument("--ref", required=True)
-    s.add_argument("--frames", nargs="+", required=True)
+    _frames_arg(s)
     s.add_argument("--rank", type=int, default=0)
     s.add_argument("--people", type=int, default=1)
     args = ap.parse_args(argv)
+    if getattr(args, "frames_file", None):
+        args.frames = [ln.strip() for ln in Path(args.frames_file).read_text(encoding="utf-8").splitlines()
+                       if ln.strip()]
     result = {"crop": cmd_crop, "faces": cmd_faces, "score": cmd_score}[args.cmd](args)
     sys.stdout.write(json.dumps(result) + "\n")
     return 0

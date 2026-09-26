@@ -2831,12 +2831,19 @@ video (`WanFirstLastFrameToVideo`, live peak 13453 MiB). Legacy
           2026-09-26j: `render_video_from_reference` + `video_reference_job_status` built
           and validated end to end (63 frames, verified outputs). Open: measure a longer
           run to raise the 64-frame cap; GVD VRAM profile/promotion; operator likeness check.
+          2026-09-26k: measured 180 frames (15 windows; RAM-bound); cap raised to 180 with a
+          free-RAM refusal. A whole 70 s clip needs ~3x the RAM: sections or more memory.
           2026-09-26d: operator decision — FaceID Plus v2 SDXL weights
           (on disk since 00:55) confirmed, and option (a) Wan 2.2 Animate
           14B approved for download (18.4 GB fp8 e4m3fn scaled KJ).
       Whichever is chosen still needs a pinned API template, a measured local VRAM
       profile, a validation render and GVD promotion before a
       `render_video_from_reference` tool can exist (doc §7). Nothing renders today.
+          2026-09-26l: segment chaining built and measured (opt-in chain=true /
+          segment_seconds; held-frame seam = visible cut, f2f 25.6 vs 2.3 median;
+          RAM is weight-bound ~13-15 GB per segment, not frame-bound). Open: img2img /
+          hybrid seam schemes, the 3-segment run, ram_needed_gb refit - see
+          motion-transfer-chaining-handoff-26l.md and CHANGELOG 2026-09-26l.
 - [ ] Never put a real, identifiable person's likeness into sexual content with
       these tools; the planner does not check inputs for that.
 

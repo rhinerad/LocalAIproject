@@ -1951,6 +1951,12 @@ def render_video_from_reference(args: dict) -> str:
         spec = mtr.prepare_request(_public_args(args))
     except mtr.RenderRequestError as exc:
         raise ToolError(f"render_video_from_reference: {exc}") from exc
+    ram = mtr.ram_check(mtr.ram_frames(spec))  # per segment when chained (2026-09-26l)
+    if not ram["ok"]:
+        raise ToolError(f"render_video_from_reference: not enough free system RAM for {mtr.ram_frames(spec)} "
+                        f"frames{' per segment' if spec.get('chained') else ''} ({ram['available_gb']} GB free, "
+                        f"{ram['needed_gb']} GB needed); close other programs or pass a shorter "
+                        f"{'segment_seconds' if spec.get('chained') else 'max_seconds'}. Nothing was started.")
     sys.path.insert(0, str(ROOT / "work"))
     import image_render
     import router
@@ -1971,7 +1977,9 @@ def render_video_from_reference(args: dict) -> str:
                             f"(pid={existing.get('pid')})")
         gate = gpu_gate.request("ComfyUI motion-transfer video render", source="desktop tool",
                                 detail=f"{Path(spec['reference_video']['path']).name} -> "
-                                       f"{spec['frames']} frames",
+                                       f"{spec['frames']} frames"
+                                       + (f" in {len(spec['segments'])} chained segments"
+                                          if spec.get("chained") else ""),
                                 key=f"motion_transfer:{spec['reference_video']['sha256'][:16]}")
         if not gate.get("granted"):
             if gate.get("blocked"):
@@ -1987,17 +1995,27 @@ def render_video_from_reference(args: dict) -> str:
                                     cwd=str(ROOT), stdout=log, stderr=subprocess.STDOUT, env=env,
                                     creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
         mtr.record_launch(job_dir, proc.pid)
-    minutes = 2 + round(spec["frames"] / 24 * 10)
+    # measured 7-9 s per rendered frame (CHANGELOG 2026-09-26k); a chained job also renders the
+    # held frames of every seam (2026-09-26l)
+    render_min = -(-mtr.rendered_frames(spec) * 9 // 60)
+    chained = bool(spec.get("chained"))
     return json.dumps({
         "started": True, "job_id": job_id, "pid": proc.pid, "job_dir": str(job_dir), "log": str(log_path),
         "frames": spec["frames"], "fps": spec["target_fps"], "windows": spec["windows"],
         "size": f"{spec['width']}x{spec['height']}", "size_measured": spec["size_measured"],
-        "estimated_minutes": f"{minutes}-{minutes + 13}",
+        "chained": chained, "segments": len(spec["segments"]) if chained else 1,
+        "segment_frames": spec.get("segment_frames"), "held_frames": spec.get("held_frames"),
+        "rendered_frames": mtr.rendered_frames(spec),
+        "estimated_minutes": f"{render_min + 2}-{render_min + 15}", "ram": ram,
         "note": ("Running in the background: backend start can take up to ~15 minutes on a cold disk, "
-                 "then roughly 10 minutes per 24 frames. No video exists yet. Call "
+                 "then about 7-9 seconds per frame. No video exists yet. Call "
                  "video_reference_job_status with this job_id; only report a video when it says "
                  "state=complete and verified_outputs=true, and say that likeness and motion still "
-                 "need the operator's own visual check."),
+                 "need the operator's own visual check."
+                 + (" This is a chained job: the segments render one after another on one backend, "
+                    "each seeded from the previous segment's last frames, then they are stitched; the "
+                    "status tool reports segments_done/segments_total and the seam measurements."
+                    if chained else "")),
     }, indent=2)
 
 
@@ -3756,8 +3774,8 @@ TOOLS = {
     "gvd_inventory": (gvd_inventory, "Read-only GVD bootstrap inventory: GPU telemetry, Comfy/Ollama endpoints, node-schema availability. Never downloads or starts ComfyUI."),
     "gvd_route_shot": (gvd_route_shot, 'Deterministic GVD router. {"manifest":{shot_id,continuity_mode,duration_s,width,height,motion_reference_video,requested_engine,...}}. Does not render. MiniMax is the default engine; set requested_engine:"wan" only when the operator names Wan. Returns selected implementation with engine/engine_selection/operator_notice (Wan chosen without being asked is flagged ENGINE_FALLBACK_WAN), or UNAVAILABLE_CAPABILITY with missing_capabilities and the blocked_candidates that could supply them.'),
     "plan_video_from_reference": (plan_video_from_reference, 'Planning only, never renders or downloads: given a reference video and a character still, report which reference-video motion-transfer approaches (Wan 2.2 Animate 14B, Wan 2.1 VACE 1.3B, AnimateDiff SDXL + pose ControlNet + IP-Adapter) this ComfyUI install can run now, exactly which weights or nodes each missing one needs with sizes, the frame plan for the whole clip, and the GVD route decision. {"reference_video":"...","character_image":"...","target_fps":16}'),
-    "render_video_from_reference": (render_video_from_reference, 'ACTUALLY RENDER a reference-video motion transfer: the character still performs the reference clip\'s body motion (AnimateDiff-SDXL + pose ControlNet + IP-Adapter, FaceID face-detail). Starts a BACKGROUND job on a private ComfyUI backend and returns a job_id; nothing exists until video_reference_job_status says state=complete with verified_outputs=true. Desktop only; up to 64 frames per job (8 s at 8 fps; use start_seconds/max_seconds for a section). Requires likeness_attestation=true: the character is fictional or consented, and a real, identifiable person\'s likeness is never put into sexual content. Run plan_video_from_reference first if unsure what is installed. {"reference_video":"...","character_image":"...","prompt":"describe the character and scene","likeness_attestation":true}'),
-    "video_reference_job_status": (video_reference_job_status, 'Read-only: state of a render_video_from_reference job (queued/analysing_inputs/starting_backend/rendering/complete/failed/finished_or_crashed), the final mp4 with sha256 and ffprobe, frame counts vs plan, and a machine identity score. Poll again while running. {"job_id":"mtr_..."}'),
+    "render_video_from_reference": (render_video_from_reference, 'ACTUALLY RENDER a reference-video motion transfer: the character still performs the reference clip\'s body motion (AnimateDiff-SDXL + pose ControlNet + IP-Adapter, FaceID face-detail). Starts a BACKGROUND job on a private ComfyUI backend and returns a job_id; nothing exists until video_reference_job_status says state=complete with verified_outputs=true. Desktop only. One job holds up to 180 frames (22 s at 8 fps, 15 s at 12 fps; needs ~16 GB free RAM at that length); longer requests are refused unless chain=true (or segment_seconds) is passed, which renders up to 600 frames (75 s at 8 fps) as chained segments of 64 frames, each seeded from the previous segment\'s last 4 rendered frames and stitched at the end. EXPERIMENTAL (CHANGELOG 2026-09-26l): every seam between segments is currently a visible cut in lighting/background; identity and pose carry over. Use start_seconds/max_seconds for a section. Requires likeness_attestation=true: the character is fictional or consented, and a real, identifiable person\'s likeness is never put into sexual content. Run plan_video_from_reference first if unsure what is installed. {"reference_video":"...","character_image":"...","prompt":"describe the character and scene","likeness_attestation":true}'),
+    "video_reference_job_status": (video_reference_job_status, 'Read-only: state of a render_video_from_reference job (queued/analysing_inputs/starting_backend/rendering/segment_complete/stitching/complete/failed/finished_or_crashed), the final mp4 with sha256 and ffprobe, frame counts vs plan, and a machine identity score; for a chained job also segments_done/segments_total, per-segment RAM and VRAM peaks, and the seam measurements (frame-to-frame change at each seam vs the clip median). Poll again while running. {"job_id":"mtr_..."}'),
     "execute_narrative_scene": (execute_narrative_scene, 'GVD narrative-scene tool. Plans the stage DAG; live=true submits only with GPU lease. Identity/wardrobe are acceptance criteria. {"manifest":{...},"live":false}'),
     "execute_continuous_take": (execute_continuous_take, 'GVD continuous-take tool. Requires start/context artifacts. live=false plans only. {"manifest":{...},"live":false}'),
     "execute_montage_morph": (execute_montage_morph, 'GVD montage/morph tool. Requires prompt_keyframes. live=false plans only. {"manifest":{...},"live":false}'),
@@ -4551,7 +4569,9 @@ _SCHEMAS: dict[str, dict] = {
                        "description": "Which person in the reference becomes the character (default auto = largest face)"},
             "target_fps": {"type": "number", "description": "Output fps, 4-12 (default 8)"},
             "start_seconds": {"type": "number", "description": "Where in the reference to start (default 0)"},
-            "max_seconds": {"type": "number", "description": "Length to render; at most 64 frames per job"},
+            "max_seconds": {"type": "number", "description": "Length to render (default: to the clip's end); up to 180 frames as one job, up to 600 frames as chained segments"},
+            "segment_seconds": {"type": "number", "description": "Optional: seconds of new frames per chained segment (default 64 frames = 8 s at 8 fps, 5.3 s at 12 fps); setting it forces chaining"},
+            "chain": {"type": "boolean", "description": "Optional: true renders the request as chained segments (experimental, seams are visible cuts); omitted/false = one job, refused over 180 frames"},
             "seed": {"type": "integer", "description": "Sampler seed"},
             "face_detail": {"type": "boolean", "description": "Video face-detail pass (default true)"},
             "likeness_attestation": {"type": "boolean",

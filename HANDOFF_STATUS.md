@@ -9,7 +9,7 @@ Regenerate from the repository root:
 python scripts/write_handoff_status.py
 ```
 
-Generated at: 2026-09-26 10:32:58 Eastern Daylight Time (UTC-04:00) (local)
+Generated at: 2026-09-26 14:03:54 Eastern Daylight Time (UTC-04:00) (local)
 
 `TODO.md` is the execution queue. Lettered `CHANGELOG/` entries are evidence. Farm *procedures* live in `docs/FARM_HEALTH_RUNBOOK.md` and `docs/RUNBOOK.md` — this file points to those runbooks and does **not** duplicate their checklists.
 
@@ -21,6 +21,8 @@ Generated at: 2026-09-26 10:32:58 Eastern Daylight Time (UTC-04:00) (local)
 
 Newest first, so a new agent sees tonight first. Lettered files matching `YYYY-MM-DDx_...` only; same letter-order as `scripts/next_changelog_id.py` (`a` < `b` < … < `z` < `aa`). Same-day duplicate letters both appear, disambiguated by filename. Title is the first markdown `#` heading, else the filename slug.
 
+- 2026-09-26 · `2026-09-26l` · `2026-09-26l_motion_transfer_segment_chaining_seam_investigation.md` — 2026-09-26l — `render_video_from_reference`: segment chaining built (opt-in), the held-frame seam measured as a visible cut, and the 26k "RAM scales with frames" model found wrong (RAM is weight-bound, ~13–15 GB per prompt whatever the length)
+- 2026-09-26 · `2026-09-26k` · `2026-09-26k_render_video_from_reference_measured_180_frames.md` — 2026-09-26k — `render_video_from_reference`: measured a 180-frame (15-window) run; cap raised 64 → 180 with a free-RAM refusal (system RAM, not VRAM, bounds length); fixed the identity check overflowing the Windows command line on long clips
 - 2026-09-26 · `2026-09-26j` · `2026-09-26j_render_video_from_reference_tool.md` — 2026-09-26j — `render_video_from_reference` + `video_reference_job_status` built: background motion-transfer jobs with the measured AnimateDiff/FaceID configuration, automatic face crop and target-person selection, render_story_image's GPU discipline, file-evidence manifests; validated end to end on two real runs
 - 2026-09-26 · `2026-09-26i` · `2026-09-26i_motion_transfer_per_frame_masks_pinned_templates_router_gate.md` — 2026-09-26i — Motion transfer, CPU building blocks: per-frame character masks from DWPose keypoints (replaces the static left-half mask and "leftmost face" rule), pinned two-stage API templates + builder, a router gate so the row can only serve motion-reference shots, and the `animatediff_pose` promotion family registered; smoke/promotion **not run** because the motion-transfer session came back mid-build and owns the GPU
 - 2026-09-26 · `2026-09-26h` · `2026-09-26h_wan22_animate_14b_weights_downloaded_verified.md` — 2026-09-26h — Wan 2.2 Animate 14B fp8 weights downloaded with operator approval (18,401,760,586 B, sha256 verified against the Hub LFS oid); nothing loaded, no template, no profile, catalog row still disabled
@@ -34,8 +36,6 @@ Newest first, so a new agent sees tonight first. Lettered files matching `YYYY-M
 - 2026-09-25 · `2026-09-25u` · `2026-09-25u_advanced_controlnet_installed_multiwindow_clips_render.md` — 2026-09-25u — ComfyUI-Advanced-ControlNet installed (operator approval); 24-frame, two-window AnimateDiff-SDXL motion-transfer clips now render upright and follow the reference motion; identity drift is the remaining blocker
 - 2026-09-25 · `2026-09-25t` · `2026-09-25t_motion_transfer_inversion_root_cause_face_hand_keypoints.md` — 2026-09-25t — Motion transfer: the upside-down AnimateDiff-SDXL output is root-caused (DWPose face + hand keypoints drawn together, which xinsir's union model never saw); with face keypoints off, one 16-frame window renders upright and follows the reference motion
 - 2026-09-25 · `2026-09-25s` · `2026-09-25s_motion_transfer_stage1_depth_and_animatediff_single_window_proof.md` — 2026-09-25s — Motion transfer follow-up: depth maps + node schemas proven; real AnimateDiff-SDXL single-window generations ran and came out upside down; seven ablations pin the inversion on the union-promax ControlNet path (unresolved); the AnimateDiff path is one node pack short for multi-window clips
-- 2026-09-25 · `2026-09-25q` · `2026-09-25q_queued_analysis_honesty_and_motion_transfer_plan.md` — 2026-09-25q — A queued analysis followed by a silent model now ends in an honest progress report (with a way to fetch the queued result); reference-video motion transfer investigated, routed honestly, planned read-only, stage 1 proven
-- 2026-09-25 · `2026-09-25p` · `2026-09-25p_scope_guard_regenerate_status_and_refused_tool_honesty.md` — 2026-09-25p — Stale specialist-scope guard: "regenerate that one" / "status" now continue this chat's own real render work, and a refused specialist tool can no longer be followed by a model narration that it ran
 
 ---
 

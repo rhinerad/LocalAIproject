@@ -156,8 +156,11 @@ APPROACHES: list[dict[str, Any]] = [
                 "similarity to the reference ~4x without changing body, hair or scene; "
                 "used on the main pass it scores highest but enlarges the head and "
                 "caricatures the face (CHANGELOG 2026-09-26g). render_video_from_reference "
-                "runs this configuration as a background job, up to 64 frames per job "
-                "(CHANGELOG 2026-09-26j)."),
+                "runs this configuration as a background job, up to 180 frames per job, "
+                "bounded by free system RAM (~16 GB for 180 frames; CHANGELOG "
+                "2026-09-26j/k); chain=true renders longer requests as chained 64-frame "
+                "segments, but the seam between segments is currently a visible cut "
+                "(experimental, CHANGELOG 2026-09-26l)."),
         "nodes": ("ComfyUI-AnimateDiff-Evolved", "comfyui_controlnet_aux",
                   "comfyui_ipadapter_plus", "ComfyUI-VideoHelperSuite",
                   "ComfyUI-Advanced-ControlNet"),

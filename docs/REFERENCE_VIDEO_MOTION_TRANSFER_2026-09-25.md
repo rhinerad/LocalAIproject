@@ -358,10 +358,26 @@ pinned graph, the job runner), `local_agent/motion_transfer_faces.py`
   temperature, and an ArcFace identity score with its caveat.
   `verified_outputs` is true only if every count equals the plan. Nothing is
   marked accepted.
-- **Limits:** at most **64 frames per job** (8 s at 8 fps; `start_seconds` /
-  `max_seconds` choose a section). The limit rises only after a measured
-  longer run. Separate sections do not share a scene, so stitching them is not
-  continuous. Faces in pictures count as people, though the target stayed
+- **Limits:** at most **180 frames per job** (22.5 s at 8 fps, 15 s at 12 fps;
+  `start_seconds` / `max_seconds` choose a section), measured 2026-09-26k:
+  180 frames took 21 min render, peak VRAM 15 881 MiB (flat with length),
+  74 C, **system RAM +14.4 GB** (29.8 of 30.9 GB used). RAM is the binding
+  limit, so the tool and the job refuse when free RAM is below the scaled
+  need (15.9 GB at 180 frames). A 70 s clip at 8 fps (≈565 frames) would
+  need about 3× that and does not fit one job on this machine. Separate
+  sections do not share a scene, so stitching them is not continuous.
+  Across 15 windows the background lighting drifts, though identity held.
+  **Segment chaining (2026-09-26l, experimental, opt-in with `chain: true` or
+  `segment_seconds`):** a request longer than one job can be rendered as chained
+  segments of 64 new frames on one backend, each segment re-rendering the previous
+  segment's last 4 output frames pinned by a latent noise mask, then stitched
+  (`final_chained.mp4`, per-segment manifests, seam measurements). Measured on a
+  2-segment run: the held frames survive (round trip 1.3/255) and identity carries
+  over, but the first new frame after the seam is a visible cut in lighting and
+  background (frame-to-frame change 25.6 vs a 2.3 median), worse than the
+  single-job window blend (max 11.3). RAM per segment is fixed by the weights
+  (~13-15 GB over baseline at 24-28 frames), not by the frame count. Not a
+  continuous long clip yet; see the changelog for the open investigation. Faces in pictures count as people, though the target stayed
   correct in the validation. Untargeted people are not controlled (their look
   can drift). Identity can soften in the last window. Output is 8 fps, with no
   audio.
