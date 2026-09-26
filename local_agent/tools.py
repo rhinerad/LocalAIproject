@@ -1933,6 +1933,83 @@ def plan_video_from_reference(args: dict) -> str:
     return json.dumps(result, indent=2, ensure_ascii=False)
 
 
+def render_video_from_reference(args: dict) -> str:
+    """ACTUALLY RENDER a reference-video motion transfer in the BACKGROUND.
+
+    The character still's identity performs the reference clip's body motion
+    (AnimateDiff-SDXL + union-promax pose ControlNet + IP-Adapter, FaceID in a
+    video face-detail pass; motion_transfer_render.py). Same discipline as
+    render_story_image: router.gpu_busy / Equal Shares owner / port 8188 /
+    live image owner refusals and the gpu_gate approval under
+    _IMAGE_RENDER_LAUNCH_LOCK, then one background job that owns one private
+    backend. Desktop only. Returns a job_id immediately; nothing exists yet.
+    """
+    if args.get("__remote_render_identity"):
+        raise ToolError("render_video_from_reference is desktop-only; no render was started")
+    import motion_transfer_render as mtr
+    try:
+        spec = mtr.prepare_request(_public_args(args))
+    except mtr.RenderRequestError as exc:
+        raise ToolError(f"render_video_from_reference: {exc}") from exc
+    sys.path.insert(0, str(ROOT / "work"))
+    import image_render
+    import router
+    import gpu_gate
+    with _IMAGE_RENDER_LAUNCH_LOCK:
+        busy, reason, detail = router.gpu_busy()
+        if busy:
+            if isinstance(detail, dict) and detail.get("comfy_port_8188") == "listening":
+                raise _port_8188_refusal()
+            raise ToolError(f"motion-transfer preflight refused: {reason}")
+        if image_render._live_owner():
+            raise ToolError("motion-transfer preflight refused: an Equal Shares render owns the GPU")
+        if image_render._port_open():
+            raise _port_8188_refusal()
+        existing = _image_owner_snapshot()
+        if _pid_is_live(existing.get("pid")):
+            raise ToolError("motion-transfer preflight refused: another render owns the backend "
+                            f"(pid={existing.get('pid')})")
+        gate = gpu_gate.request("ComfyUI motion-transfer video render", source="desktop tool",
+                                detail=f"{Path(spec['reference_video']['path']).name} -> "
+                                       f"{spec['frames']} frames",
+                                key=f"motion_transfer:{spec['reference_video']['sha256'][:16]}")
+        if not gate.get("granted"):
+            if gate.get("blocked"):
+                raise ToolError("GPU gateway is set to Block; no video render was started")
+            raise ToolError("GPU permission pending in the sidebar; approve the video render once, then retry")
+        job_id, job_dir = mtr.new_job(spec)
+        log_path = job_dir / "runner.log"
+        env = os.environ.copy()
+        env["PYTHONUTF8"] = "1"
+        env["PYTHONIOENCODING"] = "utf-8"
+        with log_path.open("ab") as log:
+            proc = subprocess.Popen([PY, str(Path(mtr.__file__).resolve()), "--job-dir", str(job_dir)],
+                                    cwd=str(ROOT), stdout=log, stderr=subprocess.STDOUT, env=env,
+                                    creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+        mtr.record_launch(job_dir, proc.pid)
+    minutes = 2 + round(spec["frames"] / 24 * 10)
+    return json.dumps({
+        "started": True, "job_id": job_id, "pid": proc.pid, "job_dir": str(job_dir), "log": str(log_path),
+        "frames": spec["frames"], "fps": spec["target_fps"], "windows": spec["windows"],
+        "size": f"{spec['width']}x{spec['height']}", "size_measured": spec["size_measured"],
+        "estimated_minutes": f"{minutes}-{minutes + 13}",
+        "note": ("Running in the background: backend start can take up to ~15 minutes on a cold disk, "
+                 "then roughly 10 minutes per 24 frames. No video exists yet. Call "
+                 "video_reference_job_status with this job_id; only report a video when it says "
+                 "state=complete and verified_outputs=true, and say that likeness and motion still "
+                 "need the operator's own visual check."),
+    }, indent=2)
+
+
+def video_reference_job_status(args: dict) -> str:
+    """Read-only: state, evidence and identity score of a render_video_from_reference job."""
+    import motion_transfer_render as mtr
+    try:
+        return json.dumps(mtr.job_status(str(args.get("job_id") or "")), indent=2, ensure_ascii=False)
+    except mtr.RenderRequestError as exc:
+        raise ToolError(str(exc)) from exc
+
+
 def _media_job_view(job: dict, *, full_result: bool) -> dict:
     status = str(job.get("status") or "")
     a = job.get("args") or {}
@@ -3679,6 +3756,8 @@ TOOLS = {
     "gvd_inventory": (gvd_inventory, "Read-only GVD bootstrap inventory: GPU telemetry, Comfy/Ollama endpoints, node-schema availability. Never downloads or starts ComfyUI."),
     "gvd_route_shot": (gvd_route_shot, 'Deterministic GVD router. {"manifest":{shot_id,continuity_mode,duration_s,width,height,motion_reference_video,requested_engine,...}}. Does not render. MiniMax is the default engine; set requested_engine:"wan" only when the operator names Wan. Returns selected implementation with engine/engine_selection/operator_notice (Wan chosen without being asked is flagged ENGINE_FALLBACK_WAN), or UNAVAILABLE_CAPABILITY with missing_capabilities and the blocked_candidates that could supply them.'),
     "plan_video_from_reference": (plan_video_from_reference, 'Planning only, never renders or downloads: given a reference video and a character still, report which reference-video motion-transfer approaches (Wan 2.2 Animate 14B, Wan 2.1 VACE 1.3B, AnimateDiff SDXL + pose ControlNet + IP-Adapter) this ComfyUI install can run now, exactly which weights or nodes each missing one needs with sizes, the frame plan for the whole clip, and the GVD route decision. {"reference_video":"...","character_image":"...","target_fps":16}'),
+    "render_video_from_reference": (render_video_from_reference, 'ACTUALLY RENDER a reference-video motion transfer: the character still performs the reference clip\'s body motion (AnimateDiff-SDXL + pose ControlNet + IP-Adapter, FaceID face-detail). Starts a BACKGROUND job on a private ComfyUI backend and returns a job_id; nothing exists until video_reference_job_status says state=complete with verified_outputs=true. Desktop only; up to 64 frames per job (8 s at 8 fps; use start_seconds/max_seconds for a section). Requires likeness_attestation=true: the character is fictional or consented, and a real, identifiable person\'s likeness is never put into sexual content. Run plan_video_from_reference first if unsure what is installed. {"reference_video":"...","character_image":"...","prompt":"describe the character and scene","likeness_attestation":true}'),
+    "video_reference_job_status": (video_reference_job_status, 'Read-only: state of a render_video_from_reference job (queued/analysing_inputs/starting_backend/rendering/complete/failed/finished_or_crashed), the final mp4 with sha256 and ffprobe, frame counts vs plan, and a machine identity score. Poll again while running. {"job_id":"mtr_..."}'),
     "execute_narrative_scene": (execute_narrative_scene, 'GVD narrative-scene tool. Plans the stage DAG; live=true submits only with GPU lease. Identity/wardrobe are acceptance criteria. {"manifest":{...},"live":false}'),
     "execute_continuous_take": (execute_continuous_take, 'GVD continuous-take tool. Requires start/context artifacts. live=false plans only. {"manifest":{...},"live":false}'),
     "execute_montage_morph": (execute_montage_morph, 'GVD montage/morph tool. Requires prompt_keyframes. live=false plans only. {"manifest":{...},"live":false}'),
@@ -3743,6 +3822,7 @@ CONCURRENCY_SAFE_TOOLS = frozenset({
     "gvd_inventory", "gvd_route_shot", "discover_workflows",
     "gvd_family_status", "gvd_plan_shot", "gvd_quality_gate",
     "plan_video_from_reference",
+    "video_reference_job_status",
 })
 
 # Virtual compact-profile tools. Not members of TOOLS; schemas(profile="gpu")
@@ -3795,6 +3875,8 @@ _TOOL_CATEGORY: dict[str, str] = {
     "discover_workflows": "gvd", "gvd_plan_shot": "gvd", "gvd_family_status": "gvd",
     "synthesize_dialogue": "gvd", "apply_lipsync": "gvd", "repair_video": "gvd",
     "plan_video_from_reference": "gvd",
+    "render_video_from_reference": "gvd",
+    "video_reference_job_status": "gvd",
     "assemble_scene": "gvd", "gvd_quality_gate": "gvd",
     "gvd_qa_evaluate": "gvd", "gvd_qa_attach_wd14": "gvd", "gvd_qa_loop": "gvd",
     "gvd_qa_accepted_still": "gvd", "gvd_qa_activation": "gvd",
@@ -4457,6 +4539,31 @@ _SCHEMAS: dict[str, dict] = {
         },
         "required": ["path"],
     },
+    "render_video_from_reference": {
+        "type": "object",
+        "properties": {
+            "reference_video": {"type": "string", "description": "Local path of the clip whose body motion to reuse"},
+            "character_image": {"type": "string", "description": "Local path of the character still (a clear face works best)"},
+            "prompt": {"type": "string", "description": "Describe the character (clothes, hair) and the scene to generate"},
+            "negative": {"type": "string", "description": "Optional negative prompt"},
+            "face_prompt": {"type": "string", "description": "Optional prompt for the face-detail pass"},
+            "target": {"type": "string", "enum": ["auto", "largest", "left", "right", "center"],
+                       "description": "Which person in the reference becomes the character (default auto = largest face)"},
+            "target_fps": {"type": "number", "description": "Output fps, 4-12 (default 8)"},
+            "start_seconds": {"type": "number", "description": "Where in the reference to start (default 0)"},
+            "max_seconds": {"type": "number", "description": "Length to render; at most 64 frames per job"},
+            "seed": {"type": "integer", "description": "Sampler seed"},
+            "face_detail": {"type": "boolean", "description": "Video face-detail pass (default true)"},
+            "likeness_attestation": {"type": "boolean",
+                                     "description": "Must be true: character is fictional or consented; never a real person's likeness in sexual content"},
+        },
+        "required": ["reference_video", "character_image", "prompt", "likeness_attestation"],
+    },
+    "video_reference_job_status": {
+        "type": "object",
+        "properties": {"job_id": {"type": "string", "description": "mtr_... id returned by render_video_from_reference"}},
+        "required": ["job_id"],
+    },
     "plan_video_from_reference": {
         "type": "object",
         "properties": {
@@ -4916,6 +5023,7 @@ _CONVERSATION_BOUND_TOOLS = frozenset({
 })
 _REMOTE_GPU_TOOLS = frozenset({
     "start_batch_render",
+    "render_video_from_reference",
     "start_current_chat_render",
     "render_story_image",
     "render_story_image_batch",

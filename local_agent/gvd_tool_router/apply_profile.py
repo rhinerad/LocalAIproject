@@ -24,6 +24,7 @@ from gvd_tool_router.schema import (
     CAPABILITY_INPAINT,
     CAPABILITY_LIPSYNC,
     CAPABILITY_MONTAGE,
+    CAPABILITY_MOTION_REFERENCE,
     CAPABILITY_STILL,
     CAPABILITY_TTS,
     CAPABILITY_VIDEO_CONTEXT,
@@ -55,6 +56,7 @@ FAMILY_IMPL = {
     "h3v2": "fasth3_v2_unvalidated",
     "wan8": "wan22_i2v_8step_unvalidated",
     "tile_video": "wan21_tile_video_unvalidated",
+    "animatediff_pose": "animatediff_sdxl_pose_ipadapter_unvalidated",
 }
 
 FAMILY_GRAPH = {
@@ -72,6 +74,9 @@ FAMILY_GRAPH = {
     "h3v2": ("h3_fasth3_v2_smoke.api.json", "fasth3_v2", ("4", "6"), "11"),
     "wan8": ("wan_i2v_8step_smoke.api.json", "wan_8step", ("3", "7"), "9"),
     "tile_video": ("wan_tile_video_smoke.api.json", "wan_tile_video", ("36", "40"), "42"),
+    # Reference-video motion transfer (2026-09-26): prompt = node 16 text, seed =
+    # KSampler 22, deliverable = the face-detailed mp4 from VHS_VideoCombine 49.
+    "animatediff_pose": ("animatediff_pose_smoke.api.json", "animatediff_sdxl_pose", ("16", "22"), "49"),
 }
 
 FAMILY_CAPS = {
@@ -89,6 +94,7 @@ FAMILY_CAPS = {
     "h3v2": frozenset({CAPABILITY_FAST}),
     "wan8": frozenset({CAPABILITY_CONTINUATION, CAPABILITY_FIRST_FRAME, CAPABILITY_VIDEO_CONTEXT}),
     "tile_video": frozenset({CAPABILITY_STILL, CAPABILITY_VIDEO_CONTEXT}),
+    "animatediff_pose": frozenset({CAPABILITY_MOTION_REFERENCE, CAPABILITY_IDENTITY, CAPABILITY_NARRATIVE}),
 }
 
 
@@ -171,6 +177,8 @@ def main() -> int:
                 if family == "f5"
                 else OutputBinding("video", out_id, "Filenames", "video/mp4")
                 if family == "tile_video"
+                else OutputBinding("video", out_id, "gifs", "video/mp4")
+                if family == "animatediff_pose"
                 else OutputBinding("image", out_id, "images", "image/png")
             ),
             model_family_key=family_key,
@@ -185,7 +193,7 @@ def main() -> int:
         "family": family,
         "smoke_report": args.report,
         "peak_gpu_mib": int(peak),
-        "allow_new_nodes": family in {"ltx", "h3", "montage", "tiled", "propainter", "f5", "musetalk", "wan_dual", "longcat", "h3v2", "wan8", "tile_video"},
+        "allow_new_nodes": family in {"ltx", "h3", "montage", "tiled", "propainter", "f5", "musetalk", "wan_dual", "longcat", "h3v2", "wan8", "tile_video", "animatediff_pose"},
     })
     validation = sha256_json({"report": report.get("prompt_id"), "peak": int(peak)})
     updated = replace(
@@ -196,8 +204,8 @@ def main() -> int:
         validation_report_sha256=validation,
         disabled_reason=None,
         quality_scores={
-            "identity": {"ltx": 0.2, "still": 0.4, "ipadapter": 0.7, "wan": 0.3, "h3": 0.2, "montage": 0.3, "tiled": 0.4, "propainter": 0.2, "f5": 0.1, "musetalk": 0.6, "wan_dual": 0.3, "longcat": 0.3}.get(family, 0.3),
-            "motion": {"ltx": 0.6, "still": 0.1, "ipadapter": 0.1, "wan": 0.7, "h3": 0.6, "montage": 0.7, "tiled": 0.1, "propainter": 0.3, "f5": 0.1, "musetalk": 0.4, "wan_dual": 0.75, "longcat": 0.7}.get(family, 0.3),
+            "identity": {"ltx": 0.2, "still": 0.4, "ipadapter": 0.7, "wan": 0.3, "h3": 0.2, "montage": 0.3, "tiled": 0.4, "propainter": 0.2, "f5": 0.1, "musetalk": 0.6, "wan_dual": 0.3, "longcat": 0.3, "animatediff_pose": 0.5}.get(family, 0.3),
+            "motion": {"ltx": 0.6, "still": 0.1, "ipadapter": 0.1, "wan": 0.7, "h3": 0.6, "montage": 0.7, "tiled": 0.1, "propainter": 0.3, "f5": 0.1, "musetalk": 0.4, "wan_dual": 0.75, "longcat": 0.7, "animatediff_pose": 0.6}.get(family, 0.3),
             "style": 0.4,
             "audio": 0.1,
             "reliability": 0.7,

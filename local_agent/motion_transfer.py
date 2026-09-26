@@ -155,7 +155,9 @@ APPROACHES: list[dict[str, Any]] = [
                 "licence); used only inside the face-detail pass it raises ArcFace "
                 "similarity to the reference ~4x without changing body, hair or scene; "
                 "used on the main pass it scores highest but enlarges the head and "
-                "caricatures the face (CHANGELOG 2026-09-26g)."),
+                "caricatures the face (CHANGELOG 2026-09-26g). render_video_from_reference "
+                "runs this configuration as a background job, up to 64 frames per job "
+                "(CHANGELOG 2026-09-26j)."),
         "nodes": ("ComfyUI-AnimateDiff-Evolved", "comfyui_controlnet_aux",
                   "comfyui_ipadapter_plus", "ComfyUI-VideoHelperSuite",
                   "ComfyUI-Advanced-ControlNet"),

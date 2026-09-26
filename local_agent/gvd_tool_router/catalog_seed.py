@@ -354,10 +354,16 @@ def seed_implementations(graph_bytes: bytes | None = None) -> list[ToolImplement
                     "late frames without flicker, faces stay soft at 768x448 (2026-09-26a); "
                     "FaceID Plus V2 in the detail pass raises identity similarity ~4x "
                     "(2026-09-26g); "
-                    "no pinned API template and no local VRAM profile yet"),
+                    "pinned two-stage API templates and per-frame character masks exist "
+                    "(local_agent/graphs/motion_transfer_animatediff_*, 2026-09-26); "
+                    "no local VRAM profile yet"),
             provenance=("https://github.com/Kosinkadink/ComfyUI-AnimateDiff-Evolved",
                         "https://github.com/Fannovel16/comfyui_controlnet_aux",
                         "https://github.com/cubiq/ComfyUI_IPAdapter_plus"),
+            # Only shots that carry a motion reference may select this row
+            # (router._compatible, 2026-09-26): it offers identity + narrative
+            # too, but its template renders nothing without a reference clip.
+            extra_limits={"requires_capabilities": [CAPABILITY_MOTION_REFERENCE]},
         ),
         known_good_still_implementation(graph_bytes),
         _disabled(

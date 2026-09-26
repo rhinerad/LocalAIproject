@@ -9,7 +9,7 @@ Regenerate from the repository root:
 python scripts/write_handoff_status.py
 ```
 
-Generated at: 2026-09-26 01:30:14 Eastern Daylight Time (UTC-04:00) (local)
+Generated at: 2026-09-26 10:32:58 Eastern Daylight Time (UTC-04:00) (local)
 
 `TODO.md` is the execution queue. Lettered `CHANGELOG/` entries are evidence. Farm *procedures* live in `docs/FARM_HEALTH_RUNBOOK.md` and `docs/RUNBOOK.md` — this file points to those runbooks and does **not** duplicate their checklists.
 
@@ -21,6 +21,13 @@ Generated at: 2026-09-26 01:30:14 Eastern Daylight Time (UTC-04:00) (local)
 
 Newest first, so a new agent sees tonight first. Lettered files matching `YYYY-MM-DDx_...` only; same letter-order as `scripts/next_changelog_id.py` (`a` < `b` < … < `z` < `aa`). Same-day duplicate letters both appear, disambiguated by filename. Title is the first markdown `#` heading, else the filename slug.
 
+- 2026-09-26 · `2026-09-26j` · `2026-09-26j_render_video_from_reference_tool.md` — 2026-09-26j — `render_video_from_reference` + `video_reference_job_status` built: background motion-transfer jobs with the measured AnimateDiff/FaceID configuration, automatic face crop and target-person selection, render_story_image's GPU discipline, file-evidence manifests; validated end to end on two real runs
+- 2026-09-26 · `2026-09-26i` · `2026-09-26i_motion_transfer_per_frame_masks_pinned_templates_router_gate.md` — 2026-09-26i — Motion transfer, CPU building blocks: per-frame character masks from DWPose keypoints (replaces the static left-half mask and "leftmost face" rule), pinned two-stage API templates + builder, a router gate so the row can only serve motion-reference shots, and the `animatediff_pose` promotion family registered; smoke/promotion **not run** because the motion-transfer session came back mid-build and owns the GPU
+- 2026-09-26 · `2026-09-26h` · `2026-09-26h_wan22_animate_14b_weights_downloaded_verified.md` — 2026-09-26h — Wan 2.2 Animate 14B fp8 weights downloaded with operator approval (18,401,760,586 B, sha256 verified against the Hub LFS oid); nothing loaded, no template, no profile, catalog row still disabled
+- 2026-09-26 · `2026-09-26g` · `2026-09-26g_motion_transfer_faceid_plusv2_installed_and_measured.md` — 2026-09-26g — Motion transfer: IP-Adapter FaceID Plus V2 (SDXL) downloaded and installed with operator approval (five items, all hash-verified); FaceID used only inside the video face-detail pass is the best balance (ArcFace identity 0.173 vs 0.040, body/scene unchanged); FaceID on the main pass scores highest but enlarges the head and caricatures the face
+- 2026-09-26 · `2026-09-26f` · `2026-09-26f_gvd_router_honest_failures_reach_chat.md` — 2026-09-26f — GVD router "ask, don't guess" verified and closed: the honest-failure statuses now end the chat turn with a fixed, specific question; before this the operator saw the model's narration ("rendering has started") over a blocked route
+- 2026-09-26 · `2026-09-26e` · `2026-09-26e_backrooms_motion_table_relaxed_and_stale_video_gates_closed.md` — 2026-09-26e — Backrooms motion-keyword table relaxed (word-bounded vocabulary with a negation floor; row 265's wording now renders) and 22 stale "do not start videos" TODO lines closed against 2026-09-22j
+- 2026-09-26 · `2026-09-26d` · `2026-09-26d_roadmap_phase1_operator_decisions.md` — 2026-09-26d — Roadmap Phase 1: the four Section-A operator decisions, decided in chat; Phase 2a found already landed (26b); motion-transfer session observed mid-render and left alone
 - 2026-09-26 · `2026-09-26b` · `2026-09-26b_gvd_router_minimax_first_wan_fallback_policy.md` — 2026-09-26b — GVD tool router: MiniMax-first engine policy, Wan only by request or as an announced last resort
 - 2026-09-26 · `2026-09-26a` · `2026-09-26a_motion_transfer_video_face_detail_pass.md` — 2026-09-26a — Motion transfer: an Impact Pack video face-detail pass on the AnimateDiff clip; no added flicker (measured), late frames move toward the reference at denoise 0.5; faces stay soft because they are ~60 px at 768×448
 - 2026-09-25 · `2026-09-25v` · `2026-09-25v_motion_transfer_identity_face_crop_and_mask.md` — 2026-09-25v — Motion transfer identity, no download: a tight face crop of the character still fixes the 24-frame identity drift; an IP-Adapter attention mask confines colour bleed; adapter strength makes no difference; late-clip softening remains
@@ -29,46 +36,25 @@ Newest first, so a new agent sees tonight first. Lettered files matching `YYYY-M
 - 2026-09-25 · `2026-09-25s` · `2026-09-25s_motion_transfer_stage1_depth_and_animatediff_single_window_proof.md` — 2026-09-25s — Motion transfer follow-up: depth maps + node schemas proven; real AnimateDiff-SDXL single-window generations ran and came out upside down; seven ablations pin the inversion on the union-promax ControlNet path (unresolved); the AnimateDiff path is one node pack short for multi-window clips
 - 2026-09-25 · `2026-09-25q` · `2026-09-25q_queued_analysis_honesty_and_motion_transfer_plan.md` — 2026-09-25q — A queued analysis followed by a silent model now ends in an honest progress report (with a way to fetch the queued result); reference-video motion transfer investigated, routed honestly, planned read-only, stage 1 proven
 - 2026-09-25 · `2026-09-25p` · `2026-09-25p_scope_guard_regenerate_status_and_refused_tool_honesty.md` — 2026-09-25p — Stale specialist-scope guard: "regenerate that one" / "status" now continue this chat's own real render work, and a refused specialist tool can no longer be followed by a model narration that it ran
-- 2026-09-25 · `2026-09-25o` · `2026-09-25o_gvd_judge_cold_prefill_rebaseline.md` — 2026-09-25o — GVD judge: cold prefill on every call (`cache_prompt: false`); re-baselined, byte-identical to the 25n cold measurements and to the live rows
-- 2026-09-25 · `2026-09-25n` · `2026-09-25n_gvd_judge_nondeterminism_is_cache_state.md` — 2026-09-25n — GVD judge non-determinism, measured: a deterministic judge whose answer depends on llama-server's prompt-cache state; the live metric judges cold, the eval runner has judged warm since 24q
-- 2026-09-25 · `2026-09-25l` · `2026-09-25l_gvd_judge_measured_turn_not_a_cut.md` — 2026-09-25l — GVD judge: a measured camera turn is not a cut (estimator readings over the sampled-frame gaps, marked in the user prompt)
-- 2026-09-25 · `2026-09-25k` · `2026-09-25k_gvd_judge_retry_when_scores_missing.md` — 2026-09-25k — GVD judge: one retry when the answer arrives without the three scores
-- 2026-09-25 · `2026-09-25j` · `2026-09-25j_mechanical_gate_before_render.md` — 2026-09-25j — GVD live metric: the mechanical gate runs before the render
-- 2026-09-25 · `2026-09-25i` · `2026-09-25i_gvd_live_mipro_validation_pass.md` — 2026-09-25i — first live MIPRO pass with every 24q–25h judge change active (4 rows, 0.80 bar, 0.10 floor)
-- 2026-09-25 · `2026-09-25h` · `2026-09-25h_gvd_judge_flicker_not_a_cut.md` — 2026-09-25h — GVD judge: a requested flicker is not a cut (CPU dip rule, dark-frame annotation, prompt rule)
 
 ---
 
 ## 2. Open TODO.md items
 
-88 open items (`[ ]` or `[~]`; closed `[x]` omitted). Checkbox lines copied verbatim from `TODO.md` (first line of each item only — wrapped continuations omitted):
+73 open items (`[ ]` or `[~]`; closed `[x]` omitted). Checkbox lines copied verbatim from `TODO.md` (first line of each item only — wrapped continuations omitted):
 
+- [ ] `catalog_seed.py` row `wan22_animate_14b_unvalidated` and doc §3c still
+- [ ] Still QA (`creative_still_qa.creative_approve`): **add a prompt-content
+- [ ] D02 `614e` judge miss: **open a follow-up investigation** — a brief-free
+- [ ] The running GUI `server.py` loads the old `agent.py` until restarted;
+- [ ] Notices are not appended on the hop-limit or empty-completion reply
+- [ ] Fixture `gvd_tool_router/fixtures/animatediff_pose_smoke.api.json` from
+- [ ] Receipt-gated smoke on the owned backend (`smoke_measure --family
+- [ ] Decide whether the worker adopts the per-frame masks (the worker uses a
 - [ ] Subject spanning the whole frame vs camera move: needs parallax
-- [ ] Whether to relax the Backrooms motion-keyword table: the prompt row
 - [ ] Judge misses still open: D02 `614e` (rig read as viewpoint), D02
 - [ ] With the current judge every clip's minimum axis is ≤ 0.40 or ≥ 0.80,
-- [ ] Do not start videos.
-- [ ] Run and review the one bounded C026 recovery. Do not start videos.
-- [ ] Next: C026 start Mode B recovery. Do not start videos.
-- [ ] Do not start videos.
-- [ ] Do not start videos.
-- [ ] Do not start videos.
-- [ ] Do not start videos.
-- [ ] Do not start videos.
-- [ ] Do not start videos.
-- [ ] Do not start videos.
-- [ ] Do not start videos.
-- [ ] Do not start videos.
-- [ ] Do not start videos.
-- [ ] Do not start videos.
-- [ ] Do not start videos.
-- [ ] Do not start videos.
-- [ ] Do not start videos.
-- [ ] Do not start videos.
-- [ ] Do not start videos.
-- [ ] Do not start videos.
 - [ ] Operator visually reviews and explicitly accepts or rejects that exact
-- [ ] Formal hash-bound approval of the complete 204-still set remains pending;
 - [ ] Operator reviews worksheet keep/replace notes (notes are NOT approval) and explicitly approves or replaces pairs.
 - [ ] TurboSparse remains parked â€” do not dump/train/convert/bench/register from this draft.
 - [ ] Semantic QA is not run. Implement/execute review through the installed exact
@@ -79,7 +65,6 @@ Newest first, so a new agent sees tonight first. Lettered files matching `YYYY-M
 - [ ] Full 18-clip Flux sheet after operator paste + review gate (VRAM: t5xxl_fp16 + ~12GB UNet on 16GB â€” expect slow / sequential only)
 - [ ] After Rhine restarts: regenerate or continue on chat d98731129ac743ac and confirm render/plan no longer stale-blocked
 - [ ] After Rhine restarts: hard-refresh GUI and verify Stop returns Send mid-turn
-- [ ] WAITING operator sidebar approve **gpu_a38b751666c5** then retry Flux smoke PNG
 - [ ] **Task 1 â€” Evaluate PowerInfer architecture (resume, don't restart).
 - [ ] **Task 2 â€” Evaluate TinyEngine architecture â€” researched 2026-09-02,
 1. [ ] **KV cache quantization** â€” BLOCKED by Phase 1. Update the chosen

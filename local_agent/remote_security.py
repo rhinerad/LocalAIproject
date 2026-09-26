@@ -96,6 +96,8 @@ GATED_REMOTE_TOOLS = frozenset({
     "start_current_chat_render",
     "render_story_image",
     "render_story_image_batch",
+    "render_video_from_reference",
+    "video_reference_job_status",
     "stop_all_comfyui",
     "comfy_generate",
     "comfy_workflow",

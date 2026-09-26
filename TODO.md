@@ -22,10 +22,16 @@ Four roadmap Section-A items decided in chat on 2026-09-26 (evidence:
       `ComfyUI-Shared/models/diffusion_models/`; optional relight LoRA
       `LoRAs/Wan22_relight/WanAnimate_relight_lora_fp16.safetensors` (1.44 GB)
       from `Kijai/WanVideo_comfy`. Wan 2.1 VACE not approved.
-- [ ] Run that download only while no render owns the GPU/drive (the
+- [x] Run that download only while no render owns the GPU/drive (the
       motion-transfer session was mid-render when decided); verify size and
       sha256 against the Hub LFS metadata; never load it without a pinned
-      template + measured VRAM profile (doc §7).
+      template + measured VRAM profile (doc §7). Done 2026-09-26h: on disk,
+      18,401,760,586 B, sha256 `2936b314…5b8e6` = Hub LFS oid, 0 render
+      pauses; relight LoRA not fetched. Nothing loaded or promoted.
+- [ ] `catalog_seed.py` row `wan22_animate_14b_unvalidated` and doc §3c still
+      say the Animate weights are missing; update the text (row stays
+      disabled until template + measured profile + promotion). Left for the
+      motion-transfer session, which owns those anchored edits. 2026-09-26h.
 - [x] Backrooms motion-keyword table: **relax** (implemented under Phase 2b;
       see the GVD judge section item below).
 - [ ] Still QA (`creative_still_qa.creative_approve`): **add a prompt-content
@@ -36,6 +42,55 @@ Four roadmap Section-A items decided in chat on 2026-09-26 (evidence:
       "list every object" first pass or per-frame object question before the
       rig check (25g's suggestion). VLM-only, measured on the labeled sets,
       separate session; compare against the v3f cold baseline (25o).
+
+---
+
+## GVD router "ask, don't guess" reaches the chat — 2026-09-26f
+
+- [x] The router's honest-failure statuses (NEEDS_MANIFEST_REVIEW,
+      PROFILE_REQUIRED, NO_COMPATIBLE_TOOL, RESOURCE_BLOCKED,
+      UNAVAILABLE_CAPABILITY, plus ENGINE_FALLBACK_WAN / QA_GATE_BLOCKED)
+      used to reach the model as a JSON blob and the operator as whatever the
+      model narrated (replayed on HEAD: "rendering has started" for a
+      blocked route). `agent.py` now ends such a turn with a fixed question
+      built from the tool's own fields (`_gvd_router_question`), and a
+      selected route's `operator_notice` (Wan fallback, 26b) is appended
+      verbatim to the model's reply. 24 tests + before/after replay.
+- [ ] The running GUI `server.py` loads the old `agent.py` until restarted;
+      no live chat has used this yet.
+- [ ] Notices are not appended on the hop-limit or empty-completion reply
+      paths (rare; the fixed replies there carry no router text).
+
+Evidence: `CHANGELOG/2026-09-26f_gvd_router_honest_failures_reach_chat.md`.
+
+---
+
+## Motion transfer productionization (roadmap Phase 3) — 2026-09-26i
+
+Two sessions are building this. The motion-transfer session owns the tool
+(`render_video_from_reference` / `video_reference_job_status`, worker
+`local_agent/motion_transfer_render.py`, `motion_transfer_faces.py`; its
+artefacts are labelled `26h`, an id already used by the download entry). The
+roadmap session added CPU building blocks only.
+
+- [x] Per-frame character masks + face rule from DWPose keypoints
+      (`local_agent/motion_transfer_masks.py`), pinned two-stage API templates
+      + builder (`local_agent/graphs/motion_transfer_animatediff_*`,
+      `motion_transfer_graph.py`), router `requires_capabilities` gate, and
+      the `animatediff_pose` family in `apply_profile.py` / `smoke_measure.py`.
+      46 tests. 2026-09-26i.
+- [ ] Fixture `gvd_tool_router/fixtures/animatediff_pose_smoke.api.json` from
+      the graph the tool really renders (files must exist on this machine).
+- [ ] Receipt-gated smoke on the owned backend (`smoke_measure --family
+      animatediff_pose`) → measured peak → `apply_profile.py` promotion. Only
+      when no render owns the GPU; the seed row stays disabled until then.
+- [ ] Decide whether the worker adopts the per-frame masks (the worker uses a
+      static per-job vertical band from InsightFace faces today).
+- [x] Confirm `test_gvd_tool_router` + `test_gvd_engine_policy` still pass
+      after the router gate (`runtime/roadmap_20260926/tests_p3_router.log`):
+      74/74 OK, 2026-09-26i.
+
+Evidence: `CHANGELOG/2026-09-26i_motion_transfer_per_frame_masks_pinned_templates_router_gate.md`.
 
 ---
 
@@ -2773,6 +2828,9 @@ video (`WanFirstLastFrameToVideo`, live peak 13453 MiB). Legacy
           soft at 768x448 (face ~60 px). 2026-09-26g: FaceID Plus V2 installed
           (approved); FaceID only in the detail pass is the best balance (ArcFace
           identity 0.173 vs 0.040, scene/body unchanged); operator to judge likeness.
+          2026-09-26j: `render_video_from_reference` + `video_reference_job_status` built
+          and validated end to end (63 frames, verified outputs). Open: measure a longer
+          run to raise the 64-frame cap; GVD VRAM profile/promotion; operator likeness check.
           2026-09-26d: operator decision — FaceID Plus v2 SDXL weights
           (on disk since 00:55) confirmed, and option (a) Wan 2.2 Animate
           14B approved for download (18.4 GB fp8 e4m3fn scaled KJ).

@@ -37,8 +37,19 @@ try {
         if ($LASTEXITCODE) { throw 'git commit failed' }
     }
 
-    # Pick up any cloud edits on this branch before pushing
-    git pull --rebase --autostash origin $branch 2>$null
+    # Pick up any cloud edits on this branch before pushing.
+    # Git writes progress to stderr, and PowerShell turns stderr into a
+    # terminating error under $ErrorActionPreference='Stop', so the pull must
+    # run with 'Continue' for both the preference and the native error stream.
+    # Without this the push below is skipped even though the commit succeeded.
+    $prevEAP = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+        git pull --rebase --autostash origin $branch 2>&1 | Out-Null
+    } finally {
+        $ErrorActionPreference = $prevEAP
+    }
+
     git push -u origin $branch
     if ($LASTEXITCODE) { throw 'git push failed' }
 

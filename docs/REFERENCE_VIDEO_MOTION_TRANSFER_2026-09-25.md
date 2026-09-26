@@ -321,31 +321,60 @@ character mask), FaceID Plus V2 only inside the video face-detail pass (denoise 
 Flicker in the head region: 8.88 vs 8.74 undetailed. Likeness acceptance is the
 operator's.
 
-## 7. What a real `render_video_from_reference` still needs (not built)
+## 7. `render_video_from_reference` (built 2026-09-26, CHANGELOG 2026-09-26j)
 
-1. An operator decision on §3c: approve the ~17 GB Wan 2.2 Animate download
-   (recommended for this need), or the ~1.2 GB VACE 1.3B module (cheapest real
-   v2v), or accept the installed AnimateDiff-SDXL quality with no download.
-2. A pinned API template per approach (graph JSON under
-   `local_agent/runtime/gvd_tool_router/…` with its sha256), built from the
-   node classes listed in §3a; DWPose/depth extraction from §6 is its first
-   stage.
-3. A measured local VRAM profile (peak MiB at the chosen window size) — the GVD
-   registry refuses to activate any implementation without one.
-4. A background job runner with the existing patterns: `preflight_execute`
-   (owner file, port 8188, thermal guard), one owned backend per job,
-   `story_image_job_status`-style polling, a manifest with `verified_outputs`
-   (sha256, ffprobe of the stitched mp4, frame count vs plan), and never a
-   success claim without that evidence. For a 70 s clip this means 15–47
-   windows stitched in order; window overlap/blending is part of the template.
-5. A visual check of the result against the reference and the character
-   still, frame-level, by a human — the judge in `gvd_qa` can rank, not pass.
+Tools: `render_video_from_reference` (starts a background job, returns a
+`job_id`) and `video_reference_job_status` (read-only). Code:
+`local_agent/motion_transfer_render.py` (validation, target analysis, the
+pinned graph, the job runner), `local_agent/motion_transfer_faces.py`
+(InsightFace helper, ComfyUI venv, CPU, never downloads), tests
+`local_agent/test_motion_transfer_render.py`.
+
+- **What it runs:** the §6e–§6g recommended configuration. AnimateDiff-SDXL +
+  union-promax openpose on DWPose body + hands (face keypoints off, xinsir
+  sticks), ACN apply for multi-window clips, IP-Adapter PLUS FACE on an
+  automatic square face crop of the still (masked to the target's region when
+  others share the frame), and a video face-detail pass (denoise 0.5) through
+  FaceID Plus V2 (PLUS FACE if the still has no detectable face or FaceID is
+  absent). 768×448 landscape (measured) or 448×768 portrait (unmeasured),
+  8 fps default.
+- **Target person:** the helper samples 8 reference frames, picks `target`
+  (`auto`/`largest`, `left`, `right`, `center`) and follows it by nearest
+  face centre. The mask band is the part of the frame closer to the target
+  than to its neighbours (median over samples, at least 25% wide). The detail
+  pass takes the face at the target's left-to-right rank.
+- **Discipline:** the same `router.gpu_busy` / Equal Shares owner / port 8188 /
+  live image-owner refusals and `gpu_gate` approval as `render_story_image`,
+  under the same launch lock. The job claims the shared image-render owner
+  first, then does a thermal preflight, runs one private backend (900 s start
+  limit), and always stops it and releases. Desktop only (phone calls are
+  refused even if granted). Inputs under `outputs/equal_shares` are refused.
+  Requires `likeness_attestation: true`.
+- **Evidence:** `outputs/motion_transfer/<job_id>/` holds job.json,
+  status.json, graph.json (with its sha256, plus the template sha256 pinned in
+  the tests), manifest.json, runner.log, face crop, mask and track frames.
+  The manifest holds every output with its sha256, ffprobe of both mp4s,
+  planned vs source/pose/generated/detailed frame counts, peak GPU memory and
+  temperature, and an ArcFace identity score with its caveat.
+  `verified_outputs` is true only if every count equals the plan. Nothing is
+  marked accepted.
+- **Limits:** at most **64 frames per job** (8 s at 8 fps; `start_seconds` /
+  `max_seconds` choose a section). The limit rises only after a measured
+  longer run. Separate sections do not share a scene, so stitching them is not
+  continuous. Faces in pictures count as people, though the target stayed
+  correct in the validation. Untargeted people are not controlled (their look
+  can drift). Identity can soften in the last window. Output is 8 fps, with no
+  audio.
+- **Not done:** no GVD VRAM profile or promotion (the router still reports
+  `motion_reference` blocked), no Wan approach, no interpolation or audio mux.
+  A human frame-level check is still the acceptance step.
 
 ## 8. How to ask for it in chat
 
 - "Plan a motion transfer from `<video>` with `<image>` as the character" →
-  the model calls `plan_video_from_reference` and reports feasibility and
-  the download decision. Nothing renders.
-- After approving a download and placing the file in the folder named in
-  §3c, the same call flips that approach to `feasible_now: true`; it is still
-  not renderable until §7 items 2–4 exist.
+  `plan_video_from_reference` reports feasibility. Nothing renders.
+- "Render `<video>` with `<image>` as the character: `<describe character and
+  scene>`" → `render_video_from_reference` (the model must pass
+  `likeness_attestation: true`, confirming the character is fictional or
+  consented and no real person's likeness goes into sexual content), then
+  `video_reference_job_status` until `complete` with `verified_outputs: true`.

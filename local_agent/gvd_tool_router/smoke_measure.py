@@ -141,7 +141,7 @@ def run_one(graph: dict, *, family: str, layout: GvdLayout, timeout_s: float, po
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--family", choices=["still", "ltx", "ipadapter", "wan", "h3", "montage", "tiled", "propainter", "f5", "musetalk", "wan_dual", "longcat", "h3v2", "wan8", "tile_video"], required=True)
+    parser.add_argument("--family", choices=["still", "ltx", "ipadapter", "wan", "h3", "montage", "tiled", "propainter", "f5", "musetalk", "wan_dual", "longcat", "h3v2", "wan8", "tile_video", "animatediff_pose"], required=True)
     parser.add_argument("--timeout", type=float, default=1200)
     parser.add_argument("--poll", type=float, default=2.0)
     args = parser.parse_args()
@@ -164,6 +164,7 @@ def main() -> int:
         "h3v2": HERE / "fixtures" / "h3_fasth3_v2_smoke.api.json",
         "wan8": HERE / "fixtures" / "wan_i2v_8step_smoke.api.json",
         "tile_video": HERE / "fixtures" / "wan_tile_video_smoke.api.json",
+        "animatediff_pose": HERE / "fixtures" / "animatediff_pose_smoke.api.json",
     }
     graph_path = graphs[args.family]
     graph = json.loads(graph_path.read_text(encoding="utf-8"))

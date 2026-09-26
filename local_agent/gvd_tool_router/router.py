@@ -248,6 +248,14 @@ def _compatible(
     if not required <= impl.capabilities:
         missing = sorted(required - impl.capabilities)
         reasons.append("missing_capabilities:" + ",".join(missing))
+    # A row may insist that the shot actually needs one of its capabilities
+    # (2026-09-26, motion transfer): a reference-video implementation offers
+    # identity + narrative too, but must never be chosen for a shot that has
+    # no motion reference, since its template renders nothing else.
+    needs = [str(c) for c in (impl.limits.get("requires_capabilities") or [])]
+    unmet = sorted(c for c in needs if c not in required)
+    if unmet:
+        reasons.append("shot_lacks_required_capability:" + ",".join(unmet))
     if local_only and not impl.local_only:
         reasons.append("local_only_policy")
     env = inventory.get("environment_sha256")
