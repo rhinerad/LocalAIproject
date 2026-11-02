@@ -106,7 +106,26 @@ After installing tools, **close and reopen your terminal** so it picks them up.
 
 ---
 
+## Windows: generation scripts do not run yet
+
+The installer, the key check, `bun run test`, and the viewer at http://localhost:5173 all work on Windows.
+The generation commands do not.
+
+Every script under `tools/image-blaster/.claude/scripts/` starts its work only when this is true:
+
+```js
+import.meta.url === `file://${process.argv[1]}`
+```
+
+On Windows, Node sets `import.meta.url` to `file:///A:/...` and `process.argv[1]` to `A:\...`, so the comparison never matches. `node .claude/scripts/project/project-state.mjs --world smoke-test` exits 0 and prints nothing, and it does not create `worlds\smoke-test`. The same guard is on the world, 3D, image-edit, and sound scripts (15 files). A blast from Claude Code calls those commands, so it would stop without calling World Labs or FAL.
+
+This is upstream code in the image-blaster clone. The setup script does not modify it. Do not start a paid blast on Windows until that guard is fixed (upstream, or with a local patch you have agreed to).
+
+The script body itself is fine. Starting Node with a preload that rewrites `process.argv[1]` to the `file://` form makes `project-state.mjs` print the project JSON.
+
 ## Your first blast
+
+Do this after the Windows guard above is fixed, and after both API keys are real keys in `.env`.
 
 1. Start Claude Code **inside the image-blaster folder** (this is what loads its skills, hooks and rules):
 
@@ -230,4 +249,5 @@ from inside `tools/image-blaster/` when you're doing a blast yourself.
 | Hooks error on Windows (`bash: ...\r`) | the files got Windows line endings; delete `tools/image-blaster` and re-run the setup script (it clones with LF line endings) |
 | A generation failed halfway | ask Claude to `resume` / `fix the <thing>` — request metadata is saved so it can pick up where it left off |
 | Files missing after a crash | ask Claude to "repair local assets" (it runs `ensure-local-assets.mjs`) |
-| `bun run test` shows 2 failures about env vars | expected until both keys are set in `.env` |
+| `node .claude/scripts/...` prints nothing and exits 0 | Windows entry guard described above. The command did not run. Do not retry it as a paid blast |
+| `bun run test` shows 2 failures in `env.test.ts` | those tests fail when `WORLD_LABS_API_KEY` or `FAL_KEY` is missing or empty. The placeholders copied from `.env.example` are non-empty, so all 13 tests pass until you blank a key. The session-start hook is what reports placeholder keys as missing |
