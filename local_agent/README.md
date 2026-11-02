@@ -139,9 +139,20 @@ hear, transcribe, browse or reason at cloud-model quality. Missing capabilities
 must remain visible and honest, and no model or dependency is downloaded without
 explicit approval.
 
-No cloud AI accounts or cloud model calls. The optional local URL fetch and web
-search tools use the workstation's existing internet connection only when the
-operator asks for a link or a search; they never download a model or dependency.
+**Local-first hybrid architecture (2026-11-02).** Memory extraction, context
+compaction, plan proposals, vision, and every media pipeline run 100 % locally
+and are never cloud-eligible. Two kinds of chat turn *may* leave the box
+through `model_gateway/` when, and only when, the operator sets
+`MODEL_GATEWAY_CLOUD=1` and an `ANTHROPIC_API_KEY`: unpinned heavy-reasoning
+turns (`claude-opus-5-5`) and unpinned tool/code turns while a render owns the
+GPU (`claude-sonnet-5-5`), plus chats explicitly pinned to `cloud-heavy` /
+`cloud-fast` in the picker. A cloud turn never loads a local model, still
+yields the agent's own GPU residency to ComfyUI, and falls back to the local
+tier with a visible note if the API is unreachable. With the switch off, no
+cloud call is ever made. See `model_gateway/README.md`. The optional local URL
+fetch and web search tools use the workstation's existing internet connection
+only when the operator asks for a link or a search; they never download a
+model or dependency.
 
 ```powershell
 .\local_agent\START_LOCAL_AGENT_GUI.ps1
