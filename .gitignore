@@ -1,0 +1,9 @@
+# image-blaster is cloned here by scripts/setup-image-blaster.* (it has its own git repo)
+tools/image-blaster/
+
+# Secrets
+.env
+
+# OS
+.DS_Store
+Thumbs.db
