@@ -29,12 +29,12 @@ cd tools/image-blaster && CLAUDE_PROJECT_DIR="$PWD" bash .claude/hooks/setup-che
 If keys are missing, ask the user to paste them into `tools/image-blaster/.env`
 (World Labs: https://platform.worldlabs.ai/ , FAL: https://fal.ai/). Do not echo key values.
 
-## Windows blocker
+## Windows entry patch
 
-On Windows, do not start a blast and do not call the `node .claude/scripts/...` commands below.
-Those scripts run `main` only when `import.meta.url` equals `file://` plus `process.argv[1]`, which
-does not match Windows paths. The process exits 0 with no output and does not create a world. Patching
-files inside `tools/image-blaster/` is out of scope unless the user asks. Details:
+On Windows, run `node scripts/patch-image-blaster-windows-entry.mjs tools/image-blaster` from the
+LocalAIproject root if a `node .claude/scripts/...` command exits 0 with no output. Upstream starts
+those CLIs only when `import.meta.url` equals `file://` plus `process.argv[1]`, which does not match
+Windows paths. The setup script applies this patch. Do not commit the patched files. Details:
 `docs/IMAGE-BLASTER.md`.
 
 ## 2. Pick a mode

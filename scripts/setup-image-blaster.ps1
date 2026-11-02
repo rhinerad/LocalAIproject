@@ -36,6 +36,9 @@ if ($nodeMajor -lt 18) {
 
 if (Test-Path (Join-Path $Dest ".git")) {
   Write-Host "Updating existing image-blaster in $Dest"
+  # The Windows entry patch edits .claude/scripts. Restore that tree so pull can
+  # fast-forward, then reapply the patch below. Other local edits there are discarded.
+  git -C $Dest checkout -- .claude/scripts
   git -C $Dest pull --ff-only
 } else {
   Write-Host "Cloning image-blaster into $Dest"
@@ -51,6 +54,9 @@ if (-not (Test-Path ".env")) {
   Copy-Item ".env.example" ".env"
   Write-Host "Created $Dest\.env -- open it and paste your API keys."
 }
+
+Write-Host "Applying local Windows entry-guard patch..."
+node (Join-Path $Root "scripts\patch-image-blaster-windows-entry.mjs") $Dest
 
 Write-Host "Installing viewer dependencies (bun install)..."
 bun install

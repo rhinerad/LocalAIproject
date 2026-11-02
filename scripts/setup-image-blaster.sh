@@ -35,6 +35,9 @@ fi
 
 if [ -d "$DEST/.git" ]; then
   echo "Updating existing image-blaster in $DEST"
+  # The Windows entry patch edits .claude/scripts. Restore that tree so pull can
+  # fast-forward, then reapply the patch below. Other local edits there are discarded.
+  git -C "$DEST" checkout -- .claude/scripts
   git -C "$DEST" pull --ff-only
 else
   echo "Cloning image-blaster into $DEST"
@@ -50,6 +53,9 @@ if [ ! -f .env ]; then
   cp .env.example .env
   echo "Created $DEST/.env -- open it and paste your API keys."
 fi
+
+echo "Applying local Windows entry-guard patch..."
+node "$ROOT/scripts/patch-image-blaster-windows-entry.mjs" "$DEST"
 
 echo "Installing viewer dependencies (bun install)..."
 bun install

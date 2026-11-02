@@ -22,7 +22,8 @@ Key rules:
   never commit them, never paste them into chat output.
 - Generation costs real money on World Labs / FAL. Confirm with the user before starting a
   generation unless they explicitly asked for a one-shot blast.
-- On Windows the upstream Node CLIs no-op. They run only when `import.meta.url` equals
-  `file://` plus `process.argv[1]`, and that never matches (`file:///A:/...` vs `A:\...`).
-  Do not start a blast or call those scripts until that guard is fixed. See `docs/IMAGE-BLASTER.md`.
+- On Windows, image-blaster CLIs need the local entry patch from
+  `scripts/patch-image-blaster-windows-entry.mjs` (the setup script runs it). Upstream
+  compares `import.meta.url` to `file://` plus `process.argv[1]`, which does not match
+  `A:\...` paths. See `docs/IMAGE-BLASTER.md`.
 - User guide: `docs/IMAGE-BLASTER.md`.
