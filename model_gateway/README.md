@@ -55,8 +55,11 @@ Any gateway failure (`offline`, `timeout`, `auth`, `rate_limit`, `server`,
 `refusal`, `bad_request`) is raised as `OllamaModelFailure` with a
 `gateway_kind`. The agent's existing one-retry path calls
 `router.fallback_after_primary_failure()`, which now re-decides locally with
-`allow_cloud=False`, puts `detail["fallback_note"]` on the local Decision, and
-the agent emits that note on the turn. The gateway also logs a warning
+`allow_cloud=False` and puts `detail["fallback_note"]` on the local Decision;
+that Decision (reason starting with the note) is emitted in the turn's
+`route` event. The agent's own one-line note on that retry still uses its
+legacy 14B→8B wording until the one-line `agent.py` follow-up described in
+`CHANGELOG/2026-11-02a` lands. The gateway also logs a warning
 (`local_agent.model_gateway`) and `router.status()["model_gateway"]` carries
 `last_fallback` / `fallbacks` for the status badge.
 
@@ -85,8 +88,9 @@ Hooks outside this directory (kept deliberately small):
   new `allow_cloud` keyword on `decide()`.
 * `local_agent/ollama_client.py` — `_is_cloud_host()` branch in `chat()` and
   `chat_stream()` (mirrors the PowerInfer branch).
-* `local_agent/agent.py` — the fallback note reads `detail["fallback_note"]`.
 * `local_agent/planner.py` — `decide(..., allow_cloud=False)`.
+* `local_agent/agent.py` — unchanged in the prototype (one-line note follow-up
+  pending, see the changelog).
 
 ## Setup
 
