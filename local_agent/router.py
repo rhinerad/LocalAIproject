@@ -412,6 +412,15 @@ def chat_models(*, include_gpu: bool = True) -> list[dict]:
             ),
             **({} if ready else {"unavailable_reason": ready_why}),
         })
+    gw = _gateway()
+    if gw is not None:
+        try:
+            for row in gw.picker_entries():
+                if row["name"] not in seen:
+                    out.append(row)
+                    seen.add(row["name"])
+        except Exception:
+            pass  # the picker must never fail because the cloud tier is misconfigured
     return out
 
 COMFY_PORT = 8188
@@ -483,9 +492,14 @@ class Decision:
     gpu_busy: bool
     reason: str
     detail: dict
-    backend: str = "ollama"  # "ollama" | "powerinfer" | "farm"
+    backend: str = "ollama"  # "ollama" | "powerinfer" | "farm" | "anthropic"
 
     def options(self) -> dict:
+        if self.backend == "anthropic":
+            # model_gateway owns these (effort, max_tokens). No Ollama knobs:
+            # a cloud turn never loads a local model, so num_gpu/num_ctx are
+            # meaningless and temperature/top_p are rejected by the API.
+            return dict(((self.detail or {}).get("gateway") or {}).get("options") or {})
         if self.backend == "powerinfer":
             return {"temperature": 0.3, "top_p": 0.9, "num_predict": 512}
         if self.backend == "farm" or self.tier == "farm":
@@ -1637,15 +1651,119 @@ def _finish_gpu_ollama(decision: Decision, *, ensure_gpu_evicted: bool) -> Decis
     return decision
 
 
+# ── model_gateway hook (cloud tier) ──────────────────────────────────────────────────
+# The gateway package lives at the repo root (``model_gateway/``) and never
+# imports this module. Everything below is a thin seam: the policy that picks
+# a cloud tier is ``model_gateway.policy``; the VRAM rules stay here.
+_GATEWAY: object = None
+
+
+def _gateway():
+    """Lazy import of ``model_gateway``; None when the package is unavailable."""
+    global _GATEWAY
+    if _GATEWAY is None:
+        root = str(ROOT)
+        if root not in sys.path:
+            sys.path.insert(0, root)
+        try:
+            import model_gateway as _mg
+            _GATEWAY = _mg
+        except Exception:
+            _GATEWAY = False
+    return _GATEWAY or None
+
+
+def _gateway_status() -> dict:
+    gw = _gateway()
+    if gw is None:
+        return {"cloud_enabled": False, "available": False,
+                "reason": "model_gateway package not importable"}
+    try:
+        snap = gw.status_snapshot()
+        snap["available"] = True
+        return snap
+    except Exception as exc:
+        return {"cloud_enabled": False, "available": False, "reason": str(exc)[:200]}
+
+
+def _maybe_cloud_decision(prefer: str, model: str | None, capability: str,
+                          busy: bool, why: str, detail: dict, *,
+                          has_prompt: bool, allow_cloud: bool,
+                          ensure_gpu_evicted: bool) -> Decision | None:
+    """Return a cloud Decision when model_gateway's policy says so, else None.
+
+    Returned *before* any ``prepare_gpu_model`` / ``_finish_gpu_ollama`` call
+    and never handed to an Ollama ``/api/chat`` request, so it cannot load a
+    local model (the VRAM invariant from the 2026-11-02 audit). When a render
+    owns the card the agent's own resident GPU model is still evicted, exactly
+    as the CPU hand-off does, so a cloud turn also yields VRAM to ComfyUI.
+    """
+    gw = _gateway()
+    if gw is None:
+        return None
+    try:
+        cfg = gw.load_config()
+        choice = gw.choose_cloud_tier(
+            config=cfg, prefer=prefer, model=model, capability=capability,
+            gpu_busy=busy, busy_reason=why, has_prompt=has_prompt,
+            allow_cloud=allow_cloud)
+    except Exception as exc:
+        detail["gateway_error"] = str(exc)[:200]
+        return None
+    if choice is None:
+        return None
+    if isinstance(choice, gw.Refusal):
+        return Decision(
+            "cloud", cfg.host(), None, busy,
+            f"Selected cloud model {choice.model} cannot run: {choice.reason}. "
+            "It will not silently become a local model; pick a local model or "
+            "enable the cloud tier.", detail, "anthropic")
+    detail["gateway"] = choice.as_detail(cfg)
+    if busy and ensure_gpu_evicted:
+        # Same yield-to-render rule as the CPU path. A failed verification is
+        # recorded but does not block the cloud route: the cloud turn itself
+        # needs no VRAM, and the next local turn re-checks before loading.
+        detail["gpu_eviction"] = evict_gpu_residents()
+    return Decision("cloud", cfg.host(), choice.model, busy,
+                    f"cloud tier {choice.alias} — {choice.reason}", detail, "anthropic")
+
+
+def _cloud_fallback_decision(previous: Decision, error: BaseException) -> Decision | None:
+    """Cloud call failed at request time: re-route this turn locally, once.
+
+    The local Decision carries ``detail["fallback_note"]`` so the agent can
+    surface a one-line note on that turn, and the gateway logs the event.
+    """
+    gw = _gateway()
+    kind = str(getattr(error, "gateway_kind", "") or "error")
+    local = decide("auto", model=None, ensure_gpu_evicted=True, allow_cloud=False)
+    if not local.model:
+        local.detail["gateway_fallback_unavailable"] = local.reason
+        return None
+    note = (gw.fallback_note(kind, str(error), local.model) if gw is not None
+            else f"cloud tier unavailable ({kind}); continuing this turn on {local.model}")
+    local.detail["gateway_fallback"] = {
+        "from_model": previous.model, "kind": kind, "error": str(error)[:300],
+        "to_tier": local.tier, "to_model": local.model,
+    }
+    local.detail["fallback_note"] = note
+    local.reason = f"{note} — {local.reason}"
+    return local
+
+
 def decide(prefer: str = "auto", model: str | None = None,
            prompt_tokens: int | None = None, *, ensure_gpu_evicted: bool = True,
-           prompt: str | None = None, skip_farm: bool = False) -> Decision:
+           prompt: str | None = None, skip_farm: bool = False,
+           allow_cloud: bool = True) -> Decision:
     """Which tier answers the next turn.
 
     `prefer` is "auto", "gpu" or "cpu". A manual "gpu" is still refused while a
     render is running — the operator can force CPU, never force a conflict.
     ``prompt`` enables capability-based auto routing (tool/logic/code). With no
     prompt and no pin, behaviour matches the historical CPU/GPU auto path.
+    ``allow_cloud=False`` keeps a caller on local tiers regardless of the
+    model_gateway policy (planner, background helpers); a cloud pin is then
+    routed as an unpinned local turn.
     """
     busy, why, detail = gpu_busy()
     busy, why, detail, capability = _maybe_comfy_timeshare(
@@ -1703,6 +1821,21 @@ def decide(prefer: str = "auto", model: str | None = None,
 
     if capability:
         detail["capability"] = capability
+
+    # model_gateway cloud tier: unpinned heavy-logic turns, unpinned
+    # interactive turns while a render owns the GPU, and explicit cloud pins.
+    # Returned here, before farm/GPU selection, so no local load can follow.
+    cloud = _maybe_cloud_decision(
+        prefer, model, capability, busy, why, detail,
+        has_prompt=bool(prompt), allow_cloud=allow_cloud,
+        ensure_gpu_evicted=ensure_gpu_evicted)
+    if cloud is not None:
+        return cloud
+    if model and not allow_cloud:
+        gw = _gateway()
+        if gw is not None and gw.is_cloud_pin(model):
+            detail["cloud_pin_ignored"] = model
+            model = None  # e.g. planner: a cloud-pinned chat plans locally
 
     # Unpinned lightweight turns go to Mac Qwythos through farm_offload
     # (same Celery/farm_status.json path as summarize/embed). Do not evict
@@ -2011,7 +2144,12 @@ def fallback_after_primary_failure(previous: Decision, error: BaseException) -> 
     partial CPU offload is slow and unpredictable; while a render is active the
     existing normal routing path owns the decision and the agent must not add a
     second GPU workload.
+
+    A failed cloud (model_gateway) request is the one other case handled
+    here: it falls back to whatever local tier ``decide()`` picks right now.
     """
+    if getattr(previous, "backend", "ollama") == "anthropic":
+        return _cloud_fallback_decision(previous, error)
     if previous.tier != "gpu" or not _is_configured_variant(previous.model, PRIMARY_REASONING_MODEL):
         return None
     busy, why, detail = gpu_busy()
@@ -2084,6 +2222,7 @@ def status() -> dict:
         "gpu_models": gpu_models,
         "chat_models": chat_models(include_gpu=include_gpu),
         "coding_model": CODING_MODEL,
+        "model_gateway": _gateway_status(),
     }
 
 
