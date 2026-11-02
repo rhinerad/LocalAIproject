@@ -1,0 +1,4 @@
+# Approved 2026-11-02 (operator decision 2): the official Anthropic SDK.
+# Pulls httpx2, pydantic, anyio, jiter, distro, sniffio — about 15 MB of wheels.
+# Everything else in model_gateway/ is standard library.
+anthropic>=2.4,<3
