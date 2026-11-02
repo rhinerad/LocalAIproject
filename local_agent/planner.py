@@ -78,7 +78,9 @@ def validate_plan(value: Any, operator_goal: str) -> dict | None:
 def propose(operator_goal: str, checkpoint: str = "", prefer: str = "auto",
             model: str | None = None) -> tuple[dict | None, str]:
     """Request a JSON plan. Returns ``(plan, reason)`` and never raises for bad JSON."""
-    route = router.decide(prefer, model=model)
+    # Plans are always produced locally: allow_cloud=False keeps this seam on
+    # the Ollama tiers even when the chat itself is pinned to the cloud tier.
+    route = router.decide(prefer, model=model, allow_cloud=False)
     if not route.model:
         return None, "no eligible local model"
     message = (
