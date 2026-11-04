@@ -244,6 +244,92 @@ class AdapterMockTests(unittest.TestCase):
                 seen.append(piece.text)
         self.assertEqual(["a"], seen)
 
+    # ── non-streaming completion + plan-only path ─────────────────────────
+
+    @staticmethod
+    def ok_json(content, stop_reason="end_turn", model="claude-opus-5-5"):
+        return lambda req, body: httpx.Response(200, json={
+            "id": "msg_1", "type": "message", "role": "assistant", "model": model,
+            "content": content, "stop_reason": stop_reason, "stop_sequence": None,
+            "usage": {"input_tokens": 40, "output_tokens": 9}})
+
+    def test_complete_returns_text_and_telemetry(self):
+        b = self.backend(self.ok_json([{"type": "text", "text": "1. look\n2. act"}]))
+        result = b.complete(model="claude-opus-5-5",
+                            messages=[{"role": "user", "content": "plan it"}],
+                            options={"max_tokens": 300, "effort": "high"})
+        self.assertEqual("1. look\n2. act", result.text)
+        self.assertEqual([], result.calls)
+        self.assertEqual("end_turn", result.stop_reason)
+        self.assertEqual(40, result.telemetry["gateway"]["input_tokens"])
+        body = self.requests[0]["body"]
+        self.assertNotIn("stream", body)              # non-streaming create
+        self.assertNotIn("tools", body)
+        self.assertNotIn("tool_choice", body)
+        self.assertEqual(300, body["max_tokens"])
+
+    def test_complete_refusal_and_errors(self):
+        with self.assertRaises(CloudUnavailable) as ctx:
+            self.backend(self.ok_json([], stop_reason="refusal")).complete(
+                model="m", messages=[{"role": "user", "content": "x"}])
+        self.assertEqual("refusal", ctx.exception.kind)
+        for status, kind in ((401, "auth"), (429, "rate_limit"), (503, "server"), (400, "bad_request")):
+            with self.subTest(status=status):
+                resp = lambda req, body, s=status: httpx.Response(
+                    s, json={"type": "error", "error": {"type": "x", "message": "m"}})
+                with self.assertRaises(CloudUnavailable) as ctx:
+                    self.backend(resp).complete(model="m", messages=[{"role": "user", "content": "x"}])
+                self.assertEqual(kind, ctx.exception.kind)
+
+    def test_request_plan_wire_shape_and_result(self):
+        from model_gateway import planning
+        b = self.backend(self.ok_json([{"type": "text", "text": "1. read router.py\n2. edit"}]))
+        plan = planning.request_plan("Refactor the router end-to-end",
+                                     "assistant: earlier reply", ["read_file", "list_dir"],
+                                     config=self.cfg, backend=b)
+        self.assertEqual("1. read router.py\n2. edit", plan)
+        body = self.requests[0]["body"]
+        self.assertEqual("claude-opus-5-5", body["model"])
+        self.assertEqual(1500, body["max_tokens"])
+        self.assertEqual({"effort": "high"}, body["output_config"])
+        self.assertNotIn("tools", body)
+        self.assertNotIn("tool_choice", body)
+        self.assertNotIn("stream", body)
+        system = body["system"][0]["text"]
+        self.assertIn("read_file, list_dir", system)
+        self.assertIn("Do not perform the task", system)
+        user = body["messages"][0]["content"][0]["text"]
+        self.assertIn("Operator request:\nRefactor the router end-to-end", user)
+        self.assertIn("assistant: earlier reply", user)
+        for forbidden in ("temperature", "top_p", "keep_alive", "think"):
+            self.assertNotIn(forbidden, body)
+
+    def test_request_plan_returns_none_on_failure_and_records_fallback(self):
+        from model_gateway import dispatch, planning
+
+        def boom(request, body):
+            raise httpx.ConnectError("connection refused")
+        before = dispatch.status_snapshot(self.cfg)["fallbacks"]
+        self.assertIsNone(planning.request_plan("x", config=self.cfg, backend=self.backend(boom)))
+        snap = dispatch.status_snapshot(self.cfg)
+        self.assertEqual(before + 1, snap["fallbacks"])
+        self.assertEqual("offline", snap["last_fallback"]["kind"])
+
+    def test_request_plan_ignores_echoed_tool_calls_and_empty_text(self):
+        from model_gateway import planning
+        b = self.backend(self.ok_json([
+            {"type": "text", "text": "1. do it"},
+            {"type": "tool_use", "id": "toolu_x", "name": "read_file", "input": {}}]))
+        self.assertEqual("1. do it", planning.request_plan("x", config=self.cfg, backend=b))
+        empty = self.backend(self.ok_json([]))
+        self.assertIsNone(planning.request_plan("x", config=self.cfg, backend=empty))
+
+    def test_request_plan_skips_when_disabled(self):
+        from model_gateway import planning
+        off = cfgmod.load_config({"ANTHROPIC_API_KEY": "sk"}, read_env_file=False)
+        self.assertIsNone(planning.request_plan("x", config=off, backend=self.backend(self.ok_json([]))))
+        self.assertEqual([], self.requests)
+
     def test_custom_base_url_client(self):
         cfg = cfgmod.load_config({"MODEL_GATEWAY_CLOUD": "1",
                                   "MODEL_GATEWAY_BASE_URL": "http://127.0.0.1:11435"},

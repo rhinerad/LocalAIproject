@@ -153,6 +153,41 @@ class MessageTests(unittest.TestCase):
         self.assertEqual("image/png", block["source"]["media_type"])
 
 
+class SchemaSanitizeTests(unittest.TestCase):
+    def test_array_limits_clamped_recursively(self):
+        schema = {
+            "type": "object",
+            "properties": {
+                "steps": {"type": "array", "minItems": 2, "maxItems": 6,
+                          "items": {"type": "object", "properties": {
+                              "tags": {"type": "array", "minItems": 3, "items": {"type": "string"}}}}},
+                "one": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+                "zero": {"type": "array", "minItems": 0, "items": {"type": "string"}},
+            },
+            "anyOf": [{"type": "array", "maxItems": 2}],
+            "$defs": {"T": {"type": "array", "minItems": 5}},
+        }
+        out = translate.sanitize_schema(schema)
+        self.assertEqual(1, out["properties"]["steps"]["minItems"])
+        self.assertNotIn("maxItems", out["properties"]["steps"])
+        self.assertEqual(1, out["properties"]["steps"]["items"]["properties"]["tags"]["minItems"])
+        self.assertEqual(1, out["properties"]["one"]["minItems"])
+        self.assertEqual(0, out["properties"]["zero"]["minItems"])
+        self.assertNotIn("maxItems", out["anyOf"][0])
+        self.assertEqual(1, out["$defs"]["T"]["minItems"])
+        self.assertEqual(2, schema["properties"]["steps"]["minItems"])   # input untouched
+
+    def test_tools_and_format_are_sanitized(self):
+        tool = {"type": "function", "function": {"name": "t", "parameters": {
+            "type": "object", "properties": {"x": {"type": "array", "minItems": 4}}}}}
+        self.assertEqual(1, translate.ollama_tools_to_anthropic([tool])[0]
+                         ["input_schema"]["properties"]["x"]["minItems"])
+        cfg, _ = translate.response_format_to_output_config(
+            {"type": "object", "properties": {"x": {"type": "array", "minItems": 2, "maxItems": 9}}})
+        self.assertEqual({"type": "array", "minItems": 1},
+                         cfg["format"]["schema"]["properties"]["x"])
+
+
 class ResponseTests(unittest.TestCase):
     def test_format_schema_maps_to_output_config(self):
         schema = {"type": "object", "properties": {"a": {"type": "string"}}, "required": ["a"]}

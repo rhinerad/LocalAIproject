@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Live verification of the hybrid router. Needs real servers; nothing is mocked.
+"""Live verification of the plan-only gateway. Needs real servers; nothing is mocked.
 
     python model_gateway/test_gateway.py              # all three checks
     python model_gateway/test_gateway.py --skip-cloud # only the local checks
@@ -9,15 +9,15 @@ Checks (each prints PASS / FAIL / SKIP and the script exits non-zero on FAIL):
 
   A  local      a short prompt answered by the CPU Ollama tier (11435) through
                 ollama_client, with the GPU server's /api/ps unchanged
-  B  cloud      a heavy-reasoning prompt: router.decide() must pick the
-                Anthropic backend, the stream must complete through
-                ollama_client, and no request may reach 11434 /api/chat
-                (GPU /api/ps is compared before and after as well)
-  C  tools      the same tool schema and the same JSON schema sent to both
-                targets; the returned arguments / JSON are validated against
-                the schema with a small stdlib validator
+  B  plan       a heavy-reasoning prompt: router.decide() must return a LOCAL
+                Decision (backend ollama) flagged needs_cloud_plan;
+                model_gateway.request_plan() must return non-empty text with
+                zero tool calls in the cloud response; GPU /api/ps compared as
+                a set before/after; no request may reach 11434 /api/chat
+  C  tools      the local tier only: a tool-calling prompt and a JSON-schema
+                prompt, validated against the schema with a small validator
 
-Set MODEL_GATEWAY_CLOUD=1 and ANTHROPIC_API_KEY (model_gateway/.env) for B/C-cloud.
+Set MODEL_GATEWAY_CLOUD=1 and ANTHROPIC_API_KEY (model_gateway/.env) for B.
 """
 from __future__ import annotations
 
@@ -106,8 +106,12 @@ def validate(value, schema: dict, path: str = "$") -> list[str]:
     return errors
 
 
-def gpu_resident() -> list[str] | None:
-    return router._running_models(router.GPU_HOST) if router.up(router.GPU_HOST) else None
+def gpu_resident() -> set[str] | None:
+    """Resident GPU models as a set: Ollama's /api/ps order is not stable."""
+    if not router.up(router.GPU_HOST):
+        return None
+    names = router._running_models(router.GPU_HOST)
+    return None if names is None else set(names)
 
 
 class Guard:
@@ -132,19 +136,6 @@ class Guard:
         oll.urllib.request.urlopen = self._orig
 
 
-def run_stream(route, messages, tools=None):
-    text, calls, end = [], [], None
-    for piece in oll.chat_stream(messages, model=route.model, options=route.options(),
-                                 host=route.host, tools=tools, keep_alive="0"):
-        if isinstance(piece, oll.ToolCall):
-            calls = piece.calls
-        elif isinstance(piece, oll.StreamEnd):
-            end = piece
-        elif isinstance(piece, str):
-            text.append(piece)
-    return "".join(text), calls, end
-
-
 class Report:
     def __init__(self):
         self.rows: list[tuple[str, str, str]] = []
@@ -158,13 +149,18 @@ class Report:
         return any(s == "FAIL" for _, s, _ in self.rows)
 
 
+def _cpu_model(cpu_model: str | None) -> str | None:
+    have = router._tags(router.CPU_HOST)
+    return cpu_model or router._installed_variant(have, router.FALLBACK_REASONING_MODEL) \
+        or (have[0] if have else None)
+
+
 def check_local(rep: Report, cpu_model: str | None) -> None:
     print("\nA. local tier (CPU Ollama)")
     if not router.up(router.CPU_HOST):
         rep.add("A local", "SKIP", f"CPU Ollama {router.CPU_HOST} is down")
         return
-    have = router._tags(router.CPU_HOST)
-    model = cpu_model or router._installed_variant(have, router.FALLBACK_REASONING_MODEL) or (have[0] if have else None)
+    model = _cpu_model(cpu_model)
     if not model:
         rep.add("A local", "SKIP", "no model on the CPU tier")
         return
@@ -178,87 +174,88 @@ def check_local(rep: Report, cpu_model: str | None) -> None:
         rep.add("A local", "FAIL", f"{type(exc).__name__}: {str(exc)[:160]}")
         return
     after = gpu_resident()
-    ok = bool(text.strip())
-    rep.add("A local answer", "PASS" if ok else "FAIL",
+    rep.add("A local answer", "PASS" if text.strip() else "FAIL",
             f"{model} on {router.CPU_HOST} in {time.time() - t0:.1f}s -> {text.strip()[:60]!r}")
     rep.add("A GPU /api/ps unchanged", "PASS" if before == after else "FAIL", f"{before} -> {after}")
 
 
-def check_cloud(rep: Report) -> None:
-    print("\nB. cloud tier (Anthropic API via router.decide)")
+def check_plan(rep: Report) -> None:
+    print("\nB. plan-only cloud gateway (router.decide flag + request_plan)")
     cfg = gw.load_config()
-    if not cfg.cloud_enabled or not cfg.credential_present:
-        rep.add("B cloud", "SKIP", "set MODEL_GATEWAY_CLOUD=1 and ANTHROPIC_API_KEY")
+    if not cfg.planning_available:
+        rep.add("B plan", "SKIP", "set MODEL_GATEWAY_CLOUD=1 and ANTHROPIC_API_KEY")
         return
     before = gpu_resident()
     route = router.decide("auto", prompt=LOGIC_PROMPT, ensure_gpu_evicted=False)
-    if route.backend != "anthropic":
-        rep.add("B decide picks anthropic", "FAIL", f"tier={route.tier} backend={route.backend}: {route.reason}")
+    local_ok = route.backend in ("ollama", "powerinfer", "farm") and route.tier in ("gpu", "cpu", "farm")
+    rep.add("B decide stays local", "PASS" if local_ok else "FAIL",
+            f"tier={route.tier} backend={route.backend} model={route.model} — {route.reason[:70]}")
+    flagged = bool((route.detail or {}).get("needs_cloud_plan"))
+    rep.add("B decide flags needs_cloud_plan", "PASS" if flagged else "FAIL",
+            json.dumps((route.detail or {}).get("cloud_plan") or {}))
+    if not flagged:
         return
-    rep.add("B decide picks anthropic", "PASS", f"{route.model} ({route.detail['gateway']['alias']}) — {route.reason[:80]}")
     t0 = time.time()
     with Guard() as guard:
-        try:
-            text, calls, end = run_stream(route, [
-                {"role": "system", "content": "You are a concise systems architect."},
-                {"role": "user", "content": LOGIC_PROMPT},
-            ])
-        except oll.OllamaModelFailure as exc:
-            rep.add("B cloud stream", "FAIL", f"{str(exc)[:200]} (fallback would now run locally)")
-            return
+        plan = gw.request_plan(LOGIC_PROMPT, "", ["read_file", "list_dir", "search_docs"])
     after = gpu_resident()
-    tel = (end.telemetry if end else {}).get("gateway", {})
-    rep.add("B cloud stream", "PASS" if text.strip() else "FAIL",
-            f"{tel.get('model')} {time.time() - t0:.1f}s in={tel.get('input_tokens')} "
-            f"out={tel.get('output_tokens')} cache_read={tel.get('cache_read_input_tokens')} "
-            f"stop={tel.get('stop_reason')}")
+    snap = gw.status_snapshot(cfg)
+    last = snap.get("last_plan") or {}
+    tel = last.get("telemetry") or {}
+    if plan:
+        rep.add("B request_plan returns text", "PASS",
+                f"{last.get('model')} {time.time() - t0:.1f}s chars={len(plan)} "
+                f"in={tel.get('input_tokens')} out={tel.get('output_tokens')} "
+                f"stop={last.get('stop_reason')}")
+        rep.add("B no tool calls in cloud response",
+                "PASS" if int(last.get("tool_calls") or 0) == 0 else "FAIL",
+                str(last.get("tool_calls")))
+        print("      plan preview: " + plan.replace("\n", " | ")[:160])
+    else:
+        fb = snap.get("last_fallback") or {}
+        rep.add("B request_plan returns text", "FAIL",
+                f"None ({fb.get('kind')}: {fb.get('detail')}) — the turn would continue locally")
     rep.add("B no /api/chat to GPU host", "PASS" if not guard.hits else "FAIL", str(guard.hits))
-    rep.add("B GPU /api/ps unchanged", "PASS" if before == after else "FAIL", f"{before} -> {after}")
+    rep.add("B GPU /api/ps unchanged (set compare)", "PASS" if before == after else "FAIL",
+            f"{before} -> {after}")
 
 
-def check_tools(rep: Report, cpu_model: str | None, skip_local: bool, skip_cloud: bool) -> None:
-    print("\nC. tool calling + JSON schema on both targets")
+def check_tools(rep: Report, cpu_model: str | None) -> None:
+    print("\nC. local tool calling + JSON schema (CPU Ollama)")
+    if not router.up(router.CPU_HOST):
+        rep.add("C tools", "SKIP", f"CPU Ollama {router.CPU_HOST} is down")
+        return
+    model = _cpu_model(cpu_model)
+    if not model:
+        rep.add("C tools", "SKIP", "no model on the CPU tier")
+        return
+    opts = dict(router.CPU_OPTIONS, num_ctx=4096, temperature=0)
     tool_prompt = "What is the weather in Lisbon right now? Use the tool; answer in celsius."
     json_prompt = ("Return a JSON plan for backing up a folder: goal, 2-3 steps, and whether an "
                    "operator decision is needed. JSON only.")
-    targets: list[tuple[str, str, str, dict]] = []
-    if not skip_local and router.up(router.CPU_HOST):
-        have = router._tags(router.CPU_HOST)
-        model = cpu_model or router._installed_variant(have, router.FALLBACK_REASONING_MODEL) or (have[0] if have else None)
-        if model:
-            targets.append(("local", router.CPU_HOST, model,
-                            dict(router.CPU_OPTIONS, num_ctx=4096, temperature=0)))
-    cfg = gw.load_config()
-    if not skip_cloud and cfg.cloud_enabled and cfg.credential_present:
-        targets.append(("cloud", cfg.host(), cfg.fast.model, {"effort": "low", "max_tokens": 1024}))
-    if not targets:
-        rep.add("C tools", "SKIP", "no target available")
-        return
-    for label, host, model, opts in targets:
-        try:
-            text, calls = oll.chat([{"role": "user", "content": tool_prompt}], model=model,
-                                   host=host, options=opts, tools=[WEATHER_TOOL], timeout=300,
-                                   keep_alive="0")
-        except Exception as exc:
-            rep.add(f"C {label} tool call", "FAIL", f"{type(exc).__name__}: {str(exc)[:160]}")
-            continue
+    try:
+        text, calls = oll.chat([{"role": "user", "content": tool_prompt}], model=model,
+                               host=router.CPU_HOST, options=opts, tools=[WEATHER_TOOL],
+                               timeout=300, keep_alive="0")
         if not calls:
-            rep.add(f"C {label} tool call", "FAIL", f"no tool_calls; text={text[:80]!r}")
+            rep.add("C local tool call", "FAIL", f"no tool_calls; text={text[:80]!r}")
         else:
             args = calls[0]["function"]["arguments"]
             errs = validate(args, WEATHER_TOOL["function"]["parameters"])
-            rep.add(f"C {label} tool call", "PASS" if not errs else "FAIL",
+            rep.add("C local tool call", "PASS" if not errs else "FAIL",
                     f"{calls[0]['function']['name']}({json.dumps(args)}) {errs or ''}")
-        try:
-            text, _ = oll.chat([{"role": "user", "content": json_prompt}], model=model,
-                               host=host, options=opts, response_format=PLAN_SCHEMA, timeout=300,
-                               keep_alive="0")
-            data = json.loads(text)
-            errs = validate(data, PLAN_SCHEMA)
-            rep.add(f"C {label} json schema", "PASS" if not errs else "FAIL",
-                    f"{json.dumps(data)[:100]} {errs or ''}")
-        except Exception as exc:
-            rep.add(f"C {label} json schema", "FAIL", f"{type(exc).__name__}: {str(exc)[:160]}")
+    except Exception as exc:
+        rep.add("C local tool call", "FAIL", f"{type(exc).__name__}: {str(exc)[:160]}")
+    try:
+        text, _ = oll.chat([{"role": "user", "content": json_prompt}], model=model,
+                           host=router.CPU_HOST, options=opts, response_format=PLAN_SCHEMA,
+                           timeout=300, keep_alive="0")
+        data = json.loads(text)
+        errs = validate(data, PLAN_SCHEMA)
+        rep.add("C local json schema", "PASS" if not errs else "FAIL",
+                f"{json.dumps(data)[:100]} {errs or ''}")
+    except Exception as exc:
+        rep.add("C local json schema", "FAIL", f"{type(exc).__name__}: {str(exc)[:160]}")
 
 
 def main(argv=None) -> int:
@@ -267,14 +264,16 @@ def main(argv=None) -> int:
     ap.add_argument("--skip-cloud", action="store_true")
     ap.add_argument("--cpu-model", default=None, help="Ollama tag on the CPU tier (default: Huihui 8B)")
     args = ap.parse_args(argv)
-    print(f"model_gateway live test — GPU {router.GPU_HOST} / CPU {router.CPU_HOST} / "
-          f"cloud {'on' if os.environ.get('MODEL_GATEWAY_CLOUD') == '1' else 'off'}")
+    cfg = gw.load_config()
+    print(f"model_gateway live test (plan-only) — GPU {router.GPU_HOST} / CPU {router.CPU_HOST} / "
+          f"cloud planning {'on' if cfg.planning_available else 'off'}")
     rep = Report()
     if not args.skip_local:
         check_local(rep, args.cpu_model)
     if not args.skip_cloud:
-        check_cloud(rep)
-    check_tools(rep, args.cpu_model, args.skip_local, args.skip_cloud)
+        check_plan(rep)
+    if not args.skip_local:
+        check_tools(rep, args.cpu_model)
     print("\nsummary:", "FAIL" if rep.failed else "OK",
           f"({sum(s == 'PASS' for _, s, _ in rep.rows)} pass, "
           f"{sum(s == 'FAIL' for _, s, _ in rep.rows)} fail, "

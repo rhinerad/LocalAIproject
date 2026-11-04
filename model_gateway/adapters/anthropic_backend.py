@@ -16,9 +16,28 @@ from typing import Any, Callable, Iterator
 
 from .. import translate
 from ..config import GatewayConfig
-from ..events import CloudUnavailable, Done, TextDelta, ToolCalls
+from ..events import CloudUnavailable, Completion, Done, TextDelta, ToolCalls
 
 _THINKING_HINTS = ("thinking", "signature", "block_binding", "prefix")
+HARD_MAX_TOKENS = 8000
+
+
+def _raise_for(anthropic, exc: BaseException) -> None:
+    """Map an SDK exception to ``CloudUnavailable``; re-raise 400s untouched."""
+    if isinstance(exc, anthropic.APITimeoutError):
+        raise CloudUnavailable("timeout", str(exc)[:300]) from exc
+    if isinstance(exc, anthropic.APIConnectionError):
+        raise CloudUnavailable("offline", str(exc)[:300]) from exc
+    if isinstance(exc, (anthropic.AuthenticationError, anthropic.PermissionDeniedError)):
+        raise CloudUnavailable("auth", str(exc)[:300]) from exc
+    if isinstance(exc, anthropic.RateLimitError):
+        raise CloudUnavailable("rate_limit", str(exc)[:300]) from exc
+    if isinstance(exc, anthropic.BadRequestError):
+        raise exc
+    if isinstance(exc, anthropic.APIStatusError):
+        kind = "server" if getattr(exc, "status_code", 500) >= 500 else "bad_request"
+        raise CloudUnavailable(kind, str(exc)[:300]) from exc
+    raise exc
 
 
 class AnthropicBackend:
@@ -96,18 +115,20 @@ class AnthropicBackend:
         if note:
             system_text = (system_text + "\n\n" + note).strip()
 
-        effort = str(opts.get("effort") or cfg.heavy.effort)
+        effort = str(opts.get("effort") or cfg.plan.effort)
         if cfg.send_effort and effort:
             output_config["effort"] = effort
 
-        max_tokens = cfg.max_tokens
+        # Default to the plan ceiling; an explicit request may go higher only
+        # up to the hard adapter ceiling (a plan is never a long document).
+        max_tokens = cfg.plan.max_tokens
         for key in ("max_tokens", "num_predict"):
             try:
                 requested = int(opts.get(key) or 0)
             except (TypeError, ValueError):
                 requested = 0
             if requested > 0:
-                max_tokens = max(256, min(cfg.max_tokens, requested))
+                max_tokens = max(256, min(HARD_MAX_TOKENS, requested))
                 break
 
         params: dict[str, Any] = {
@@ -129,6 +150,51 @@ class AnthropicBackend:
         # think) are intentionally not forwarded: temperature/top_p are 400s on
         # the current API version and thinking is governed by effort.
         return params
+
+    # ── one-shot completion (plan-only path) ─────────────────────────────
+
+    def complete(
+        self,
+        *,
+        model: str,
+        messages: list[dict],
+        tools: list[dict] | None = None,
+        response_format: dict | str | None = None,
+        options: dict | None = None,
+    ) -> Completion:
+        """One non-streaming ``messages.create``. No ``tool_choice`` is ever sent.
+
+        With ``tools=None`` (the planning call) the response cannot contain
+        ``tool_use`` blocks; any that a proxy might echo are surfaced in
+        ``Completion.calls`` so the caller can refuse to act on them.
+        """
+        anthropic = self._sdk()
+        params = self.build_request(model=model, messages=messages, tools=tools,
+                                    response_format=response_format, options=options)
+        client = self.client()
+        started = time.monotonic_ns()
+        try:
+            final = client.messages.create(**params)
+        except anthropic.BadRequestError as exc:
+            raise CloudUnavailable("bad_request", str(exc)[:500]) from exc
+        except Exception as exc:
+            _raise_for(anthropic, exc)
+            raise  # unreachable; _raise_for always raises
+        ended = time.monotonic_ns()
+        content = list(getattr(final, "content", None) or [])
+        stop_reason = getattr(final, "stop_reason", None)
+        model_used = str(getattr(final, "model", None) or params["model"])
+        if stop_reason == "refusal":
+            details = getattr(final, "stop_details", None)
+            category = translate._get(details, "category") if details is not None else None
+            raise CloudUnavailable("refusal", f"the cloud model declined this request"
+                                              f"{f' ({category})' if category else ''}")
+        telemetry = translate.usage_to_telemetry(
+            getattr(final, "usage", None), total_ns=ended - started, eval_ns=ended - started,
+            model=model_used, stop_reason=stop_reason)
+        return Completion(model=model_used, text=translate.blocks_to_text(content),
+                          calls=translate.blocks_to_ollama_calls(content),
+                          stop_reason=stop_reason, telemetry=telemetry)
 
     # ── streaming ────────────────────────────────────────────────────────
 

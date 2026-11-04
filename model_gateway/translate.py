@@ -55,6 +55,46 @@ def mint_tool_use_id(message_index: int, call_index: int, name: str, arguments: 
     return MINTED_ID_PREFIX + hashlib.sha1(seed.encode("utf-8")).hexdigest()[:20]
 
 
+# ── JSON schema hygiene ───────────────────────────────────────────────────────
+
+_SCHEMA_CHILD_KEYS = ("properties", "$defs", "definitions", "patternProperties")
+_SCHEMA_LIST_KEYS = ("anyOf", "oneOf", "allOf", "prefixItems")
+
+
+def sanitize_schema(schema: Any) -> Any:
+    """Return a deep copy with the array limits the Messages API rejects removed.
+
+    The API answers ``400: For 'array' type, 'minItems' values other than 0 or
+    1 are not supported`` and rejects ``maxItems`` likewise, so ``minItems``
+    above 1 is clamped to 1 and ``maxItems`` is dropped, recursively. Nothing
+    else is touched; local Ollama callers keep the original schema.
+    """
+    if isinstance(schema, list):
+        return [sanitize_schema(item) for item in schema]
+    if not isinstance(schema, dict):
+        return schema
+    out: dict = {}
+    for key, value in schema.items():
+        if key == "maxItems":
+            continue
+        if key == "minItems":
+            try:
+                out[key] = 1 if int(value) > 1 else int(value)
+            except (TypeError, ValueError):
+                out[key] = value
+            continue
+        if key in _SCHEMA_CHILD_KEYS and isinstance(value, dict):
+            out[key] = {k: sanitize_schema(v) for k, v in value.items()}
+        elif key in _SCHEMA_LIST_KEYS and isinstance(value, list):
+            out[key] = [sanitize_schema(v) for v in value]
+        elif key in ("items", "additionalProperties", "not", "if", "then", "else") \
+                and isinstance(value, (dict, list)):
+            out[key] = sanitize_schema(value)
+        else:
+            out[key] = value
+    return out
+
+
 # ── tools ────────────────────────────────────────────────────────────────────────
 
 def ollama_tools_to_anthropic(tools: list[dict] | None, *, cache_last: bool = False) -> list[dict]:
@@ -69,7 +109,7 @@ def ollama_tools_to_anthropic(tools: list[dict] | None, *, cache_last: bool = Fa
         entry = {
             "name": str(fn["name"]),
             "description": str(fn.get("description") or "")[:4096],
-            "input_schema": schema,
+            "input_schema": sanitize_schema(schema),
         }
         out.append(entry)
     if cache_last and out:
@@ -269,7 +309,7 @@ def response_format_to_output_config(response_format: dict | str | None) -> tupl
     if not response_format:
         return None, ""
     if isinstance(response_format, dict):
-        return {"format": {"type": "json_schema", "schema": response_format}}, ""
+        return {"format": {"type": "json_schema", "schema": sanitize_schema(response_format)}}, ""
     if str(response_format).lower() == "json":
         return None, "Respond with a single JSON object and nothing else."
     return None, ""
