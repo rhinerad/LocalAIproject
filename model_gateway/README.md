@@ -1,104 +1,107 @@
-# model_gateway — local-first hybrid router (Ollama tiers + optional Anthropic tier)
+# model_gateway — plan-only cloud assist for the local agent
 
-Proof of concept from the 2026-11-02 audit (`CHANGELOG/2026-11-02a_…`). It adds
-one more backend to the existing dispatcher in `local_agent/router.py` instead
-of a separate proxy process: there is **no new port**, and with
-`MODEL_GATEWAY_CLOUD` unset every turn routes exactly as before.
+**The cloud writes plans only; the local model executes.** The gateway never
+answers a turn and never calls a tool. For a heavy prompt it asks a cloud
+planning model (default `claude-opus-5-5`) for a numbered text plan, and the
+local Ollama model runs the whole turn with that plan in context. With
+`MODEL_GATEWAY_CLOUD` unset nothing ever leaves the box and every turn routes
+exactly as before.
+
+Second iteration of the 2026-11-02 prototype (`CHANGELOG/2026-11-02a`): the
+earlier cloud *answer* tiers (`tier-cloud-heavy` / `tier-cloud-fast`, picker
+pins, cloud dispatch in `ollama_client`) are removed. See
+`CHANGELOG/2026-11-04a` for the change and its evidence.
 
 ## The picture
 
-`router.decide()` is a taxi dispatcher in front of one parking spot (the 16 GB of
-VRAM). It already chooses between the GPU cab (`127.0.0.1:11434`), the CPU cab
-(`127.0.0.1:11435`), PowerInfer and the Mac farm. This package gives the
-dispatcher one more phone number: a long-distance carrier that never needs the
-parking spot.
+`router.decide()` is still the taxi dispatcher in front of one parking spot
+(the 16 GB of VRAM) and still picks the GPU cab (`127.0.0.1:11434`) or the CPU
+cab (`127.0.0.1:11435`). The cloud is now a dispatcher's phone-a-friend: for a
+hard fare it rings the planning model, writes the route it suggests on a
+sticky note, and hands that note to the local cab. The friend never drives.
 
 ```
-agent.py ──► router.decide(prompt) ──► Decision(tier, host, model, backend)
-                 │   gpu_busy() probes (read-only)            │
-                 │   classify_capability() → tool/logic/code  │
-                 │   model_gateway.policy.choose_cloud_tier() │
-                 ▼                                            ▼
-      backend="ollama"  → ollama_client → /api/chat on 11434 / 11435
-      backend="anthropic" → ollama_client → model_gateway.dispatch → anthropic SDK
-                                              (events → str / ToolCall / StreamEnd)
+agent.py ──► router.decide(prompt) ──► local Decision (gpu | cpu | farm), unchanged
+                 │   gpu_busy() probes (read-only)
+                 │   classify_capability() → logic?  ──► detail["needs_cloud_plan"] = True
+                 ▼
+agent.py: if needs_cloud_plan → model_gateway.request_plan(prompt, summary, tool_names)
+                 │                         one non-streaming call, tools=None, ≤1500 tokens
+                 ▼
+     msgs.insert(1, system: "Plan from planning model (follow, adapt if a step fails) …")
+                 ▼
+     local Ollama model executes the turn (tools, answers, everything) as before
 ```
 
-## Tier map (approved 2026-11-02)
+## When a plan is requested
 
-| alias | target | who goes here | guard |
-|---|---|---|---|
-| `tier-local-cpu` | Ollama 11435 (`num_gpu 0`, 4 threads) | compactor, memory extractor, planner, busy-GPU chat when cloud is off | unchanged; **never** cloud-eligible |
-| `tier-local-gpu` | Ollama 11434 (Huihui 14B/8B, coder, DeepSeek) | default interactive turns while the GPU is idle | existing `gpu_busy()`, thermal, GPU gate |
-| `tier-cloud-heavy` | `claude-opus-5-5`, effort `high` | unpinned **logic** turns (`difficulty.needs_escalation`), `cloud-heavy` pin, any `claude-*` pin | `MODEL_GATEWAY_CLOUD=1` + `ANTHROPIC_API_KEY` |
-| `tier-cloud-fast` | `claude-sonnet-5-5`, effort `medium` | unpinned **tool/code** turns while ComfyUI holds the GPU (port 8188 / queue owner / foreign VRAM), `cloud-fast` pin | same, plus `MODEL_GATEWAY_BUSY_TIER=1` |
+| condition | source |
+|---|---|
+| `MODEL_GATEWAY_CLOUD=1` and a credential is present | `config.py` |
+| the turn has a prompt (interactive), `prefer != "cpu"` | `policy.wants_cloud_plan` |
+| `classify_capability(prompt) == "logic"` (`difficulty.needs_escalation`) | `router.py` |
+| the caller did not pass `allow_cloud=False` (planner, helpers never do) | `router.decide` |
 
-Never cloud: `prefer == "cpu"`, callers that pass no prompt (title helpers,
-background workers), callers that pass `allow_cloud=False` (planner), pinned
-local models, image/creative turns (they drive local media tools), and every
-module that pins `CPU_HOST` directly (`context_compactor.py`,
-`memory_extractor.py`).
+Pinned local models still qualify (planning is additive). Tool, code, image
+and creative turns never ask for a plan. Busy-GPU turns are routed to the CPU
+tier exactly as before; the plan flag does not change that.
 
-## VRAM safety
+## What the cloud sees and returns
 
-A local model loads only when a body reaches `11434/api/chat`. The cloud
-Decision is returned from `decide()` before `prepare_gpu_model()` /
-`_finish_gpu_ollama()` run and is dispatched by `ollama_client` without building
-an Ollama request, so a cloud turn cannot collide with ComfyUI. When the GPU is
-busy the cloud route still calls `evict_gpu_residents()` (the same
-yield-to-render rule the CPU hand-off uses) so the agent's own resident 14B
-leaves the card. `test_router_hooks.py` asserts both.
+* System prompt: *"Return a numbered step-by-step plan for a local agent with
+  these tools: &lt;names&gt;. Do not perform the task. No code longer than
+  needed to specify a step."*
+* User content: the operator prompt (≤12k chars) plus a compact summary made
+  only of the assistant's own earlier replies (≤2k chars). No system prompt,
+  no tool results, no attachments, no inlined file contents beyond what the
+  operator prompt already holds.
+* `tools=None`, no `tool_choice`, `max_tokens` = `MODEL_GATEWAY_PLAN_MAX_TOKENS`
+  (default 1500), effort `MODEL_GATEWAY_PLAN_EFFORT` (default `high`).
+* Returns the text, or `None` on any failure (`offline`, `timeout`, `auth`,
+  `rate_limit`, `server`, `refusal`, `bad_request`, empty). It never raises
+  into the agent. Any tool-call block a proxy might echo is ignored and logged.
 
-## Offline / failure behaviour (decision 6)
-
-Any gateway failure (`offline`, `timeout`, `auth`, `rate_limit`, `server`,
-`refusal`, `bad_request`) is raised as `OllamaModelFailure` with a
-`gateway_kind`. The agent's existing one-retry path calls
-`router.fallback_after_primary_failure()`, which now re-decides locally with
-`allow_cloud=False` and puts `detail["fallback_note"]` on the local Decision;
-that Decision (reason starting with the note) is emitted in the turn's
-`route` event. The agent's own one-line note on that retry still uses its
-legacy 14B→8B wording until the one-line `agent.py` follow-up described in
-`CHANGELOG/2026-11-02a` lands. The gateway also logs a warning
-(`local_agent.model_gateway`) and `router.status()["model_gateway"]` carries
-`last_fallback` / `fallbacks` for the status badge.
+The agent then emits `note: cloud plan received` or `note: cloud plan
+unavailable; continuing locally`, and the turn's `route` event carries
+`detail.plan_source = "cloud" | "none"`. `router.status()["model_gateway"]`
+shows `plans`, `fallbacks`, `last_plan` (chars, tokens, tool_calls) and
+`last_fallback`.
 
 ## Files
 
 | file | role |
 |---|---|
-| `config.py` | env → `GatewayConfig`; tier aliases; `model_gateway/.env` loader (non-overriding) |
-| `policy.py` | pure `choose_cloud_tier()`; no I/O |
-| `translate.py` | Ollama ⇄ Messages API shapes (system lift, tool schemas, tool-call id minting, tool-result coalescing, `format` → `output_config`, usage → telemetry) |
-| `adapters/anthropic_backend.py` | official SDK; streaming; typed-error mapping; one retry when a replayed thinking block is rejected |
-| `adapters/base.py`, `adapters/__init__.py` | adapter contract + registry (add a vendor here) |
-| `dispatch.py` | host-prefix → adapter; fallback bookkeeping; `status_snapshot()` |
-| `events.py` | `TextDelta` / `ToolCalls` / `Done` / `CloudUnavailable` |
-| `preflight.py`, `start_gateway.ps1`, `start_gateway.sh` | read-only preflight; prints the Claude Code env block |
-| `test_gateway.py` | live A/B/C verification against real servers |
-| `test_translate.py`, `test_policy.py`, `test_adapter_mock.py`, `test_router_hooks.py` | offline tests (61) |
+| `config.py` | env → `GatewayConfig` (`plan` tier only); `model_gateway/.env` loader (non-overriding) |
+| `policy.py` | pure `wants_cloud_plan()`; no I/O |
+| `planning.py` | `request_plan()` and `build_plan_messages()`; the only cloud call the agent makes |
+| `translate.py` | Ollama ⇄ Messages API shapes; `sanitize_schema()` clamps array `minItems`/`maxItems` the API rejects |
+| `adapters/anthropic_backend.py` | official SDK; `complete()` (non-streaming, used for plans) and `stream()`; typed-error mapping |
+| `adapters/base.py`, `adapters/__init__.py` | adapter contract + registry |
+| `dispatch.py` | bookkeeping (`note_plan`, `note_fallback`, `status_snapshot`) |
+| `events.py` | `Completion` / `TextDelta` / `ToolCalls` / `Done` / `CloudUnavailable` |
+| `preflight.py`, `start_gateway.ps1`, `start_gateway.sh` | read-only preflight; `-CloudCheck` makes one ~8-token call to the planning model |
+| `test_gateway.py` | live A (local) / B (plan) / C (local tools) verification |
+| `test_translate.py`, `test_policy.py`, `test_adapter_mock.py`, `test_router_hooks.py` | offline tests (64) |
 | `env.example`, `requirements.txt` | configuration template; the one approved dependency |
 
 Hooks outside this directory (kept deliberately small):
 
-* `local_agent/router.py` — `Decision.backend` gains `"anthropic"`;
-  `_gateway()` lazy import; `_maybe_cloud_decision()` called once inside
-  `decide()`; `_cloud_fallback_decision()` from `fallback_after_primary_failure()`;
-  picker rows in `chat_models()`; `model_gateway` block in `status()`;
-  new `allow_cloud` keyword on `decide()`.
-* `local_agent/ollama_client.py` — `_is_cloud_host()` branch in `chat()` and
-  `chat_stream()` (mirrors the PowerInfer branch).
-* `local_agent/planner.py` — `decide(..., allow_cloud=False)`.
-* `local_agent/agent.py` — unchanged in the prototype (one-line note follow-up
-  pending, see the changelog).
+* `local_agent/router.py` — `_gateway()` lazy import; `_mark_cloud_plan()`
+  called once inside `decide()` (sets `detail["needs_cloud_plan"]`); `status()`
+  carries a `model_gateway` block; `decide(..., allow_cloud=True)` keyword.
+* `local_agent/agent.py` — `_request_cloud_plan()` runs once per turn right
+  after the hop-0 route is decided; inserts the plan as a system message.
+* `local_agent/planner.py` — `propose(..., guidance=...)` folds advisory text
+  into the local planning prompt; still `allow_cloud=False`.
+* `local_agent/ollama_client.py` — no gateway code any more.
 
 ## Setup
 
 ```powershell
 pip install -r model_gateway\requirements.txt          # anthropic SDK (~15 MB, approved)
 Copy-Item model_gateway\env.example model_gateway\.env  # then set ANTHROPIC_API_KEY, MODEL_GATEWAY_CLOUD=1
-.\model_gateway\start_gateway.ps1 -CloudCheck           # read-only preflight + one 8-token round trip
-.\local_agent\START_LOCAL_AGENT_GUI.ps1                 # normal launcher; picker now shows cloud-heavy / cloud-fast
+.\model_gateway\start_gateway.ps1 -CloudCheck           # read-only preflight + one tiny planning-model call
+.\local_agent\START_LOCAL_AGENT_GUI.ps1                 # normal launcher; nothing new in the picker
 ```
 
 Offline tests (no servers, no key):
@@ -107,43 +110,22 @@ Offline tests (no servers, no key):
 python -m unittest discover -s model_gateway -t . -p "test_*.py"   # -t . keeps package imports intact
 ```
 
-Live verification (needs the CPU Ollama tier; the cloud checks need the key):
+Live verification (needs the CPU Ollama tier; section B needs the key):
 
 ```powershell
 python model_gateway\test_gateway.py
 ```
 
-## Translation notes (what the adapter changes on the wire)
-
-* `temperature`, `top_p`, `repeat_penalty`, `num_*`, `keep_alive`, `think` are
-  dropped. Sampling parameters are rejected on the current API version and
-  thinking is governed by `output_config.effort`.
-* Ollama tool calls carry no id; ids are minted deterministically and the
-  provider's own ids are kept once a cloud hop has produced them. All tool
-  results of one assistant turn are sent as one user message of `tool_result`
-  blocks (the API otherwise stops making parallel calls).
-* The assistant turn still awaiting its tool results is replayed from the raw
-  provider blocks (thinking included); earlier turns are replayed as text and
-  `tool_use` only. If the API rejects a replayed block (history edited), the
-  adapter retries once without it.
-* Mid-conversation `system` messages (the agent's "planning assist") become
-  `[Operator note]` user text so the transcript stays append-only.
-* `format=<schema>` → `output_config.format` (json_schema); `format="json"` → a
-  system note.
-* `usage` is mapped onto Ollama's `eval_count` / `prompt_eval_count` so tracing
-  spans and the token ledger keep working; cache hits are under
-  `telemetry["gateway"]`.
-
-## Local proxy testing (decision 2 note)
+## Local proxy testing
 
 `MODEL_GATEWAY_BASE_URL` (or the SDK's own `ANTHROPIC_BASE_URL`) points the
-same adapter at any Anthropic-compatible server, for example Ollama's
+adapter at any Anthropic-compatible server, for example Ollama's
 `/v1/messages` on `http://127.0.0.1:11435`. For a non-Anthropic host the
 adapter stops sending `effort` and cache markers and uses a placeholder key;
-set the tier models to Ollama tags. Note that this path **does** load a local
-model, so it is for adapter testing, not for the VRAM-free cloud tier.
+set `MODEL_GATEWAY_PLAN_MODEL` to an Ollama tag. That path loads a local
+model, so it is for adapter testing only.
 
-## Claude Code against local models (goal 2)
+## Claude Code against local models
 
 No gateway is involved: Ollama ≥ 0.14 serves `/v1/messages` itself.
 
@@ -157,14 +139,12 @@ claude
 `tool_choice` and `count_tokens` are not supported on Ollama's endpoint, and
 pointing at 11434 loads that model into VRAM, so run the preflight first.
 
-## Known limits of the prototype
+## Known limits
 
-* Vision turns (user `images`) are translated but the policy never routes them
-  to the cloud; local media tooling owns them.
-* No server-side refusal fallback: a `refusal` stop reason falls back locally
-  like any other failure (`MODEL_GATEWAY_SERVER_FALLBACK` is reserved).
-* The agent's context trimming edits history client-side; on an account with
-  the preserved-thinking check enforced this costs one retry per edited hop
-  (handled) and the dropped reasoning for that hop.
-* Status polling calls `load_config()` each time; it is a few dict reads plus
-  an optional `.env` stat, not a network call.
+* The plan is advice. The injected system message says so, and the local
+  model still needs a live tool result before anything counts as done.
+* One plan per turn, requested at hop 0; later hops reuse it as context.
+* Context trimming can drop the injected plan on very long turns like any
+  other early system note.
+* The adapter's `stream()` path is retained for future use and tests; nothing
+  in the agent calls it.

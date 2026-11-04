@@ -1,21 +1,20 @@
-"""Gateway configuration: tier map and environment resolution. Stdlib only.
+"""Gateway configuration. Stdlib only.
+
+The gateway is **plan-only**: the cloud model never answers a turn and never
+calls tools. For a heavy prompt it returns a numbered text plan, and the local
+Ollama model executes the whole turn with that plan in context. So the only
+cloud "tier" is the planning model.
 
 Everything here is read from environment variables so the production files
 never embed a key or a hostname. ``load_config()`` is cheap and side-effect
 free apart from an optional, non-overriding read of ``model_gateway/.env``.
 
-Tier aliases (operator-facing names, stable across adapters):
-
-    tier-local-cpu     Ollama on EQUAL_SHARES_CPU_HOST   (unchanged, never cloud)
-    tier-local-gpu     Ollama on EQUAL_SHARES_GPU_HOST   (unchanged)
-    tier-cloud-heavy   Anthropic, heavy reasoning        (default claude-opus-5-5)
-    tier-cloud-fast    Anthropic, busy-GPU continuation  (default claude-sonnet-5-5)
-
-Picker pins the operator can select as a chat ``model``:
-
-    cloud-heavy  -> tier-cloud-heavy
-    cloud-fast   -> tier-cloud-fast
-    claude-*     -> that literal Anthropic model id on the heavy tier settings
+    MODEL_GATEWAY_CLOUD=1               master switch (default 0: nothing leaves the box)
+    ANTHROPIC_API_KEY / ANTHROPIC_AUTH_TOKEN   standard SDK credential
+    MODEL_GATEWAY_PLAN_MODEL            default claude-opus-5-5
+    MODEL_GATEWAY_PLAN_EFFORT           default high
+    MODEL_GATEWAY_PLAN_MAX_TOKENS       default 1500 (a plan, not an answer)
+    MODEL_GATEWAY_BASE_URL / ANTHROPIC_BASE_URL   optional local Anthropic-compatible server
 """
 from __future__ import annotations
 
@@ -27,21 +26,10 @@ from urllib.parse import urlparse
 PACKAGE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = PACKAGE_DIR.parent
 
-TIER_LOCAL_CPU = "tier-local-cpu"
-TIER_LOCAL_GPU = "tier-local-gpu"
-TIER_CLOUD_HEAVY = "tier-cloud-heavy"
-TIER_CLOUD_FAST = "tier-cloud-fast"
-
-PIN_CLOUD_HEAVY = "cloud-heavy"
-PIN_CLOUD_FAST = "cloud-fast"
-
-# ``Decision.host`` for a cloud route. router/ollama_client branch on this
-# prefix exactly the way they branch on the PowerInfer proxy host today.
-CLOUD_HOST_PREFIX = "anthropic://"
 ANTHROPIC_DEFAULT_NETLOC = "api.anthropic.com"
-
-DEFAULT_HEAVY_MODEL = "claude-opus-5-5"
-DEFAULT_FAST_MODEL = "claude-sonnet-5-5"
+DEFAULT_PLAN_MODEL = "claude-opus-5-5"
+DEFAULT_PLAN_EFFORT = "high"
+DEFAULT_PLAN_MAX_TOKENS = 1500
 VALID_EFFORT = ("low", "medium", "high", "xhigh", "max")
 
 
@@ -91,10 +79,10 @@ def apply_env_file(environ: dict | None = None, path: str | os.PathLike | None =
 
 
 @dataclass(frozen=True)
-class CloudTier:
-    alias: str
+class PlanTier:
     model: str
     effort: str
+    max_tokens: int
 
 
 @dataclass(frozen=True)
@@ -103,46 +91,37 @@ class GatewayConfig:
     credential_present: bool
     credential_source: str            # "ANTHROPIC_API_KEY" | "ANTHROPIC_AUTH_TOKEN" | ""
     base_url: str | None              # None -> SDK default (api.anthropic.com)
-    netloc: str                       # what Decision.host carries after the prefix
-    heavy: CloudTier
-    fast: CloudTier
-    max_tokens: int
+    netloc: str
+    plan: PlanTier
     timeout_s: float
     max_retries: int
     send_effort: bool                 # off when targeting a non-Anthropic base URL
     prompt_cache: bool
-    busy_tier_enabled: bool           # unpinned turns while GPU busy -> fast tier
-    server_fallback: bool             # beta server-side refusal fallback
     env_file_keys: tuple[str, ...] = field(default_factory=tuple)
 
     @property
     def is_official_endpoint(self) -> bool:
         return self.netloc == ANTHROPIC_DEFAULT_NETLOC
 
-    def tier(self, alias: str) -> CloudTier:
-        if alias == TIER_CLOUD_FAST:
-            return self.fast
-        return self.heavy
-
-    def host(self) -> str:
-        return CLOUD_HOST_PREFIX + self.netloc
+    @property
+    def planning_available(self) -> bool:
+        return self.cloud_enabled and self.credential_present
 
     def public_dict(self) -> dict:
         """Status/UI snapshot. Never includes the credential value."""
         return {
+            "mode": "plan-only",
             "cloud_enabled": self.cloud_enabled,
             "credential_present": self.credential_present,
             "credential_source": self.credential_source,
+            "planning_available": self.planning_available,
             "base_url": self.base_url or f"https://{ANTHROPIC_DEFAULT_NETLOC}",
             "official_endpoint": self.is_official_endpoint,
-            "heavy": {"alias": self.heavy.alias, "model": self.heavy.model, "effort": self.heavy.effort},
-            "fast": {"alias": self.fast.alias, "model": self.fast.model, "effort": self.fast.effort},
-            "max_tokens": self.max_tokens,
+            "plan": {"model": self.plan.model, "effort": self.plan.effort,
+                     "max_tokens": self.plan.max_tokens},
             "timeout_s": self.timeout_s,
             "send_effort": self.send_effort,
             "prompt_cache": self.prompt_cache,
-            "busy_tier_enabled": self.busy_tier_enabled,
-            "server_fallback": self.server_fallback,
             "env_file_keys": list(self.env_file_keys),
         }
 
@@ -173,17 +152,6 @@ def load_config(environ: dict | None = None, *, read_env_file: bool = True) -> G
         netloc = ANTHROPIC_DEFAULT_NETLOC
     official = netloc == ANTHROPIC_DEFAULT_NETLOC
 
-    heavy = CloudTier(
-        TIER_CLOUD_HEAVY,
-        (env.get("MODEL_GATEWAY_HEAVY_MODEL") or DEFAULT_HEAVY_MODEL).strip(),
-        _effort(env.get("MODEL_GATEWAY_HEAVY_EFFORT"), "high"),
-    )
-    fast = CloudTier(
-        TIER_CLOUD_FAST,
-        (env.get("MODEL_GATEWAY_FAST_MODEL") or DEFAULT_FAST_MODEL).strip(),
-        _effort(env.get("MODEL_GATEWAY_FAST_EFFORT"), "medium"),
-    )
-
     def _int(name: str, default: int, lo: int, hi: int) -> int:
         try:
             return max(lo, min(hi, int(env.get(name) or default)))
@@ -196,32 +164,27 @@ def load_config(environ: dict | None = None, *, read_env_file: bool = True) -> G
         except (TypeError, ValueError):
             return default
 
+    # MODEL_GATEWAY_HEAVY_* are accepted as aliases from the first prototype.
+    plan = PlanTier(
+        (env.get("MODEL_GATEWAY_PLAN_MODEL") or env.get("MODEL_GATEWAY_HEAVY_MODEL")
+         or DEFAULT_PLAN_MODEL).strip(),
+        _effort(env.get("MODEL_GATEWAY_PLAN_EFFORT") or env.get("MODEL_GATEWAY_HEAVY_EFFORT"),
+                DEFAULT_PLAN_EFFORT),
+        _int("MODEL_GATEWAY_PLAN_MAX_TOKENS", DEFAULT_PLAN_MAX_TOKENS, 256, 8000),
+    )
+
     return GatewayConfig(
         cloud_enabled=_truthy(env.get("MODEL_GATEWAY_CLOUD"), False),
         credential_present=bool(source),
         credential_source=source,
         base_url=base_url,
         netloc=netloc,
-        heavy=heavy,
-        fast=fast,
-        max_tokens=_int("MODEL_GATEWAY_MAX_TOKENS", 16000, 256, 128000),
-        timeout_s=_float("MODEL_GATEWAY_TIMEOUT_S", 600.0),
+        plan=plan,
+        timeout_s=_float("MODEL_GATEWAY_TIMEOUT_S", 180.0),
         max_retries=_int("MODEL_GATEWAY_MAX_RETRIES", 2, 0, 5),
         # Ollama's /v1/messages and other local proxies may reject
         # output_config; only send effort to the official endpoint by default.
         send_effort=_truthy(env.get("MODEL_GATEWAY_SEND_EFFORT"), official),
         prompt_cache=_truthy(env.get("MODEL_GATEWAY_PROMPT_CACHE"), official),
-        busy_tier_enabled=_truthy(env.get("MODEL_GATEWAY_BUSY_TIER"), True),
-        server_fallback=_truthy(env.get("MODEL_GATEWAY_SERVER_FALLBACK"), False),
         env_file_keys=tuple(added),
     )
-
-
-def is_cloud_host(host: str | None) -> bool:
-    return bool(host) and str(host).startswith(CLOUD_HOST_PREFIX)
-
-
-def is_cloud_pin(model: str | None) -> bool:
-    """True for the picker aliases or any literal Anthropic model id."""
-    name = str(model or "").strip().lower()
-    return name in {PIN_CLOUD_HEAVY, PIN_CLOUD_FAST} or name.startswith("claude-")

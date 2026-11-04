@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gateway preflight: is every tier reachable, and is the cloud tier armed?
+"""Gateway preflight: are both Ollama tiers reachable, and is cloud planning enabled?
 
 Read-only. Probes the two Ollama servers and port 8188 the way router.py
 does (TCP + /api/tags + /api/ps), checks the SDK and credential presence,
@@ -61,21 +61,20 @@ def _ollama(host: str) -> dict:
 
 
 def _cloud_check(cfg: gw.GatewayConfig) -> dict:
+    """One tiny non-streaming call to the planning model (no tools, ~8 tokens)."""
     from model_gateway.adapters import get_backend
     backend = get_backend("anthropic", cfg)
-    pieces = list(backend.stream(model=cfg.fast.model,
-                                 messages=[{"role": "user", "content": "Reply with the single word: ready"}],
-                                 options={"max_tokens": 16, "effort": "low"}))
-    text = "".join(p.text for p in pieces if isinstance(p, gw.TextDelta)).strip()
-    done = next((p for p in pieces if isinstance(p, gw.Done)), None)
-    return {"ok": True, "model": done.model if done else cfg.fast.model, "reply": text[:60],
-            "usage": (done.telemetry.get("gateway") if done else {})}
+    result = backend.complete(model=cfg.plan.model,
+                              messages=[{"role": "user", "content": "Reply with the single word: ready"}],
+                              options={"max_tokens": 16, "effort": "low"})
+    return {"ok": True, "model": result.model, "reply": result.text.strip()[:60],
+            "tool_calls": len(result.calls), "usage": result.telemetry.get("gateway", {})}
 
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--strict", action="store_true", help="exit 1 when the cloud tier is enabled but unusable")
-    ap.add_argument("--cloud-check", action="store_true", help="send one tiny request to the fast tier")
+    ap.add_argument("--strict", action="store_true", help="exit 1 when cloud planning is enabled but unusable")
+    ap.add_argument("--cloud-check", action="store_true", help="send one tiny request to the planning model")
     ap.add_argument("--json", action="store_true", help="machine-readable output")
     args = ap.parse_args(argv)
 
@@ -109,19 +108,18 @@ def main(argv: list[str] | None = None) -> int:
     else:
         g = report["gateway"]
         print("model_gateway preflight")
-        print(f"  cloud tier      : {'ENABLED' if g['cloud_enabled'] else 'off'}  "
+        print(f"  cloud planning  : {'ENABLED' if g['cloud_enabled'] else 'off'}  "
               f"(credential {'present via ' + g['credential_source'] if g['credential_present'] else 'MISSING'})")
         print(f"  endpoint        : {g['base_url']}  {'(official)' if g['official_endpoint'] else '(custom base URL)'}")
-        print(f"  heavy tier      : {g['heavy']['model']}  effort={g['heavy']['effort']}")
-        print(f"  fast tier       : {g['fast']['model']}  effort={g['fast']['effort']}  "
-              f"(busy-GPU turns {'on' if g['busy_tier_enabled'] else 'off'})")
+        print(f"  planning model  : {g['plan']['model']}  effort={g['plan']['effort']}  "
+              f"max_tokens={g['plan']['max_tokens']}  (plan-only: never answers, no tools)")
         h = report["health"] or {}
         print(f"  anthropic SDK   : {'v' + str(h.get('sdk_version')) if h.get('sdk_installed') else 'not installed'}")
         for key in ("gpu_ollama", "cpu_ollama"):
             o = report[key]
             print(f"  {key:<15} : {o['host']}  {'UP' if o['up'] else 'DOWN'}  "
                   f"models={len(o['models'])}  resident={o['resident'] or '[]'}")
-        print(f"  ComfyUI :8188   : {'LISTENING (GPU busy -> fast tier / CPU)' if report['comfy_8188_listening'] else 'closed'}")
+        print(f"  ComfyUI :8188   : {'LISTENING (GPU busy -> local CPU tier)' if report['comfy_8188_listening'] else 'closed'}")
         if "cloud_check" in report:
             c = report["cloud_check"]
             print(f"  cloud check     : {'OK ' + str(c.get('model')) + ' -> ' + repr(c.get('reply')) if c.get('ok') else 'FAILED ' + str(c)}")

@@ -1,136 +1,48 @@
-"""Pure routing policy: which turns may leave the workstation. No I/O.
+"""Pure routing policy for the plan-only gateway. No I/O.
 
-``choose_cloud_tier`` returns ``None`` whenever the existing local router
-should keep the decision. It never inspects the GPU itself; the router passes
-in the result of its own ``gpu_busy()`` probe so the VRAM rules stay in one
-place (``local_agent/router.py``).
+``wants_cloud_plan`` decides whether a turn should first ask the cloud planning
+model for a text plan. It never changes *which local model answers*: the
+router's own GPU/CPU decision stands, and the plan is injected as context for
+that local model. No turn is ever answered by the cloud and no tool is ever
+called there.
 
-Eligibility, as approved 2026-11-02:
-
-* explicitly pinned cloud requests (``cloud-heavy``, ``cloud-fast``, ``claude-*``)
-* unpinned heavy-logic turns (``capability == "logic"``) -> heavy tier
-* unpinned interactive turns while the GPU is busy       -> fast tier
-  (only ``tool`` / ``code`` capabilities; image and creative turns stay local
-  because they drive local media tooling)
-
-Never cloud: ``prefer == "cpu"`` (operator forced local), any call without a
-prompt (planner, title helpers, background workers), any pinned local model,
-and every caller that pins ``CPU_HOST`` directly (compactor, memory extractor).
+Eligible: an interactive turn (a prompt is present) classified as heavy logic
+(``capability == "logic"``, i.e. ``difficulty.needs_escalation``), while the
+cloud switch is on and a credential is present, and the operator has not
+forced the offline tier (``prefer == "cpu"``). Callers that pass
+``allow_cloud=False`` (the local planner, background helpers) are never
+eligible.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from .config import GatewayConfig
 
-from .config import (
-    PIN_CLOUD_FAST,
-    PIN_CLOUD_HEAVY,
-    TIER_CLOUD_FAST,
-    TIER_CLOUD_HEAVY,
-    GatewayConfig,
-    is_cloud_pin,
-)
-
-CAP_TOOL = "tool"
 CAP_LOGIC = "logic"
-CAP_CODE = "code"
-CAP_IMAGE = "image"
-CAP_CREATIVE = "creative"
-
-BUSY_TIER_CAPABILITIES = frozenset({CAP_TOOL, CAP_CODE})
 
 
-@dataclass(frozen=True)
-class TierChoice:
-    alias: str
-    model: str
-    effort: str
-    reason: str
-    pinned: bool
-
-    def as_detail(self, config: GatewayConfig) -> dict:
-        """What ``router.Decision.detail["gateway"]`` carries."""
-        return {
-            "alias": self.alias,
-            "model": self.model,
-            "effort": self.effort,
-            "pinned": self.pinned,
-            "reason": self.reason,
-            "endpoint": config.netloc,
-            "options": {"effort": self.effort, "max_tokens": config.max_tokens},
-        }
-
-
-@dataclass(frozen=True)
-class Refusal:
-    """A cloud pin that cannot run. The router turns this into a precise
-    non-runnable Decision instead of silently substituting a local model."""
-    model: str
-    reason: str
-
-
-def _pin_choice(model: str, config: GatewayConfig) -> TierChoice:
-    name = model.strip()
-    lowered = name.lower()
-    if lowered == PIN_CLOUD_FAST:
-        tier = config.fast
-        return TierChoice(tier.alias, tier.model, tier.effort,
-                          f"pinned {PIN_CLOUD_FAST} -> {tier.model}", True)
-    if lowered == PIN_CLOUD_HEAVY:
-        tier = config.heavy
-        return TierChoice(tier.alias, tier.model, tier.effort,
-                          f"pinned {PIN_CLOUD_HEAVY} -> {tier.model}", True)
-    # Literal claude-* id: heavy-tier settings, the operator's exact model.
-    return TierChoice(TIER_CLOUD_HEAVY, name, config.heavy.effort,
-                      f"pinned literal cloud model {name}", True)
-
-
-def choose_cloud_tier(
+def wants_cloud_plan(
     *,
     config: GatewayConfig,
     prefer: str,
     model: str | None,
     capability: str,
-    gpu_busy: bool,
-    busy_reason: str = "",
     has_prompt: bool,
     allow_cloud: bool = True,
-) -> TierChoice | Refusal | None:
-    pinned_cloud = is_cloud_pin(model)
-
+) -> tuple[bool, str]:
+    """Return ``(wanted, reason)``. ``model`` is accepted for symmetry with the
+    router and for future per-pin exclusions; a pinned local model can still
+    receive a plan because planning is additive."""
+    del model
     if not allow_cloud:
-        # Caller excluded itself (planner). A cloud pin falls back to the
-        # local auto path; the router treats the pin as absent.
-        return None
-
-    if pinned_cloud:
-        if not config.cloud_enabled:
-            return Refusal(str(model), "cloud tier is disabled (MODEL_GATEWAY_CLOUD is not 1)")
-        if not config.credential_present:
-            return Refusal(str(model), "no ANTHROPIC_API_KEY (or ANTHROPIC_AUTH_TOKEN) is set")
-        return _pin_choice(str(model), config)
-
-    if model:
-        return None  # a pinned local model always stays local
-    if not config.cloud_enabled or not config.credential_present:
-        return None
+        return False, "caller excluded cloud planning"
+    if not config.cloud_enabled:
+        return False, "cloud planning disabled (MODEL_GATEWAY_CLOUD is not 1)"
+    if not config.credential_present:
+        return False, "no ANTHROPIC_API_KEY (or ANTHROPIC_AUTH_TOKEN) is set"
     if prefer == "cpu":
-        return None  # operator forced the offline tier
+        return False, "operator forced the offline tier"
     if not has_prompt:
-        return None  # background/helper callers never leave the box
-
-    if capability == CAP_LOGIC:
-        tier = config.heavy
-        why = "heavy-logic turn -> cloud heavy tier"
-        if gpu_busy:
-            why += f" (GPU busy: {busy_reason or 'render owns the card'})"
-        return TierChoice(tier.alias, tier.model, tier.effort, why, False)
-
-    if gpu_busy and config.busy_tier_enabled and capability in BUSY_TIER_CAPABILITIES:
-        tier = config.fast
-        return TierChoice(
-            tier.alias, tier.model, tier.effort,
-            f"GPU busy ({busy_reason or 'render owns the card'}); "
-            f"{capability or 'chat'} turn continues on cloud fast tier instead of CPU 8B",
-            False)
-
-    return None
+        return False, "no interactive prompt (helper/background caller)"
+    if capability != CAP_LOGIC:
+        return False, f"capability {capability or 'none'} is not heavy logic"
+    return True, "heavy-logic turn: ask the planning model for a plan, execute locally"

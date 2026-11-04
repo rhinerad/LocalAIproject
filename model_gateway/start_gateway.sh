@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Model gateway preflight (Linux/macOS). No separate gateway process exists:
-# the hybrid router lives inside local_agent (Option B). This arms the cloud
-# tier for the current shell when sourced with --enable, verifies both Ollama
-# tiers, and prints the Claude Code environment block for local-model CLI use.
+# the plan-only hook lives inside local_agent. This enables cloud planning for
+# the current shell when sourced with --enable, verifies both Ollama tiers,
+# and prints the Claude Code environment block for local-model CLI use.
 #
 #   bash model_gateway/start_gateway.sh                 # report only
 #   source model_gateway/start_gateway.sh --enable      # export MODEL_GATEWAY_CLOUD=1 here
-#   bash model_gateway/start_gateway.sh --cloud-check   # one tiny cloud round trip
+#   bash model_gateway/start_gateway.sh --cloud-check   # one tiny planning-model call
 #   bash model_gateway/start_gateway.sh --strict
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

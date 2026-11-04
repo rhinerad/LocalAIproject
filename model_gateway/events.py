@@ -33,6 +33,16 @@ class Done:
     stopped: bool = False                           # cooperative stop fired
 
 
+@dataclass
+class Completion:
+    """Result of one non-streaming call (``AnthropicBackend.complete``)."""
+    model: str
+    text: str
+    calls: list[dict] = field(default_factory=list)   # Ollama-shaped; empty when tools=None
+    stop_reason: str | None = None
+    telemetry: dict = field(default_factory=dict)
+
+
 class CloudUnavailable(RuntimeError):
     """The cloud tier cannot serve this request. Callers fall back locally.
 

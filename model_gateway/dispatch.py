@@ -1,91 +1,53 @@
-"""Call-time glue used by ``local_agent/ollama_client.py``.
+"""Bookkeeping for the plan-only gateway: last call, last plan, last fallback.
 
-``stream_for_host`` is what the Ollama client calls when ``Decision.host``
-starts with ``anthropic://``. It resolves the adapter from the host prefix,
-streams provider-neutral events, and records the outcome for ``status()``.
-
-The gateway never decides *whether* a turn goes to the cloud here; that is
-``router.decide()`` via ``policy.choose_cloud_tier``. This module only knows
-how to talk to the chosen provider.
+The gateway never decides *whether* a turn asks for a plan here; that is
+``router.decide()`` via ``policy.wants_cloud_plan``. This module records what
+happened so ``router.status()`` and the logs can show it.
 """
 from __future__ import annotations
 
 import logging
 import threading
 import time
-from typing import Callable, Iterator
 
 from .adapters import get_backend
-from .config import CLOUD_HOST_PREFIX, GatewayConfig, is_cloud_host, load_config
-from .events import CloudUnavailable, Done, TextDelta, ToolCalls
+from .config import GatewayConfig, load_config
 
 log = logging.getLogger("local_agent.model_gateway")
 
 _LOCK = threading.Lock()
 _LAST: dict = {
-    "last_call": None,       # {"model", "stop_reason", "ok", "at", "telemetry"}
+    "last_plan": None,       # {"model", "chars", "tool_calls", "stop_reason", "at", "telemetry"}
     "last_fallback": None,   # {"kind", "detail", "at", "from_model"}
-    "calls": 0,
+    "plans": 0,
     "fallbacks": 0,
 }
 
 
-def backend_name_for_host(host: str) -> str:
-    if not is_cloud_host(host):
-        raise CloudUnavailable("disabled", f"{host!r} is not a gateway host")
-    return "anthropic"  # the prefix is the provider; extend here for a second vendor
-
-
-def stream_for_host(
-    host: str,
-    *,
-    model: str,
-    messages: list[dict],
-    tools: list[dict] | None = None,
-    response_format: dict | str | None = None,
-    options: dict | None = None,
-    should_stop: Callable[[], bool] | None = None,
-    config: GatewayConfig | None = None,
-) -> Iterator[TextDelta | ToolCalls | Done]:
-    cfg = config or load_config()
-    backend = get_backend(backend_name_for_host(host), cfg)
+def note_plan(*, model: str, chars: int, tool_calls: int, stop_reason: str | None,
+              telemetry: dict | None = None) -> dict:
+    entry = {"model": model, "chars": int(chars), "tool_calls": int(tool_calls),
+             "stop_reason": stop_reason, "at": time.time(),
+             "telemetry": dict((telemetry or {}).get("gateway") or {})}
     with _LOCK:
-        _LAST["calls"] += 1
-    try:
-        for piece in backend.stream(model=model, messages=messages, tools=tools,
-                                    response_format=response_format, options=options,
-                                    should_stop=should_stop):
-            if isinstance(piece, Done):
-                with _LOCK:
-                    _LAST["last_call"] = {
-                        "model": piece.model, "stop_reason": piece.stop_reason,
-                        "ok": True, "at": time.time(),
-                        "telemetry": dict(piece.telemetry.get("gateway", {})),
-                    }
-            yield piece
-    except CloudUnavailable as exc:
-        note_fallback(exc.kind, exc.detail, from_model=model)
-        raise
+        _LAST["plans"] += 1
+        _LAST["last_plan"] = entry
+    log.info("model_gateway plan: %s chars=%d tool_calls=%d in=%s out=%s",
+             model, chars, tool_calls,
+             entry["telemetry"].get("input_tokens"), entry["telemetry"].get("output_tokens"))
+    return entry
 
 
 def note_fallback(kind: str, detail: str, *, from_model: str | None = None) -> dict:
-    """Record a cloud->local fallback so the status badge and logs show it."""
+    """Record that the cloud plan was unavailable; the turn continues locally."""
     entry = {"kind": kind, "detail": str(detail)[:300], "at": time.time(),
              "from_model": from_model}
     with _LOCK:
         _LAST["fallbacks"] += 1
         _LAST["last_fallback"] = entry
-        _LAST["last_call"] = {"model": from_model, "stop_reason": None, "ok": False,
-                              "at": entry["at"], "telemetry": {}}
-    log.warning("model_gateway fallback to local Ollama: %s — %s (from %s)",
+    log.warning("model_gateway: cloud plan unavailable (%s): %s (model %s); continuing locally",
                 kind, entry["detail"], from_model)
     return entry
-
-
-def fallback_note(kind: str, detail: str, local_model: str | None) -> str:
-    """One-line operator note for the turn on which a fallback happened."""
-    target = local_model or "the local Ollama tier"
-    return f"cloud tier unavailable ({kind}); continuing this turn on {target}"
 
 
 def status_snapshot(config: GatewayConfig | None = None) -> dict:
@@ -97,5 +59,4 @@ def status_snapshot(config: GatewayConfig | None = None) -> dict:
         snap["health"] = get_backend("anthropic", cfg).health()
     except Exception as exc:  # health must never break status()
         snap["health"] = {"backend": "anthropic", "error": str(exc)[:200]}
-    snap["host"] = CLOUD_HOST_PREFIX + cfg.netloc
     return snap
