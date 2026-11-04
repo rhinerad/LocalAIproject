@@ -199,3 +199,37 @@ To finish on the workstation, from the gateway worktree on this branch:
 The patch was checked with `git apply --check` against the remote head
 before it was committed; the hook itself was tested in the cloud session
 (64 tests OK, section 2) with the patched file in place.
+
+## 6. Workstation verification (2026-11-04, reported by the workstation agent)
+
+Section 5 is complete: the patch was applied on the workstation and pushed as
+`85fb98b` (fast-forward from `63d7fd5`; `model_gateway/pending/` removed).
+The cloud session re-fetched that commit and confirmed `local_agent/agent.py`
+is byte-identical to the file tested in section 2.
+
+- Offline: `python -m unittest discover -s model_gateway -t . -p "test_*.py"`
+  went from `Ran 64 tests ... FAILED (errors=4)` (the four `AgentHookTests`
+  `AttributeError`s) before the patch to `Ran 64 tests in 5.068s ... OK` after.
+- `.\model_gateway\start_gateway.ps1 -CloudCheck -Strict`: exit 0,
+  `cloud check : OK claude-opus-5-5 -> 'ready'`. This is the first real
+  Anthropic round trip for the gateway.
+- `python model_gateway\test_gateway.py`: `OK (10 pass, 0 fail, 0 skip)` with
+  port 8188 closed. Section B: `decide stays local` (tier=cpu, backend=ollama,
+  `huihui_ai/qwen3-abliterated:8b`; the GPU host had a foreign resident
+  `nomic-embed-text:latest`, so the router's normal "resident not loaded by
+  this agent" rule chose the CPU tier, which is the intended behaviour, and
+  the plan flag was still set because it is additive); `decide flags
+  needs_cloud_plan` (claude-opus-5-5, effort high, max_tokens 1500);
+  `request_plan returns text` (10.9 s, 1055 chars, 150 tokens in, 849 out,
+  stop=end_turn); `no tool calls in cloud response: 0`; `no /api/chat to GPU
+  host: []`; `GPU /api/ps unchanged (set compare)`
+  `{'nomic-embed-text:latest'}` before and after.
+- `model_gateway\.env` stayed git-ignored; no key was printed.
+
+Still unverified: the GUI turn (`route.detail.plan_source == "cloud"` and the
+`cloud plan received` note). Port 8760 was already held by the agent started
+from the `wip/october-2026` checkout, and a second GUI from the gateway
+worktree must not be started beside it. Run it after that agent is stopped,
+from a shell where `MODEL_GATEWAY_CLOUD=1` is set. The workstation router
+suites were not re-run; the pre-existing 12 FAIL + 2 ERROR of section 3 are
+neither fixed nor rechecked.
