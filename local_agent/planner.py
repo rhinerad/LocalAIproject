@@ -76,10 +76,15 @@ def validate_plan(value: Any, operator_goal: str) -> dict | None:
 
 
 def propose(operator_goal: str, checkpoint: str = "", prefer: str = "auto",
-            model: str | None = None) -> tuple[dict | None, str]:
-    """Request a JSON plan. Returns ``(plan, reason)`` and never raises for bad JSON."""
-    # Plans are always produced locally: allow_cloud=False keeps this seam on
-    # the Ollama tiers even when the chat itself is pinned to the cloud tier.
+            model: str | None = None, guidance: str = "") -> tuple[dict | None, str]:
+    """Request a JSON plan. Returns ``(plan, reason)`` and never raises for bad JSON.
+
+    ``guidance`` is optional advisory text (for example the plan-only cloud
+    gateway's step list). It is folded into the local planning prompt; this
+    function itself never calls the cloud (``allow_cloud=False``).
+    """
+    # Plans are always produced locally: allow_cloud=False keeps model_gateway
+    # from flagging this helper call for a cloud plan of its own.
     route = router.decide(prefer, model=model, allow_cloud=False)
     if not route.model:
         return None, "no eligible local model"
@@ -92,6 +97,9 @@ def propose(operator_goal: str, checkpoint: str = "", prefer: str = "auto",
     )
     if checkpoint:
         message += "\n\nExisting trusted checkpoint:\n" + _clean(checkpoint, 900)
+    if guidance:
+        message += ("\n\nGuidance from the planning model (advisory; it proves nothing "
+                    "about files or state):\n" + _clean(guidance, 1800))
     opts = route.options()
     # A plan proposal should be short, stable, and never turn on a model's
     # optional thinking stream. It runs sequentially inside agent.answer().

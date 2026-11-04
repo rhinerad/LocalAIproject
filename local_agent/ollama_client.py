@@ -372,48 +372,6 @@ def _is_powerinfer_host(host: str | None) -> bool:
     return (host or HOST) == router.POWERINFER_PROXY_HOST
 
 
-def _is_cloud_host(host: str | None) -> bool:
-    """``Decision.host`` of a model_gateway cloud route (``anthropic://…``)."""
-    return bool(host) and str(host).startswith("anthropic://")
-
-
-def _cloud_chat_stream(messages: list[dict], *, model: str | None, host: str,
-                       options: dict | None, should_stop, tools: list | None,
-                       response_format: dict | str | None = None
-                       ) -> Iterator[Union[str, ToolCall, StreamEnd]]:
-    """Dispatch a cloud route through model_gateway and re-yield this module's
-    own stream types so ``agent.py`` never sees a provider object.
-
-    Any gateway failure is raised as ``OllamaModelFailure`` carrying
-    ``gateway_kind`` so the agent's existing one-retry path calls
-    ``router.fallback_after_primary_failure`` and continues locally.
-    """
-    gw = router._gateway()
-    if gw is None:
-        raise OllamaModelFailure("cloud route requested but model_gateway is not importable")
-    if not model:
-        raise OllamaModelFailure("cloud route requested without a model id")
-    visible = 0
-    try:
-        for piece in gw.stream_for_host(
-                host, model=model, messages=messages, tools=tools,
-                response_format=response_format, options=options,
-                should_stop=should_stop):
-            if isinstance(piece, gw.TextDelta):
-                visible += len(piece.text)
-                yield piece.text
-            elif isinstance(piece, gw.ToolCalls):
-                if piece.calls:
-                    yield ToolCall(piece.calls)
-            elif isinstance(piece, gw.Done):
-                yield StreamEnd(piece.telemetry, visible_chars=visible,
-                                raw_content_chars=visible)
-    except gw.CloudUnavailable as exc:
-        err = OllamaModelFailure(f"cloud tier unavailable ({exc.kind}): {exc.detail}")
-        err.gateway_kind = exc.kind
-        raise err from exc
-
-
 def chat(messages: list[dict], model: str | None = None,
          options: dict | None = None, timeout: int = 900,
          host: str | None = None,
@@ -432,20 +390,6 @@ def chat(messages: list[dict], model: str | None = None,
     ``.telemetry``: ``eval_count``, ``prompt_eval_count``, ``total_duration``,
     and ``eval_duration`` copied from Ollama when present.
     """
-    if _is_cloud_host(host):
-        pieces: list[str] = []
-        calls: list = []
-        telemetry: dict = {}
-        for piece in _cloud_chat_stream(messages, model=model, host=host, options=options,
-                                        should_stop=None, tools=tools,
-                                        response_format=response_format):
-            if isinstance(piece, ToolCall):
-                calls = piece.calls
-            elif isinstance(piece, StreamEnd):
-                telemetry = piece.telemetry
-            elif isinstance(piece, str):
-                pieces.append(piece)
-        return ChatResult("".join(pieces), calls, telemetry)
     if _is_powerinfer_host(host):
         import powerinfer_client
         text, calls = powerinfer_client.chat(
@@ -552,10 +496,6 @@ def chat_stream(messages: list[dict], model: str | None = None,
     counts so far (and ``chat_telemetry`` from the last parsed chunk if any),
     then returns — it does not wait for ``done=True``.
     """
-    if _is_cloud_host(host):
-        yield from _cloud_chat_stream(messages, model=model, host=host, options=options,
-                                      should_stop=should_stop, tools=tools)
-        return
     if _is_powerinfer_host(host):
         import powerinfer_client
         yield from powerinfer_client.chat_stream(
