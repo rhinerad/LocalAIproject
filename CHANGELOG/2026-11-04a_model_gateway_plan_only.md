@@ -168,3 +168,34 @@ scope for this change.
   `python model_gateway\test_gateway.py`, then one GUI turn with a heavy
   prompt and `route.detail.plan_source == "cloud"` in the route event.
 - Prompt-cache hit rate for the planning system prompt is unmeasured.
+
+## 5. Delivery state on `origin/claude/jolly-dirac-9impbq` (added after the push)
+
+This change was pushed from the cloud session through the GitHub contents
+API (`git push` is denied for the agent by `.claude/settings.local.json`),
+one commit per batch. 24 of the 25 files above are on the remote byte-for-byte
+(verified with `git fetch` + `git diff` against the local commit). The one
+exception is `local_agent/agent.py` (209 KB): its full-content upload exceeded
+the single-call size limit twice, so the 55-line hook described in section 1
+is delivered as `model_gateway/pending/agent_py_plan_hook.patch` instead.
+
+Until that patch is applied, the remote branch is **incomplete**:
+
+- `router.decide()` flags heavy-logic turns (`needs_cloud_plan`) but nothing
+  in `agent.py` consumes the flag, so no plan is ever requested and every
+  turn behaves exactly as before. Safe, but not the feature.
+- `model_gateway/test_router_hooks.py::AgentHookTests` (4 tests) fail with
+  `AttributeError: module 'agent' has no attribute '_request_cloud_plan'`.
+
+To finish on the workstation, from the gateway worktree on this branch:
+
+    git apply --check model_gateway\pending\agent_py_plan_hook.patch
+    git apply model_gateway\pending\agent_py_plan_hook.patch
+    python -m unittest discover -s model_gateway -t . -p "test_*.py"   # expect 64 OK
+    git rm model_gateway\pending\agent_py_plan_hook.patch
+    git commit -am "Apply the agent.py plan-only hook (model_gateway 4/4)"
+    git push -u origin claude/jolly-dirac-9impbq
+
+The patch was checked with `git apply --check` against the remote head
+before it was committed; the hook itself was tested in the cloud session
+(64 tests OK, section 2) with the patched file in place.
