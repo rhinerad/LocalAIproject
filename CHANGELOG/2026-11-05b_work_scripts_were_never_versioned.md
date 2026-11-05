@@ -75,3 +75,38 @@ level; subfolders (runtime state, scratch data) are left behind on purpose.
   ignored (a package rather than flat scripts). If `git status` after the
   copy shows a script the agent imports still missing, report it and extend
   the negation for that path only.
+
+## 5. Done on the workstation (2026-11-05, reported by the workstation agent)
+
+Pushed as `1d91b61`: 167 files added under `work/` (141 `.py`, 24 `.ps1`,
+2 `.md`; 38,812 lines), nothing outside `work/`, a fast-forward. Largest
+file `run_prompt_pack_production.py` at 423,778 bytes; none over 1 MB.
+
+The keyword tripwire named two files; both were reviewed and are not
+credentials: `run_prompt_pack_production.py` uses `token` for a watchdog
+identifier (`uuid.uuid4().hex`), and `voice_manager.py` reads
+`MINIMAX_API_KEY` from the environment and exits if it is unset ("never
+hard-code it"). The cloud session re-scanned the pushed tree with
+`git grep` for literal key shapes (`sk-`, `sk-ant-`, `AKIA...`, `ghp_...`,
+Slack `xox...`, PEM private-key headers, and any `api_key|secret|password|
+token = "<16+ chars>"`): no matches. 58 of the files contain absolute
+workstation paths (`A:\Users\rhine\...`), which is how this project's
+scripts have always been written and is not a secret.
+
+Effect, as predicted in section 3: `python -c "import thermal_guard"` from
+`work/` prints `thermal_guard ok 70 82` (START_MAX_C / EMERGENCY_C), and the
+router suites on the workstation went from 12 FAIL + 2 ERROR to
+`test_router_switching`: `Ran 54 ... FAILED (failures=11)` and
+`test_router_status_busy`: `Ran 8 ... FAILED (failures=1)`, i.e. 12 failures
+and **no errors**. The remaining 12 are the machine-wide
+`EQUAL_SHARES_PRIMARY_REASONING_MODEL=gpt-oss-20b-heretic:latest` override
+and are still out of scope.
+
+The cloud session (Linux, no env override, no `nvidia-smi`) now has `work/`
+as well and saw the same mechanism: `test_router_switching` went from the
+4 known failures of `2026-11-04a` section 2 to 2
+(`test_coding_mode_selects_coding_model_when_gpu_idle`,
+`test_unknown_coding_model_falls_back_cleanly`), `test_router_status_busy`
+went from 1 failure to `Ran 8 ... OK`, and the gateway suite stays at 64
+OK. The two `*_names_only_server_exe_*` failures were the thermal guard's
+absence all along.

@@ -103,3 +103,37 @@ the new `local_agent/chats/<id>.json` transcript.
 - The PowerShell edits were not executed in this session.
 - Not touched: the 12 FAIL + 2 ERROR in `test_router_switching` /
   `test_router_status_busy` (2026-11-04a section 3).
+
+## 4. Workstation results (2026-11-05, reported by the workstation agent)
+
+- Section 2's one-time untrack landed as `8b1fe32`: a fast-forward of 24
+  index deletions (4 knowledge files, 5 FUSE leftovers, 15 chat lock files)
+  and nothing else, verified from the cloud session with `git diff
+  --name-status`. Working copies stayed on disk.
+- One leftover the list above missed: `local_agent/media_watcher.log` was
+  still tracked and had been rewritten by the *old* launcher's log redirect
+  during the GUI turn. Its only change was the watcher's own line
+  `[watcher] another watcher instance is already running — exiting`, so it
+  was restored with `git checkout --`. The new launcher writes that log
+  under `runtime/launcher/`, so this cannot recur; the file was briefly
+  locked by the still-running watcher until that watcher was stopped.
+- After a full launch plus one chat turn, `git status --short` shows only
+  the two new `local_agent/chats/<id>.json` transcripts. That is the
+  intended end state of section 2.
+- Launcher reproduction (section 3): **did not reproduce.** Windows
+  PowerShell `5.1.26100.9711`; the launcher ran the routing check, the
+  knowledge rebuild and the watcher start, started `server.py`, a browser tab
+  opened and connected to 8760, a short `/api/send` turn returned HTTP 200,
+  and the server stayed up for roughly ten minutes until it was stopped on
+  purpose. No `server_crash_*.log` was written. One capture limitation: the
+  operator's console session dropped during a brief workstation disconnect
+  while the server kept running, so the launcher's own exit line was not
+  observed, and the agent's console capture showed the launcher's
+  `Write-Host` lines but none of the Python child output. That second point
+  is consistent with how the original error was "cut off": a Python
+  traceback printed to that console is invisible to the capture, which is
+  exactly what the crash-log file now covers.
+
+Status: the original exit code 1 remains unexplained and unreproduced. The
+instrumentation stays in place; if it recurs, `runtime/launcher/
+server_crash_*.log` (or its absence) is the first thing to read.
