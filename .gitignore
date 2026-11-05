@@ -103,11 +103,22 @@ worker_farm/runtime/
 external/
 artifacts/
 live_jobs/
-work/
 comfy_output/
 run/
 tmp/
 scratch/
+# work/ is NOT scratch: it holds the project's own tooling that CLAUDE.md,
+# router.py, tools.py, media_tools.py and chat_render_jobs.py import
+# (thermal_guard.py, duration_ladder.py, image_render.py, ...). The old blanket
+# `work/` rule kept every one of those scripts out of git since the first
+# import, so a fresh worktree had no thermal guard at all
+# (CHANGELOG/2026-11-05b). Ignore the directory's contents, then re-include
+# the top-level scripts and notes; work/runtime/ and any data subfolders
+# stay ignored.
+work/*
+!work/*.py
+!work/*.ps1
+!work/*.md
 **/uploads/derived/
 **/managed_tasks/
 
