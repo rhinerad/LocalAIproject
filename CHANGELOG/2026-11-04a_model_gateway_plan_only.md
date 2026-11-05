@@ -233,3 +233,54 @@ worktree must not be started beside it. Run it after that agent is stopped,
 from a shell where `MODEL_GATEWAY_CLOUD=1` is set. The workstation router
 suites were not re-run; the pre-existing 12 FAIL + 2 ERROR of section 3 are
 neither fixed nor rechecked.
+
+## 7. Live GUI turn verified (2026-11-05, reported by the workstation agent)
+
+The last unverified item from section 4 is now verified: a real agent turn
+asked the cloud planning model for a plan and the local model executed the
+turn.
+
+Preflight (`start_gateway.ps1 -Enable`): `cloud planning : ENABLED (credential
+present via ANTHROPIC_API_KEY)`, `planning model : claude-opus-5-5
+effort=high max_tokens=1500`, both Ollama tiers UP with 45 models and no
+residents, `ComfyUI :8188 : closed`.
+
+The turn (new chat, default model, the heavy prompt from the handoff, about
+66 s end to end):
+
+1. progress label `Asking the planning model for a step plan`
+2. note `cloud plan received` (the fallback did not fire)
+3. hop-0 `route` event: tier `cpu` on `127.0.0.1:11435`, model
+   `huihui_ai/qwen3-abliterated:8b`, `needs_cloud_plan` set, `cloud_plan` =
+   claude-opus-5-5 / effort high, and `detail.plan_source == "cloud"`
+4. the note was event 3 of the trace; the first streamed token was event 15,
+   at hop 1 after a `list_tools` call, so the plan was in context before the
+   local model produced any text
+
+The route chose the CPU tier because `gpu_busy()` reported "GPU reserved":
+Windows shell processes were listed by `nvidia-smi --query-compute-apps` as
+foreign compute processes. That is the existing router rule (see
+`_BROWSER_NAMES` in `router.py`), not gateway behaviour, and the plan was
+requested regardless because planning is additive to routing. The exact
+process names were not captured; if this recurs on an idle card it is a
+candidate for the `_BROWSER_NAMES` allowlist, as a separate change.
+
+Two observations from the run, both outside this change:
+
+- `START_LOCAL_AGENT_GUI.ps1` came up and then exited with code 1 about a
+  minute later, before any prompt was sent, with the error cut off by
+  PowerShell. The turn above was run against `python local_agent\server.py`
+  started from the same shell (so `MODEL_GATEWAY_CLOUD=1` was inherited), and
+  the message was sent to the server's own `/api/send` endpoint rather than
+  from a browser tab. The launcher exit is unexplained and should be
+  reproduced with its output captured before anyone treats it as a gateway
+  problem.
+- Running the server rewrote four tracked generated files under
+  `local_agent/` (`knowledge/EQUAL_SHARES_REFERENCE.md`, `PROJECT_STATE.json`,
+  `retrieval_index.json`, `media_watcher.log`) and added untracked chat
+  `.json`/`.lock` files under `local_agent/chats/`. Nothing was committed.
+  The chat file is the only record of the verified turn and should be kept;
+  the four tracked files are rebuilt on every launch.
+
+No render was started, no Ollama model was evicted, and the workstation
+router suites were again not re-run (section 3 unchanged).
