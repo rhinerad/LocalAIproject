@@ -1063,7 +1063,9 @@ command, use `docs/LOCAL_AGENT_REGRESSION_RUNBOOK.md`.
 
 | Symptom | Cause |
 |---|---|
-| "ollama not running" | run the launcher; check `local_agent\ollama_cpu.err.log` |
+| "ollama not running" | run the launcher; check `local_agent\runtime\launcher\ollama_cpu.err.log` (launcher-written logs moved there on 2026-11-05) |
+| Launcher ends with `server.py exited with code 1` | the traceback is in the newest `local_agent\runtime\launcher\server_crash_*.log`; the launcher prints its last lines. Fix the cause it names, then relaunch |
+| `git status` dirty after a launch | expected only for new `chats/*.json`. The knowledge pack, retrieval index, embedding cache and chat `.lock` files are git-ignored since 2026-11-05; if they still show as modified, that checkout has not run the one-time `git rm --cached` in `CHANGELOG/2026-11-05a` |
 | Always on CPU, never GPU | expected if `nvidia-smi` is not on PATH — it fails safe. Run `python local_agent\router.py` to see which signal is firing |
 | "has no models" | run the launcher; it verifies the configured Huihui Qwen3 abliterated CPU 8B model before opening the GUI |
 | PowerInfer row disabled | proxy `127.0.0.1:8091` or `server.exe` on `127.0.0.1:8080` not listening. The router does not start them. Read the picker hint or `python local_agent\router.py` |
