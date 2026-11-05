@@ -29,6 +29,7 @@ import subprocess
 import sys
 import threading
 import time
+import traceback
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -1922,5 +1923,39 @@ def main() -> int:
     return 0
 
 
+CRASH_LOG_DIR = HERE / "runtime" / "launcher"
+
+
+def _write_crash_log(exc: BaseException) -> Path | None:
+    """Persist an uncaught exception so the cause survives a truncated console.
+
+    The desktop launcher runs ``python server.py`` as its last step; when the
+    process dies the console scrolls or the window closes and the traceback is
+    lost (2026-11-05: an exit code 1 with the error cut off). The file lives
+    under ``runtime/launcher``, which git ignores.
+    """
+    try:
+        CRASH_LOG_DIR.mkdir(parents=True, exist_ok=True)
+        path = CRASH_LOG_DIR / time.strftime("server_crash_%Y%m%d_%H%M%S.log")
+        body = "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
+        path.write_text(
+            f"server.py uncaught exception at {time.strftime('%Y-%m-%d %H:%M:%S')}\n"
+            f"python {sys.version.split()[0]}  cwd {os.getcwd()}\n\n{body}",
+            encoding="utf-8")
+        return path
+    except Exception:
+        return None
+
+
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        code = main()
+    except (KeyboardInterrupt, SystemExit):
+        raise
+    except BaseException as exc:  # noqa: BLE001 - last-chance diagnostics, then exit 1
+        traceback.print_exc()
+        crash = _write_crash_log(exc)
+        if crash:
+            print(f"server.py crashed; traceback saved to {crash}", file=sys.stderr)
+        raise SystemExit(1)
+    raise SystemExit(code)
