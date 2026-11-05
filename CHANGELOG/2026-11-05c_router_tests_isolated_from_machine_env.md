@@ -16,7 +16,7 @@ the GPU-only opt-in model, so every test about the pair's semantics (paired
 `-v2` pin, busy-picker ordering, VRAM-derived `num_ctx`) asserts one thing
 and the router does another. Reproduced in this Linux session by exporting
 the same variable: `test_router_switching` 13 failures (11 of them this),
-`test_router_status_busy` 1, and `test_gpu_vram_num_ctx` 3, which the
+`test_router_status_busy` 1, and `test_gpu_vram_num_ctx` 3 of 7, which the
 workstation runs had not covered.
 
 The tests describe the shipped defaults. A deployment override is not a test
@@ -52,7 +52,7 @@ exported, exactly as on the workstation:
 
     python test_router_switching.py      Ran 54 tests ... OK   (was FAILED (failures=13))
     python test_router_status_busy.py    Ran 8 tests ... OK    (was failures=1)
-    python test_gpu_vram_num_ctx.py      Ran 13 tests ... OK   (was failures=3)
+    python test_gpu_vram_num_ctx.py      Ran 7 tests ... OK    (was failures=3)
     python -m unittest -q test_router_status_busy test_router_switching test_gpu_vram_num_ctx
                                          Ran 69 tests ... OK
     # reload path: an un-isolated router importer first
@@ -76,7 +76,7 @@ decision.
 
 - Not run on the workstation yet. Expected there: `test_router_switching`
   `Ran 54 ... OK`, `test_router_status_busy` `Ran 8 ... OK`,
-  `test_gpu_vram_num_ctx` `Ran 13 ... OK`, with the machine-wide override
+  `test_gpu_vram_num_ctx` `Ran 7 ... OK`, with the machine-wide override
   still set and untouched.
 - Other suites in `docs/LOCAL_AGENT_REGRESSION_RUNBOOK.md` that import
   `router` were checked under the override here: `test_activity_trace`,
