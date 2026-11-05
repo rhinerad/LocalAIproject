@@ -31,7 +31,11 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $Ollama = 'A:\Users\rhine\AppData\Local\Programs\Ollama\ollama.exe'
-$Log    = $PSScriptRoot
+# Launcher-written logs (Ollama servers, media watcher, server crash
+# tracebacks) live under runtime\launcher, which git ignores. Writing them
+# next to the code left tracked log files modified after every launch.
+$Log    = Join-Path $PSScriptRoot 'runtime\launcher'
+$null = New-Item -ItemType Directory -Force -Path $Log
 $AppUrl = 'http://127.0.0.1:8760'
 $ExpectedAgentRevision = '2026-09-22i-gvd-video-pipeline-readiness'
 $StartupCpuModel = if ($env:EQUAL_SHARES_CPU_CHAT_MODEL) {
@@ -236,7 +240,7 @@ function Start-Server([string]$HostPort, [string]$Name, [bool]$CpuOnly,
         Start-Sleep -Milliseconds 700
         if (Test-Server $HostPort) { Write-Host "  $Name up" -ForegroundColor Green; return $true }
     }
-    Write-Host "  $Name did not start — see ollama_$Name.err.log" -ForegroundColor Yellow
+    Write-Host "  $Name did not start — see $(Join-Path $Log "ollama_$Name.err.log")" -ForegroundColor Yellow
     return $false
 }
 
@@ -372,8 +376,24 @@ python (Join-Path $PSScriptRoot 'build_knowledge_pack.py')
 Write-Host "`nStarting media queue watcher" -ForegroundColor White
 Start-Process python -ArgumentList (Join-Path $PSScriptRoot 'media_watcher.py') `
     -WindowStyle Hidden `
-    -RedirectStandardOutput (Join-Path $PSScriptRoot 'media_watcher.log') `
-    -RedirectStandardError  (Join-Path $PSScriptRoot 'media_watcher.err.log')
+    -RedirectStandardOutput (Join-Path $Log 'media_watcher.log') `
+    -RedirectStandardError  (Join-Path $Log 'media_watcher.err.log')
 
 Write-Host "`nStarting the app" -ForegroundColor White
 python (Join-Path $PSScriptRoot 'server.py')
+$serverExit = $LASTEXITCODE
+if ($serverExit -ne 0) {
+    # server.py writes any uncaught startup/runtime exception to a timestamped
+    # crash log before exiting, so the cause survives a scrolled or truncated
+    # console. Name the newest one here instead of leaving a bare exit code.
+    Write-Host "`nserver.py exited with code $serverExit" -ForegroundColor Red
+    $crash = Get-ChildItem -Path $Log -Filter 'server_crash_*.log' -ErrorAction SilentlyContinue |
+        Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    if ($crash) {
+        Write-Host "  traceback saved to $($crash.FullName)" -ForegroundColor Yellow
+        Get-Content $crash.FullName -Tail 25 | ForEach-Object { Write-Host "  | $_" }
+    } else {
+        Write-Host "  no server_crash_*.log was written under $Log; the error was not a Python exception (check the console above)." -ForegroundColor Yellow
+    }
+}
+exit $serverExit
