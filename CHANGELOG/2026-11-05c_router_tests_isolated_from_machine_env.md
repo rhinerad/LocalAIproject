@@ -88,3 +88,25 @@ decision.
   (1), `test_router_comfy_timeshare` (2) fail here identically with and
   without the override, so they are box-specific (no GPU, no ComfyUI, no
   Windows), not this bug, and were not touched.
+
+## 5. Workstation results (2026-11-05, reported by the workstation agent)
+
+Verified on the workstation (DuranGamingPC, gateway worktree), fast-forwarded
+to `45f58f6`, with the machine-wide override left in place and confirmed
+identical before and after the runs
+(`EQUAL_SHARES_PRIMARY_REASONING_MODEL=gpt-oss-20b-heretic:latest`):
+
+    test_router_switching.py   Ran 54 tests in 19.773s   OK   (was FAILED (failures=11))
+    test_router_status_busy.py Ran 8 tests in 2.203s     OK   (was FAILED (failures=1))
+    test_gpu_vram_num_ctx.py   Ran 7 tests in 0.833s     OK
+    batch (test_vram_arbitration, test_gpu_vram_num_ctx, test_router_status_busy,
+           test_router_switching)  Ran 74 tests in 11.772s   OK
+
+No `FAIL:` or `ERROR:` lines. The batch line is the in-place reload path
+(an un-isolated `router` importer first) and matches the Linux result.
+`git status --short` afterwards showed only the two untracked GUI-turn chat
+transcripts. No file was edited, no GUI launched, no model loaded.
+
+The "12 FAIL" item carried since `2026-11-04a` section 3 is closed on both
+machines. Section 4's first bullet is now done; its second bullet (the three
+box-specific suites) is unchanged.
