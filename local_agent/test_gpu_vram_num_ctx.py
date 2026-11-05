@@ -11,6 +11,11 @@ from unittest.mock import patch
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
+import testsupport_env  # noqa: E402
+
+# Test the shipped routing defaults, not this machine's EQUAL_SHARES_* overrides.
+testsupport_env.isolate_model_env()
+
 import router  # noqa: E402
 
 

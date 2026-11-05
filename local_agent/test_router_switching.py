@@ -13,6 +13,11 @@ from unittest.mock import patch
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
+import testsupport_env  # noqa: E402
+
+# Test the shipped routing defaults, not this machine's EQUAL_SHARES_* overrides.
+testsupport_env.isolate_model_env()
+
 import router  # noqa: E402
 
 
@@ -555,9 +560,17 @@ class RouterSwitchingTests(unittest.TestCase):
     def test_coding_mode_selects_coding_model_when_gpu_idle(self):
         have = [router.PRIMARY_REASONING_MODEL, router.CODING_MODEL,
                 router.FALLBACK_REASONING_MODEL]
+        # A coding pin takes the capability-GPU path, which consults the live
+        # thermal guard and queue owner; pin both so the test does not depend
+        # on this machine having nvidia-smi or an idle card.
         with patch.object(router, "gpu_busy", return_value=(False, "idle", {})), \
              patch.object(router, "up", return_value=True), \
-             patch.object(router, "_tags", return_value=have):
+             patch.object(router, "_tags", return_value=have), \
+             patch.object(router, "queue_owner", return_value=(False, "released")), \
+             patch.object(router, "thermal_blocks_gpu", return_value=None), \
+             patch.object(router, "prepare_gpu_model", return_value={
+                 "attempted": [], "keep_alive_sent": [], "remaining": [],
+                 "verified": True, "reason": "empty"}):
             decision = router.decide("auto", model=router.CODING_MODEL)
         self.assertEqual((decision.tier, decision.model),
                          ("gpu", router.CODING_MODEL))
@@ -566,9 +579,13 @@ class RouterSwitchingTests(unittest.TestCase):
     def test_unknown_coding_model_falls_back_cleanly(self):
         have = [router.PRIMARY_REASONING_MODEL, router.FALLBACK_REASONING_MODEL]
         missing = "huihui_ai/qwen2.5-coder-abliterate:99b"
+        # Same capability-GPU path as above: keep the thermal guard and queue
+        # owner out of a unit test.
         with patch.object(router, "gpu_busy", return_value=(False, "idle", {})), \
              patch.object(router, "up", return_value=True), \
-             patch.object(router, "_tags", return_value=have):
+             patch.object(router, "_tags", return_value=have), \
+             patch.object(router, "queue_owner", return_value=(False, "released")), \
+             patch.object(router, "thermal_blocks_gpu", return_value=None):
             decision = router.decide("auto", model=missing)
         self.assertIsNotNone(decision.model)
         self.assertNotEqual(missing, decision.model)
