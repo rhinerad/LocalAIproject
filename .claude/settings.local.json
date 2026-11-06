@@ -32,8 +32,7 @@
       "Bash(format:*)",
       "Bash(diskpart:*)",
       "Bash(git reset --hard:*)",
-      "Bash(git clean:*)",
-      "Bash(git push:*)"
+      "Bash(git clean:*)"
     ]
   }
 }
