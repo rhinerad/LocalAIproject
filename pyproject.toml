@@ -1,0 +1,35 @@
+[project]
+name = "localaiproject"
+version = "0.1.0"
+description = "Offline local AI assistant and ComfyUI batch video pipeline for a single Windows workstation"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+extend-exclude = [
+    "archive",
+    "local_agent/ble_runtime",
+    "local_agent/vendor_tools",
+    "local_agent/saf_pyjnius_spike",
+    "tools/powerinfer/.hf_cache",
+    "review-only",
+]
+
+[tool.ruff.lint]
+# Correctness only. Style rules are deliberately off for this codebase.
+select = ["F", "E9", "B006", "B008", "B904"]
+ignore = ["F841"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.pytest.ini_options]
+testpaths = ["local_agent", "tests", "."]
+python_files = ["test_*.py"]
+norecursedirs = [
+    "archive", ".git", "__pycache__",
+    "ble_runtime", "vendor_tools", "saf_pyjnius_spike", ".hf_cache",
+    "review-only", "benchmark_profiles", "docs",
+]
+addopts = "-p no:cacheprovider -q"

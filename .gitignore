@@ -103,7 +103,7 @@ worker_farm/runtime/
 external/
 artifacts/
 live_jobs/
-work/
+# work/ (blanket rule retired 2026-11: source in work/ is tracked, see end of file)
 comfy_output/
 run/
 tmp/
@@ -182,3 +182,56 @@ desktop.ini
 # --- Debug output is explicitly text and kept syncable ------------------------
 !debug/**
 !debug/*.txt
+
+# =============================================================================
+#  Added by the 2026-11 audit remediation (see AUDIT_2026-11-02.md §6).
+# =============================================================================
+
+# --- Secrets and live mesh state: a Reticulum transport identity is a private
+# key pair; ratchets, announces and packet hashlists are rewritten every run.
+local_agent/rns_wifi/storage/
+local_agent/tests/rns_offline/storage/
+**/transport_identity
+**/ratchets/
+
+# --- Private operator data: the assistant's chat memory and uploads are not
+# source. Already-tracked copies are untracked locally by
+# scripts/untrack_private_data.ps1 so a pull never deletes them.
+local_agent/chats/
+local_agent/uploads/
+local_agent/render_jobs/
+ARCHIVE_DECISION.md
+.claude/settings.local.json
+.claude/launch.json
+pasted-text.txt
+_agent_diff.txt
+
+# --- Logs and run traces (regenerated; never evidence of record).
+*.log
+*.err
+*.log.*
+logs/
+SYNC_STATUS.json
+SYNC_LOG.txt
+
+# --- Changelog claim markers and lock are per-machine working state.
+CHANGELOG/.id_claims/
+CHANGELOG/.next_changelog_id.lock
+
+# --- Caches, backups, downloaded binaries.
+**/.hf_cache/
+.fuse_hidden*
+*.pre_*
+*.bak-*
+local_agent/vendor_tools/platform-tools/
+local_agent/knowledge/retrieval_index.json
+local_agent/knowledge/retrieval_embeddings.json
+
+# --- work/ holds the render supervisors, thermal guard and image renderer that
+# local_agent imports. Track the source there; keep its runtime state out.
+# (The earlier blanket `work/` rule above is overridden by these lines.)
+!work/
+work/*
+!work/*.py
+!work/*.md
+!work/README*

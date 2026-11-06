@@ -9,7 +9,7 @@ Regenerate from the repository root:
 python scripts/write_handoff_status.py
 ```
 
-Generated at: 2026-09-26 14:03:54 Eastern Daylight Time (UTC-04:00) (local)
+Generated at: 2026-11-06 14:30:45 UTC (UTC+00:00) (local)
 
 `TODO.md` is the execution queue. Lettered `CHANGELOG/` entries are evidence. Farm *procedures* live in `docs/FARM_HEALTH_RUNBOOK.md` and `docs/RUNBOOK.md` — this file points to those runbooks and does **not** duplicate their checklists.
 
@@ -56,20 +56,20 @@ Newest first, so a new agent sees tonight first. Lettered files matching `YYYY-M
 - [ ] With the current judge every clip's minimum axis is ≤ 0.40 or ≥ 0.80,
 - [ ] Operator visually reviews and explicitly accepts or rejects that exact
 - [ ] Operator reviews worksheet keep/replace notes (notes are NOT approval) and explicitly approves or replaces pairs.
-- [ ] TurboSparse remains parked â€” do not dump/train/convert/bench/register from this draft.
+- [ ] TurboSparse remains parked — do not dump/train/convert/bench/register from this draft.
 - [ ] Semantic QA is not run. Implement/execute review through the installed exact
 - [ ] Regenerate current-prompt candidates through receipts, then obtain explicit
 - [ ] Verify a real approved-input video and its embedded graph/hashes only after
 - [ ] Optional operator step: bounded verify_prompt_pack_startup.py only if
 - [ ] After Rhine restarts: paste/continue Backrooms pack on a fresh chat and confirm outputs under local_agent/runtime/managed_tasks/<cid>/
-- [ ] Full 18-clip Flux sheet after operator paste + review gate (VRAM: t5xxl_fp16 + ~12GB UNet on 16GB â€” expect slow / sequential only)
+- [ ] Full 18-clip Flux sheet after operator paste + review gate (VRAM: t5xxl_fp16 + ~12GB UNet on 16GB — expect slow / sequential only)
 - [ ] After Rhine restarts: regenerate or continue on chat d98731129ac743ac and confirm render/plan no longer stale-blocked
 - [ ] After Rhine restarts: hard-refresh GUI and verify Stop returns Send mid-turn
-- [ ] **Task 1 â€” Evaluate PowerInfer architecture (resume, don't restart).
-- [ ] **Task 2 â€” Evaluate TinyEngine architecture â€” researched 2026-09-02,
-1. [ ] **KV cache quantization** â€” BLOCKED by Phase 1. Update the chosen
-3. [ ] **RAG-first memory retrieval** â€” BLOCKED by Phase 1. Enforce Chroma DB
-4. [~] **Agentic RAG upgrade for local-docs retrieval** â€” Stages 1-2
+- [ ] **Task 1 — Evaluate PowerInfer architecture (resume, don't restart).
+- [ ] **Task 2 — Evaluate TinyEngine architecture — researched 2026-09-02,
+1. [ ] **KV cache quantization** — BLOCKED by Phase 1. Update the chosen
+3. [ ] **RAG-first memory retrieval** — BLOCKED by Phase 1. Enforce Chroma DB
+4. [~] **Agentic RAG upgrade for local-docs retrieval** — Stages 1-2
 - [ ] **Operator goal:** experiment with
 - [ ] **2026-09-05, follow-up: KTransformers / PowerInfer MoE feasibility
 - [ ] **2026-09-01, operator feedback:** "Claude, Claude Code, GPT are all very
@@ -84,19 +84,19 @@ Newest first, so a new agent sees tonight first. Lettered files matching `YYYY-M
 - [ ] After an accepted model exists, deliberately wire the registered endpoint
 - [ ] Run a single benign, battery/thermal-observed Pixel test with
 - [ ] Later, separately: abliterate `PowerInfer/SmallThinker-4BA0.6B-Instruct`
-- [ ] **10-node asynchronous Worker Farm** â€” planned control-plane/worker-plane
-  - [ ] Establish the 1-GbE capacity baseline: inventory every node, measure
-  - [ ] Prototype a private RabbitMQ ingress with publisher confirms, manual
-  - [ ] Add Celery for durable fetch/extract/encrypt workflows and Ray actors
-  - [ ] Build four operator-reviewed workflows: encrypted Judge evaluation;
-  - [ ] Encrypt raw artifacts and backups with authenticated AES-256-GCM;
-  - [ ] Gate all production work on private-network isolation, source/license
-  - [ ] See `docs/WORKER_FARM_ARCHITECTURE_PLAN_2026-08-29.md` for the
-- [ ] **Farm efficiency, ticket 4 â€” Ratchet Loop (autoresearch-style
+- [ ] **10-node asynchronous Worker Farm** — planned control-plane/worker-plane
+- [ ] Establish the 1-GbE capacity baseline: inventory every node, measure
+- [ ] Prototype a private RabbitMQ ingress with publisher confirms, manual
+- [ ] Add Celery for durable fetch/extract/encrypt workflows and Ray actors
+- [ ] Build four operator-reviewed workflows: encrypted Judge evaluation;
+- [ ] Encrypt raw artifacts and backups with authenticated AES-256-GCM;
+- [ ] Gate all production work on private-network isolation, source/license
+- [ ] See `docs/WORKER_FARM_ARCHITECTURE_PLAN_2026-08-29.md` for the
+- [ ] **Farm efficiency, ticket 4 — Ratchet Loop (autoresearch-style
 - [ ] **Farm efficiency tickets 1/4** (full entries: Phase 2 section
-- [ ] **Operator-approved phone-call assistant** â€” let the local agent complete
-- [ ] **Trusted Android companion: approved phone files and app delivery** â€” evolve
-- [ ] **Local 3D generation through ComfyUI** â€” accept a text prompt and optional
+- [ ] **Operator-approved phone-call assistant** — let the local agent complete
+- [ ] **Trusted Android companion: approved phone files and app delivery** — evolve
+- [ ] **Local 3D generation through ComfyUI** — accept a text prompt and optional
 - [ ] Add optional exact-Qwen2.5-VL semantic review only when the GPU is explicitly idle; never substitute another VLM.
 - [ ] Re-run production with the gate enabled after the current r98 worker naturally finishes or is resumed.
 - [ ] Integrate the exact Qwen2.5-VL Caption V4 output into a prompt-grounded
@@ -104,7 +104,7 @@ Newest first, so a new agent sees tonight first. Lettered files matching `YYYY-M
 - [ ] On threshold, capture the prompt, negative prompt, model/profile, seed,
 - [ ] Have the local agent diagnose the failure pattern and propose a bounded
 - [ ] Apply an adjustment only after deterministic validation and preserve the
-- [ ] Add regression tests proving the escalation occurs at 3â€“4 failures and
+- [ ] Add regression tests proving the escalation occurs at 3–4 failures and
 - [ ] Add a durable task controller that converts a user request into explicit
 - [ ] Require each stage to report physical evidence (file path, checksum,
 - [ ] Add prompt-pack-specific state: source revision, clip/shot IDs, approved
@@ -119,7 +119,7 @@ Newest first, so a new agent sees tonight first. Lettered files matching `YYYY-M
 
 ---
 
-## 3. Known orphaned / leftover infrastructure
+## 3. Known orphaned / leftover infrastructure (seeded 2026-09-04 checklist, not a live probe)
 
 Seeded from tonight's documented CHANGELOG/runbook text only. **Not** live-probed. Do not treat this list as current OS state.
 

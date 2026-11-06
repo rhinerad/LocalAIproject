@@ -32,6 +32,19 @@ try {
                 Write-Host "  skipped large file (>50MB): $f  -- add it to .gitignore" -ForegroundColor Yellow
             }
         }
+        # Refuse to commit secrets or private data (2026-11 audit). Patterns
+        # match the files that were found committed; .gitignore now excludes
+        # them, but a force-add or a renamed copy would get past it.
+        $secretPatterns = @('transport_identity', '/ratchets/', '\.env($|\.)', '\.key$', '\.pem$',
+                            'id_rsa', 'credentials', 'local_agent/chats/', 'local_agent/uploads/')
+        foreach ($f in $staged) {
+            foreach ($pat in $secretPatterns) {
+                if ($f -match $pat) {
+                    git reset -q -- $f
+                    throw "refusing to commit '$f' (matches secret/private pattern '$pat'); add it to .gitignore or run scripts/untrack_private_data.ps1"
+                }
+            }
+        }
         if (-not $Message) { $Message = "Local sync $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') from $env:COMPUTERNAME" }
         git commit -m $Message
         if ($LASTEXITCODE) { throw 'git commit failed' }
