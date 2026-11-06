@@ -46,12 +46,11 @@ through `PureWindowsPath` too, which is what the old `str(Path(..)).replace
 by construction; the two `*_names_only_server_exe_*` tests in
 `test_router_comfy_timeshare` are the proof on this box.
 
-No other production code changed. `local_agent/router.py` only. As with
-the `agent.py` change in `2026-11-04a`, the file is larger than this cloud
-session can push whole, so the change travels as a 70-line patch applied
-and committed from the workstation; this entry and its id claim are pushed
-from here first. Until that commit lands the branch carries the entry
-without the code.
+No other production code changed. `local_agent/router.py` only. Pushed
+whole from the cloud session as `0c9588d` (one commit after this entry's
+`45193e8`); the pushed blob was fetched back and is byte-identical to the
+tested local file (`md5 90d3ccfdb28a23dcf9dd6fa0e2e4dfd1`, `git diff`
+empty), so no workstation patch step is needed.
 
 ## 3. Evidence (this Linux session, Python 3.13, no GPU, no override)
 
@@ -81,7 +80,8 @@ are named in the runbook but do not exist in the tree.
 
 ## 4. Unverified / next
 
-- Not yet run on the workstation. Expected there, with the machine-wide
+- Not yet run on the workstation. After `git merge --ff-only` to `0c9588d`,
+  expected there, with the machine-wide
   override untouched: `test_capability_routing` `Ran 44 ... OK`,
   `test_router_comfy_timeshare` `Ran 51 ... OK`, and the three
   `2026-11-05c` suites unchanged (54 / 8 / 7 OK). Section 2 predicts no
