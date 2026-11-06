@@ -1,0 +1,15 @@
+{
+  "id": "2b74722faaca4374",
+  "title": "play house beat at 120 in sonic pi also im going…",
+  "created": 1787878420.145565,
+  "updated": 1787878420.153594,
+  "model": "gpt-oss-20b-heretic:latest",
+  "messages": [
+    {
+      "role": "user",
+      "content": "play house beat at 120 in sonic pi also im going to refer to sonic pi as 'sp' for short",
+      "at": 1787878420.1525936,
+      "source": "desktop"
+    }
+  ]
+}

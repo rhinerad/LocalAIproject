@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "practice-score-preview",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd /d A:\\Users\\rhine\\practice-score && npx vite preview --host 127.0.0.1 --port 4173 --strictPort"],
+      "port": 4173
+    },
+    {
+      "name": "practice-score-preview-coi",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd /d A:\\Users\\rhine\\practice-score && set PREVIEW_COI=1&& npx vite preview --host 127.0.0.1 --port 4174 --strictPort"],
+      "port": 4174
+    },
+    {
+      "name": "practice-score-dev-spike",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd /d A:\\Users\\rhine\\practice-score && set VITE_OMR_SPIKE=1&& npx vite --host 127.0.0.1 --port 5174 --strictPort"],
+      "port": 5174
+    }
+  ]
+}

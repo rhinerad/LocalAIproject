@@ -1,0 +1,17 @@
+{
+  "elapsed_s": 2036.6,
+  "exit_code": 0,
+  "saved": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\models\\dspy_compiled\\generalized_video_director_mipro_2row.json",
+  "compile_log": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\logs\\run_traces\\gvd_run_rows2_20260916T020015.log",
+  "vram_trace": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\logs\\run_traces\\gvd_run_rows2_20260916T020015_vram.jsonl",
+  "final_vram": {
+    "used_mib": 479,
+    "free_mib": 15499,
+    "total_mib": 16303,
+    "temp_c": 38.0,
+    "util": 0.0,
+    "ts": 1789540452.2155836
+  },
+  "comfy_8188": true,
+  "qwen_11436": false
+}

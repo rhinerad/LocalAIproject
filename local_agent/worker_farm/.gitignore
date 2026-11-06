@@ -1,0 +1,7 @@
+.env
+.env.*
+.venv/
+runtime/
+wireguard/*.key
+wireguard/*.conf
+farm_status.json

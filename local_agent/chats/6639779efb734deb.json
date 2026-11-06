@@ -1,0 +1,25 @@
+{
+  "id": "6639779efb734deb",
+  "title": "I am testing how fast you can respond.",
+  "created": 1788196778.7784965,
+  "updated": 1788196820.8273306,
+  "model": "huihui_ai/qwen3-abliterated:8b",
+  "workspace": "general",
+  "messages": [
+    {
+      "role": "user",
+      "content": "I am testing how fast you can respond.",
+      "at": 1788196778.785016,
+      "source": "desktop"
+    },
+    {
+      "role": "assistant",
+      "content": "Got it! How can I assist you quickly?",
+      "at": 1788196820.7063541,
+      "retrieved_exemplar_ids": [],
+      "tool_evidence": [],
+      "source": "desktop"
+    }
+  ],
+  "last_tier": "cpu"
+}

@@ -1,0 +1,13 @@
+# Relative paths under /workspace/pipeline_p0/ ready for CopyFromBox → DuranGamingPC
+# Windows pipeline root (overwrite in-place):
+#   A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09
+
+handoff/gvd_core.py
+handoff/generate_video.py
+handoff/master_batch_runner.py
+handoff/batch_run_backrooms_gvd.py
+handoff/local_agent/dspy_orchestrator.py
+handoff/local_agent/dynamic_voice.py
+CHANGELOG_2026-09-18a_pipeline_p0_correctness.md
+verify_p0_offline.py
+FILES_CHANGED.txt

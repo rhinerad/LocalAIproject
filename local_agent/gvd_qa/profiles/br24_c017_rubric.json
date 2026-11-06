@@ -1,0 +1,4 @@
+[
+  {"id": "yellow_walls", "criterion": "Yellow wallpaper or yellow wall surfaces are visibly present."},
+  {"id": "person_visible", "criterion": "A person is clearly visible in the frame."}
+]

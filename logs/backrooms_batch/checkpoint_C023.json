@@ -1,0 +1,11 @@
+{
+  "id": "C023",
+  "injected": {
+    "start": "View facing backward down the corridor while moving; a hand gestures into frame. Static tripod shot of a yellow hallway. Heavy VHS artifacting, continuous unbroken shot, and 1990s home video aesthetic. First-person camcorder tracking, handheld walking momentum, and realistic camera shake.",
+    "end": "Frame lurches down; a hand slaps the wall. Heavy VHS artifacting, continuous unbroken shot, and 1990s home video aesthetic. First-person camcorder tracking, handheld walking momentum, and realistic camera shake.",
+    "motion": "Walks backward talking, then lurches and catches the wall. Heavy VHS artifacting, continuous unbroken shot, and 1990s home video aesthetic. First-person camcorder tracking, handheld walking momentum, and realistic camera shake."
+  },
+  "stage": "end_complete",
+  "start_png": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\br24_C023_start_00001_.png",
+  "end_png": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\br24_C023_end_00001_.png"
+}

@@ -1,0 +1,25 @@
+{
+  "description": "Fixed, non-private 20-turn chat prompts for the PowerInfer acceptance gate. Do not replace with project story text.",
+  "turns": [
+    "Say hello in one short sentence.",
+    "What is 17 plus 25?",
+    "Name three primary colors.",
+    "Give a one-sentence definition of latency.",
+    "Rewrite this clearly: the gpu is currently idle.",
+    "List two reasons to keep a server on loopback only.",
+    "What is the capital of France?",
+    "Complete the phrase: once upon a time",
+    "Give a one-line Python hello world.",
+    "Is 91 a prime number? Answer yes or no, then one reason.",
+    "Summarize TCP versus UDP in one sentence.",
+    "Name a safe default host bind for a local LLM server.",
+    "Convert 12 gibibytes to mebibytes.",
+    "What does VRAM stand for?",
+    "Give one risk of exposing an LLM API on 0.0.0.0.",
+    "Write a two-line checklist for a cold-start benchmark.",
+    "What is a token in language-model inference?",
+    "Name the activation family PowerInfer sparse inference requires.",
+    "Give a one-sentence difference between prefill and decode.",
+    "Reply with the single word ready if you can still follow instructions."
+  ]
+}

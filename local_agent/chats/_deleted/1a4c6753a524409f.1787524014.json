@@ -1,0 +1,25 @@
+{
+  "id": "1a4c6753a524409f",
+  "title": "hi",
+  "created": 1787522900.5019298,
+  "updated": 1787522904.775457,
+  "model": "huihui_ai/qwen3-abliterated:14b-v2",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi",
+      "at": 1787522900.509933,
+      "remote_identity": "62ce41abf11e32c42a6d85736f36cdde",
+      "request_id": "aa26dc9c88129b7ac3a30911dbdc569c19eb59bdbb64d61ee7badf64e2412cea",
+      "source": "phone"
+    },
+    {
+      "role": "assistant",
+      "content": "起来，干活！\n\n</think>\n\nHello! How can I assist you today?",
+      "at": 1787522904.7749217,
+      "remote_identity": "62ce41abf11e32c42a6d85736f36cdde",
+      "request_id": "aa26dc9c88129b7ac3a30911dbdc569c19eb59bdbb64d61ee7badf64e2412cea",
+      "source": "phone"
+    }
+  ]
+}

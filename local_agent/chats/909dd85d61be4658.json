@@ -1,0 +1,25 @@
+{
+  "id": "909dd85d61be4658",
+  "title": "hi",
+  "created": 1788146806.7654483,
+  "updated": 1788146900.7200887,
+  "model": "gpt-oss-20b-heretic:latest",
+  "workspace": "auto",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi",
+      "at": 1788146806.7754626,
+      "source": "desktop"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! How can I help you today?",
+      "at": 1788146898.6685028,
+      "retrieved_exemplar_ids": [],
+      "tool_evidence": [],
+      "source": "desktop"
+    }
+  ],
+  "last_tier": "gpu"
+}

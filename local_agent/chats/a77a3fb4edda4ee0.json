@@ -1,0 +1,25 @@
+{
+  "id": "a77a3fb4edda4ee0",
+  "title": "What's a comfortable indoor temperature in Fahre…",
+  "created": 1788304033.438631,
+  "updated": 1788304252.4329767,
+  "model": "huihui_ai/qwen3-abliterated:8b",
+  "workspace": "general",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What's a comfortable indoor temperature in Fahrenheit for sleeping? Keep it short.\n",
+      "at": 1788304043.464637,
+      "source": "desktop"
+    },
+    {
+      "role": "assistant",
+      "content": "A comfortable indoor temperature for sleeping is typically **65–72°F (18–22°C)**, depending on personal preference and environmental factors.",
+      "at": 1788304252.4156106,
+      "retrieved_exemplar_ids": [],
+      "tool_evidence": [],
+      "source": "desktop"
+    }
+  ],
+  "last_tier": "cpu"
+}

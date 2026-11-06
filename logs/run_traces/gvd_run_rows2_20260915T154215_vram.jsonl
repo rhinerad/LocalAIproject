@@ -1,0 +1,564 @@
+{"used_mib": 525, "free_mib": 15453, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501340.372058, "comfy": true, "qwen": false}
+{"used_mib": 525, "free_mib": 15453, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501345.8159833, "comfy": true, "qwen": false}
+{"used_mib": 525, "free_mib": 15453, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501351.2740593, "comfy": true, "qwen": false}
+{"used_mib": 5156, "free_mib": 10822, "total_mib": 16303, "temp_c": 34.0, "util": 1.0, "ts": 1789501356.7293117, "comfy": true, "qwen": false}
+{"used_mib": 5156, "free_mib": 10822, "total_mib": 16303, "temp_c": 34.0, "util": 1.0, "ts": 1789501362.1990967, "comfy": true, "qwen": false}
+{"used_mib": 5156, "free_mib": 10822, "total_mib": 16303, "temp_c": 33.0, "util": 6.0, "ts": 1789501367.6537771, "comfy": true, "qwen": false}
+{"used_mib": 5156, "free_mib": 10822, "total_mib": 16303, "temp_c": 33.0, "util": 7.0, "ts": 1789501373.1248035, "comfy": true, "qwen": false}
+{"used_mib": 7490, "free_mib": 8488, "total_mib": 16303, "temp_c": 33.0, "util": 97.0, "ts": 1789501378.5990238, "comfy": true, "qwen": false}
+{"used_mib": 525, "free_mib": 15453, "total_mib": 16303, "temp_c": 37.0, "util": 0.0, "ts": 1789501384.0547533, "comfy": true, "qwen": false}
+{"used_mib": 525, "free_mib": 15453, "total_mib": 16303, "temp_c": 37.0, "util": 0.0, "ts": 1789501389.5041902, "comfy": true, "qwen": false}
+{"used_mib": 1501, "free_mib": 14477, "total_mib": 16303, "temp_c": 36.0, "util": 4.0, "ts": 1789501394.948513, "comfy": true, "qwen": false}
+{"used_mib": 2141, "free_mib": 13837, "total_mib": 16303, "temp_c": 35.0, "util": 0.0, "ts": 1789501400.3971612, "comfy": true, "qwen": false}
+{"used_mib": 2591, "free_mib": 13387, "total_mib": 16303, "temp_c": 36.0, "util": 19.0, "ts": 1789501405.866711, "comfy": true, "qwen": false}
+{"used_mib": 3615, "free_mib": 12363, "total_mib": 16303, "temp_c": 35.0, "util": 5.0, "ts": 1789501411.3403864, "comfy": true, "qwen": false}
+{"used_mib": 4543, "free_mib": 11435, "total_mib": 16303, "temp_c": 35.0, "util": 16.0, "ts": 1789501416.8016016, "comfy": true, "qwen": false}
+{"used_mib": 5247, "free_mib": 10731, "total_mib": 16303, "temp_c": 35.0, "util": 0.0, "ts": 1789501422.2999036, "comfy": true, "qwen": false}
+{"used_mib": 6015, "free_mib": 9963, "total_mib": 16303, "temp_c": 35.0, "util": 0.0, "ts": 1789501427.7690477, "comfy": true, "qwen": false}
+{"used_mib": 6943, "free_mib": 9035, "total_mib": 16303, "temp_c": 35.0, "util": 0.0, "ts": 1789501433.2467678, "comfy": true, "qwen": false}
+{"used_mib": 7455, "free_mib": 8523, "total_mib": 16303, "temp_c": 37.0, "util": 19.0, "ts": 1789501438.7199852, "comfy": true, "qwen": false}
+{"used_mib": 7135, "free_mib": 8843, "total_mib": 16303, "temp_c": 60.0, "util": 98.0, "ts": 1789501444.1724305, "comfy": true, "qwen": false}
+{"used_mib": 7583, "free_mib": 8395, "total_mib": 16303, "temp_c": 60.0, "util": 99.0, "ts": 1789501449.6387706, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 43.0, "util": 0.0, "ts": 1789501455.0885515, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 39.0, "util": 0.0, "ts": 1789501460.539993, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 39.0, "ts": 1789501461.9295168, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 38.0, "util": 0.0, "ts": 1789501465.9991415, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 37.0, "util": 0.0, "ts": 1789501471.464762, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 36.0, "util": 0.0, "ts": 1789501476.9253366, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 36.0, "ts": 1789501477.9371724, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 35.0, "util": 0.0, "ts": 1789501482.3907037, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789501487.8710704, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 34.0, "ts": 1789501493.4124806, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789501493.3363647, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789501498.8068647, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789501504.2634606, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 34.0, "ts": 1789501508.8878496, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789501509.744213, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789501515.1993034, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789501520.6629035, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 34.0, "ts": 1789501524.3318026, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789501526.122543, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789501531.5773613, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789501537.0369613, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 34.0, "ts": 1789501539.8182023, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789501542.51388, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789501547.9581993, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789501553.416639, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 34.0, "ts": 1789501555.3051584, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501558.8752506, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501564.3439202, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501569.8072143, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 33.0, "ts": 1789501570.7527866, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501575.2683706, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501580.7256129, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 33.0, "ts": 1789501586.1811883, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501586.1675136, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501591.623828, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501597.0835838, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 33.0, "ts": 1789501601.6110818, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501602.5336704, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501607.9905252, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501613.4419146, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 33.0, "ts": 1789501617.0553439, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501618.9065893, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501624.3482885, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501629.7958035, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 33.0, "ts": 1789501632.4902594, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501635.243099, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501640.6864393, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501646.1494396, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 33.0, "ts": 1789501647.9282193, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789501651.625442, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501657.087084, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501662.5390415, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 32.0, "ts": 1789501663.36922, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501668.0124779, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501673.4699836, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 32.0, "ts": 1789501678.7992175, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501678.9227998, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501684.3914351, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501689.837509, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 32.0, "ts": 1789501694.2404232, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501695.296913, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501700.755886, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501706.2154212, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 32.0, "ts": 1789501709.6834972, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501711.6935127, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501717.1531115, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501722.6331456, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 32.0, "ts": 1789501725.1106296, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501728.1105008, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501733.565567, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501739.044458, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 32.0, "ts": 1789501740.5478742, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501744.5359547, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501749.992453, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501755.4496238, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 32.0, "ts": 1789501755.9778166, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501760.911204, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501766.3695834, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 32.0, "ts": 1789501771.4786634, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501771.8248115, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501777.298876, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501782.7746387, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "temp_c": 32.0, "ts": 1789501786.9581003, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501788.258969, "comfy": true, "qwen": false}
+{"used_mib": 639, "free_mib": 15339, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501793.7077525, "comfy": true, "qwen": false}
+{"used_mib": 1247, "free_mib": 14731, "total_mib": 16303, "temp_c": 34.0, "util": 1.0, "ts": 1789501799.1804953, "comfy": true, "qwen": false}
+{"used_mib": 1919, "free_mib": 14059, "temp_c": 32.0, "ts": 1789501802.4092708, "comfy": true, "qwen": false}
+{"used_mib": 2463, "free_mib": 13515, "total_mib": 16303, "temp_c": 32.0, "util": 6.0, "ts": 1789501804.6421578, "comfy": true, "qwen": false}
+{"used_mib": 3711, "free_mib": 12267, "total_mib": 16303, "temp_c": 32.0, "util": 8.0, "ts": 1789501810.105348, "comfy": true, "qwen": false}
+{"used_mib": 4959, "free_mib": 11019, "total_mib": 16303, "temp_c": 32.0, "util": 8.0, "ts": 1789501815.557922, "comfy": true, "qwen": false}
+{"used_mib": 5503, "free_mib": 10475, "temp_c": 32.0, "ts": 1789501817.8470411, "comfy": true, "qwen": false}
+{"used_mib": 6207, "free_mib": 9771, "total_mib": 16303, "temp_c": 32.0, "util": 7.0, "ts": 1789501821.0240555, "comfy": true, "qwen": false}
+{"used_mib": 7391, "free_mib": 8587, "total_mib": 16303, "temp_c": 32.0, "util": 8.0, "ts": 1789501826.50152, "comfy": true, "qwen": false}
+{"used_mib": 8447, "free_mib": 7531, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789501831.9567199, "comfy": true, "qwen": false}
+{"used_mib": 8479, "free_mib": 7499, "temp_c": 32.0, "ts": 1789501833.3048723, "comfy": true, "qwen": false}
+{"used_mib": 8991, "free_mib": 6987, "total_mib": 16303, "temp_c": 32.0, "util": 9.0, "ts": 1789501837.4152005, "comfy": true, "qwen": false}
+{"used_mib": 10015, "free_mib": 5963, "total_mib": 16303, "temp_c": 32.0, "util": 3.0, "ts": 1789501842.85244, "comfy": true, "qwen": false}
+{"used_mib": 11137, "free_mib": 4841, "total_mib": 16303, "temp_c": 55.0, "util": 98.0, "ts": 1789501848.3300037, "comfy": true, "qwen": false}
+{"used_mib": 11137, "free_mib": 4841, "temp_c": 56.0, "ts": 1789501848.7332091, "comfy": true, "qwen": false}
+{"used_mib": 11233, "free_mib": 4745, "total_mib": 16303, "temp_c": 58.0, "util": 98.0, "ts": 1789501853.7935557, "comfy": true, "qwen": false}
+{"used_mib": 11265, "free_mib": 4713, "total_mib": 16303, "temp_c": 62.0, "util": 98.0, "ts": 1789501859.2452867, "comfy": true, "qwen": false}
+{"used_mib": 11265, "free_mib": 4713, "temp_c": 63.0, "ts": 1789501864.1671007, "comfy": true, "qwen": false}
+{"used_mib": 11265, "free_mib": 4713, "total_mib": 16303, "temp_c": 64.0, "util": 98.0, "ts": 1789501864.6967695, "comfy": true, "qwen": false}
+{"used_mib": 11265, "free_mib": 4713, "total_mib": 16303, "temp_c": 66.0, "util": 98.0, "ts": 1789501870.1486723, "comfy": true, "qwen": false}
+{"used_mib": 11297, "free_mib": 4681, "total_mib": 16303, "temp_c": 68.0, "util": 98.0, "ts": 1789501875.5981972, "comfy": true, "qwen": false}
+{"used_mib": 11297, "free_mib": 4681, "temp_c": 69.0, "ts": 1789501879.6099148, "comfy": true, "qwen": false}
+{"used_mib": 11297, "free_mib": 4681, "total_mib": 16303, "temp_c": 68.0, "util": 98.0, "ts": 1789501881.0660772, "comfy": true, "qwen": false}
+{"used_mib": 11297, "free_mib": 4681, "total_mib": 16303, "temp_c": 70.0, "util": 98.0, "ts": 1789501886.5267916, "comfy": true, "qwen": false}
+{"used_mib": 11297, "free_mib": 4681, "total_mib": 16303, "temp_c": 71.0, "util": 98.0, "ts": 1789501891.9734228, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 51.0, "ts": 1789501895.055017, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 48.0, "util": 0.0, "ts": 1789501897.4389572, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 45.0, "util": 0.0, "ts": 1789501902.9208987, "comfy": true, "qwen": false}
+{"used_mib": 932, "free_mib": 15046, "total_mib": 16303, "temp_c": 45.0, "util": 0.0, "ts": 1789501908.4555793, "comfy": true, "qwen": true}
+{"used_mib": 932, "free_mib": 15046, "total_mib": 16303, "temp_c": 43.0, "util": 0.0, "ts": 1789501913.5227427, "comfy": true, "qwen": true}
+{"used_mib": 932, "free_mib": 15046, "temp_c": 44.0, "ts": 1789501910.5161414, "comfy": true, "qwen": true}
+{"used_mib": 10528, "free_mib": 5450, "total_mib": 16303, "temp_c": 40.0, "util": 0.0, "ts": 1789501927.200469, "comfy": true, "qwen": true}
+{"used_mib": 11248, "free_mib": 4730, "total_mib": 16303, "temp_c": 49.0, "util": 22.0, "ts": 1789501932.2762294, "comfy": true, "qwen": true}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 41.0, "ts": 1789501937.3005846, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 41.0, "util": 0.0, "ts": 1789501937.3483863, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 39.0, "util": 0.0, "ts": 1789501942.8102202, "comfy": true, "qwen": false}
+{"used_mib": 1868, "free_mib": 14110, "total_mib": 16303, "temp_c": 40.0, "util": 1.0, "ts": 1789501948.2726576, "comfy": true, "qwen": false}
+{"used_mib": 2508, "free_mib": 13470, "temp_c": 40.0, "ts": 1789501952.7326832, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 47.0, "util": 87.0, "ts": 1789501953.7375858, "comfy": true, "qwen": false}
+{"used_mib": 833, "free_mib": 15145, "total_mib": 16303, "temp_c": 39.0, "util": 1.0, "ts": 1789501959.1848965, "comfy": true, "qwen": false}
+{"used_mib": 1825, "free_mib": 14153, "total_mib": 16303, "temp_c": 37.0, "util": 6.0, "ts": 1789501964.6367888, "comfy": true, "qwen": false}
+{"used_mib": 2241, "free_mib": 13737, "temp_c": 36.0, "ts": 1789501968.17236, "comfy": true, "qwen": false}
+{"used_mib": 2273, "free_mib": 13705, "total_mib": 16303, "temp_c": 38.0, "util": 0.0, "ts": 1789501970.1013162, "comfy": true, "qwen": false}
+{"used_mib": 3777, "free_mib": 12201, "total_mib": 16303, "temp_c": 36.0, "util": 6.0, "ts": 1789501975.5786624, "comfy": true, "qwen": false}
+{"used_mib": 4673, "free_mib": 11305, "total_mib": 16303, "temp_c": 35.0, "util": 11.0, "ts": 1789501981.0514657, "comfy": true, "qwen": false}
+{"used_mib": 5057, "free_mib": 10921, "temp_c": 35.0, "ts": 1789501983.6149135, "comfy": true, "qwen": false}
+{"used_mib": 5473, "free_mib": 10505, "total_mib": 16303, "temp_c": 35.0, "util": 4.0, "ts": 1789501986.5073583, "comfy": true, "qwen": false}
+{"used_mib": 6369, "free_mib": 9609, "total_mib": 16303, "temp_c": 34.0, "util": 9.0, "ts": 1789501991.9822834, "comfy": true, "qwen": false}
+{"used_mib": 7297, "free_mib": 8681, "total_mib": 16303, "temp_c": 35.0, "util": 10.0, "ts": 1789501997.4523647, "comfy": true, "qwen": false}
+{"used_mib": 7457, "free_mib": 8521, "temp_c": 34.0, "ts": 1789501999.0735416, "comfy": true, "qwen": false}
+{"used_mib": 7681, "free_mib": 8297, "total_mib": 16303, "temp_c": 57.0, "util": 98.0, "ts": 1789502002.906417, "comfy": true, "qwen": false}
+{"used_mib": 993, "free_mib": 14985, "total_mib": 16303, "temp_c": 40.0, "util": 0.0, "ts": 1789502008.3486617, "comfy": true, "qwen": false}
+{"used_mib": 7777, "free_mib": 8201, "total_mib": 16303, "temp_c": 60.0, "util": 97.0, "ts": 1789502013.795267, "comfy": true, "qwen": false}
+{"used_mib": 7777, "free_mib": 8201, "temp_c": 61.0, "ts": 1789502014.5110998, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 40.0, "util": 0.0, "ts": 1789502019.2487948, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 38.0, "util": 0.0, "ts": 1789502024.7153559, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 37.0, "ts": 1789502029.9610806, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 37.0, "util": 0.0, "ts": 1789502030.1629446, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 36.0, "util": 0.0, "ts": 1789502035.622395, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 35.0, "util": 0.0, "ts": 1789502041.0692716, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 35.0, "ts": 1789502045.4428139, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 35.0, "util": 0.0, "ts": 1789502046.5483549, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502052.0044, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502057.4669876, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 34.0, "ts": 1789502060.9247282, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502062.9083261, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502068.3820095, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502073.8530395, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 34.0, "ts": 1789502076.403662, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502079.312697, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502084.7652223, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502090.2212892, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 34.0, "ts": 1789502091.8602333, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502095.6843061, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502101.1295063, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502106.5851998, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 34.0, "ts": 1789502107.299102, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502112.048696, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502117.4989078, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 34.0, "ts": 1789502122.7698731, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502122.9406743, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502128.391797, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502133.8370872, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 33.0, "ts": 1789502138.2094376, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502139.284383, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502144.727727, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502150.188401, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 33.0, "ts": 1789502153.6490817, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502155.6340466, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502161.0982234, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502166.547137, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 33.0, "ts": 1789502169.0909884, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502172.005266, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502177.467249, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502182.9349725, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 33.0, "ts": 1789502184.5136683, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502188.4120574, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502193.868108, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502199.340705, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 33.0, "ts": 1789502199.9497466, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502204.81355, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502210.2722657, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 33.0, "ts": 1789502215.4079144, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502215.7193062, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502221.173196, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502226.6388676, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 33.0, "ts": 1789502230.8478017, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502232.0909739, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502237.5696816, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502243.019903, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 32.0, "ts": 1789502246.2839868, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502248.4652345, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502253.9253237, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502259.363304, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 32.0, "ts": 1789502261.7197285, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502264.8262944, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502270.293965, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502275.7620332, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 32.0, "ts": 1789502277.151912, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502281.2020588, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502286.654375, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502292.1072798, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 32.0, "ts": 1789502292.5891826, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502297.5636258, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502303.0572333, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 32.0, "ts": 1789502308.1003382, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502308.536873, "comfy": true, "qwen": false}
+{"used_mib": 897, "free_mib": 15081, "total_mib": 16303, "temp_c": 33.0, "util": 1.0, "ts": 1789502313.9882767, "comfy": true, "qwen": false}
+{"used_mib": 2209, "free_mib": 13769, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502319.429214, "comfy": true, "qwen": false}
+{"used_mib": 3201, "free_mib": 12777, "temp_c": 32.0, "ts": 1789502323.5464919, "comfy": true, "qwen": false}
+{"used_mib": 3457, "free_mib": 12521, "total_mib": 16303, "temp_c": 32.0, "util": 6.0, "ts": 1789502324.8996947, "comfy": true, "qwen": false}
+{"used_mib": 4737, "free_mib": 11241, "total_mib": 16303, "temp_c": 32.0, "util": 9.0, "ts": 1789502330.3794901, "comfy": true, "qwen": false}
+{"used_mib": 5953, "free_mib": 10025, "total_mib": 16303, "temp_c": 32.0, "util": 8.0, "ts": 1789502335.8461063, "comfy": true, "qwen": false}
+{"used_mib": 6721, "free_mib": 9257, "temp_c": 32.0, "ts": 1789502339.0054705, "comfy": true, "qwen": false}
+{"used_mib": 7169, "free_mib": 8809, "total_mib": 16303, "temp_c": 32.0, "util": 7.0, "ts": 1789502341.3073483, "comfy": true, "qwen": false}
+{"used_mib": 8353, "free_mib": 7625, "total_mib": 16303, "temp_c": 32.0, "util": 7.0, "ts": 1789502346.765316, "comfy": true, "qwen": false}
+{"used_mib": 9537, "free_mib": 6441, "total_mib": 16303, "temp_c": 32.0, "util": 7.0, "ts": 1789502352.21059, "comfy": true, "qwen": false}
+{"used_mib": 9985, "free_mib": 5993, "temp_c": 32.0, "ts": 1789502354.5006678, "comfy": true, "qwen": false}
+{"used_mib": 10433, "free_mib": 5545, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502357.6712143, "comfy": true, "qwen": false}
+{"used_mib": 11201, "free_mib": 4777, "total_mib": 16303, "temp_c": 58.0, "util": 98.0, "ts": 1789502363.113383, "comfy": true, "qwen": false}
+{"used_mib": 11201, "free_mib": 4777, "total_mib": 16303, "temp_c": 62.0, "util": 98.0, "ts": 1789502368.5666914, "comfy": true, "qwen": false}
+{"used_mib": 11201, "free_mib": 4777, "temp_c": 62.0, "ts": 1789502369.9312553, "comfy": true, "qwen": false}
+{"used_mib": 11233, "free_mib": 4745, "total_mib": 16303, "temp_c": 64.0, "util": 98.0, "ts": 1789502374.0071495, "comfy": true, "qwen": false}
+{"used_mib": 11233, "free_mib": 4745, "total_mib": 16303, "temp_c": 65.0, "util": 98.0, "ts": 1789502379.4760761, "comfy": true, "qwen": false}
+{"used_mib": 11233, "free_mib": 4745, "total_mib": 16303, "temp_c": 66.0, "util": 98.0, "ts": 1789502384.9311106, "comfy": true, "qwen": false}
+{"used_mib": 11233, "free_mib": 4745, "temp_c": 67.0, "ts": 1789502385.3688653, "comfy": true, "qwen": false}
+{"used_mib": 11233, "free_mib": 4745, "total_mib": 16303, "temp_c": 66.0, "util": 90.0, "ts": 1789502390.3787677, "comfy": true, "qwen": false}
+{"used_mib": 11297, "free_mib": 4681, "total_mib": 16303, "temp_c": 69.0, "util": 98.0, "ts": 1789502395.8205168, "comfy": true, "qwen": false}
+{"used_mib": 11297, "free_mib": 4681, "temp_c": 71.0, "ts": 1789502400.8292644, "comfy": true, "qwen": false}
+{"used_mib": 11297, "free_mib": 4681, "total_mib": 16303, "temp_c": 69.0, "util": 98.0, "ts": 1789502401.2850854, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 49.0, "util": 0.0, "ts": 1789502406.7352557, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 46.0, "util": 0.0, "ts": 1789502412.196066, "comfy": true, "qwen": false}
+{"used_mib": 932, "free_mib": 15046, "temp_c": 46.0, "ts": 1789502416.2809186, "comfy": true, "qwen": true}
+{"used_mib": 932, "free_mib": 15046, "total_mib": 16303, "temp_c": 46.0, "util": 0.0, "ts": 1789502417.658313, "comfy": true, "qwen": true}
+{"used_mib": 932, "free_mib": 15046, "total_mib": 16303, "temp_c": 44.0, "util": 0.0, "ts": 1789502422.7020168, "comfy": true, "qwen": true}
+{"used_mib": 932, "free_mib": 15046, "total_mib": 16303, "temp_c": 42.0, "util": 0.0, "ts": 1789502427.7770143, "comfy": true, "qwen": true}
+{"used_mib": 932, "free_mib": 15046, "temp_c": 41.0, "ts": 1789502431.4211078, "comfy": true, "qwen": true}
+{"used_mib": 5062, "free_mib": 10916, "total_mib": 16303, "temp_c": 41.0, "util": 0.0, "ts": 1789502432.8679183, "comfy": true, "qwen": true}
+{"used_mib": 10528, "free_mib": 5450, "total_mib": 16303, "temp_c": 40.0, "util": 0.0, "ts": 1789502437.9518678, "comfy": true, "qwen": true}
+{"used_mib": 11242, "free_mib": 4736, "total_mib": 16303, "temp_c": 41.0, "util": 0.0, "ts": 1789502443.016021, "comfy": true, "qwen": true}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 51.0, "ts": 1789502446.5751586, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 41.0, "util": 0.0, "ts": 1789502448.0848444, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 39.0, "util": 0.0, "ts": 1789502453.5444024, "comfy": true, "qwen": false}
+{"used_mib": 1868, "free_mib": 14110, "total_mib": 16303, "temp_c": 40.0, "util": 1.0, "ts": 1789502458.9994335, "comfy": true, "qwen": false}
+{"used_mib": 1868, "free_mib": 14110, "temp_c": 39.0, "ts": 1789502462.0384367, "comfy": true, "qwen": false}
+{"used_mib": 2524, "free_mib": 13454, "total_mib": 16303, "temp_c": 39.0, "util": 0.0, "ts": 1789502464.4802132, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 39.0, "util": 0.0, "ts": 1789502469.9411557, "comfy": true, "qwen": false}
+{"used_mib": 1761, "free_mib": 14217, "total_mib": 16303, "temp_c": 37.0, "util": 3.0, "ts": 1789502475.3921359, "comfy": true, "qwen": false}
+{"used_mib": 2017, "free_mib": 13961, "temp_c": 37.0, "ts": 1789502477.4745228, "comfy": true, "qwen": false}
+{"used_mib": 2305, "free_mib": 13673, "total_mib": 16303, "temp_c": 36.0, "util": 6.0, "ts": 1789502480.8666756, "comfy": true, "qwen": false}
+{"used_mib": 3617, "free_mib": 12361, "total_mib": 16303, "temp_c": 36.0, "util": 0.0, "ts": 1789502486.3308513, "comfy": true, "qwen": false}
+{"used_mib": 4417, "free_mib": 11561, "total_mib": 16303, "temp_c": 35.0, "util": 3.0, "ts": 1789502491.822376, "comfy": true, "qwen": false}
+{"used_mib": 4609, "free_mib": 11369, "temp_c": 35.0, "ts": 1789502492.9311926, "comfy": true, "qwen": false}
+{"used_mib": 5281, "free_mib": 10697, "total_mib": 16303, "temp_c": 35.0, "util": 0.0, "ts": 1789502497.2766497, "comfy": true, "qwen": false}
+{"used_mib": 6145, "free_mib": 9833, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502502.7503135, "comfy": true, "qwen": false}
+{"used_mib": 7041, "free_mib": 8937, "total_mib": 16303, "temp_c": 35.0, "util": 14.0, "ts": 1789502508.2023196, "comfy": true, "qwen": false}
+{"used_mib": 7041, "free_mib": 8937, "temp_c": 35.0, "ts": 1789502508.374458, "comfy": true, "qwen": false}
+{"used_mib": 7553, "free_mib": 8425, "total_mib": 16303, "temp_c": 35.0, "util": 17.0, "ts": 1789502513.6569338, "comfy": true, "qwen": false}
+{"used_mib": 7745, "free_mib": 8233, "total_mib": 16303, "temp_c": 42.0, "util": 3.0, "ts": 1789502519.100396, "comfy": true, "qwen": false}
+{"used_mib": 1121, "free_mib": 14857, "temp_c": 38.0, "ts": 1789502523.8356318, "comfy": true, "qwen": false}
+{"used_mib": 1473, "free_mib": 14505, "total_mib": 16303, "temp_c": 38.0, "util": 3.0, "ts": 1789502524.5588467, "comfy": true, "qwen": false}
+{"used_mib": 7553, "free_mib": 8425, "total_mib": 16303, "temp_c": 38.0, "util": 2.0, "ts": 1789502530.017177, "comfy": true, "qwen": false}
+{"used_mib": 7361, "free_mib": 8617, "total_mib": 16303, "temp_c": 61.0, "util": 99.0, "ts": 1789502535.4847863, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 39.0, "ts": 1789502539.2798598, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 39.0, "util": 0.0, "ts": 1789502540.932294, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 37.0, "util": 0.0, "ts": 1789502546.4056926, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 36.0, "util": 0.0, "ts": 1789502551.8629642, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 36.0, "ts": 1789502554.7319436, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 35.0, "util": 0.0, "ts": 1789502557.3157005, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 35.0, "util": 0.0, "ts": 1789502562.7763867, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502568.2264435, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 34.0, "ts": 1789502570.1762056, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502573.6790795, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502579.1362684, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502584.593907, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 34.0, "ts": 1789502585.6523154, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502590.0500805, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502595.5130627, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502600.9720705, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 34.0, "ts": 1789502601.0974748, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502606.424599, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502611.9028096, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "temp_c": 34.0, "ts": 1789502616.5414243, "comfy": true, "qwen": false}
+{"used_mib": 705, "free_mib": 15273, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502617.3520803, "comfy": true, "qwen": false}
+{"used_mib": 713, "free_mib": 15265, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502622.8158562, "comfy": true, "qwen": false}
+{"used_mib": 709, "free_mib": 15269, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502628.2721672, "comfy": true, "qwen": false}
+{"used_mib": 709, "free_mib": 15269, "temp_c": 34.0, "ts": 1789502631.9781318, "comfy": true, "qwen": false}
+{"used_mib": 709, "free_mib": 15269, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789502633.7288048, "comfy": true, "qwen": false}
+{"used_mib": 711, "free_mib": 15267, "total_mib": 16303, "temp_c": 34.0, "util": 9.0, "ts": 1789502639.1817188, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502644.641381, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "temp_c": 33.0, "ts": 1789502647.4458864, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502650.100966, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502655.554475, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502661.0139885, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "temp_c": 33.0, "ts": 1789502662.90258, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502666.471186, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502671.943226, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502677.3978462, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "temp_c": 33.0, "ts": 1789502678.3650196, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502682.8393483, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502688.2904525, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "temp_c": 33.0, "ts": 1789502693.8157077, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502693.7534225, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502699.2066276, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502704.6720552, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "temp_c": 33.0, "ts": 1789502709.268141, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502710.1191647, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502715.5704896, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502721.0492358, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "temp_c": 33.0, "ts": 1789502724.693104, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502726.506985, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502731.9558883, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502737.4008982, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "temp_c": 33.0, "ts": 1789502740.1531126, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502742.8475273, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502748.313623, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502753.7667983, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "temp_c": 33.0, "ts": 1789502755.5961547, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502759.2087755, "comfy": true, "qwen": false}
+{"used_mib": 712, "free_mib": 15266, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502764.6706395, "comfy": true, "qwen": false}
+{"used_mib": 723, "free_mib": 15255, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502770.1174452, "comfy": true, "qwen": false}
+{"used_mib": 721, "free_mib": 15257, "temp_c": 32.0, "ts": 1789502771.0386147, "comfy": true, "qwen": false}
+{"used_mib": 713, "free_mib": 15265, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502775.5619154, "comfy": true, "qwen": false}
+{"used_mib": 718, "free_mib": 15260, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502781.0181804, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "temp_c": 32.0, "ts": 1789502786.474507, "comfy": true, "qwen": false}
+{"used_mib": 714, "free_mib": 15264, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502786.4599867, "comfy": true, "qwen": false}
+{"used_mib": 716, "free_mib": 15262, "total_mib": 16303, "temp_c": 32.0, "util": 7.0, "ts": 1789502791.925255, "comfy": true, "qwen": false}
+{"used_mib": 712, "free_mib": 15266, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502797.4077194, "comfy": true, "qwen": false}
+{"used_mib": 712, "free_mib": 15266, "temp_c": 32.0, "ts": 1789502801.9464638, "comfy": true, "qwen": false}
+{"used_mib": 712, "free_mib": 15266, "total_mib": 16303, "temp_c": 32.0, "util": 1.0, "ts": 1789502802.852483, "comfy": true, "qwen": false}
+{"used_mib": 723, "free_mib": 15255, "total_mib": 16303, "temp_c": 32.0, "util": 9.0, "ts": 1789502808.3145947, "comfy": true, "qwen": false}
+{"used_mib": 721, "free_mib": 15257, "total_mib": 16303, "temp_c": 32.0, "util": 8.0, "ts": 1789502813.7709308, "comfy": true, "qwen": false}
+{"used_mib": 726, "free_mib": 15252, "temp_c": 32.0, "ts": 1789502817.3755991, "comfy": true, "qwen": false}
+{"used_mib": 725, "free_mib": 15253, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502819.2121332, "comfy": true, "qwen": false}
+{"used_mib": 727, "free_mib": 15251, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502824.6909418, "comfy": true, "qwen": false}
+{"used_mib": 718, "free_mib": 15260, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502830.1574137, "comfy": true, "qwen": false}
+{"used_mib": 716, "free_mib": 15262, "temp_c": 32.0, "ts": 1789502832.847854, "comfy": true, "qwen": false}
+{"used_mib": 717, "free_mib": 15261, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502835.6348956, "comfy": true, "qwen": false}
+{"used_mib": 715, "free_mib": 15263, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502841.088436, "comfy": true, "qwen": false}
+{"used_mib": 715, "free_mib": 15263, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502846.5508862, "comfy": true, "qwen": false}
+{"used_mib": 1131, "free_mib": 14847, "temp_c": 32.0, "ts": 1789502848.2937138, "comfy": true, "qwen": false}
+{"used_mib": 1483, "free_mib": 14495, "total_mib": 16303, "temp_c": 33.0, "util": 1.0, "ts": 1789502852.013853, "comfy": true, "qwen": false}
+{"used_mib": 1771, "free_mib": 14207, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789502857.4684718, "comfy": true, "qwen": false}
+{"used_mib": 2411, "free_mib": 13567, "total_mib": 16303, "temp_c": 32.0, "util": 6.0, "ts": 1789502862.9361026, "comfy": true, "qwen": false}
+{"used_mib": 2603, "free_mib": 13375, "temp_c": 33.0, "ts": 1789502863.7492492, "comfy": true, "qwen": false}
+{"used_mib": 3307, "free_mib": 12671, "total_mib": 16303, "temp_c": 32.0, "util": 7.0, "ts": 1789502868.403579, "comfy": true, "qwen": false}
+{"used_mib": 4459, "free_mib": 11519, "total_mib": 16303, "temp_c": 32.0, "util": 9.0, "ts": 1789502873.865234, "comfy": true, "qwen": false}
+{"used_mib": 5611, "free_mib": 10367, "temp_c": 32.0, "ts": 1789502879.213837, "comfy": true, "qwen": false}
+{"used_mib": 5643, "free_mib": 10335, "total_mib": 16303, "temp_c": 32.0, "util": 9.0, "ts": 1789502879.336586, "comfy": true, "qwen": false}
+{"used_mib": 6379, "free_mib": 9599, "total_mib": 16303, "temp_c": 32.0, "util": 8.0, "ts": 1789502884.7949793, "comfy": true, "qwen": false}
+{"used_mib": 7371, "free_mib": 8607, "total_mib": 16303, "temp_c": 32.0, "util": 7.0, "ts": 1789502890.2587059, "comfy": true, "qwen": false}
+{"used_mib": 8299, "free_mib": 7679, "temp_c": 32.0, "ts": 1789502894.6464128, "comfy": true, "qwen": false}
+{"used_mib": 8523, "free_mib": 7455, "total_mib": 16303, "temp_c": 32.0, "util": 7.0, "ts": 1789502895.7226775, "comfy": true, "qwen": false}
+{"used_mib": 9707, "free_mib": 6271, "total_mib": 16303, "temp_c": 32.0, "util": 9.0, "ts": 1789502901.193962, "comfy": true, "qwen": false}
+{"used_mib": 10763, "free_mib": 5215, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789502906.658386, "comfy": true, "qwen": false}
+{"used_mib": 11243, "free_mib": 4735, "temp_c": 57.0, "ts": 1789502910.0974376, "comfy": true, "qwen": false}
+{"used_mib": 11243, "free_mib": 4735, "total_mib": 16303, "temp_c": 59.0, "util": 98.0, "ts": 1789502912.1184955, "comfy": true, "qwen": false}
+{"used_mib": 11242, "free_mib": 4736, "total_mib": 16303, "temp_c": 61.0, "util": 98.0, "ts": 1789502917.5927358, "comfy": true, "qwen": false}
+{"used_mib": 11242, "free_mib": 4736, "total_mib": 16303, "temp_c": 64.0, "util": 98.0, "ts": 1789502923.0422876, "comfy": true, "qwen": false}
+{"used_mib": 11242, "free_mib": 4736, "temp_c": 64.0, "ts": 1789502925.5406075, "comfy": true, "qwen": false}
+{"used_mib": 11244, "free_mib": 4734, "total_mib": 16303, "temp_c": 66.0, "util": 98.0, "ts": 1789502928.4888375, "comfy": true, "qwen": false}
+{"used_mib": 11244, "free_mib": 4734, "total_mib": 16303, "temp_c": 68.0, "util": 98.0, "ts": 1789502933.9334977, "comfy": true, "qwen": false}
+{"used_mib": 11244, "free_mib": 4734, "total_mib": 16303, "temp_c": 69.0, "util": 98.0, "ts": 1789502939.377446, "comfy": true, "qwen": false}
+{"used_mib": 11276, "free_mib": 4702, "temp_c": 69.0, "ts": 1789502941.0116105, "comfy": true, "qwen": false}
+{"used_mib": 11276, "free_mib": 4702, "total_mib": 16303, "temp_c": 71.0, "util": 98.0, "ts": 1789502944.8287625, "comfy": true, "qwen": false}
+{"used_mib": 11316, "free_mib": 4662, "total_mib": 16303, "temp_c": 71.0, "util": 98.0, "ts": 1789502950.2713275, "comfy": true, "qwen": false}
+{"used_mib": 11320, "free_mib": 4658, "total_mib": 16303, "temp_c": 73.0, "util": 97.0, "ts": 1789502955.736646, "comfy": true, "qwen": false}
+{"used_mib": 11320, "free_mib": 4658, "temp_c": 72.0, "ts": 1789502956.453977, "comfy": true, "qwen": false}
+{"used_mib": 11352, "free_mib": 4626, "total_mib": 16303, "temp_c": 72.0, "util": 98.0, "ts": 1789502961.1893303, "comfy": true, "qwen": false}
+{"used_mib": 984, "free_mib": 14994, "total_mib": 16303, "temp_c": 53.0, "util": 0.0, "ts": 1789502966.6723921, "comfy": true, "qwen": false}
+{"used_mib": 713, "free_mib": 15265, "temp_c": 47.0, "ts": 1789502971.8974886, "comfy": true, "qwen": false}
+{"used_mib": 713, "free_mib": 15265, "total_mib": 16303, "temp_c": 47.0, "util": 0.0, "ts": 1789502972.132366, "comfy": true, "qwen": false}
+{"used_mib": 952, "free_mib": 15026, "total_mib": 16303, "temp_c": 46.0, "util": 14.0, "ts": 1789502977.5861847, "comfy": true, "qwen": true}
+{"used_mib": 946, "free_mib": 15032, "total_mib": 16303, "temp_c": 45.0, "util": 0.0, "ts": 1789502982.6560907, "comfy": true, "qwen": true}
+{"used_mib": 929, "free_mib": 15049, "temp_c": 43.0, "ts": 1789502987.3598936, "comfy": true, "qwen": true}
+{"used_mib": 929, "free_mib": 15049, "total_mib": 16303, "temp_c": 43.0, "util": 1.0, "ts": 1789502987.7336426, "comfy": true, "qwen": true}
+{"used_mib": 929, "free_mib": 15049, "total_mib": 16303, "temp_c": 42.0, "util": 0.0, "ts": 1789502992.7793124, "comfy": true, "qwen": true}
+{"used_mib": 5059, "free_mib": 10919, "total_mib": 16303, "temp_c": 42.0, "util": 7.0, "ts": 1789502997.8254702, "comfy": true, "qwen": true}
+{"used_mib": 9829, "free_mib": 6149, "temp_c": 40.0, "ts": 1789503002.5275636, "comfy": true, "qwen": true}
+{"used_mib": 9829, "free_mib": 6149, "total_mib": 16303, "temp_c": 40.0, "util": 1.0, "ts": 1789503002.9000595, "comfy": true, "qwen": true}
+{"used_mib": 10527, "free_mib": 5451, "total_mib": 16303, "temp_c": 40.0, "util": 1.0, "ts": 1789503007.9409764, "comfy": true, "qwen": true}
+{"used_mib": 10523, "free_mib": 5455, "total_mib": 16303, "temp_c": 39.0, "util": 0.0, "ts": 1789503012.9887767, "comfy": true, "qwen": true}
+{"used_mib": 11333, "free_mib": 4645, "temp_c": 40.0, "ts": 1789503017.6873927, "comfy": true, "qwen": true}
+{"used_mib": 11337, "free_mib": 4641, "total_mib": 16303, "temp_c": 55.0, "util": 87.0, "ts": 1789503018.0652213, "comfy": true, "qwen": true}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 39.0, "util": 0.0, "ts": 1789503023.132477, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 38.0, "util": 0.0, "ts": 1789503028.6041424, "comfy": true, "qwen": false}
+{"used_mib": 1863, "free_mib": 14115, "temp_c": 39.0, "ts": 1789503032.863145, "comfy": true, "qwen": false}
+{"used_mib": 1863, "free_mib": 14115, "total_mib": 16303, "temp_c": 39.0, "util": 0.0, "ts": 1789503034.0616896, "comfy": true, "qwen": false}
+{"used_mib": 1867, "free_mib": 14111, "total_mib": 16303, "temp_c": 37.0, "util": 1.0, "ts": 1789503039.5197926, "comfy": true, "qwen": false}
+{"used_mib": 2519, "free_mib": 13459, "total_mib": 16303, "temp_c": 47.0, "util": 82.0, "ts": 1789503044.9844394, "comfy": true, "qwen": false}
+{"used_mib": 2519, "free_mib": 13459, "temp_c": 50.0, "ts": 1789503048.2907474, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 40.0, "util": 0.0, "ts": 1789503050.4399357, "comfy": true, "qwen": false}
+{"used_mib": 860, "free_mib": 15118, "total_mib": 16303, "temp_c": 39.0, "util": 0.0, "ts": 1789503055.9083254, "comfy": true, "qwen": false}
+{"used_mib": 1820, "free_mib": 14158, "total_mib": 16303, "temp_c": 37.0, "util": 5.0, "ts": 1789503061.40728, "comfy": true, "qwen": false}
+{"used_mib": 2108, "free_mib": 13870, "temp_c": 37.0, "ts": 1789503063.7329664, "comfy": true, "qwen": false}
+{"used_mib": 2300, "free_mib": 13678, "total_mib": 16303, "temp_c": 36.0, "util": 6.0, "ts": 1789503066.8702257, "comfy": true, "qwen": false}
+{"used_mib": 3580, "free_mib": 12398, "total_mib": 16303, "temp_c": 36.0, "util": 1.0, "ts": 1789503072.3118436, "comfy": true, "qwen": false}
+{"used_mib": 4444, "free_mib": 11534, "total_mib": 16303, "temp_c": 35.0, "util": 12.0, "ts": 1789503077.7889674, "comfy": true, "qwen": false}
+{"used_mib": 4668, "free_mib": 11310, "temp_c": 35.0, "ts": 1789503079.1992989, "comfy": true, "qwen": false}
+{"used_mib": 5276, "free_mib": 10702, "total_mib": 16303, "temp_c": 35.0, "util": 0.0, "ts": 1789503083.2538295, "comfy": true, "qwen": false}
+{"used_mib": 6012, "free_mib": 9966, "total_mib": 16303, "temp_c": 34.0, "util": 12.0, "ts": 1789503088.7313013, "comfy": true, "qwen": false}
+{"used_mib": 6844, "free_mib": 9134, "total_mib": 16303, "temp_c": 34.0, "util": 7.0, "ts": 1789503094.2403061, "comfy": true, "qwen": false}
+{"used_mib": 6844, "free_mib": 9134, "temp_c": 34.0, "ts": 1789503094.6609435, "comfy": true, "qwen": false}
+{"used_mib": 7552, "free_mib": 8426, "total_mib": 16303, "temp_c": 34.0, "util": 2.0, "ts": 1789503099.7233958, "comfy": true, "qwen": false}
+{"used_mib": 7612, "free_mib": 8366, "total_mib": 16303, "temp_c": 59.0, "util": 98.0, "ts": 1789503105.1994011, "comfy": true, "qwen": false}
+{"used_mib": 2268, "free_mib": 13710, "temp_c": 39.0, "ts": 1789503110.1221788, "comfy": true, "qwen": false}
+{"used_mib": 5084, "free_mib": 10894, "total_mib": 16303, "temp_c": 42.0, "util": 34.0, "ts": 1789503110.6579852, "comfy": true, "qwen": false}
+{"used_mib": 7484, "free_mib": 8494, "total_mib": 16303, "temp_c": 61.0, "util": 99.0, "ts": 1789503116.1222074, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 39.0, "util": 0.0, "ts": 1789503121.5921032, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 38.0, "ts": 1789503125.5656028, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 37.0, "util": 0.0, "ts": 1789503127.0666122, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 37.0, "util": 0.0, "ts": 1789503132.5302625, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 36.0, "util": 1.0, "ts": 1789503137.9960487, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 35.0, "ts": 1789503141.0132449, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 35.0, "util": 0.0, "ts": 1789503143.433202, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789503148.8904564, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 34.0, "util": 1.0, "ts": 1789503154.3533344, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 34.0, "ts": 1789503156.4564486, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789503159.8063636, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789503165.2598307, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789503170.7195938, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 34.0, "ts": 1789503171.9080658, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789503176.1741087, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 34.0, "util": 1.0, "ts": 1789503181.6320589, "comfy": true, "qwen": false}
+{"used_mib": 704, "free_mib": 15274, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789503187.0862174, "comfy": true, "qwen": false}
+{"used_mib": 704, "free_mib": 15274, "temp_c": 34.0, "ts": 1789503187.3506806, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789503192.536192, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789503197.989499, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 34.0, "ts": 1789503202.8050027, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789503203.4435265, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 34.0, "util": 1.0, "ts": 1789503208.8914654, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789503214.3591013, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 34.0, "ts": 1789503218.2437708, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789503219.8210013, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789503225.2788892, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789503230.740333, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 34.0, "ts": 1789503233.704661, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789503236.2037532, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 34.0, "util": 0.0, "ts": 1789503241.6630843, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503247.1159115, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 33.0, "ts": 1789503249.1356266, "comfy": true, "qwen": false}
+{"used_mib": 704, "free_mib": 15274, "total_mib": 16303, "temp_c": 33.0, "util": 3.0, "ts": 1789503252.5707717, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503258.032173, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503263.4949102, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 33.0, "ts": 1789503264.7089322, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503268.9426227, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503274.396744, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503279.855377, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 33.0, "ts": 1789503280.1504877, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503285.31436, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503290.7638834, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 33.0, "ts": 1789503295.5908532, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 1.0, "ts": 1789503296.2177494, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503301.6571329, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503307.1272738, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 33.0, "ts": 1789503311.0330796, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503312.5921147, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503318.0548842, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 1.0, "ts": 1789503323.5110526, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 33.0, "ts": 1789503326.4573998, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503328.97444, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503334.4339628, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503339.8774304, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 33.0, "ts": 1789503341.90922, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503345.3167796, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503350.7654989, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503356.2266927, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 33.0, "ts": 1789503357.3656812, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503361.6899579, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503367.1494539, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503372.5963423, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 33.0, "ts": 1789503372.8324616, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 1.0, "ts": 1789503378.0413907, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503383.4997478, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 33.0, "ts": 1789503388.3057244, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503388.964282, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503394.4118936, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 0.0, "ts": 1789503399.852613, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 33.0, "ts": 1789503403.7491298, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 33.0, "util": 1.0, "ts": 1789503405.3250287, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789503410.7894547, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789503416.2486193, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 32.0, "ts": 1789503419.2012546, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 32.0, "util": 1.0, "ts": 1789503421.7051928, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789503427.1608331, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789503432.6254184, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 32.0, "ts": 1789503434.6451993, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789503438.081959, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789503443.5338326, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 32.0, "util": 1.0, "ts": 1789503448.9830086, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 32.0, "ts": 1789503450.1052763, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789503454.4540582, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789503459.9161658, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789503465.3784258, "comfy": true, "qwen": false}
+{"used_mib": 700, "free_mib": 15278, "temp_c": 32.0, "ts": 1789503465.569136, "comfy": true, "qwen": false}
+{"used_mib": 892, "free_mib": 15086, "total_mib": 16303, "temp_c": 34.0, "util": 6.0, "ts": 1789503470.829298, "comfy": true, "qwen": false}
+{"used_mib": 2204, "free_mib": 13774, "total_mib": 16303, "temp_c": 33.0, "util": 1.0, "ts": 1789503476.2894325, "comfy": true, "qwen": false}
+{"used_mib": 3228, "free_mib": 12750, "temp_c": 33.0, "ts": 1789503481.0271397, "comfy": true, "qwen": false}
+{"used_mib": 3420, "free_mib": 12558, "total_mib": 16303, "temp_c": 33.0, "util": 4.0, "ts": 1789503481.7433403, "comfy": true, "qwen": false}
+{"used_mib": 4608, "free_mib": 11370, "total_mib": 16303, "temp_c": 33.0, "util": 8.0, "ts": 1789503487.2047315, "comfy": true, "qwen": false}
+{"used_mib": 5820, "free_mib": 10158, "total_mib": 16303, "temp_c": 33.0, "util": 8.0, "ts": 1789503492.686421, "comfy": true, "qwen": false}
+{"used_mib": 6716, "free_mib": 9262, "temp_c": 33.0, "ts": 1789503496.485832, "comfy": true, "qwen": false}
+{"used_mib": 7068, "free_mib": 8910, "total_mib": 16303, "temp_c": 33.0, "util": 6.0, "ts": 1789503498.168769, "comfy": true, "qwen": false}
+{"used_mib": 8316, "free_mib": 7662, "total_mib": 16303, "temp_c": 32.0, "util": 9.0, "ts": 1789503503.638693, "comfy": true, "qwen": false}
+{"used_mib": 9468, "free_mib": 6510, "total_mib": 16303, "temp_c": 32.0, "util": 6.0, "ts": 1789503509.0960596, "comfy": true, "qwen": false}
+{"used_mib": 9948, "free_mib": 6030, "temp_c": 32.0, "ts": 1789503511.9846804, "comfy": true, "qwen": false}
+{"used_mib": 10076, "free_mib": 5902, "total_mib": 16303, "temp_c": 32.0, "util": 0.0, "ts": 1789503514.541351, "comfy": true, "qwen": false}
+{"used_mib": 10974, "free_mib": 5004, "total_mib": 16303, "temp_c": 60.0, "util": 96.0, "ts": 1789503519.9845004, "comfy": true, "qwen": false}
+{"used_mib": 10974, "free_mib": 5004, "total_mib": 16303, "temp_c": 62.0, "util": 97.0, "ts": 1789503525.424796, "comfy": true, "qwen": false}
+{"used_mib": 10974, "free_mib": 5004, "temp_c": 61.0, "ts": 1789503527.4278235, "comfy": true, "qwen": false}
+{"used_mib": 10974, "free_mib": 5004, "total_mib": 16303, "temp_c": 65.0, "util": 97.0, "ts": 1789503530.8852088, "comfy": true, "qwen": false}
+{"used_mib": 11006, "free_mib": 4972, "total_mib": 16303, "temp_c": 66.0, "util": 93.0, "ts": 1789503536.3379793, "comfy": true, "qwen": false}
+{"used_mib": 11006, "free_mib": 4972, "total_mib": 16303, "temp_c": 68.0, "util": 97.0, "ts": 1789503541.8109455, "comfy": true, "qwen": false}
+{"used_mib": 11006, "free_mib": 4972, "temp_c": 69.0, "ts": 1789503542.8779182, "comfy": true, "qwen": false}
+{"used_mib": 11006, "free_mib": 4972, "total_mib": 16303, "temp_c": 70.0, "util": 97.0, "ts": 1789503547.257124, "comfy": true, "qwen": false}
+{"used_mib": 11074, "free_mib": 4904, "total_mib": 16303, "temp_c": 71.0, "util": 97.0, "ts": 1789503552.711728, "comfy": true, "qwen": false}
+{"used_mib": 11070, "free_mib": 4908, "total_mib": 16303, "temp_c": 71.0, "util": 97.0, "ts": 1789503558.1697457, "comfy": true, "qwen": false}
+{"used_mib": 11070, "free_mib": 4908, "temp_c": 71.0, "ts": 1789503558.3290243, "comfy": true, "qwen": false}
+{"used_mib": 11070, "free_mib": 4908, "total_mib": 16303, "temp_c": 72.0, "util": 96.0, "ts": 1789503563.619584, "comfy": true, "qwen": false}
+{"used_mib": 11070, "free_mib": 4908, "total_mib": 16303, "temp_c": 72.0, "util": 97.0, "ts": 1789503569.0834148, "comfy": true, "qwen": false}
+{"used_mib": 11070, "free_mib": 4908, "temp_c": 73.0, "ts": 1789503573.7551455, "comfy": true, "qwen": false}
+{"used_mib": 11070, "free_mib": 4908, "total_mib": 16303, "temp_c": 73.0, "util": 96.0, "ts": 1789503574.5390406, "comfy": true, "qwen": false}
+{"used_mib": 11070, "free_mib": 4908, "total_mib": 16303, "temp_c": 73.0, "util": 96.0, "ts": 1789503579.986438, "comfy": true, "qwen": false}
+{"used_mib": 11074, "free_mib": 4904, "total_mib": 16303, "temp_c": 71.0, "util": 97.0, "ts": 1789503585.4358432, "comfy": true, "qwen": false}
+{"used_mib": 11070, "free_mib": 4908, "temp_c": 74.0, "ts": 1789503589.201117, "comfy": true, "qwen": false}
+{"used_mib": 11070, "free_mib": 4908, "total_mib": 16303, "temp_c": 74.0, "util": 96.0, "ts": 1789503590.8794484, "comfy": true, "qwen": false}
+{"used_mib": 11070, "free_mib": 4908, "total_mib": 16303, "temp_c": 72.0, "util": 96.0, "ts": 1789503596.3413918, "comfy": true, "qwen": false}
+{"used_mib": 11070, "free_mib": 4908, "total_mib": 16303, "temp_c": 72.0, "util": 95.0, "ts": 1789503601.8079107, "comfy": true, "qwen": false}
+{"used_mib": 11070, "free_mib": 4908, "temp_c": 73.0, "ts": 1789503604.6444123, "comfy": true, "qwen": false}
+{"used_mib": 958, "free_mib": 15020, "total_mib": 16303, "temp_c": 54.0, "util": 0.0, "ts": 1789503607.2531335, "comfy": true, "qwen": false}
+{"used_mib": 702, "free_mib": 15276, "total_mib": 16303, "temp_c": 47.0, "util": 0.0, "ts": 1789503612.720783, "comfy": true, "qwen": false}
+{"used_mib": 929, "free_mib": 15049, "total_mib": 16303, "temp_c": 46.0, "util": 10.0, "ts": 1789503618.1732013, "comfy": true, "qwen": true}
+{"used_mib": 929, "free_mib": 15049, "total_mib": 16303, "temp_c": 46.0, "util": 0.0, "ts": 1789503623.2147152, "comfy": true, "qwen": true}
+{"used_mib": 929, "free_mib": 15049, "temp_c": 46.0, "ts": 1789503620.1011906, "comfy": true, "qwen": true}
+{"used_mib": 10525, "free_mib": 5453, "total_mib": 16303, "temp_c": 41.0, "util": 0.0, "ts": 1789503640.7204027, "comfy": true, "qwen": true}
+{"used_mib": 11231, "free_mib": 4747, "total_mib": 16303, "temp_c": 40.0, "util": 0.0, "ts": 1789503645.8300412, "comfy": true, "qwen": true}
+{"used_mib": 702, "free_mib": 15276, "temp_c": 46.0, "ts": 1789503650.8024547, "comfy": true, "qwen": false}
+{"used_mib": 702, "free_mib": 15276, "total_mib": 16303, "temp_c": 46.0, "util": 0.0, "ts": 1789503650.8965602, "comfy": true, "qwen": false}
+{"used_mib": 702, "free_mib": 15276, "total_mib": 16303, "temp_c": 40.0, "util": 0.0, "ts": 1789503656.3519561, "comfy": true, "qwen": false}

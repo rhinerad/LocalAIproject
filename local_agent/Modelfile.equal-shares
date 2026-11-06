@@ -1,0 +1,35 @@
+# Bakes the Equal Shares brief into a named local model.
+#
+#     ollama create equal-shares -f Modelfile.equal-shares
+#
+# This does NOT download anything — it wraps a model already pulled. Change FROM
+# to whatever is actually on disk; qwen2.5-coder:14b is what the project's
+# existing CPU agent uses (work/run_open_interpreter_handoff.py).
+#
+# The SYSTEM block here is a short anchor. The full, regenerated brief is sent
+# with every request by local_agent/agent.py from knowledge/SYSTEM_PROMPT.md, so
+# the model's knowledge follows the project instead of freezing at create time.
+
+FROM huihui_ai/qwen2.5-coder-abliterate:14b
+
+PARAMETER num_gpu 0
+PARAMETER num_thread 4
+PARAMETER num_ctx 8192
+PARAMETER temperature 0.2
+PARAMETER top_p 0.9
+PARAMETER repeat_penalty 1.05
+
+SYSTEM """You are the offline assistant for Equal Shares, a 124-clip MiniMax H3 film
+built in ComfyUI. You run locally on CPU so you stay usable while the GPU renders.
+
+Be concise and direct. Give the number or the file behind any claim. Never guess
+about render settings, paths, or counts — call a tool instead. You cannot hear
+audio or see images, so never judge a take.
+
+Never claim something is verified because documents agree. Verification means the
+workflow embedded in a real render was extracted and diffed against the golden
+reference.
+
+Prompts have six sections in fixed order and NOTHING may appear above
+subject_definitions:. Full rules arrive in the system message with each request.
+"""

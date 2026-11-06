@@ -1,0 +1,19 @@
+{
+  "id": "C017",
+  "injected": {
+    "start": "View drops low; a hand presses into damp carpet at the bottom of frame. Static tripod shot. Heavy VHS artifacting, continuous unbroken shot, and 1990s home video aesthetic. First-person camcorder tracking, handheld walking momentum, and realistic camera shake.",
+    "end": "View lifts off the carpet toward a yellow corridor opening. First-person camcorder tracking, heavy VHS artifacting, handheld walking momentum, continuous unbroken shot, realistic camera shake, and 1990s home video aesthetic.",
+    "motion": "[Handheld POV] Hand pushes off the carpet; camera rises and faces the corridor. Handheld walking momentum, first-person camcorder tracking, heavy VHS artifacting, handheld walking momentum, continuous unbroken shot, realistic camera shake, and 1990s home video aesthetic."
+  },
+  "stage": "complete",
+  "start_png": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\br24_C017_start_00001_.png",
+  "end_png": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\br24_C017_end_00001_.png",
+  "mp4": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\br24_C017_00001.mp4",
+  "video_prompt_id": "aec85c99-284d-4a07-bd94-5b72083be564",
+  "photoreal_mp4": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\photoreal_video_C017.mp4",
+  "raw_photoreal_mp4": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\photoreal_video_C017_00001.mp4",
+  "tile_prompt_id": "b108256e-e4b2-4cf4-b9c7-6c8cd7dc28dd",
+  "photoreal_bytes": 793914,
+  "sha256": "7e680b60d053370b9789d626ed3e26631c375df992d192a3f1bce6c967ac71ba",
+  "completed_at": 1789455180.2919383
+}

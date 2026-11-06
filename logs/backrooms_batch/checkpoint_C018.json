@@ -1,0 +1,19 @@
+{
+  "id": "C018",
+  "injected": {
+    "start": "Chest-height forward view into an empty yellow room; sleeve cuff at lower edge. Heavy VHS artifacting, continuous unbroken shot, and 1990s home video aesthetic. First-person camcorder tracking, handheld walking momentum, and realistic camera shake.",
+    "end": "The same room, one doorway larger in frame. Heavy VHS artifacting, continuous unbroken shot, and 1990s home video aesthetic. First-person camcorder tracking, handheld walking momentum, and realistic camera shake.",
+    "motion": "Shaky tracking, slow walk toward the nearest doorway. First-person camcorder tracking, heavy VHS artifacting, handheld walking momentum, continuous unbroken shot, realistic camera shake, and 1990s home video aesthetic."
+  },
+  "stage": "complete",
+  "start_png": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\br24_C018_start_00001_.png",
+  "end_png": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\br24_C018_end_00001_.png",
+  "mp4": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\br24_C018_00001.mp4",
+  "video_prompt_id": "f2c4c40a-e8ec-484c-aeb6-be2a09351eeb",
+  "photoreal_mp4": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\photoreal_video_C018.mp4",
+  "raw_photoreal_mp4": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\photoreal_video_C018_00001.mp4",
+  "tile_prompt_id": "c589cea8-b0cb-4abd-aece-b62897585cba",
+  "photoreal_bytes": 590777,
+  "sha256": "7d42e27e9aa18cd74b929bdd9800df8b05544ddd1d7d62bce2ecbbd7d1737756",
+  "completed_at": 1789456017.7763536
+}

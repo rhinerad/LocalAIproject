@@ -1,0 +1,18 @@
+{
+  "id": "753ecd5835a44286",
+  "title": "Compare the duration ladders for 00B and 00A. Us…",
+  "created": 1787442265.1179702,
+  "updated": 1787442523.5733147,
+  "messages": [
+    {
+      "role": "user",
+      "content": "Compare the duration ladders for 00B and 00A. Use the current project data.",
+      "at": 1787442265.122973
+    },
+    {
+      "role": "assistant",
+      "content": "Clip 00B's duration ladder starts at **14.375 seconds** (rung 0) and decreases steadily across rungs, with the shortest duration at **5.417 seconds** (rung 8). Clip 00A's ladder is more variable: it peaks at **13.417 seconds** (rung 7) and dips to **5.417 seconds** (rung 8), but its base (rung 0) is shorter at **9.417 seconds**. \n\nThe key difference is **00B’s ladder is consistently decreasing**, while **00A’s has peaks and valleys**. This suggests different duration strategies: 00B likely prioritizes tighter compression, while 00A accommodates both longer and shorter segments, possibly due to varying voice delivery or content complexity. Both share the same minimum duration (5.417s) but differ in baseline and variation range.",
+      "at": 1787442523.5733147
+    }
+  ]
+}

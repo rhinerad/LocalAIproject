@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Farm Monitor</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --panel: #1a2332;
+    --border: #2d3a4d;
+    --text: #e7ecf3;
+    --muted: #8b9bb4;
+    --green: #3dd68c;
+    --red: #f07178;
+    --amber: #e6b450;
+    --gray: #6b7a90;
+    --chip: #243044;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    background: var(--bg); color: var(--text); font-size: 13px; line-height: 1.45;
+  }
+  header {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+    padding: 14px 18px; border-bottom: 1px solid var(--border); background: #121820;
+  }
+  header h1 { margin: 0; font-size: 16px; letter-spacing: 0.04em; }
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 999px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .badge.ok, .badge.up { background: #163528; color: var(--green); }
+  .badge.down, .badge.no_workers, .badge.unreachable, .badge.daemon-down, .badge.error, .badge.missing_tasks {
+    background: #3a1a1e; color: var(--red);
+  }
+  .badge.stale, .badge.unknown, .badge.unconfigured { background: #2a2f38; color: var(--gray); }
+  .badge.amber { background: #3a2e12; color: var(--amber); }
+  .meta { color: var(--muted); margin-left: auto; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  button {
+    background: var(--chip); color: var(--text); border: 1px solid var(--border);
+    border-radius: 6px; padding: 6px 12px; cursor: pointer; font: inherit;
+  }
+  button:hover { border-color: var(--muted); }
+  main { padding: 16px 18px 40px; max-width: 1200px; }
+  .cards {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px; margin-bottom: 18px;
+  }
+  .card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 14px; min-height: 92px;
+  }
+  .card.down, .card.no_workers, .card.unreachable, .card.error { border-color: #6b3038; }
+  .card.unknown, .card.stale { border-color: #3a4558; }
+  .card.up, .card.ok { border-color: #2a5a44; }
+  .card h2 { margin: 0 0 8px; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .card .state { font-size: 18px; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; }
+  .card .state.up, .card .state.ok { color: var(--green); }
+  .card .state.down, .card .state.error, .card .state.no_workers { color: var(--red); }
+  .card .state.unknown, .card .state.stale { color: var(--gray); }
+  .card .detail { color: var(--muted); font-size: 11px; word-break: break-word; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .chip {
+    background: var(--chip); border: 1px solid var(--border); border-radius: 6px;
+    padding: 2px 8px; font-size: 11px;
+  }
+  .chip.missing { border-color: #6b3038; color: var(--red); }
+  .chip.present { border-color: #2a5a44; color: var(--green); }
+  section.panel {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 16px; margin-bottom: 16px;
+  }
+  section.panel h2 { margin: 0 0 10px; font-size: 13px; }
+  .err { color: var(--red); }
+  pre.events {
+    margin: 0; white-space: pre-wrap; word-break: break-word;
+    color: var(--muted); max-height: 280px; overflow: auto; font-size: 11px;
+  }
+  .hint { color: var(--muted); font-size: 11px; margin-top: 4px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Farm Monitor</h1>
+  <span id="overall-badge" class="badge unknown">—</span>
+  <span id="stale-badge" class="badge stale" style="display:none">stale</span>
+  <div class="meta">
+    <span id="age-line">age —</span>
+    <span id="updated-line">updated —</span>
+    <button type="button" id="refresh-btn">Refresh</button>
+  </div>
+</header>
+<main>
+  <div class="cards" id="cards"></div>
+
+  <section class="panel">
+    <h2>Registered tasks</h2>
+    <div id="tasks-status" class="detail"></div>
+    <div class="chips" id="tasks-expected"></div>
+    <div class="hint">Expected tasks highlighted; missing in red. distill_export shown if present but not required.</div>
+    <div class="chips" id="tasks-extra" style="margin-top:8px"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Outage / recovered (last 20)</h2>
+    <pre class="events" id="events">loading…</pre>
+  </section>
+</main>
+<script>
+const EXPECTED_SHORT = ["connectivity_probe","judge_transcript","summarize_conversation","embed_chunks"];
+let lastFetchAt = 0;
+
+function clsState(s) {
+  const v = String(s || "unknown").toLowerCase();
+  if (["up","ok"].includes(v)) return "up";
+  if (["down","no_workers","unreachable","daemon-down","error","missing_tasks"].includes(v)) return "down";
+  if (["stale"].includes(v)) return "stale";
+  return "unknown";
+}
+
+function esc(s) {
+  return String(s == null ? "" : s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function card(title, state, detailHtml, extraClass) {
+  const st = clsState(state);
+  return `<div class="card ${st} ${extraClass||""}">
+    <h2>${esc(title)}</h2>
+    <div class="state ${st}">${esc(state || "unknown")}</div>
+    <div class="detail">${detailHtml || ""}</div>
+  </div>`;
+}
+
+function ageLabel(age) {
+  if (age == null || Number.isNaN(age)) return "age unknown";
+  if (age < 60) return `age ${Math.round(age)}s`;
+  return `age ${(age/60).toFixed(1)}m`;
+}
+
+function render(data) {
+  const overall = data.overall || {};
+  const badge = document.getElementById("overall-badge");
+  badge.textContent = overall.status || "unknown";
+  badge.className = "badge " + clsState(overall.status);
+
+  const staleBadge = document.getElementById("stale-badge");
+  if (overall.stale) {
+    staleBadge.style.display = "";
+  } else {
+    staleBadge.style.display = "none";
+  }
+
+  document.getElementById("age-line").textContent =
+    ageLabel(overall.age_s) + (overall.checked_at ? ` · ${overall.checked_at}` : "");
+
+  const hub = data.wireguard_hub || {};
+  const spoke = data.wireguard_spoke || {};
+  const relay = data.tunnel_relay || {};
+  const redis = data.redis || {};
+  const celery = data.celery_workers || {};
+
+  const workerChips = (celery.workers || []).map(w =>
+    `<span class="chip present">${esc(w)}</span>`).join("");
+  const workerDetail = (celery.workers && celery.workers.length)
+    ? `<div class="chips">${workerChips}</div>`
+    : `<span class="err">${esc(celery.error || "no workers")}</span>`;
+
+  const docker = (redis.docker && redis.docker.container)
+    ? `<div class="hint">docker: ${esc(redis.docker.container)} — ${esc(redis.docker.status||"")}</div>`
+    : "";
+
+  document.getElementById("cards").innerHTML = [
+    card("WireGuard hub", hub.state,
+      `${esc(hub.status||"")} · StartType ${esc(hub.start_type||"—")}` +
+      (hub.error ? `<div class="err">${esc(hub.error)}</div>` : "")),
+    card("WireGuard spoke (Mac)", spoke.state,
+      esc(spoke.reason || "") + (spoke.error ? `<div class="err">${esc(spoke.error)}</div>` : "")),
+    card("tunnel_relay", relay.state,
+      `process=${relay.process ? "yes" : "no"} · listen 10.90.90.1:6379=${relay.listening ? "yes" : "no"}` +
+      (relay.last_log_line ? `<div class="hint">${esc(relay.last_log_line)}</div>` : "") +
+      (relay.error ? `<div class="err">${esc(relay.error)}</div>` : "")),
+    card("Redis (broker_reachable)", redis.state,
+      `from snapshot · broker_reachable=${esc(String(redis.broker_reachable))}${docker}` +
+      (redis.error ? `<div class="err">${esc(redis.error)}</div>` : "")),
+    card("Celery workers", celery.state, workerDetail),
+  ].join("");
+
+  const tasks = data.registered_tasks || {};
+  const ts = document.getElementById("tasks-status");
+  if (!tasks.ok) {
+    ts.innerHTML = `<span class="err">registered-task check failed: ${esc(tasks.error || "unknown")}</span>`;
+  } else {
+    ts.innerHTML = `status=<b>${esc(tasks.state)}</b>` +
+      (tasks.error ? ` · <span class="err">${esc(tasks.error)}</span>` : "");
+  }
+
+  const presentSet = new Set(tasks.present_short || []);
+  const missingSet = new Set(tasks.missing_short || []);
+  const expected = tasks.expected_short || EXPECTED_SHORT;
+  document.getElementById("tasks-expected").innerHTML = expected.map(name => {
+    const missing = missingSet.has(name) || (!tasks.ok);
+    const present = presentSet.has(name);
+    const cls = (!tasks.ok) ? "missing" : (missing ? "missing" : (present ? "present" : "missing"));
+    const mark = (!tasks.ok) ? "?" : (missing ? "missing" : "ok");
+    return `<span class="chip ${cls}">${esc(name)} · ${mark}</span>`;
+  }).join("");
+
+  const extras = (tasks.present_short || []).filter(n => !expected.includes(n));
+  document.getElementById("tasks-extra").innerHTML = extras.map(n =>
+    `<span class="chip present">${esc(n)} (extra)</span>`).join("");
+
+  const ev = data.outage_events || {};
+  const pre = document.getElementById("events");
+  if (ev.error) {
+    pre.innerHTML = `<span class="err">${esc(ev.error)}</span>`;
+  } else if (!ev.events || !ev.events.length) {
+    pre.textContent = "(no OUTAGE/RECOVERED lines)";
+  } else {
+    pre.textContent = ev.events.join("\n");
+  }
+}
+
+function tickUpdated() {
+  if (!lastFetchAt) return;
+  const s = Math.round((Date.now() - lastFetchAt) / 1000);
+  document.getElementById("updated-line").textContent = `updated ${s}s ago`;
+}
+
+async function refresh() {
+  try {
+    const res = await fetch("/api/dashboard", { cache: "no-store" });
+    const data = await res.json();
+    lastFetchAt = Date.now();
+    render(data);
+    tickUpdated();
+  } catch (err) {
+    document.getElementById("overall-badge").textContent = "error";
+    document.getElementById("overall-badge").className = "badge error";
+    document.getElementById("events").textContent = "fetch failed: " + err;
+  }
+}
+
+document.getElementById("refresh-btn").addEventListener("click", refresh);
+refresh();
+setInterval(refresh, 10000);
+setInterval(tickUpdated, 1000);
+</script>
+</body>
+</html>

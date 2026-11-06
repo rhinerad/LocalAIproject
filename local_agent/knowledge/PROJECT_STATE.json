@@ -1,0 +1,118 @@
+{
+  "generated": "2026-09-25T21:23:11",
+  "clips_total": 124,
+  "dialogue_clips": 78,
+  "speakers": 18,
+  "recurring": [
+    "Avery",
+    "Doris",
+    "Faith White",
+    "Housing representative",
+    "Kent",
+    "Male Visitor One",
+    "Narrator",
+    "Ryann Sally",
+    "Terminal voice",
+    "Volunteer"
+  ],
+  "one_off": [
+    "Aid worker",
+    "Congregation member",
+    "Council member",
+    "Crew lead",
+    "Doris recording",
+    "Male Visitor Two",
+    "Unhoused man",
+    "Wealthy commuter"
+  ],
+  "fl2va_clips": [
+    "01B",
+    "20B",
+    "22B",
+    "30B"
+  ],
+  "mixed_clips": [
+    "00D2",
+    "27E",
+    "28C"
+  ],
+  "prompts_generated": 124,
+  "manifest_clip_records": 0,
+  "voice_masters": {
+    "Narrator": {
+      "wav": "voices/narrator/omni_master_v2.wav",
+      "provisional": false
+    },
+    "Male Visitor One": {
+      "wav": "voices/male_visitor_one/omni_master_v2.wav",
+      "provisional": true
+    },
+    "Male Visitor Two": {
+      "wav": "voices/male_visitor_two/omni_master_v2.wav",
+      "provisional": true
+    },
+    "Wealthy commuter": {
+      "wav": "voices/wealthy_commuter/omni_master_v2.wav",
+      "provisional": true
+    },
+    "Unhoused man": {
+      "wav": "voices/unhoused_man/omni_master_v2.wav",
+      "provisional": true
+    },
+    "Doris": {
+      "wav": "voices/doris/omni_master_v1.wav",
+      "provisional": false
+    },
+    "Kent": {
+      "wav": "voices/kent/omni_master_v1.wav",
+      "provisional": false
+    },
+    "Avery": {
+      "wav": "voices/avery/omni_master_v1.wav",
+      "provisional": false
+    },
+    "Faith White": {
+      "wav": "voices/faith_white/omni_master_v1.wav",
+      "provisional": false
+    },
+    "Ryann Sally": {
+      "wav": "voices/ryann_sally/omni_master_v1.wav",
+      "provisional": false
+    },
+    "Terminal voice": {
+      "wav": "voices/terminal_voice/omni_master_v3.wav",
+      "provisional": true
+    },
+    "Volunteer": {
+      "wav": "voices/volunteer/omni_master_v1.wav",
+      "provisional": false
+    },
+    "Housing representative": {
+      "wav": "voices/housing_representative/omni_master_v1.wav",
+      "provisional": false
+    },
+    "Congregation member": {
+      "wav": "voices/congregation_member/omni_master_v1.wav",
+      "provisional": false
+    },
+    "Doris recording": {
+      "wav": "voices/doris_recording/omni_master_v1.wav",
+      "provisional": false
+    },
+    "Council member": {
+      "wav": "voices/council_member/omni_master_v2.wav",
+      "provisional": true
+    },
+    "Crew lead": {
+      "wav": "voices/crew_lead/omni_master_v2.wav",
+      "provisional": true
+    },
+    "Aid worker": {
+      "wav": "voices/aid_worker/omni_master_v2.wav",
+      "provisional": true
+    }
+  },
+  "auditions_rendered": 0,
+  "auditions_chosen": 0,
+  "shortened_clips": 45
+}

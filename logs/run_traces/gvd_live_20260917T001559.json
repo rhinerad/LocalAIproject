@@ -1,0 +1,419 @@
+{
+  "saved": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\models\\dspy_compiled\\generalized_video_director_mipro.json",
+  "optimizer": "mipro",
+  "mock": false,
+  "auto": null,
+  "trials": 1,
+  "trainset": 2,
+  "ids": "GVD-B01,GVD-D01",
+  "last_feedback": "{\"mock\": false, \"clip_id\": \"GVD-B01\", \"category\": \"backrooms\", \"hparams\": {\"cfg_scale\": 4.0, \"denoise\": 1.0, \"step_count\": 25.0}, \"step_count_int\": 25, \"scores\": null, \"mean\": null, \"minimum\": null, \"threshold\": null, \"passes_curriculum\": false, \"mipro\": 0.02, \"error\": \"mechanical video check failed: ['backrooms clip missing a camera keyword (handheld, camcorder, first-person, fpv, pov)', 'backrooms clip missing a motion keyword (walk, push in, tracking forward, dolly, ...)']\", \"video_path\": \"A:\\\\Users\\\\rhine\\\\ComfyUI-Shared\\\\output\\\\dspy_opt\\\\gvd_GVD-B01_51cd0d84c7_00001_.mp4\", \"positive_prompt\": \"\", \"vram_trace\": [{\"label\": \"after_prepare_comfy\", \"ts\": 1789617690.459946, \"used_mib\": 499, \"free_mib\": 15479, \"total_mib\": 16303, \"owner\": {\"owner\": \"comfyui\", \"reason\": \"FLUX.1 + MiniMax I2V generation\", \"since\": 1789617690.4589496}}, {\"label\": \"phase_telemetry\", \"phase\": \"summary\", \"flux_vram_peak_mib\": 14835, \"post_flux_idle_vram_mib\": 499, \"minimax_vram_peak_mib\": 15123, \"minimax_generation_seconds\": 864.4324502944946, \"sage_attention_minimax\": true, \"sage_mode\": \"auto\"}, {\"label\": \"after_minimax_and_free\", \"ts\": 1789618558.180427, \"used_mib\": 12211, \"free_mib\": 3767, \"total_mib\": 16303, \"owner\": {\"owner\": \"idle\", \"reason\": \"ComfyUI /free called\", \"since\": 1789618558.180427}}, {\"label\": \"after_release_comfy\", \"ts\": 1789618559.355716, \"used_mib\": 5235, \"free_mib\": 10743, \"total_mib\": 16303, \"owner\": {\"owner\": \"idle\", \"reason\": \"ComfyUI /free called\", \"since\": 1789618558.234488}}]}",
+  "history_n": 4,
+  "history": [
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 1.0,
+        "step_count": 16.0
+      },
+      "step_count_int": 16,
+      "scores": {
+        "text_video_alignment": 0.0,
+        "temporal_consistency": 0.0,
+        "aesthetic_quality": 0.0
+      },
+      "mean": 0.0,
+      "minimum": 0.0,
+      "threshold": 0.6,
+      "iteration": 0,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "reasons": [
+        "minimum score 0.00 below curriculum threshold 0.60"
+      ],
+      "hparam_warnings": [
+        "hparam denoise=None missing or unparseable; using fallback 0.9"
+      ],
+      "video_path": "A:\\Users\\rhine\\ComfyUI-Shared\\output\\dspy_opt\\gvd_GVD-D01_6accd405ce_00001_.mp4",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789614838.4512186,
+          "used_mib": 499,
+          "free_mib": 15479,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "FLUX.1 + MiniMax I2V generation",
+            "since": 1789614838.4502196
+          }
+        },
+        {
+          "label": "phase_telemetry",
+          "phase": "summary",
+          "flux_vram_peak_mib": 15059,
+          "post_flux_idle_vram_mib": 499,
+          "minimax_vram_peak_mib": 15091,
+          "minimax_generation_seconds": 676.7639651298523,
+          "sage_attention_minimax": true,
+          "sage_mode": "auto"
+        },
+        {
+          "label": "after_minimax_and_free",
+          "ts": 1789615519.4903114,
+          "used_mib": 12595,
+          "free_mib": 3383,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789615519.4903114
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789615520.695004,
+          "used_mib": 5235,
+          "free_mib": 10743,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789615519.5528922
+          }
+        },
+        {
+          "label": "after_prepare_vlm",
+          "ts": 1789615520.7511947,
+          "used_mib": 4787,
+          "free_mib": 11191,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789615520.7511947
+          }
+        },
+        {
+          "label": "after_vlm",
+          "ts": 1789615565.8436265,
+          "used_mib": 11138,
+          "free_mib": 4840,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789615520.7511947
+          }
+        },
+        {
+          "label": "after_release_vlm",
+          "ts": 1789615570.612828,
+          "used_mib": 503,
+          "free_mib": 15475,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Qwen2.5-VL complete",
+            "since": 1789615570.6118274
+          }
+        }
+      ],
+      "vlm_raw": "{\n  \"text_video_alignment\": 0.00,\n  \"temporal_consistency\": 0.00,\n  \"aesthetic_quality\": 0.00,\n  \"rationale\": {\n    \"text_video_alignment\": \"No motion or camera movement is visible; the video is entirely static, failing to execute any described motion.\",\n    \"temporal_consistency\": \"The video is a single static frame repeated, showing no temporal change or progression.\",\n    \"aesthetic_quality\": \"The image is extremely dark, blurry, and lacks detail, with no discernible subject or setting.\"\n  }\n}"
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 8.0,
+        "denoise": 1.0,
+        "step_count": 25.0
+      },
+      "step_count_int": 25,
+      "scores": {
+        "text_video_alignment": 0.85,
+        "temporal_consistency": 0.95,
+        "aesthetic_quality": 0.7
+      },
+      "mean": 0.8333,
+      "minimum": 0.7,
+      "threshold": 0.6,
+      "iteration": 0,
+      "passes_curriculum": true,
+      "mipro": 0.7399899999999999,
+      "reasons": [],
+      "hparam_warnings": [
+        "hparam denoise=None missing or unparseable; using fallback 0.9"
+      ],
+      "video_path": "A:\\Users\\rhine\\ComfyUI-Shared\\output\\dspy_opt\\gvd_GVD-B01_15240c10b6_00001_.mp4",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789615588.86938,
+          "used_mib": 503,
+          "free_mib": 15475,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "FLUX.1 + MiniMax I2V generation",
+            "since": 1789615588.86938
+          }
+        },
+        {
+          "label": "phase_telemetry",
+          "phase": "summary",
+          "flux_vram_peak_mib": 14711,
+          "post_flux_idle_vram_mib": 503,
+          "minimax_vram_peak_mib": 15095,
+          "minimax_generation_seconds": 876.9644854068756,
+          "sage_attention_minimax": true,
+          "sage_mode": "auto"
+        },
+        {
+          "label": "after_minimax_and_free",
+          "ts": 1789616469.2465134,
+          "used_mib": 12595,
+          "free_mib": 3383,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789616469.245518
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789616470.4100025,
+          "used_mib": 5235,
+          "free_mib": 10743,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789616469.3010476
+          }
+        },
+        {
+          "label": "after_prepare_vlm",
+          "ts": 1789616470.4849243,
+          "used_mib": 5235,
+          "free_mib": 10743,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789616470.4842155
+          }
+        },
+        {
+          "label": "after_vlm",
+          "ts": 1789616512.1510174,
+          "used_mib": 11134,
+          "free_mib": 4844,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789616470.4842155
+          }
+        },
+        {
+          "label": "after_release_vlm",
+          "ts": 1789616516.7940462,
+          "used_mib": 499,
+          "free_mib": 15479,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Qwen2.5-VL complete",
+            "since": 1789616516.7930462
+          }
+        }
+      ],
+      "vlm_raw": "{\n  \"text_video_alignment\": 0.85,\n  \"temporal_consistency\": 0.95,\n  \"aesthetic_quality\": 0.70,\n  \"rationale\": {\n    \"text_video_alignment\": \"The video shows a first-person perspective walking down a dimly lit yellow wallpapered hallway, matching the VHS camcorder style and empty setting described in the prompt.\",\n    \"temporal_consistency\": \"The hallway's geometry, lighting, and yellow wallpaper remain consistent across frames, with only natural camera shake and perspective changes from walking.\",\n    \"aesthetic_quality\": \"The video has a grainy, VHS-like quality with visible tracking noise and chromatic aberration, though some frames appear slightly over-smoothed and lack the full VHS artifacts.\"\n  }\n}"
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 7.0,
+        "denoise": 1.0,
+        "step_count": 35.0
+      },
+      "step_count_int": 35,
+      "scores": {
+        "text_video_alignment": 1.0,
+        "temporal_consistency": 1.0,
+        "aesthetic_quality": 0.95
+      },
+      "mean": 0.9833,
+      "minimum": 0.95,
+      "threshold": 0.6,
+      "iteration": 0,
+      "passes_curriculum": true,
+      "mipro": 0.9599899999999999,
+      "reasons": [],
+      "hparam_warnings": [
+        "hparam denoise=None missing or unparseable; using fallback 0.9"
+      ],
+      "video_path": "A:\\Users\\rhine\\ComfyUI-Shared\\output\\dspy_opt\\gvd_GVD-D01_2402443952_00001_.mp4",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789616537.9221084,
+          "used_mib": 499,
+          "free_mib": 15479,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "FLUX.1 + MiniMax I2V generation",
+            "since": 1789616537.9221084
+          }
+        },
+        {
+          "label": "phase_telemetry",
+          "phase": "summary",
+          "flux_vram_peak_mib": 15187,
+          "post_flux_idle_vram_mib": 499,
+          "minimax_vram_peak_mib": 15091,
+          "minimax_generation_seconds": 1078.1887528896332,
+          "sage_attention_minimax": true,
+          "sage_mode": "auto"
+        },
+        {
+          "label": "after_minimax_and_free",
+          "ts": 1789617619.3922067,
+          "used_mib": 12595,
+          "free_mib": 3383,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789617619.3922067
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789617620.5621388,
+          "used_mib": 5235,
+          "free_mib": 10743,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789617619.4347842
+          }
+        },
+        {
+          "label": "after_prepare_vlm",
+          "ts": 1789617620.6134312,
+          "used_mib": 5235,
+          "free_mib": 10743,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789617620.6129155
+          }
+        },
+        {
+          "label": "after_vlm",
+          "ts": 1789617666.5642047,
+          "used_mib": 11134,
+          "free_mib": 4844,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789617620.6129155
+          }
+        },
+        {
+          "label": "after_release_vlm",
+          "ts": 1789617671.2954738,
+          "used_mib": 499,
+          "free_mib": 15479,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Qwen2.5-VL complete",
+            "since": 1789617671.293474
+          }
+        }
+      ],
+      "vlm_raw": "{\n  \"text_video_alignment\": 1.00,\n  \"temporal_consistency\": 1.00,\n  \"aesthetic_quality\": 0.95,\n  \"rationale\": {\n    \"text_video_alignment\": \"The video perfectly executes the camera motion described, with a slow pan to the right revealing a scenic mountain view through a wooden door frame.\",\n    \"temporal_consistency\": \"The scene remains consistent across all frames, with no flicker, morph, or random changes, and the motion is physically plausible.\",\n    \"aesthetic_quality\": \"The composition is excellent, with vibrant colors, sharp focus, and no visible artifacts or watermarks.\"\n  }\n}"
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 1.0,
+        "step_count": 25.0
+      },
+      "step_count_int": 25,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.02,
+      "error": "mechanical video check failed: ['backrooms clip missing a camera keyword (handheld, camcorder, first-person, fpv, pov)', 'backrooms clip missing a motion keyword (walk, push in, tracking forward, dolly, ...)']",
+      "video_path": "A:\\Users\\rhine\\ComfyUI-Shared\\output\\dspy_opt\\gvd_GVD-B01_51cd0d84c7_00001_.mp4",
+      "positive_prompt": "",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789617690.459946,
+          "used_mib": 499,
+          "free_mib": 15479,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "FLUX.1 + MiniMax I2V generation",
+            "since": 1789617690.4589496
+          }
+        },
+        {
+          "label": "phase_telemetry",
+          "phase": "summary",
+          "flux_vram_peak_mib": 14835,
+          "post_flux_idle_vram_mib": 499,
+          "minimax_vram_peak_mib": 15123,
+          "minimax_generation_seconds": 864.4324502944946,
+          "sage_attention_minimax": true,
+          "sage_mode": "auto"
+        },
+        {
+          "label": "after_minimax_and_free",
+          "ts": 1789618558.180427,
+          "used_mib": 12211,
+          "free_mib": 3767,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789618558.180427
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789618559.355716,
+          "used_mib": 5235,
+          "free_mib": 10743,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789618558.234488
+          }
+        }
+      ]
+    }
+  ]
+}

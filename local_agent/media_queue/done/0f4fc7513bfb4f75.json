@@ -1,0 +1,25 @@
+{
+  "id": "0f4fc7513bfb4f75",
+  "kind": "vision",
+  "args": {
+    "images": [
+      "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\uploads\\c57e83aa6c1b2dc1_grok-image-2db60e8e-f57c-46ea-aa47-4bf6ad5d2698.jpg"
+    ],
+    "question": "",
+    "instruction": null
+  },
+  "priority": "interactive",
+  "queued_at": "2026-09-25T21:50:17Z",
+  "source_stat": {
+    "path": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\uploads\\c57e83aa6c1b2dc1_grok-image-2db60e8e-f57c-46ea-aa47-4bf6ad5d2698.jpg",
+    "size": 662917,
+    "mtime_ns": 1790372612261463500
+  },
+  "claimed_at": "2026-09-25T21:51:58Z",
+  "started_at": "2026-09-25T21:51:58Z",
+  "progress": {
+    "stage": "analyzing"
+  },
+  "done_at": "2026-09-25T21:52:10Z",
+  "result": "{\n  \"available\": true,\n  \"tier\": \"gpu\",\n  \"host\": \"127.0.0.1:11436\",\n  \"runtime\": \"llama.cpp\",\n  \"model\": \"qwen25-vl-nsfw-caption:v4-q4_k_m\",\n  \"analysis\": \"**Subjects & Stable Appearance:**  \\n- Blonde woman with short bob haircut (left: front view; middle: side view; right: back view).  \\n- Wears black spaghetti strap tank top, blue denim shorts, and fishnet stockings.  \\n\\n**Setting:**  \\n- Plain light gray background, no additional objects or scenery.  \\n\\n**Lighting/Color:**  \\n- Even studio lighting with soft shadows (e.g., under arms, legs).  \\n- Color palette: Black (top), blue (shorts), black (stockings), blonde (hair), light gray (background).  \\n\\n**Composition:**  \\n- Three full-body shots of the same woman in a row.  \\n- Left: Front view (facing camera); Middle: Side view (left profile); Right: Back view (facing away).  \\n\\n**Camera/Shot:**  \\n- Full-length portrait shot, eye-level perspective.  \\n- Clear focus on subject; no motion blur.  \\n\\n**Visible Action:**  \\n- Static poses: Standing upright in all views.  \\n- Left: Hands at sides, feet together.  \\n- Middle: Hands at sides, weight shifted to one leg (left foot forward).  \\n- Right: Hands at sides, feet together.  \\n\\n**Spatial Relationships:**  \\n- Subject centered in each frame; no other objects present.  \\n- Consistent positioning relative to camera across all views.  \\n\\n**Continuity Details:**  \\n- Identical clothing and hairstyle in all three shots.  \\n- No visible changes between frames (e.g., same tank top fit, shorts length).\"\n}"
+}

@@ -1,0 +1,18 @@
+{
+  "id": "c963cff4471d4567",
+  "title": "What is blocking the 124-clip pass right now?",
+  "created": 1787120851.2110136,
+  "updated": 1787120943.2029557,
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is blocking the 124-clip pass right now?",
+      "at": 1787120851.2410138
+    },
+    {
+      "role": "assistant",
+      "content": "The 124-clip soundtrack pass is blocked because only the Narrator's voice is approved. Running the pass with unapproved masters would bake rejected voices into 74 clips.",
+      "at": 1787120943.1839545
+    }
+  ]
+}

@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Local Agent</title>
+<!-- One file. No build step, no CDN, nothing to download. -->
+<style>
+  :root{--bg:#131316;--panel:#1a1a1f;--line:#2b2b33;--ink:#e9e9ec;--dim:#9797a3;
+        --accent:#c96442;--ok:#5aa469;--warn:#d4a72c;--err:#d1544f;
+        --mono:"Cascadia Mono",Consolas,"SF Mono",Menlo,monospace}
+  *{box-sizing:border-box}
+  body{margin:0;height:100vh;display:flex;background:var(--bg);color:var(--ink);
+       font:15px/1.62 -apple-system,"Segoe UI",system-ui,sans-serif}
+
+  aside{width:262px;flex:none;background:var(--panel);border-right:1px solid var(--line);
+        display:flex;flex-direction:column}
+  .brand{padding:16px 16px 10px}
+  .brand h1{font-size:14px;margin:0}
+  .brand .s{font-size:11px;color:var(--dim)}
+  #newchat{margin:0 12px 10px;padding:9px;background:transparent;color:var(--ink);
+           border:1px solid var(--line);border-radius:7px;cursor:pointer;font-size:13px}
+  #newchat:hover{border-color:var(--accent)}
+  #chats{flex:1;overflow-y:auto;padding:0 8px}
+  .chat{display:flex;align-items:center;gap:4px;padding:8px 9px;border-radius:6px;
+        cursor:pointer;font-size:13px;color:var(--dim)}
+  .chat:hover{background:#22222a;color:var(--ink)}
+  .chat.on{background:#2a2a33;color:var(--ink)}
+  .chat .t{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .chat .ren{opacity:0;font-size:13px;padding:0 3px;color:var(--dim);cursor:pointer;flex:none;line-height:1}
+  .chat:hover .ren{opacity:1}
+  .chat .ren:hover{color:var(--accent)}
+  .chat .x{opacity:0;font-size:15px;padding:0 4px;color:var(--dim);flex:none}
+  .chat:hover .x{opacity:1}
+  .chat .x:hover{color:var(--err)}
+  .ctier{font-size:10px;font-family:var(--mono);padding:1px 4px;border-radius:3px;
+         background:#000;color:var(--dim);flex:none;opacity:0}
+  .chat:hover .ctier,.chat.on .ctier{opacity:1}
+  .ctier.g{color:var(--ok)}.ctier.c{color:var(--warn)}.ctier.f{color:#7eb8ff}
+  .chat input.ren-inp{flex:1;background:var(--bg);color:var(--ink);border:1px solid var(--accent);
+                      border-radius:4px;padding:1px 5px;font:inherit;font-size:13px;outline:none}
+  .foot{border-top:1px solid var(--line);padding:12px 14px;font-size:11px;color:var(--dim)}
+  .tier{font-family:var(--mono);font-size:11px;padding:8px 10px;border-radius:6px;
+        background:#000;border:1px solid var(--line);margin-bottom:8px;white-space:pre-wrap}
+  .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px}
+  .g{background:var(--ok)}.c{background:var(--warn)}.d{background:var(--err)}
+  select{width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--line);
+         border-radius:6px;padding:5px;font-size:12px}
+  .sellabel{display:block;margin:7px 0 3px;color:var(--dim);font-size:10px;
+            text-transform:uppercase;letter-spacing:.6px}
+  select:disabled{opacity:.65;cursor:not-allowed}
+
+  main{flex:1;display:flex;flex-direction:column;min-width:0}
+  #log{flex:1;overflow-y:auto;padding:26px 30px}
+  .wrap{max-width:800px;margin:0 auto}
+  .msg{margin-bottom:20px}
+  .who{font-size:11px;text-transform:uppercase;letter-spacing:.9px;color:var(--dim);margin-bottom:5px}
+  .you .who{color:var(--accent)}
+  .body{white-space:pre-wrap;word-wrap:break-word}
+  .body code{font-family:var(--mono);font-size:13px;background:#000;padding:1px 5px;border-radius:4px}
+  .body pre{font-family:var(--mono);font-size:13px;background:#000;border:1px solid var(--line);
+            border-radius:7px;padding:12px;overflow-x:auto;white-space:pre}
+  .act{font-family:var(--mono);font-size:12px;border-left:2px solid var(--accent);
+       padding:6px 11px;margin:0 0 12px;color:var(--dim);background:#000;border-radius:0 6px 6px 0}
+  .act b{color:var(--accent)}
+  .act pre{margin:6px 0 0;max-height:200px;overflow:auto;white-space:pre-wrap;font-size:11px}
+  .act[data-state=announced]{border-left-color:var(--warn)}
+  .act[data-state=result]{border-left-color:var(--ok)}
+  .act[data-state=error]{border-left-color:var(--err)}
+  .act[data-kind=planning]{border-left-color:var(--dim)}
+  .act[data-kind=waiting_for_permission]{border-left-color:var(--warn)}
+  .act summary{color:var(--ink);cursor:pointer;user-select:none}
+  .stamp{font-size:10px;text-transform:uppercase;letter-spacing:.5px;margin-right:7px}
+  .stamp.announced,.stamp.proposal{color:var(--warn)}
+  .stamp.result{color:var(--ok)}
+  .stamp.error{color:var(--err)}
+  .hop{font-size:10px;text-transform:uppercase;letter-spacing:.5px;margin-right:7px;color:var(--dim)}
+  .life[data-hop]{scroll-margin-top:8px}
+  .activity{margin:0 0 8px}
+  .who .route-reason{text-transform:none;letter-spacing:0;display:block;margin-top:3px;
+                     font-size:10px;color:var(--dim);font-family:var(--mono)}
+  .trace{font-family:var(--mono);font-size:12px;border-left:2px solid var(--ok);
+         padding:6px 11px;margin:0 0 12px;color:var(--dim);background:#000;border-radius:0 6px 6px 0}
+  .trace summary{color:var(--ink);cursor:pointer;user-select:none}.trace ol{margin:6px 0 0;padding-left:20px}
+  .trace li{margin:2px 0}.trace .done{color:var(--ok)}
+  .elapsed{color:var(--dim);font-size:11px;margin-left:8px;text-transform:none;letter-spacing:0}
+  .qdrop{display:none;background:#000;border:1px solid var(--line);border-radius:6px;
+         margin:-2px 0 7px;padding:5px;max-height:280px;overflow:auto;font:11px var(--mono)}
+  .qdrop.open{display:block}.qrow{border-bottom:1px solid var(--line);padding:6px 3px}
+  .qrow:last-child{border:0}.qmeta{color:var(--dim);margin-top:3px}.qwait{color:var(--warn);margin-top:3px}
+  .qcancel{float:right;background:transparent;border:1px solid var(--line);color:var(--err);border-radius:4px;cursor:pointer}
+  .err{color:var(--err)}
+  .rowbtn{margin-top:6px;display:flex;flex-wrap:wrap;gap:8px}
+  .rowbtn button{background:transparent;border:1px solid var(--line);color:var(--dim);
+                 border-radius:5px;font-size:11px;padding:3px 9px;cursor:pointer}
+  .rowbtn button:hover{color:var(--ink);border-color:var(--accent)}
+  .empty{color:var(--dim);text-align:center;margin-top:16vh}
+  .empty h2{color:var(--ink);font-weight:600;font-size:20px;margin-bottom:6px}
+  .sugg{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px}
+  .sugg button{background:transparent;border:1px solid var(--line);color:var(--ink);
+               border-radius:16px;padding:7px 14px;font-size:13px;cursor:pointer}
+  .sugg button:hover{border-color:var(--accent)}
+
+  footer{border-top:1px solid var(--line);padding:14px 30px 18px;background:var(--panel)}
+  .comp{max-width:800px;margin:0 auto;display:flex;gap:9px;align-items:flex-end}
+  textarea{flex:1;resize:none;background:var(--bg);color:var(--ink);border:1px solid var(--line);
+           border-radius:9px;padding:11px 13px;font:inherit;min-height:46px;max-height:200px}
+  textarea:focus{outline:none;border-color:var(--accent)}
+  .ic{background:transparent;border:1px solid var(--line);color:var(--dim);border-radius:9px;
+      padding:11px 13px;cursor:pointer;font-size:15px}
+  .ic:hover{color:var(--ink);border-color:var(--accent)}
+  #send{background:var(--accent);color:#fff;border:0;border-radius:9px;padding:12px 20px;
+        font-weight:600;cursor:pointer}
+  #send.stop{background:var(--err)}
+  .atts{max-width:800px;margin:0 auto 8px;display:flex;flex-wrap:wrap;gap:6px}
+  .att{font-size:11px;font-family:var(--mono);background:#000;border:1px solid var(--line);
+       border-radius:5px;padding:3px 8px;color:var(--dim)}
+  .att span{cursor:pointer;margin-left:6px}
+  .hint{max-width:800px;margin:7px auto 0;font-size:11px;color:var(--dim)}
+  #toasts{position:fixed;right:18px;bottom:96px;display:flex;flex-direction:column;gap:8px;z-index:50;max-width:380px}
+  .toast{display:flex;gap:10px;align-items:flex-start;background:var(--panel);color:var(--ink);
+         border:1px solid var(--line);border-left:3px solid var(--ok);border-radius:7px;
+         padding:9px 11px;font-size:13px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.45)}
+  .toast.bad{border-left-color:var(--err)}
+  .toast span{flex:1}
+  .toast button{background:transparent;border:0;color:var(--dim);cursor:pointer;font-size:15px;line-height:1;padding:0}
+</style>
+
+<aside>
+  <div class="brand"><h1>Local Agent</h1><div class="s">desktop assistant</div></div>
+  <button id="newchat">+ New chat</button>
+  <div id="chats"></div>
+  <div class="foot">
+    <div class="tier" id="tier">checking…</div>
+    <div id="gpugate" style="font:11px var(--mono);color:var(--dim);margin:7px 0;padding:7px;
+      border:1px solid var(--line);border-radius:6px;background:#000"></div>
+    <label class="sellabel" for="gpumode">GPU permission</label>
+    <select id="gpumode" title="Ask requires approval for each local-agent GPU model load.">
+      <option value="ask">Ask every time</option><option value="allow">Allow local agent</option><option value="block">Block local agent</option>
+    </select>
+    <div id="queuepill" style="display:none;font-size:11px;font-family:var(--mono);
+         color:var(--warn);margin-bottom:6px;padding:3px 8px;border-radius:4px;
+         background:#000;border:1px solid var(--line);cursor:pointer"
+         title="Click to refresh queue status"></div>
+    <button id="clearqueue" style="display:none;margin:0 0 6px;width:100%;background:transparent;
+      border:1px solid var(--line);color:var(--warn);border-radius:6px;padding:5px;
+      font-size:11px;cursor:pointer;text-align:left"
+      title="Moves pending jobs to a retained cancelled record. It never deletes media or interrupts active work.">Clear pending media queue</button>
+    <div id="queuedrop" class="qdrop" aria-live="polite"></div>
+    <label class="sellabel" for="chatmodel">Model for this chat</label>
+    <select id="chatmodel" title="Choose before the first message. Pinned models stay on that tag. Auto (may use Mac farm) stays unpinned so tool turns can use Qwythos."></select>
+    <label class="sellabel" for="workspace">Workspace for this chat</label>
+    <select id="workspace" title="Choose before the first message; General prevents Equal Shares context from being injected.">
+      <option value="auto">Auto — infer only from explicit request</option>
+      <option value="general">General — no Equal Shares context</option>
+      <option value="equal_shares">Equal Shares — specialist context</option>
+    </select>
+    <label class="sellabel" for="prefer">Compute</label>
+    <select id="prefer">
+      <option value="auto">Auto — GPU when free</option>
+      <option value="cpu">Force CPU</option>
+      <option value="gpu">Prefer GPU</option>
+    </select>
+    <label class="sellabel" for="ctxceil">Context ceiling</label>
+    <select id="ctxceil" title="Cap the context window used per turn. Lower = faster / less VRAM. Auto = adaptive (recommended).">
+      <option value="">Auto</option>
+      <option value="8192">8 K</option>
+      <option value="16384">16 K</option>
+      <option value="24576">24 K</option>
+      <option value="32768">32 K</option>
+    </select>
+    <button id="yieldgpu" style="margin-top:8px;width:100%;background:transparent;
+      border:1px solid var(--line);color:var(--dim);border-radius:6px;padding:5px;
+      font-size:11px;cursor:pointer;text-align:left"
+      title="Evict all models from GPU VRAM. Use before a ComfyUI render.">⬡ Yield GPU</button>
+    <button id="stopcomfy" style="margin-top:8px;width:100%;background:transparent;
+      border:1px solid #b84a4a;color:#ef8b8b;border-radius:6px;padding:5px;
+      font-size:11px;cursor:pointer;text-align:left"
+      title="Interrupt and stop active ComfyUI renders. Prompts, uploads, sources and outputs are preserved.">■ Stop ComfyUI render</button>
+  </div>
+</aside>
+
+<main>
+  <div id="log"></div>
+  <footer>
+    <div class="atts" id="atts"></div>
+    <div class="comp">
+      <button class="ic" id="attach" title="Attach text, image, audio or video">+</button>
+      <button class="ic" id="exportmd" title="Export conversation as Markdown (⬇)">⬇</button>
+      <textarea id="input" rows="1" placeholder="Message…  (Enter to send, Shift+Enter for new line, Ctrl+N for new chat)"></textarea>
+      <button id="send">Send</button>
+    </div>
+    <div class="hint" id="hint">Runs entirely on this machine. Images and video frames are analyzed locally;
+      audio is measured locally and transcribed when a speech model is installed. Desktop chats can start a guarded batch render; phone chats cannot.</div>
+  </footer>
+</main>
+<div id="toasts" aria-live="polite"></div>
+<input type="file" id="file" hidden multiple accept=".txt,.md,.json,.py,.csv,.log,.ps1,.yaml,.yml,image/*,audio/*,video/*">
+
+<script>
+const _fetch = window.fetch.bind(window);
+function csrfToken(){
+  const m=document.cookie.match(/(?:^|; )la_csrf=([^;]*)/);
+  return m ? decodeURIComponent(m[1]) : '';
+}
+window.fetch=function(url, opts){
+  opts=opts?Object.assign({}, opts):{};
+  const method=String(opts.method||'GET').toUpperCase();
+  if(method!=='GET' && method!=='HEAD'){
+    const headers=new Headers(opts.headers||{});
+    if(!headers.has('Content-Type')) headers.set('Content-Type','application/json');
+    headers.set('X-CSRF-Token', csrfToken());
+    opts.headers=headers;
+  }
+  return _fetch(url, opts);
+};
+const $ = s => document.querySelector(s);
+const log=$('#log'), input=$('#input'), send=$('#send');
+let cid=localStorage.getItem('active_chat_id')||null, busy=false, atts=[], chatTitle='Chat', activeModel='', activeRouting='', activeWorkspace='auto', modelSignature='';
+let traceCard=null, traceSteps=[], traceLast='', turnHost=null, pendingToolCards=[];
+let traceStarted=0, elapsedTimer=null;
+// streamEpoch orphans an in-flight SSE reader when Stop unlocks early so a
+// hung tool/Ollama call cannot leave Send stuck on Stop forever.
+let streamEpoch=0;
+function setBusy(on){
+  busy=!!on;
+  send.textContent=busy?'Stop':'Send';
+  if(busy) send.classList.add('stop'); else send.classList.remove('stop');
+}
+
+const esc = s => s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function render(s){
+  let h=esc(s);
+  h=h.replace(/```[a-z]*\n([\s\S]*?)```/g,(m,c)=>'<pre>'+c.replace(/\n$/,'')+'</pre>');
+  h=h.replace(/`([^`\n]+)`/g,'<code>$1</code>');
+  h=h.replace(/\*\*([^*\n]+)\*\*/g,'<b>$1</b>');
+  h=h.replace(/^### (.+)$/gm,'<b>$1</b>');
+  return h;
+}
+const wrap = () => { let w=log.querySelector('.wrap'); if(!w){w=document.createElement('div');w.className='wrap';log.appendChild(w);} return w; };
+function bubble(who,cls){
+  const d=document.createElement('div'); d.className='msg '+(cls||'');
+  d.innerHTML='<div class="who">'+who+'</div><div class="activity"></div><div class="body"></div>';
+  wrap().appendChild(d); log.scrollTop=log.scrollHeight; return d;
+}
+function cardHost(){ return turnHost || wrap(); }
+function actCard(html){
+  const d=document.createElement('div'); d.className='act'; d.innerHTML=html;
+  cardHost().appendChild(d); log.scrollTop=log.scrollHeight; return d;
+}
+function fmtElapsed(ms){
+  const s=Math.max(0,Math.floor((Number(ms)||0)/1000));
+  return s<60?s+'s':Math.floor(s/60)+'m '+(s%60)+'s';
+}
+function stateStamp(state, source){
+  if(source==='proposal' || state==='announced')
+    return source==='proposal'
+      ? {cls:'proposal', text:'Proposal — not proof of execution'}
+      : {cls:'announced', text:'Announced — not yet observed'};
+  if(state==='error') return {cls:'error', text:'Observed error'};
+  return {cls:'result', text:'Observed result'};
+}
+function redactArgs(args){
+  if(!args || typeof args!=='object' || Array.isArray(args)) return {keys:[]};
+  const out={keys:Object.keys(args).sort()};
+  for(const k of ['path','clip','action','name']){
+    if(args[k]!=null) out[k]=String(args[k]).slice(0,260);
+  }
+  return out;
+}
+function formatWho(r){
+  if(!r||typeof r!=='object') return 'agent';
+  const backend=String(r.backend||'').toLowerCase();
+  const tier=String(r.tier||'').toUpperCase();
+  const shown=backend==='farm'||tier==='FARM'?'FARM':(tier||'');
+  let s='agent';
+  if(shown) s+=' · '+shown;
+  if(r.model) s+=' · '+r.model;
+  if(r.effective_ctx && r.ctx_ceiling && r.effective_ctx<r.adaptive_ctx)
+    s+=' · ctx '+r.effective_ctx+' (cap '+r.ctx_ceiling+')';
+  else if(r.effective_ctx) s+=' · ctx '+r.effective_ctx;
+  const cap=(r.detail&&r.detail.capability)||r.capability;
+  if(cap) s+=' · '+cap;
+  return s;
+}
+function formatReason(r){
+  if(!r||typeof r!=='object') return '';
+  const bits=[];
+  if(r.reason) bits.push(String(r.reason));
+  if(r.gpu_busy) bits.push('GPU busy at decision time');
+  if(r.backend) bits.push('backend '+r.backend);
+  return bits.join(' · ');
+}
+function applyRouteWho(msg, r){
+  if(!msg||!r) return;
+  const who=msg.querySelector('.who'); if(!who) return;
+  who.textContent=formatWho(r);
+  const extra=formatReason(r);
+  if(extra){
+    const sub=document.createElement('div');
+    sub.className='route-reason';
+    sub.textContent=extra;
+    who.appendChild(sub);
+  }
+}
+function classifyNote(text){
+  const low=String(text||'').toLowerCase();
+  if(low.includes('task plan prepared'))
+    return {kind:'planning', state:'announced', source:'proposal'};
+  if(low.includes('permission is pending')||low.includes('awaiting approval')
+     ||low.includes('waiting for gpu permission')||low.includes('file edit pending'))
+    return {kind:'waiting_for_permission', state:'announced', source:'observation'};
+  if(low.includes('hop limit')||low.includes('hop-limit'))
+    return {kind:'blocked', state:'error', source:'observation'};
+  return {kind:'planning', state:'announced', source:'proposal'};
+}
+function progressLifecycle(payload){
+  const stage=String((payload&&payload.stage)||'');
+  const label=String((payload&&payload.label)||'');
+  if(stage==='decide'||stage==='review'||stage==='write')
+    return {kind:'planning', state:'announced', source:'proposal', label:label, stage:stage};
+  if(stage==='evidence')
+    return {kind:'verification', state:'announced', source:'observation', label:label, stage:stage};
+  return null;
+}
+function lifeNode(ev){
+  const d=document.createElement('details');
+  const kind=String(ev.kind||'note');
+  const state=String(ev.state||'announced');
+  const source=String(ev.source||(state==='announced'?'proposal':'observation'));
+  d.className='act life';
+  d.dataset.kind=kind;
+  d.dataset.state=state;
+  d.dataset.source=source;
+  if(ev.tool) d.dataset.tool=String(ev.tool);
+  if(ev.job_id) d.dataset.job=String(ev.job_id);
+  const hop=(ev.hop!=null&&ev.hop!=='')?ev.hop:ev.hop_index;
+  if(hop!=null && hop!=='' && Number.isFinite(Number(hop)))
+    d.dataset.hop=String(hop);
+  const stamp=stateStamp(state, source);
+  const title=String(ev.tool||ev.label||kind);
+  const hopMark=(d.dataset.hop!=null)?'<span class="hop">hop '+esc(d.dataset.hop)+'</span> ':'';
+  const sum=document.createElement('summary');
+  sum.innerHTML='<span class="stamp '+stamp.cls+'">'+esc(stamp.text)+'</span>'+hopMark+'<b>'+esc(kind)+'</b> '+esc(title);
+  d.appendChild(sum);
+  const body=document.createElement('div');
+  const bits=[];
+  if(kind==='tool_call' && ev.args)
+    bits.push('<pre>'+esc(JSON.stringify(ev.args,null,0))+'</pre>');
+  if(ev.summary) bits.push('<pre>'+esc(ev.summary)+'</pre>');
+  if(ev.reason && kind==='route') bits.push('<div>'+esc(ev.reason)+'</div>');
+  if(ev.path) bits.push('<div>path '+esc(String(ev.path))+'</div>');
+  if(kind==='tool_call' && state==='announced')
+    bits.push('<div>Waiting for an observed result — this card is not proof the tool ran.</div>');
+  if(kind==='planning')
+    bits.push('<div>This is a plan or draft, not evidence that the step completed.</div>');
+  if(kind==='waiting_for_permission')
+    bits.push('<div>Approve or deny from the GPU / file-edit sidebar. This turn may already continue on CPU.</div>');
+  if(kind==='complete')
+    bits.push('<div>The answer below is the completed turn. Elapsed time is live-only and is not restored.</div>');
+  body.innerHTML=bits.join('')||'<div>No extra detail stored.</div>';
+  d.appendChild(body);
+  return d;
+}
+function mountActivity(host, activity, evidence, route){
+  if(!host) return;
+  let events=Array.isArray(activity)?activity.filter(e=>e&&typeof e==='object'):[];
+  if(!events.length && Array.isArray(evidence))
+    events=evidence.filter(e=>e&&typeof e==='object').map(item=>({
+      kind:'tool_result',
+      state:String(item.outcome||'result')==='error'?'error':'result',
+      source:'observation',
+      tool:item.tool||'unknown',
+      outcome:item.outcome||'result',
+      summary:item.summary||'',
+      path:item.path,
+      label:item.tool||'unknown'
+    }));
+  if(route && typeof route==='object' && !events.some(e=>e.kind==='route'))
+    events=[{kind:'route', state:'result', source:'observation',
+             tier:route.tier, model:route.model, backend:route.backend,
+             reason:route.reason, gpu_busy:route.gpu_busy,
+             capability:(route.detail&&route.detail.capability)||route.capability,
+             label:(route.tier||'')+' '+(route.model||'')}].concat(events);
+  events.forEach(ev=>host.appendChild(lifeNode(ev)));
+}
+function startTrace(){
+  traceSteps=[]; traceLast='';
+  const d=document.createElement('details'); d.className='trace'; d.open=true;
+  d.innerHTML='<summary>Working… <span class="elapsed">0s</span></summary><ol></ol>';
+  cardHost().appendChild(d); traceCard=d; log.scrollTop=log.scrollHeight;
+  traceStarted=Date.now();
+  if(elapsedTimer) clearInterval(elapsedTimer);
+  elapsedTimer=setInterval(()=>{
+    if(!traceCard) return;
+    const el=traceCard.querySelector('.elapsed');
+    if(el) el.textContent=fmtElapsed(Date.now()-traceStarted);
+  },1000);
+}
+function trace(label){
+  label=String(label||'').trim(); if(!label||label===traceLast) return;
+  if(!traceCard) startTrace(); traceLast=label; traceSteps.push(label);
+  const li=document.createElement('li'); li.textContent=label;
+  traceCard.querySelector('ol').appendChild(li);
+  const elapsed=traceCard.querySelector('.elapsed');
+  const spent=elapsed?elapsed.textContent:fmtElapsed(Date.now()-traceStarted);
+  traceCard.querySelector('summary').innerHTML='Working — '+esc(label)+' <span class="elapsed">'+esc(spent)+'</span>';
+  log.scrollTop=log.scrollHeight;
+}
+function finishTrace(error){
+  if(elapsedTimer){ clearInterval(elapsedTimer); elapsedTimer=null; }
+  if(!traceCard) return;
+  const spent=fmtElapsed(Date.now()-traceStarted);
+  const summary=traceCard.querySelector('summary');
+  summary.innerHTML=(error?'Work stopped':'Completed')+' · '+esc(spent)+' — show activity';
+  summary.classList.add('done'); traceCard.open=false; traceCard=null;
+}
+
+function updateCharCount(){
+  const msgs=log.querySelectorAll('.msg .body');
+  let n=0; msgs.forEach(m=>{n+=(m.innerText||'').length;});
+  const el=$('#hint'); if(!el) return;
+  const base='Runs entirely on this machine. Images and video frames are analyzed locally; audio is measured locally and transcribed when a speech model is installed. Desktop chats can start a guarded general render; phone chats cannot.';
+  const tok=n>0?' · ~'+(n>=4000?(n/4/1000).toFixed(1)+'K':Math.round(n/4))+' tokens in context':'';
+  el.textContent=base+tok;
+}
+
+async function refresh(){
+  try{
+    const s=await (await fetch('/api/status')).json();
+    const models=s.chat_models||[];
+    const signature=JSON.stringify(models);
+    const picker=$('#chatmodel');
+    if(signature!==modelSignature){
+      const wanted=activeRouting==='auto_farm'?'auto_farm':(activeModel||picker.value||s.model||'');
+      picker.innerHTML='';
+      const farm=document.createElement('option');
+      farm.value='auto_farm';
+      farm.textContent='Auto (may use Mac farm) — unpinned; tool turns may use Qwythos';
+      picker.appendChild(farm);
+      for(const m of models){
+        const o=document.createElement('option'); o.value=m.name;
+        const available=m.available!==false;
+        const where=m.cpu&&m.gpu?'CPU + GPU':m.gpu?'GPU only':m.gpu_only?'GPU only':'CPU only';
+        const coding=m.kind==='coding' || /coder/i.test(m.name||'') || m.name===(s.coding_model||'');
+        o.disabled=!available;
+        o.textContent=(coding?'Coding mode — ':'')+(m.label||m.name)+' — '+
+          (available?where:(m.unavailable_reason||'Install required'));
+        picker.appendChild(o);
+      }
+      if(wanted==='auto_farm') picker.value='auto_farm';
+      else if([...picker.options].some(o=>o.value===wanted && !o.disabled)) picker.value=wanted;
+      else {
+        const first=[...picker.options].find(o=>!o.disabled && o.value!=='auto_farm');
+        if(first) picker.value=first.value;
+      }
+      modelSignature=signature;
+    }
+    picker.disabled=!!cid;
+    const cls = !s.tier ? 'd' : (s.tier==='gpu'?'g':'c');
+    const shown=($('#chatmodel').value==='auto_farm'||activeRouting==='auto_farm')
+      ? 'Auto (may use Mac farm)'
+      : (activeModel||picker.value||s.model||'');
+    const codingShown=/coder/i.test(shown) || shown===(s.coding_model||'');
+    let gpuNote = (s.timeshare_idle || s.reason === '8188 up, idle, agent may claim')
+      ? '8188 up, idle, agent may claim'
+      : (s.gpu_busy
+      ? (String(s.reason||'').toLowerCase().includes('llama-server')
+          ? 'GPU occupied — vision model is ready'
+          : (s.detail && s.detail.comfy_port_8188==='listening'
+              ? 'GPU busy — ComfyUI is running'
+              : 'GPU occupied — '+String(s.reason||'other local work')))
+      : (!s.gpu_server_up
+          ? 'GPU server offline — routing to CPU 8B'
+          : 'GPU free'));
+    if(s.gpu_busy && codingShown)
+      gpuNote += '\nCoding on CPU is slow — free the GPU for the 14B coder';
+    $('#tier').innerHTML='<span class="dot '+cls+'"></span>'+
+      (shown? (cid?'CHAT · ':'NEW CHAT · ')+shown : 'no model')+'\n'+
+      gpuNote;
+    const gate=(s.gpu_gateway||{}), pending=gate.pending||[];
+    const gateEl=$('#gpugate'), mode=$('#gpumode');
+    if(mode && gate.mode) mode.value=gate.mode;
+    const owner=(s.detail&&s.detail.compute_processes&&s.detail.compute_processes.length)
+      ? ' · processes: '+s.detail.compute_processes.join(', ') : '';
+    let gateText='<b>GPU gateway</b> · '+esc((gate.mode||'ask').toUpperCase())+
+      '<br>'+esc(gpuNote)+esc(owner);
+    for(const r of pending){ gateText+='<div style="margin-top:6px;color:var(--warn)">Permission: '+esc(r.workload||'GPU work')+
+      '<br><button onclick="gpuDecision(\''+esc(r.id)+'\',\'approve\')">Approve once</button> <button onclick="gpuDecision(\''+esc(r.id)+'\',\'deny\')">Deny</button></div>'; }
+    for(const r of ((s.file_edit_gateway||{}).pending||[])){ const m=r.metadata||{}; const detail=m.kind==='exact byte patch'
+      ? ('byte patch · offset '+esc(m.offset)+' · '+esc(m.bytes)+' bytes · '+esc(m.before)+' → '+esc(m.after))
+      : esc(r.chars+' chars · '+r.content_sha256.slice(0,12)); gateText+='<div style="margin-top:6px;color:var(--warn)">File edit: '+esc(r.path)+'<br>'+detail+
+      '<br><button onclick="fileEditDecision(\''+esc(r.id)+'\',true)">Approve exact edit</button> <button onclick="fileEditDecision(\''+esc(r.id)+'\',false)">Deny</button></div>'; }
+    gateEl.innerHTML=gateText;
+  }catch(e){ $('#tier').textContent='server unreachable'; }
+}
+
+async function gpuDecision(id,action){
+  const r=await (await fetch('/api/gpu_gateway/decision',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,action})})).json();
+  actCard('<b>GPU gateway</b> '+esc(r.ok?('permission '+action+'d once'):r.error)); refresh();
+}
+async function fileEditDecision(id,approve){
+  const r=await (await fetch('/api/file_edit_gateway/decision',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,approve})})).json();
+  actCard('<b>file edit</b> '+esc(r.ok?(approve?'approved once':'denied'):r.error)); refresh();
+}
+$('#gpumode').onchange=async()=>{
+  const mode=$('#gpumode').value;
+  const r=await (await fetch('/api/gpu_gateway/mode',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode})})).json();
+  actCard('<b>GPU gateway</b> '+esc(r.ok?('mode: '+mode):r.error)); refresh();
+};
+
+function startRename(chatId, currentTitle, chatEl){
+  const titleEl=chatEl.querySelector('.t');
+  const inp=document.createElement('input');
+  inp.type='text'; inp.className='ren-inp'; inp.value=currentTitle;
+  titleEl.replaceWith(inp); inp.select();
+  let submitted=false;
+  async function submit(){
+    if(submitted) return; submitted=true;
+    const newTitle=(inp.value||'').trim()||currentTitle;
+    await fetch('/api/rename',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({id:chatId,title:newTitle})});
+    if(chatId===cid) chatTitle=newTitle;
+    loadChats();
+  }
+  inp.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){e.preventDefault();submit();}
+    if(e.key==='Escape'){submitted=true;loadChats();}
+  });
+  inp.addEventListener('blur',()=>submit());
+  inp.focus();
+}
+
+async function loadChats(){
+  const list=await (await fetch('/api/chats')).json();
+  const box=$('#chats'); box.innerHTML='';
+  for(const c of list){
+    const d=document.createElement('div');
+    d.className='chat'+(c.id===cid?' on':'');
+
+    const t=c.last_tier||'';
+    const tierCls=t==='gpu'?'g':t==='farm'?'f':t==='cpu'?'c':'';
+    const tierText=t==='gpu'?'GPU':t==='farm'?'FARM':t==='cpu'?'CPU':'';
+
+    d.innerHTML='<div class="t"></div>'
+      +(tierText?'<span class="ctier '+tierCls+'">'+tierText+'</span>':'')
+      +'<span class="ren" title="Rename">✎</span>'
+      +'<div class="x" title="Delete">×</div>';
+
+    const titleEl=d.querySelector('.t');
+    titleEl.textContent=c.title;
+    if(c.model) titleEl.title='Model: '+c.model;
+    titleEl.onclick=()=>openChat(c.id);
+    titleEl.ondblclick=e=>{e.preventDefault();startRename(c.id,c.title,d);};
+
+    d.querySelector('.ren').onclick=e=>{
+      e.stopPropagation(); startRename(c.id,c.title,d);
+    };
+    d.querySelector('.x').onclick=async e=>{
+      e.stopPropagation();
+      await fetch('/api/delete',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({id:c.id})});
+      if(c.id===cid){cid=null; localStorage.removeItem('active_chat_id'); blank();}
+      loadChats();
+    };
+    box.appendChild(d);
+  }
+}
+
+function blank(){
+  chatTitle='Chat';
+  activeModel='';
+  activeRouting='';
+  activeWorkspace='auto';
+  $('#chatmodel').disabled=false;
+  $('#workspace').disabled=false;
+  $('#workspace').value='auto';
+  log.innerHTML='<div class="wrap"><div class="empty"><h2>Local Agent</h2>'+
+    '<div>Ask anything. It knows the project and can act on it.</div>'+
+    '<div class="sugg"></div></div></div>';
+  const s=log.querySelector('.sugg');
+  ['Where are we, and what runs next?','What is blocking the 124-clip pass?',
+   'Show me clip 27E','Check the config for drift','Ladder for 00B?']
+   .forEach(q=>{const b=document.createElement('button');b.textContent=q;b.onclick=()=>ask(q);s.appendChild(b);});
+  updateCharCount();
+}
+
+async function openChat(id){
+  cid=id;
+  localStorage.setItem('active_chat_id',id);
+  const c=await (await fetch('/api/chat?id='+encodeURIComponent(id))).json();
+  if(c.error){ cid=null; localStorage.removeItem('active_chat_id'); blank(); loadChats(); return; }
+  chatTitle=c.title||'Chat';
+  activeModel=c.model||'';
+  activeRouting=c.routing||'';
+  activeWorkspace=c.workspace||'auto';
+  if(activeRouting==='auto_farm' && !activeModel) $('#chatmodel').value='auto_farm';
+  else if(activeModel) $('#chatmodel').value=activeModel;
+  $('#workspace').value=activeWorkspace;
+  $('#chatmodel').disabled=!!(c.messages||[]).length;
+  $('#workspace').disabled=!!(c.messages||[]).length;
+  log.innerHTML='<div class="wrap"></div>';
+  const msgs=c.messages||[];
+  msgs.forEach((m,i)=>{
+    const b=bubble(m.role==='user'?'you':'agent', m.role==='user'?'you':'');
+    if(m.role==='assistant'){
+      if(m.route) applyRouteWho(b, m.route);
+      mountActivity(b.querySelector('.activity'), m.activity, m.tool_evidence, m.route);
+    }
+    b.querySelector('.body').innerHTML=render(m.content);
+    if(m.role==='assistant' && Array.isArray(m.media_artifacts))
+      m.media_artifacts.forEach(art=>mountMediaArtifact(b, art));
+    if(m.role==='assistant' && i !== msgs.length-1) addMismatchBtn(b, i);
+  });
+  addRegen();
+  loadChats(); log.scrollTop=log.scrollHeight; updateCharCount();
+}
+
+function addRegen(){
+  const msgs=log.querySelectorAll('.msg');
+  if(!msgs.length) return;
+  const last=msgs[msgs.length-1];
+  if(last.classList.contains('you')) return;
+  if(last.querySelector('.rowbtn')) return;
+  const r=document.createElement('div'); r.className='rowbtn';
+  const copy=document.createElement('button'); copy.textContent='Copy';
+  copy.onclick=()=>navigator.clipboard.writeText(last.querySelector('.body').innerText);
+  const re=document.createElement('button'); re.textContent='Regenerate';
+  re.onclick=()=>stream('/api/regenerate',{id:cid,prefer:$('#prefer').value});
+  const helpful=document.createElement('button'); helpful.textContent='Helpful';
+  helpful.title='Record feedback only. This does not change persistent memory.';
+  helpful.onclick=()=>sendFeedback('helpful');
+  const incorrect=document.createElement('button'); incorrect.textContent='Needs correction';
+  incorrect.title='Record that this reply needs correction. This does not change persistent memory.';
+  incorrect.onclick=()=>sendFeedback('corrected');
+  const correct=document.createElement('button'); correct.textContent='Correct & remember';
+  correct.title='Save a short reusable rule you explicitly provide for similar future requests.';
+  correct.onclick=async()=>{
+    const rule=prompt('What short rule should the agent remember for similar future requests?\n\nOnly this rule is saved; the reply itself is not copied into memory.');
+    if(rule!==null && rule.trim()) await sendFeedback('remembered',rule.trim());
+  };
+  r.append(copy,re,helpful,incorrect,correct);
+  last.appendChild(r);
+  addMismatchBtn(last);
+}
+
+function addMismatchBtn(el, index){
+  if(!el || el.querySelector('.mismatch')) return;
+  let r=el.querySelector('.rowbtn');
+  if(!r){ r=document.createElement('div'); r.className='rowbtn'; el.appendChild(r); }
+  const btn=document.createElement('button');
+  btn.className='mismatch';
+  btn.textContent="this wasn't what I meant";
+  btn.title='Save this turn locally for later review. Does not change the reply or routing.';
+  btn.onclick=()=>{
+    const idx=Number.isInteger(index) ? index
+      : Array.prototype.indexOf.call(log.querySelectorAll('.msg'), el);
+    sendIntentMismatch(idx);
+  };
+  r.appendChild(btn);
+}
+
+async function sendIntentMismatch(index){
+  if(!cid) return;
+  const body={id:cid};
+  if(Number.isInteger(index)) body.message_index=index;
+  const resp=await fetch('/api/intent_mismatch',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(body)});
+  const result=await resp.json();
+  if(!result.ok){ alert(result.error||'Could not save this example.'); return; }
+  actCard('<b>saved locally</b> '+esc(result.message||'Recorded for later review.'));
+}
+
+async function sendFeedback(verdict,correction=''){
+  if(!cid) return;
+  const resp=await fetch('/api/feedback',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({id:cid,verdict,correction})});
+  const result=await resp.json();
+  if(!result.ok){ alert(result.error||'Feedback could not be recorded.'); return; }
+  actCard('<b>feedback</b> '+esc(result.message||'Recorded.'));
+}
+
+async function ask(text){
+  if(busy||(!text.trim()&&!atts.length)) return;
+  bubble('you','you').querySelector('.body').textContent=text.trim()||'[analyze attached media]';
+  const ctxceil=$('#ctxceil').value; const ctxCeiling=ctxceil?parseInt(ctxceil,10):null;
+  const payload={id:cid,message:text,prefer:$('#prefer').value,ctx_ceiling:ctxCeiling,
+                 model:cid?(activeRouting==='auto_farm'?'auto_farm':activeModel||$('#chatmodel').value):$('#chatmodel').value,
+                 workspace:cid?activeWorkspace:$('#workspace').value,attachments:atts};
+  input.value=''; input.style.height='auto'; atts=[]; drawAtts();
+  await stream('/api/send',payload);
+}
+
+function mediaQuery(art){
+  const q=new URLSearchParams();
+  q.set('root', art.root||'story_comfy');
+  q.set('subfolder', art.subfolder||'');
+  q.set('filename', art.filename||'');
+  if(art.sha256) q.set('sha256', art.sha256);
+  return q.toString();
+}
+function mediaRevealBody(art){
+  return JSON.stringify({
+    root: art.root||'story_comfy',
+    subfolder: art.subfolder||'',
+    filename: art.filename||''
+  });
+}
+function openMediaFolder(art, btn){
+  btn.disabled=true; const original=btn.textContent; btn.textContent='Opening…';
+  return fetch('/api/reveal_story_image',{method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:mediaRevealBody(art)}).then(r=>r.json()).then(res=>{
+      if(res.error) alert(res.error);
+    }).catch(()=>{ alert('Could not reach the local agent to open the folder.'); })
+    .finally(()=>{ btn.disabled=false; btn.textContent=original; });
+}
+function mediaKey(art){
+  return [art.root||'',art.subfolder||'',art.filename||'',art.sha256||''].join('|');
+}
+function mountMediaArtifact(host, art){
+  if(!art) return;
+  // One card per file per chat: a late render-watch card must not duplicate
+  // the one the turn (or a history reload) already mounted.
+  if(art.filename && [...log.querySelectorAll('.media-card[data-key]')]
+       .some(el=>el.dataset.key===mediaKey(art))) return;
+  const wrap=document.createElement('div');
+  wrap.className='media-card';
+  wrap.style.cssText='margin-top:8px;';
+  if(art.filename) wrap.dataset.key=mediaKey(art);
+  // A chat video batch that finished with some renders done and some failed
+  // gets one summary card after its videos (server: chat_render_partial).
+  const partial=String(art.card_key||'').startsWith('chat_render_partial|');
+  if(art.late){
+    const tag=document.createElement('div');
+    tag.style.cssText='color:var(--ok);font-size:11px;text-transform:uppercase;letter-spacing:.5px;';
+    tag.textContent=(partial?'Batch finished after the reply'
+      :art.status==='error'?'Render ended after the reply':'Finished after the reply')
+      +(art.label?' · '+art.label:'');
+    wrap.appendChild(tag);
+  }
+  const status=document.createElement('div');
+  status.style.cssText='color:var(--dim);font-size:13px;';
+  wrap.appendChild(status);
+  host.appendChild(wrap);
+  const st=String(art.status||'ready');
+  if(st==='pending'||st==='running'||st==='timeout'){
+    const pid=art.prompt_id?(' prompt_id '+art.prompt_id):'';
+    status.textContent='Generate still running'+pid
+      +' — not showing a preview until comfy_job_status completes.';
+    return;
+  }
+  if(partial){
+    // e.g. "1 of 3 renders done; 0002 failed: …" — the videos above are real.
+    status.innerHTML='<span class="err">some renders failed</span>'
+      +(art.note?(' — '+esc(String(art.note))):'');
+    return;
+  }
+  if(st==='error'||st==='not_started'){
+    // Batch failure / not-started cards name their frame; late cards already
+    // show the label in the tag above.
+    status.innerHTML='<span class="err">'+(st==='error'?'generate failed':'not started')+'</span>'
+      +(art.label&&!art.late?(' — '+esc(String(art.label))):'')
+      +(art.prompt_id?(' — '+esc(art.prompt_id)):'')
+      +(art.note?(' — '+esc(String(art.note))):'');
+    return;
+  }
+  if(!art.filename){
+    status.innerHTML='<span class="err">file missing</span> — unavailable';
+    return;
+  }
+  status.textContent=art.kind==='video'?'Loading video…':'Loading image…';
+  fetch('/api/generated_media?'+mediaQuery(art)).then(async resp=>{
+    if(resp.status===404){
+      status.innerHTML='<span class="err">file missing</span> — '+esc(art.filename)
+        +' (deleted or never written)';
+      return;
+    }
+    if(resp.status===409){
+      let msg='file changed on disk since this turn; not showing a substitute';
+      try{ const j=await resp.json(); if(j.error) msg=j.error; }catch(e){}
+      status.innerHTML='<span class="err">'+esc(msg)+'</span>';
+      const btn=document.createElement('button');
+      btn.textContent='Open containing folder';
+      btn.style.cssText='margin-top:6px;display:block;';
+      btn.onclick=()=>openMediaFolder(art, btn);
+      wrap.appendChild(btn);
+      return;
+    }
+    if(!resp.ok){
+      status.innerHTML='<span class="err">file missing</span> — '+esc(art.filename||'unavailable');
+      return;
+    }
+    const blob=await resp.blob();
+    const url=URL.createObjectURL(blob);
+    const btn=document.createElement('button');
+    btn.textContent='Open containing folder';
+    btn.style.cssText='margin-top:6px;';
+    btn.onclick=()=>openMediaFolder(art, btn);
+    if(art.kind==='video'){
+      const vid=document.createElement('video');
+      vid.controls=true; vid.preload='metadata';
+      vid.src=url;
+      vid.style.cssText='max-width:420px;max-height:360px;display:block;border-radius:8px;'
+        +'box-shadow:0 1px 4px rgba(0,0,0,.3);background:#000;';
+      vid.onerror=()=>{ status.innerHTML='<span class="err">file missing</span> — '+esc(art.filename); vid.remove(); };
+      const dur=document.createElement('div');
+      dur.style.cssText='color:var(--dim);font-size:12px;margin-top:4px;';
+      vid.onloadedmetadata=()=>{
+        const s=vid.duration;
+        if(Number.isFinite(s) && s>0){
+          const m=Math.floor(s/60), r=(s%60).toFixed(1);
+          dur.textContent='Duration '+m+':'+(r<10?'0':'')+r;
+        }
+      };
+      status.remove();
+      wrap.append(vid,dur,btn);
+      return;
+    }
+    const img=document.createElement('img');
+    img.src=url; img.alt=art.filename||'generated image';
+    img.style.cssText='max-width:360px;max-height:360px;display:block;border-radius:8px;'
+      +'box-shadow:0 1px 4px rgba(0,0,0,.3);';
+    img.onerror=()=>{ status.innerHTML='<span class="err">file missing</span> — '+esc(art.filename); img.remove(); };
+    status.remove();
+    wrap.append(img,btn);
+  }).catch(()=>{
+    status.innerHTML='<span class="err">file missing</span> — '+esc(art.filename||'unavailable');
+  });
+}
+
+async function stream(url,payload){
+  const epoch=++streamEpoch;
+  setBusy(true);
+  const b=bubble('agent'); const body=b.querySelector('.body');
+  let acc='', turnMedia=0;
+  turnHost=b.querySelector('.activity');
+  pendingToolCards=[];
+  startTrace(); trace('Request received locally');
+
+  try{
+    const resp=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
+                               body:JSON.stringify(payload)});
+    if(!resp.body){
+      body.innerHTML='<span class="err">No response stream from the local agent.</span>';
+      finishTrace(true);
+      return;
+    }
+    const rd=resp.body.getReader(), dec=new TextDecoder(); let buf='';
+    while(true){
+      const {done,value}=await rd.read(); if(done) break;
+      // Stop (or a newer send) orphaned this reader: keep draining so the
+      // server can finish/save, but do not touch the Send/Stop button.
+      const orphaned=epoch!==streamEpoch;
+      buf+=dec.decode(value,{stream:true});
+      const parts=buf.split('\n\n'); buf=parts.pop();
+      for(const p of parts){
+        if(orphaned) continue;
+        if(!p.startsWith('data: ')) continue;
+        let ev;
+        try{ ev=JSON.parse(p.slice(6)); }catch(e){ continue; }
+        try{
+          if(ev.kind==='conversation'){ const c=JSON.parse(ev.data); cid=c.id; chatTitle=c.title||'Chat';
+            activeRouting=c.routing||'';
+            activeModel=c.model||'';
+            activeWorkspace=c.workspace||activeWorkspace||$('#workspace').value;
+            if(activeRouting==='auto_farm' && !activeModel) $('#chatmodel').value='auto_farm';
+            else if(activeModel) $('#chatmodel').value=activeModel;
+            $('#workspace').value=activeWorkspace;
+            $('#chatmodel').disabled=true; $('#workspace').disabled=true; loadChats(); }
+          else if(ev.kind==='route'){ const r=JSON.parse(ev.data); refresh();
+            const proposal=r.source==='proposal';
+            if(!proposal) applyRouteWho(b, r);
+            const shown=(String(r.backend||'').toLowerCase()==='farm'||String(r.tier||'').toLowerCase()==='farm')
+              ?'FARM':String(r.tier||'').toUpperCase();
+            trace(proposal
+              ? ('Attempting '+shown+' — not yet observed')
+              : ('Routing on '+shown+' with '+(r.model||'the selected model')));
+            cardHost().appendChild(lifeNode({
+              kind:'route',
+              state:proposal?'announced':'result',
+              source:proposal?'proposal':'observation',
+              hop:r.hop, hop_index:r.hop_index,
+              tier:r.tier, model:r.model, backend:r.backend, reason:r.reason,
+              gpu_busy:r.gpu_busy, capability:(r.detail&&r.detail.capability),
+              label:proposal?'attempting farm':(shown+' '+(r.model||''))
+            })); }
+          else if(ev.kind==='progress'){
+            let prog={}; try{prog=JSON.parse(ev.data)}catch(e){prog={label:ev.data}}
+            if(prog.label) trace(prog.label);
+            const mapped=progressLifecycle(prog);
+            if(mapped){ mapped.hop=prog.hop; mapped.hop_index=prog.hop_index;
+              cardHost().appendChild(lifeNode(mapped)); } }
+          else if(ev.kind==='token'){ trace('Writing the answer'); acc+=ev.data; body.innerHTML=render(acc); }
+          else if(ev.kind==='tool'){ const t=JSON.parse(ev.data); acc=''; body.innerHTML='';
+            trace('Announced local tool: '+t.tool+' (not yet observed)');
+            const card=lifeNode({
+              kind:'tool_call', state:'announced', source:'proposal',
+              hop:t.hop, hop_index:t.hop_index,
+              tool:t.tool, label:t.tool, args:redactArgs(t.args)
+            });
+            cardHost().appendChild(card);
+            pendingToolCards.push(card); }
+          else if(ev.kind==='tool_result'){
+            const text=String(ev.data||'');
+            const isErr=/^\s*(ERROR:|REFUSED)/.test(text);
+            trace(isErr?'Observed tool error':'Observed tool result');
+            const announced=pendingToolCards.shift();
+            const toolName=(announced&&announced.dataset.tool)||'tool_result';
+            const result=lifeNode({
+              kind:'tool_result',
+              state:isErr?'error':'result',
+              source:'observation',
+              hop:announced&&announced.dataset.hop,
+              tool:toolName,
+              summary:text.replace(/\n/g,' ').slice(0,240),
+              label:toolName
+            });
+            cardHost().appendChild(result); }
+          else if(ev.kind==='media'){ try{ const art=JSON.parse(ev.data);
+            // Into the reply bubble (as a history reload does), not the tool
+            // result card: that is a collapsed <details>, which hid the stills
+            // the operator is meant to review.
+            mountMediaArtifact(b, art); if(art.filename) turnMedia++; }catch(e){} }
+          else if(ev.kind==='queued'){ const q=JSON.parse(ev.data);
+            cardHost().appendChild(lifeNode({
+              kind:'queued', state:'announced', source:'observation',
+              label:q.reason||'GPU busy', job_id:q.job_id||''
+            }));
+            setTimeout(refreshQueue,500); }
+          else if(ev.kind==='note'){
+            const mapped=classifyNote(ev.data);
+            cardHost().appendChild(lifeNode({
+              kind:mapped.kind, state:mapped.state, source:mapped.source, label:ev.data
+            }));
+            // Permission cards are not a parked SSE: the turn usually continues
+            // on CPU. Still refresh the sidebar; busy clears when the stream ends
+            // or the operator hits Stop (which orphans this epoch immediately).
+            if(mapped.kind==='waiting_for_permission') refresh(); }
+          else if(ev.kind==='error'){
+            body.innerHTML='<span class="err">'+esc(ev.data)+'</span>';
+            cardHost().appendChild(lifeNode({kind:'blocked', state:'error', source:'observation', label:ev.data}));
+            finishTrace(true); }
+          else if(ev.kind==='done'){
+            body.innerHTML=render(ev.data);
+            cardHost().appendChild(lifeNode({kind:'complete', state:'result', source:'observation', label:'Turn complete'}));
+            finishTrace(false);
+            // The operator may have walked away during a long batch: flag the
+            // finished media when they are not looking at this window.
+            if(turnMedia && operatorAway()){
+              const doneCid=cid;
+              announce(turnMedia+' new '+(turnMedia===1?'item':'items')+' ready for review in “'+chatTitle+'”',
+                false, ()=>{ if(cid!==doneCid) openChat(doneCid); else scrollToMedia(); });
+            } }
+          log.scrollTop=log.scrollHeight;
+        }catch(e){ /* one bad event must not leave Stop stuck */ }
+      }
+    }
+  }catch(e){
+    if(epoch===streamEpoch){
+      const msg=(e&&e.message)?e.message:String(e||'stream failed');
+      body.innerHTML='<span class="err">'+esc(msg)+'</span>';
+      finishTrace(true);
+    }
+  }finally{
+    // Every terminal path restores Send when this epoch still owns the button:
+    // normal done, error, empty completion, exception, client disconnect, and
+    // Stop (Stop bumps streamEpoch first so an orphaned reader does not flip
+    // a newer turn back to Send mid-flight).
+    if(epoch===streamEpoch){
+      setBusy(false);
+      turnHost=null; pendingToolCards=[];
+      finishTrace(false);
+      addRegen(); input.focus(); refresh(); updateCharCount();
+      // A render launched this turn may already be done; check promptly.
+      setTimeout(pollRenderWatch, 1500);
+    }
+  }
+}
+
+function drawAtts(){
+  const box=$('#atts'); box.innerHTML='';
+  atts.forEach((a,i)=>{
+    const d=document.createElement('div'); d.className='att';
+    const icon=a.kind==='image'?'▧':a.kind==='audio'?'♪':a.kind==='video'?'▶':'≡';
+    d.innerHTML=icon+' '+esc(a.name)+' <span>×</span>';
+    d.querySelector('span').onclick=()=>{atts.splice(i,1);drawAtts();};
+    box.appendChild(d);
+  });
+}
+
+$('#exportmd').onclick=()=>{
+  if(!cid) return;
+  const msgs=[...log.querySelectorAll('.msg')];
+  if(!msgs.length) return;
+  const lines=['# '+chatTitle,''];
+  msgs.forEach(m=>{
+    const who=(m.querySelector('.who')?.textContent||'').replace(/·.*$/,'').trim();
+    const body=(m.querySelector('.body')?.innerText||'').trim();
+    if(body) lines.push('## '+who,'',body,'');
+  });
+  const blob=new Blob([lines.join('\n')],{type:'text/markdown'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=(chatTitle.replace(/[^a-z0-9]+/gi,'_').replace(/^_|_$/g,'')||'chat')+'.md';
+  a.click(); URL.revokeObjectURL(a.href);
+};
+
+$('#attach').onclick=()=>$('#file').click();
+$('#file').onchange=async e=>{
+  for(const f of e.target.files){
+    if(f.size>75*1024*1024){ alert(f.name+' exceeds the 75 MB upload limit.'); continue; }
+    const text=/\.(txt|md|json|py|csv|log|ps1|yaml|yml)$/i.test(f.name);
+    if(text){ atts.push({name:f.name,kind:'text',content:await f.text(),size:f.size}); continue; }
+    const data=await new Promise((resolve,reject)=>{
+      const r=new FileReader(); r.onerror=()=>reject(r.error); r.onload=()=>resolve(String(r.result).split(',')[1]);
+      r.readAsDataURL(f);
+    });
+    const resp=await fetch('/api/upload',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name:f.name,type:f.type,size:f.size,data})});
+    const uploaded=await resp.json();
+    if(!resp.ok){ alert(uploaded.error||('Could not upload '+f.name)); continue; }
+    atts.push(uploaded);
+  }
+  e.target.value=''; drawAtts();
+};
+send.onclick=async()=>{
+  if(busy){
+    // Unlock Send immediately. Keep draining the orphaned SSE so the server
+    // can observe /api/stop and persist _[stopped]_ without a BrokenPipe.
+    streamEpoch++;
+    setBusy(false);
+    turnHost=null; pendingToolCards=[];
+    finishTrace(true);
+    try{
+      await fetch('/api/stop',{method:'POST',headers:{'Content-Type':'application/json'},
+                  body:JSON.stringify({id:cid})});
+    }catch(e){}
+    input.focus();
+    return;
+  }
+  ask(input.value);
+};
+input.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();ask(input.value);}
+  if(e.key==='n'&&(e.ctrlKey||e.metaKey)){e.preventDefault();cid=null;localStorage.removeItem('active_chat_id');blank();loadChats();refresh();}
+});
+input.addEventListener('input',()=>{
+  input.style.height='auto'; input.style.height=Math.min(input.scrollHeight,200)+'px';
+});
+$('#newchat').onclick=()=>{cid=null;localStorage.removeItem('active_chat_id');blank();loadChats();refresh();};
+
+async function refreshQueue(){
+  try{
+    const q=await (await fetch('/api/media_queue')).json();
+    const pill=$('#queuepill');
+    const clear=$('#clearqueue');
+    const drop=$('#queuedrop');
+    const pending=(q.pending||[]).length, processing=(q.processing||[]).length;
+    const n=pending+processing;
+    if(n>0){
+      pill.style.display='block';
+      pill.textContent='⧖ '+pending+' pending · '+processing+' running';
+    } else {
+      pill.style.display='none';
+    }
+    clear.style.display=pending>0?'block':'none';
+    clear.disabled=busy||pending===0;
+    const rows=[...(q.processing||[]),...(q.pending||[])];
+    if(!rows.length){ drop.innerHTML='<div class="qmeta">nothing queued</div>'; }
+    else { drop.innerHTML=rows.map(job=>{
+      const p=job.progress||{}, stage=esc(p.stage||job.status||'pending');
+      const count=p.total!=null?' '+esc(String(p.done||0))+'/'+esc(String(p.total)):'';
+      const wait=job.waiting_reason?'<div class="qwait">'+esc(job.waiting_reason)+'</div>':'';
+      const action='<button class="qcancel" data-job="'+esc(job.id)+'">✕</button>';
+      return '<div class="qrow">'+action+'<b>'+esc(job.name||job.kind||'media')+'</b><div class="qmeta">'+stage+count+' · <span data-elapsed="'+Number(job.elapsed_seconds||0)+'">'+fmtSeconds(job.elapsed_seconds||0)+'</span></div>'+wait+'</div>';
+    }).join(''); }
+    drop.querySelectorAll('.qcancel').forEach(btn=>btn.onclick=()=>cancelQueueJob(btn.dataset.job));
+    restampQueuedFromQueue(q);
+  }catch(e){}
+}
+function restampQueuedFromQueue(q){
+  const byId={};
+  ['done','failed','cancelled'].forEach(b=>(q[b]||[]).forEach(j=>{ if(j&&j.id) byId[j.id]=b; }));
+  document.querySelectorAll('.life[data-kind=queued][data-job]').forEach(el=>{
+    const st=byId[el.dataset.job];
+    if(!st || el.dataset.state==='result' || el.dataset.state==='error') return;
+    const state=st==='done'?'result':'error';
+    el.dataset.state=state;
+    el.dataset.source='observation';
+    const mapped=stateStamp(state,'observation');
+    const stamp=el.querySelector('.stamp');
+    if(stamp){ stamp.className='stamp '+mapped.cls; stamp.textContent=mapped.text; }
+  });
+}
+function fmtSeconds(value){const n=Math.max(0,Math.floor(Number(value)||0));return n<60?'waiting '+n+'s':'waiting '+Math.floor(n/60)+'m '+(n%60)+'s';}
+function tickQueueTimers(){
+  document.querySelectorAll('[data-elapsed]').forEach(el=>{
+    el.dataset.elapsed=String(Math.max(0,Number(el.dataset.elapsed||0)+1));
+    el.textContent=fmtSeconds(el.dataset.elapsed);
+  });
+}
+setInterval(tickQueueTimers,1000);
+async function cancelQueueJob(id){
+  try{const response=await fetch('/api/media_queue/cancel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});
+    const r=await response.json(); actCard('<b>media queue</b> '+esc(r.message||r.error||'Queue updated.'));}
+  catch(e){actCard('<b>media queue</b> <span class="err">'+esc(String(e))+'</span>');}
+  refreshQueue();
+}
+$('#queuepill').onclick=()=>{ $('#queuedrop').classList.toggle('open'); refreshQueue(); };
+$('#clearqueue').onclick=async()=>{
+  if(!confirm('Clear pending media jobs? Their job records will be kept under cancelled; no uploaded media is deleted. Active jobs, if any, continue.')) return;
+  try{
+    const r=await (await fetch('/api/clear_media_queue',{method:'POST',
+      headers:{'Content-Type':'application/json'},body:'{}'})).json();
+    actCard('<b>media queue</b> '+esc(r.message||'Queue updated.'));
+  }catch(e){actCard('<b>media queue</b> <span class="err">'+esc(String(e))+'</span>');}
+  refreshQueue();
+};
+
+// ── render completion announcements ──────────────────────────────────────────
+// A background render (render_story_image / comfy_generate) can land after the
+// agent's reply ended. /api/render_watch resolves it server-side (and saves the
+// card onto that chat's reply); here it is mounted and announced with a toast
+// plus an unread count in the tab title, so a backgrounded window shows it.
+const BASE_TITLE=document.title;
+let unreadRenders=0;
+function operatorAway(){ return document.hidden || !document.hasFocus(); }
+function clearUnread(){ unreadRenders=0; document.title=BASE_TITLE; }
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden && document.hasFocus()) clearUnread(); });
+window.addEventListener('focus',clearUnread);
+function scrollToMedia(){
+  const cards=log.querySelectorAll('.media-card');
+  if(cards.length) cards[cards.length-1].scrollIntoView({behavior:'smooth',block:'center'});
+}
+function announce(text, isErr, onOpen){
+  if(operatorAway()){ unreadRenders++; document.title='('+unreadRenders+') ● '+BASE_TITLE; }
+  const box=$('#toasts');
+  while(box.children.length>=4) box.firstChild.remove();
+  const t=document.createElement('div'); t.className='toast'+(isErr?' bad':'');
+  const msg=document.createElement('span'); msg.textContent=text;
+  const x=document.createElement('button'); x.textContent='×'; x.title='Dismiss';
+  x.onclick=e=>{ e.stopPropagation(); t.remove(); };
+  t.onclick=()=>{ t.remove(); clearUnread(); if(onOpen) onOpen(); };
+  t.append(msg,x); box.appendChild(t);
+  t.dataset.seen='0';
+}
+// A toast only counts down while the operator can actually see it.
+setInterval(()=>{ if(operatorAway()) return;
+  document.querySelectorAll('#toasts .toast').forEach(t=>{
+    t.dataset.seen=String(Number(t.dataset.seen||0)+1);
+    if(Number(t.dataset.seen)>=25) t.remove(); }); },1000);
+const seenWatches=new Set(JSON.parse(localStorage.getItem('seen_render_watches')||'[]'));
+async function pollRenderWatch(){
+  let r; try{ r=await (await fetch('/api/render_watch')).json(); }catch(e){ return; }
+  let changed=false;
+  (r.watches||[]).forEach(w=>{
+    if(!w || !w.id || w.status==='running' || seenWatches.has(w.id)) return;
+    seenWatches.add(w.id); changed=true;
+    const arts=Array.isArray(w.artifacts)?w.artifacts:[];
+    // complete with nothing new = the turn itself already showed the file.
+    if(w.status==='complete' && !arts.length) return;
+    if(w.cid===cid){
+      const agents=log.querySelectorAll('.msg:not(.you)');
+      const host=agents.length?agents[agents.length-1]:wrap();
+      arts.forEach(a=>mountMediaArtifact(host,a));
+    }
+    const failed=w.status!=='complete';
+    const files=arts.filter(a=>a.filename);
+    const kind=files.some(a=>a.kind==='video')?'video':'image';
+    const what=failed
+      ? ('Render '+(w.status==='expired'?'stopped reporting':'failed')+(w.label?': '+w.label:''))
+      : (files.length+' '+kind+(files.length===1?'':'s')+' ready for review'+(w.label?' — '+w.label:'')
+         // Only a partial chat video batch completes with a note ("1 of 3 renders done; …").
+         +(w.note?' ('+String(w.note).split(';')[0]+')':''));
+    const where=w.cid===cid?'':' in “'+(w.title||'another chat')+'”';
+    announce(what+where, failed, ()=>{ if(w.cid!==cid) openChat(w.cid).then(scrollToMedia); else scrollToMedia(); });
+  });
+  if(changed) localStorage.setItem('seen_render_watches', JSON.stringify([...seenWatches].slice(-200)));
+}
+
+// Restore ctx ceiling from localStorage
+(function(){const saved=localStorage.getItem('ctxceil')||'';
+  const sel=$('#ctxceil');
+  if([...sel.options].some(o=>o.value===saved)) sel.value=saved;})();
+$('#ctxceil').onchange=()=>localStorage.setItem('ctxceil',$('#ctxceil').value);
+
+$('#yieldgpu').onclick=async()=>{
+  try{
+    const r=await (await fetch('/api/yield_gpu',{method:'POST',
+      headers:{'Content-Type':'application/json'},body:'{}'})).json();
+    actCard('<b>yield gpu</b> '+esc(r.message)+(r.vram_mb!=null?' · '+r.vram_mb+' MB used after':''));
+  }catch(e){actCard('<b>yield gpu</b> <span class="err">'+esc(String(e))+'</span>');}
+};
+
+$('#stopcomfy').onclick=async()=>{
+  if(!confirm('Stop all active ComfyUI render processes? This interrupts the current render and releases the batch lock. Prompts, uploads, source media, and existing outputs are preserved.')) return;
+  try{
+    const r=await (await fetch('/api/stop_comfyui',{method:'POST',
+      headers:{'Content-Type':'application/json'},body:'{}'})).json();
+    const state=r.gpu_busy ? ('GPU still busy: '+(r.gpu_reason||'unknown')) : 'GPU is available for normal routing.';
+    const elevation=r.elevation_requested ? ' Windows is asking for permission to finish stopping the elevated backend.' : '';
+    actCard('<b>stop ComfyUI</b> '+esc(state)+' · stopped '+esc((r.stopped_pids||[]).join(', ')||'no matching process')+esc(elevation));
+    refresh(); refreshQueue();
+  }catch(e){actCard('<b>stop ComfyUI</b> <span class="err">'+esc(String(e))+'</span>');}
+};
+
+blank(); loadChats().then(()=>{ if(cid) openChat(cid); }); refresh(); refreshQueue(); setInterval(refresh,15000); setInterval(refreshQueue,30000);
+setInterval(()=>{ if(document.querySelector('.life[data-kind=queued][data-state=announced]')) refreshQueue(); },5000);
+pollRenderWatch(); setInterval(pollRenderWatch,10000);
+input.focus();
+</script>

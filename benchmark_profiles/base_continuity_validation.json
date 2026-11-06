@@ -1,0 +1,18 @@
+{
+  "profile_id": "base_continuity_validation",
+  "label": "RTX 5080 starting profile — continuity validation",
+  "gpu_class": "rtx_5080",
+  "starting_point_only": true,
+  "measured_guarantee": false,
+  "width": 864,
+  "height": 480,
+  "frames": 124,
+  "steps": 20,
+  "sampler_name": "res_multistep",
+  "scheduler": "simple",
+  "denoise": 1.0,
+  "family": "minimax_h3",
+  "backend_profile": "h3_distilled",
+  "fps": 24.0,
+  "notes": "Audit §12 starting point for continuity cut validation. Not a measured wall-clock guarantee."
+}

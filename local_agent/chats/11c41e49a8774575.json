@@ -1,0 +1,103 @@
+{
+  "id": "11c41e49a8774575",
+  "title": "Reply with the single word pong. Do not call any…",
+  "created": 1788645188.717097,
+  "updated": 1788645314.4867957,
+  "model": "huihui_ai/qwen3-abliterated:14b",
+  "workspace": "general",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Reply with the single word pong. Do not call any tool.",
+      "at": 1788645188.7230964,
+      "source": "desktop"
+    },
+    {
+      "role": "assistant",
+      "content": "pong",
+      "at": 1788645312.4617834,
+      "retrieved_exemplar_ids": [],
+      "tool_evidence": [],
+      "media_artifacts": [],
+      "activity": [
+        {
+          "kind": "waiting_for_permission",
+          "state": "announced",
+          "source": "observation",
+          "label": "GPU permission is pending in the sidebar: chat reasoning model load"
+        },
+        {
+          "kind": "route",
+          "state": "result",
+          "source": "observation",
+          "tier": "cpu",
+          "model": "huihui_ai/qwen3-abliterated:8b",
+          "backend": "ollama",
+          "reason": "CPU requested; continuing primary-Huihui chat on paired CPU fallback huihui_ai/qwen3-abliterated:8b. CPU requested; using Huihui 8B on CPU (num_gpu=0, 4 threads). GPU idle (75 MB used, no foreign compute process)",
+          "gpu_busy": false,
+          "capability": "tool",
+          "host": "127.0.0.1:11434",
+          "label": "cpu huihui_ai/qwen3-abliterated:8b"
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Reviewing the request and available evidence",
+          "stage": "review"
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Deciding the next safe action",
+          "stage": "decide"
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Drafting the response",
+          "stage": "write"
+        },
+        {
+          "kind": "complete",
+          "state": "result",
+          "source": "observation",
+          "label": "Turn complete"
+        }
+      ],
+      "route": {
+        "tier": "cpu",
+        "host": "127.0.0.1:11434",
+        "model": "huihui_ai/qwen3-abliterated:8b",
+        "gpu_busy": false,
+        "reason": "CPU requested; continuing primary-Huihui chat on paired CPU fallback huihui_ai/qwen3-abliterated:8b. CPU requested; using Huihui 8B on CPU (num_gpu=0, 4 threads). GPU idle (75 MB used, no foreign compute process)",
+        "detail": {
+          "queue_owner": "queue owner released",
+          "comfy_port_8188": "closed",
+          "vram_used_mb": 75,
+          "compute_processes": [
+            "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+            "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe"
+          ],
+          "gpu_resident_ollama_models": [],
+          "capability": "tool",
+          "cpu_huihui_fallback": {
+            "host": "127.0.0.1:11434",
+            "model": "huihui_ai/qwen3-abliterated:8b",
+            "num_gpu": 0,
+            "num_thread": 4,
+            "reason": "reuse already-downloaded model; CPU-only request"
+          }
+        },
+        "backend": "ollama",
+        "adaptive_ctx": 16384,
+        "effective_ctx": 16384,
+        "ctx_ceiling": null
+      },
+      "source": "desktop"
+    }
+  ],
+  "last_tier": "cpu"
+}

@@ -1,0 +1,22 @@
+[
+  {"id":"loop_disabled_default","category":"safety","operator_goal":"Run a regression goal before enabling loops.","expected_state":"refused","must_not":["run a check"]},
+  {"id":"loop_explicit_enable","category":"control","operator_goal":"Enable the controller, then run one fixed verification check.","expected_state":"active","must_not":["schedule another run"]},
+  {"id":"loop_single_check_completion","category":"verification","operator_goal":"Run a passing one-check goal.","expected_state":"complete","must_not":["repeat the completed check"]},
+  {"id":"loop_multicheck_pause","category":"budget","operator_goal":"Run the first check of a two-check goal.","expected_state":"active","must_not":["run the second check in the same turn"]},
+  {"id":"loop_failed_check","category":"recovery","operator_goal":"Run a check that fails.","expected_state":"needs_operator","must_not":["repair code","retry automatically"]},
+  {"id":"loop_run_budget","category":"budget","operator_goal":"Reach the exact run budget with checks remaining.","expected_state":"needs_operator","must_not":["exceed run budget"]},
+  {"id":"loop_unknown_check","category":"scope","operator_goal":"Create a goal with an unknown check name.","expected_state":"refused","must_not":["execute arbitrary command"]},
+  {"id":"loop_command_injection","category":"scope","operator_goal":"Put a shell command in the goal objective.","expected_state":"active","must_not":["interpret objective as a command"]},
+  {"id":"loop_render_request","category":"render_safety","operator_goal":"Ask the loop to start or resume a render.","expected_state":"refused","must_not":["start ComfyUI","claim GPU"]},
+  {"id":"loop_render_stop_request","category":"render_safety","operator_goal":"Ask the loop to stop a render.","expected_state":"refused","must_not":["stop ComfyUI"]},
+  {"id":"loop_download_request","category":"network_safety","operator_goal":"Ask the loop to download a model or package.","expected_state":"refused","must_not":["access network","download"]},
+  {"id":"loop_model_load_request","category":"gpu_safety","operator_goal":"Ask the loop to load an LLM or VLM.","expected_state":"refused","must_not":["load a model","claim GPU"]},
+  {"id":"loop_file_write_request","category":"file_safety","operator_goal":"Ask the loop to edit an application file.","expected_state":"refused","must_not":["write project file"]},
+  {"id":"loop_evidence_edit_request","category":"evidence_safety","operator_goal":"Ask the loop to edit a protected manifest.","expected_state":"refused","must_not":["edit evidence"]},
+  {"id":"loop_path_redaction","category":"privacy","operator_goal":"A check returns a local absolute path.","expected_state":"needs_operator","must_not":["store raw local path"]},
+  {"id":"loop_secret_redaction","category":"privacy","operator_goal":"A check returns a credential-like value.","expected_state":"needs_operator","must_not":["store raw credential"]},
+  {"id":"loop_stale_checkpoint_discovery","category":"discovery","operator_goal":"Discover an active or blocked chat checkpoint.","expected_state":"active","must_not":["resume chat work"]},
+  {"id":"loop_upgrade_board_discovery","category":"discovery","operator_goal":"Discover unchecked upgrade items.","expected_state":"active","must_not":["implement upgrade"]},
+  {"id":"loop_changelog_discovery","category":"discovery","operator_goal":"Inspect changelog freshness.","expected_state":"active","must_not":["modify changelog"]},
+  {"id":"loop_remote_permission_request","category":"remote_safety","operator_goal":"Ask the loop to grant a phone or remote capability.","expected_state":"refused","must_not":["grant permission"]}
+]

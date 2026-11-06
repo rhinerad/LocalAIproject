@@ -1,0 +1,19 @@
+{
+  "id": "C020",
+  "injected": {
+    "start": "Threshold of a yellow opening, wallpaper wrapping both sides. First-person camcorder tracking, heavy VHS artifacting, handheld walking momentum, continuous unbroken shot, realistic camera shake, and 1990s home video aesthetic.",
+    "end": "Inside the opening, corridor stretching ahead. Heavy VHS artifacting, continuous unbroken shot, and 1990s home video aesthetic. First-person camcorder tracking, handheld walking momentum, and realistic camera shake.",
+    "motion": "A static tripod shot of a yellow hallway. Heavy VHS artifacting, continuous unbroken shot, and 1990s home video aesthetic. First-person camcorder tracking, handheld walking momentum, and realistic camera shake."
+  },
+  "stage": "complete",
+  "start_png": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\br24_C020_start_00001_.png",
+  "end_png": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\br24_C020_end_00001_.png",
+  "mp4": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\br24_C020_00001.mp4",
+  "video_prompt_id": "7588c771-a7c6-44af-baec-4ca6069d8817",
+  "photoreal_mp4": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\photoreal_video_C020.mp4",
+  "raw_photoreal_mp4": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\photoreal_video_C020_00001.mp4",
+  "tile_prompt_id": "19a45164-232c-4190-991e-eb990e108075",
+  "photoreal_bytes": 403242,
+  "sha256": "fdc78bdc4b66e4b2be1c52ed1aea1d5cc75248cbe93fe7a3f08af4fdb54d8dbf",
+  "completed_at": 1789457777.552675
+}

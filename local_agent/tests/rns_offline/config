@@ -1,0 +1,9 @@
+[reticulum]
+enable_transport = No
+share_instance = No
+instance_name = equal_shares_lxmf_test
+
+[logging]
+loglevel = 3
+
+[interfaces]

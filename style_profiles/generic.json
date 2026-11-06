@@ -1,0 +1,17 @@
+{
+  "profile_id": "generic",
+  "display_name": "Generic",
+  "category": "generic",
+  "intent_prefix": "",
+  "constraints": [
+    "No text, no watermark, no UI overlay."
+  ],
+  "focus": "scene, motion_smoothness",
+  "vhs_finishing": {
+    "enabled": false,
+    "rec_overlay": false
+  },
+  "backend_profile": "h3_distilled",
+  "quality_tier_default": "standard",
+  "motion_complexity_default": "moderate"
+}

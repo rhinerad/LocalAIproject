@@ -1,0 +1,20 @@
+subject_definitions:
+<Subject 1> is the young woman in <Picture 1>, with long dark hair and a blue cardigan.
+<Subject 2> is the park setting in <Picture 2>, featuring a stone bench and autumn trees.
+
+summary:
+[reference generation] The target video shows <Subject 1> leaving <Subject 2> at the end of the day.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1]): fully_preserved - the woman's face, hair, and clothing are retained.
+<Subject 2> (appears in [Shot 1]): fully_preserved - the park setting, bench, and trees are retained.
+
+detailed_description:
+The target video is in a naturalistic cinematic style with low golden evening light.
+[Shot 1] A medium-wide shot shows <Subject 2> bathed in golden hour light. <Subject 1> rises from the bench, picks up her bag, and walks toward the camera until she exits frame right. The camera stays static.
+
+overall_soundscape:
+Late-day outdoor ambience — quieter than earlier, a single bird call.
+
+non_diegetic_music:
+N/A

@@ -1,0 +1,30 @@
+{
+  "title": "Backrooms 24-clip Mode B hallway sequence (C016-C039)",
+  "notes": "Post-fall handheld POV. Actor body never shown. Used by batch_generate_backrooms.py.",
+  "clips": [
+    {"id": "C016", "start": "Static low tilted 4:3 consumer-camcorder POV on empty Level 0 floor. Damp brown-beige carpet, sickly yellow wallpaper.", "end": "Same floor plate, slightly more of the yellow wall entering frame.", "motion": "[First-person POV, shaky tracking] Camera settles on the damp carpet then lifts toward the hallway."},
+    {"id": "C017", "start": "View drops low; a hand presses into damp carpet at the bottom of frame.", "end": "View lifts off the carpet toward a yellow corridor opening.", "motion": "[Handheld POV] Hand pushes off the carpet; camera rises and faces the corridor."},
+    {"id": "C018", "start": "Chest-height forward view into an empty yellow room; sleeve cuff at lower edge.", "end": "The same room, one doorway larger in frame.", "motion": "[Shaky tracking] Slow walk toward the nearest doorway."},
+    {"id": "C019", "start": "Chest-height forward-facing empty yellow room, sleeve cuff visible.", "end": "Doorway fills the frame.", "motion": "[Handheld] Walks toward the opening; breathing on the track."},
+    {"id": "C020", "start": "Threshold of a yellow opening, wallpaper wrapping both sides.", "end": "Inside the opening, corridor stretching ahead.", "motion": "[POV] View advances into the center opening, walls closing in."},
+    {"id": "C021", "start": "Low shaky view down a narrow yellow corridor, floor and wallpaper filling frame.", "end": "Far fluorescent fixture growing larger.", "motion": "[Low handheld walk] Bounce forward through the narrow corridor."},
+    {"id": "C022", "start": "Corridor continues; a dark side opening on the left.", "end": "The side opening slides past.", "motion": "[Tracking] Walk past the dark alcove without entering."},
+    {"id": "C023", "start": "View facing backward down the corridor while moving; a hand gestures into frame.", "end": "Frame lurches down; a hand slaps the wall.", "motion": "[Handheld] Walks backward talking, then lurches and catches the wall."},
+    {"id": "C024", "start": "Forward again, yellow wallpaper and damp carpet.", "end": "A T-junction ahead.", "motion": "[Shaky tracking] Resume forward walk toward the junction."},
+    {"id": "C025", "start": "T-junction, both arms of the hall identical yellow.", "end": "Right arm chosen, wall sliding past.", "motion": "[POV] Pause, then turn right into the matching corridor."},
+    {"id": "C026", "start": "Long empty hall, repeating fluorescent rectangles.", "end": "The fluorescents recede; carpet wetter.", "motion": "[Continuous walk] Forward momentum, lights passing overhead."},
+    {"id": "C027", "start": "A stain on the wallpaper catching the light.", "end": "The stain fills more of frame, still just wallpaper.", "motion": "[Slow push] Camera eases toward the stained wallpaper."},
+    {"id": "C028", "start": "Pull back from the stain to the corridor axis.", "end": "Corridor empty again.", "motion": "[Handheld] Retreat from the wall and continue walking."},
+    {"id": "C029", "start": "Wider yellow room with several pillars.", "end": "A pillar passing on the left.", "motion": "[Tracking] Move through the pillar room, pillars left and right."},
+    {"id": "C030", "start": "Between two pillars, carpet dark with damp.", "end": "Far wall of the pillar room.", "motion": "[Walk] Cross the pillar room toward the far wall."},
+    {"id": "C031", "start": "Another corridor mouth.", "end": "Inside, ceiling lower.", "motion": "[POV] Enter the lower corridor."},
+    {"id": "C032", "start": "Faster bounce, walls streaking at the edges.", "end": "A corner approaching fast.", "motion": "[Handheld bounce] Walk faster; camera bouncing."},
+    {"id": "C033", "start": "Corner, yellow wrapping around.", "end": "New stretch of identical hall.", "motion": "[Turn] Swing around the corner without cutting."},
+    {"id": "C034", "start": "Distant darkness at the far end.", "end": "The darkness slightly closer.", "motion": "[Cautious walk] Approach the dark end slowly."},
+    {"id": "C035", "start": "Darkness still distant; fluorescents dying ahead.", "end": "A step closer, lights flickering harder.", "motion": "[Slow track] Continue toward the dark, flicker increasing."},
+    {"id": "C036", "start": "View rises, darkness filling more of frame.", "end": "View retreats; darkness shrinks.", "motion": "[Handheld] Raise the camera and walk backward away from the darkness."},
+    {"id": "C037", "start": "Turned around, original corridor behind.", "end": "Walking the way we came.", "motion": "[Reverse walk] Turn and walk back, still handheld."},
+    {"id": "C038", "start": "Pillar room again from the opposite side.", "end": "Exit back to the first corridor.", "motion": "[Tracking] Recross the pillar room."},
+    {"id": "C039", "start": "Original narrow hall, slightly more scuffed.", "end": "Dead-end wall ahead, yellow and close.", "motion": "[Shaky tracking] Walk until the dead-end wall fills the frame."}
+  ]
+}

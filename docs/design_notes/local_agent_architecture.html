@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>How the Local Agent Works</title>
+<style>
+  :root {
+    --bg: #14181f;
+    --panel: #1c2230;
+    --panel2: #232b3c;
+    --line: #3a4457;
+    --text: #e6e9ef;
+    --muted: #9aa5b8;
+    --accent: #5eb3ff;
+    --accent2: #7ee787;
+    --accent3: #ffb454;
+    --accent4: #ff7b9c;
+    --accent5: #c792ea;
+    --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 90px; }
+  h1 { font-size: 1.8rem; margin: 0 0 6px; }
+  .subtitle { color: var(--muted); margin: 0 0 30px; font-size: 1rem; }
+  .diagram-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 40px;
+    overflow-x: auto;
+  }
+  svg { display: block; margin: 0 auto; }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 22px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .legend span.dot {
+    display: inline-block;
+    width: 11px; height: 11px;
+    border-radius: 3px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  section.part {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 18px;
+  }
+  section.part.safety { border-left-color: var(--accent4); }
+  section.part.backend { border-left-color: var(--accent3); }
+  section.part.tools { border-left-color: var(--accent2); }
+  section.part.memory { border-left-color: var(--accent5); }
+  section.part h2 {
+    font-size: 1.05rem;
+    margin: 0 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  section.part .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--panel2);
+    color: var(--text);
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  section.part p { margin: 6px 0; color: var(--text); }
+  section.part p.small { color: var(--muted); font-size: 0.88rem; }
+  code, .file {
+    font-family: var(--mono);
+    background: var(--panel2);
+    padding: 1px 6px;
+    border-radius: 5px;
+    font-size: 0.86em;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  h2.group-title {
+    font-size: 1.15rem;
+    margin: 42px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+    color: var(--text);
+  }
+  .status-note {
+    background: #2a2116;
+    border: 1px solid #5a4620;
+    color: #e8c98a;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    margin-bottom: 30px;
+  }
+  .status-note b { color: #ffcf7a; }
+  footer {
+    margin-top: 50px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>How the Local Agent Works</h1>
+  <p class="subtitle">A map of <code class="file">local_agent/</code> as it actually stands today — one request's journey from "you typed a message" to "you got an answer," and the systems standing around that path.</p>
+
+  <div class="status-note">
+    <b>Current priority:</b> this is a general-purpose desktop assistant first. Equal Shares (the film project) is one optional, currently paused specialist mode it can load into &mdash; not what it's for by default.
+  </div>
+
+  <div class="diagram-card">
+    <svg viewBox="0 0 1000 1800" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, Segoe UI, sans-serif">
+      <defs>
+        <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 Z" fill="#7c8aa5"/>
+        </marker>
+        <marker id="arrowRed" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 Z" fill="#ff7b9c"/>
+        </marker>
+      </defs>
+
+      <!-- ===== ROW: Interfaces ===== -->
+      <rect x="60" y="20" width="230" height="60" rx="10" fill="#233047" stroke="#5eb3ff" stroke-width="1.5"/>
+      <text x="175" y="45" text-anchor="middle" fill="#e6e9ef" font-size="14" font-weight="600">Desktop GUI</text>
+      <text x="175" y="63" text-anchor="middle" fill="#9aa5b8" font-size="11">browser, 127.0.0.1:8760</text>
+
+      <rect x="710" y="20" width="230" height="60" rx="10" fill="#233047" stroke="#5eb3ff" stroke-width="1.5"/>
+      <text x="825" y="45" text-anchor="middle" fill="#e6e9ef" font-size="14" font-weight="600">Phone (Sideband)</text>
+      <text x="825" y="63" text-anchor="middle" fill="#9aa5b8" font-size="11">LXMF / Reticulum bridge</text>
+
+      <line x1="175" y1="80" x2="175" y2="110" stroke="#7c8aa5" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <line x1="825" y1="80" x2="825" y2="110" stroke="#7c8aa5" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <line x1="175" y1="110" x2="500" y2="110" stroke="#7c8aa5" stroke-width="1.5"/>
+      <line x1="825" y1="110" x2="500" y2="110" stroke="#7c8aa5" stroke-width="1.5"/>
+
+      <!-- server.py -->
+      <rect x="330" y="110" width="340" height="60" rx="10" fill="#233047" stroke="#5eb3ff" stroke-width="1.5"/>
+      <text x="500" y="135" text-anchor="middle" fill="#e6e9ef" font-size="14" font-weight="600">server.py</text>
+      <text x="500" y="153" text-anchor="middle" fill="#9aa5b8" font-size="11">stdlib HTTP + SSE streaming, one process</text>
+
+      <line x1="500" y1="170" x2="500" y2="200" stroke="#7c8aa5" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- agent.py big box -->
+      <rect x="120" y="200" width="760" height="230" rx="12" fill="#1c2230" stroke="#5eb3ff" stroke-width="2"/>
+      <text x="500" y="228" text-anchor="middle" fill="#e6e9ef" font-size="15" font-weight="700">agent.py &mdash; the turn loop</text>
+      <text x="500" y="246" text-anchor="middle" fill="#9aa5b8" font-size="11">message -&gt; scope &amp; safety checks -&gt; route -&gt; model -&gt; tool calls -&gt; answer</text>
+
+      <rect x="145" y="262" width="210" height="50" rx="8" fill="#232b3c" stroke="#ff7b9c" stroke-width="1.2"/>
+      <text x="250" y="282" text-anchor="middle" fill="#e6e9ef" font-size="12" font-weight="600">Safety gates first</text>
+      <text x="250" y="298" text-anchor="middle" fill="#9aa5b8" font-size="10">access-bypass refusal,</text>
+      <text x="250" y="309" text-anchor="middle" fill="#9aa5b8" font-size="10">scope boundary, stop/render intent</text>
+
+      <rect x="375" y="262" width="250" height="50" rx="8" fill="#232b3c" stroke="#c792ea" stroke-width="1.2"/>
+      <text x="500" y="282" text-anchor="middle" fill="#e6e9ef" font-size="12" font-weight="600">Context prefetch</text>
+      <text x="500" y="298" text-anchor="middle" fill="#9aa5b8" font-size="10">task checkpoint, prior chats, project docs,</text>
+      <text x="500" y="309" text-anchor="middle" fill="#9aa5b8" font-size="10">exemplars, URL evidence</text>
+
+      <rect x="645" y="262" width="210" height="50" rx="8" fill="#232b3c" stroke="#5eb3ff" stroke-width="1.2"/>
+      <text x="750" y="282" text-anchor="middle" fill="#e6e9ef" font-size="12" font-weight="600">GPU permission</text>
+      <text x="750" y="298" text-anchor="middle" fill="#9aa5b8" font-size="10">ask-every-time gate before</text>
+      <text x="750" y="309" text-anchor="middle" fill="#9aa5b8" font-size="10">a chat model loads onto the card</text>
+
+      <line x1="250" y1="312" x2="250" y2="330" stroke="#7c8aa5" stroke-width="1.2"/>
+      <line x1="500" y1="312" x2="500" y2="330" stroke="#7c8aa5" stroke-width="1.2"/>
+      <line x1="750" y1="312" x2="750" y2="330" stroke="#7c8aa5" stroke-width="1.2"/>
+      <line x1="250" y1="330" x2="750" y2="330" stroke="#7c8aa5" stroke-width="1.2"/>
+      <line x1="500" y1="330" x2="500" y2="345" stroke="#7c8aa5" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <line x1="500" y1="430" x2="500" y2="460" stroke="#7c8aa5" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- ===== THE AGENTIC LOOP ===== -->
+      <text x="500" y="476" text-anchor="middle" fill="#5eb3ff" font-size="12.5" font-weight="700">THE AGENTIC LOOP</text>
+      <text x="500" y="491" text-anchor="middle" fill="#9aa5b8" font-size="10.5">router re-decides the backend every hop; the loop exits the moment the model stops calling tools, or at the hop cap</text>
+
+      <rect x="40" y="502" width="920" height="418" rx="14" fill="none" stroke="#5eb3ff" stroke-width="1.6" stroke-dasharray="7,5"/>
+
+      <!-- router.py -->
+      <rect x="280" y="518" width="440" height="60" rx="10" fill="#233047" stroke="#ffb454" stroke-width="1.5"/>
+      <text x="500" y="543" text-anchor="middle" fill="#e6e9ef" font-size="14" font-weight="600">router.py &mdash; decide(), re-run every hop</text>
+      <text x="500" y="561" text-anchor="middle" fill="#9aa5b8" font-size="11">is the GPU idle, busy, or reserved? which model, which host, this time?</text>
+
+      <line x1="360" y1="578" x2="180" y2="623" stroke="#7c8aa5" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <line x1="500" y1="578" x2="500" y2="623" stroke="#7c8aa5" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <line x1="640" y1="578" x2="820" y2="623" stroke="#7c8aa5" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- three backends -->
+      <rect x="60" y="623" width="240" height="70" rx="10" fill="#2a2410" stroke="#ffb454" stroke-width="1.5"/>
+      <text x="180" y="646" text-anchor="middle" fill="#e6e9ef" font-size="13" font-weight="600">GPU Ollama</text>
+      <text x="180" y="664" text-anchor="middle" fill="#9aa5b8" font-size="10">Huihui 14B (idle GPU),</text>
+      <text x="180" y="677" text-anchor="middle" fill="#9aa5b8" font-size="10">8B fallback, opt-in Heretic</text>
+
+      <rect x="380" y="623" width="240" height="70" rx="10" fill="#2a2410" stroke="#ffb454" stroke-width="1.5"/>
+      <text x="500" y="646" text-anchor="middle" fill="#e6e9ef" font-size="13" font-weight="600">CPU Ollama</text>
+      <text x="500" y="664" text-anchor="middle" fill="#9aa5b8" font-size="10">Huihui 8B fallback &mdash;</text>
+      <text x="500" y="677" text-anchor="middle" fill="#9aa5b8" font-size="10">used whenever a render owns the GPU</text>
+
+      <rect x="700" y="623" width="240" height="70" rx="10" fill="#2a2410" stroke="#ffb454" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <text x="820" y="646" text-anchor="middle" fill="#e6e9ef" font-size="13" font-weight="600">PowerInfer (opt-in)</text>
+      <text x="820" y="664" text-anchor="middle" fill="#9aa5b8" font-size="10">GPU-only, text-only, never a</text>
+      <text x="820" y="677" text-anchor="middle" fill="#9aa5b8" font-size="10">silent substitute &mdash; no accepted model yet</text>
+
+      <text x="500" y="708" text-anchor="middle" fill="#9aa5b8" font-size="10" font-style="italic">the chosen model generates this hop's turn</text>
+
+      <line x1="180" y1="693" x2="180" y2="705" stroke="#7c8aa5" stroke-width="1.2"/>
+      <line x1="500" y1="693" x2="500" y2="705" stroke="#7c8aa5" stroke-width="1.2"/>
+      <line x1="820" y1="693" x2="820" y2="705" stroke="#7c8aa5" stroke-width="1.2"/>
+      <line x1="180" y1="716" x2="820" y2="716" stroke="#7c8aa5" stroke-width="1.2"/>
+      <line x1="180" y1="705" x2="180" y2="716" stroke="#7c8aa5" stroke-width="1.2"/>
+      <line x1="820" y1="705" x2="820" y2="716" stroke="#7c8aa5" stroke-width="1.2"/>
+      <line x1="500" y1="716" x2="500" y2="726" stroke="#7c8aa5" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- decision diamond -->
+      <polygon points="500,726 565,756 500,786 435,756" fill="#232b3c" stroke="#5eb3ff" stroke-width="1.6"/>
+      <text x="500" y="752" text-anchor="middle" fill="#e6e9ef" font-size="10.5" font-weight="600">tool call in</text>
+      <text x="500" y="764" text-anchor="middle" fill="#e6e9ef" font-size="10.5" font-weight="600">the output?</text>
+
+      <text x="600" y="748" text-anchor="middle" fill="#7ee787" font-size="10.5" font-weight="700">yes</text>
+      <text x="515" y="808" text-anchor="middle" fill="#ff7b9c" font-size="10.5" font-weight="700">no</text>
+
+      <!-- YES branch: run the tool -->
+      <line x1="565" y1="756" x2="698" y2="756" stroke="#7ee787" stroke-width="1.6" marker-end="url(#arrow)"/>
+      <rect x="700" y="725" width="220" height="89" rx="10" fill="#1a2e20" stroke="#7ee787" stroke-width="1.6"/>
+      <text x="810" y="745" text-anchor="middle" fill="#e6e9ef" font-size="12" font-weight="700">tools.py</text>
+      <text x="810" y="758" text-anchor="middle" fill="#9aa5b8" font-size="9">run the one named, whitelisted</text>
+      <text x="810" y="769" text-anchor="middle" fill="#9aa5b8" font-size="9">tool &mdash; never a raw command:</text>
+      <text x="810" y="784" text-anchor="middle" fill="#7ee787" font-size="8.5">files/code &middot; web &middot; media &middot; Sonic Pi &middot; guarded render</text>
+      <text x="810" y="800" text-anchor="middle" fill="#c792ea" font-size="8.5">too large to inline? read_artifact pages it back</text>
+
+      <!-- loop-back arrow: result feeds the next hop -->
+      <path d="M920,745 C 953,745 953,548 720,548" stroke="#5eb3ff" stroke-width="1.6" fill="none" marker-end="url(#arrow)"/>
+      <text x="945" y="600" text-anchor="end" fill="#5eb3ff" font-size="9.5" font-weight="600">tool result appended</text>
+      <text x="945" y="612" text-anchor="end" fill="#5eb3ff" font-size="9.5" font-weight="600">to context, hop += 1</text>
+      <text x="945" y="624" text-anchor="end" fill="#9aa5b8" font-size="9.5">(cap: 6 hops &mdash; hop 6</text>
+      <text x="945" y="636" text-anchor="end" fill="#9aa5b8" font-size="9.5">forces a final answer)</text>
+
+      <!-- NO branch: exit the loop -->
+      <line x1="500" y1="786" x2="500" y2="808" stroke="#ff7b9c" stroke-width="1.6" marker-end="url(#arrowRed)"/>
+      <rect x="330" y="808" width="340" height="60" rx="9" fill="#241a1c" stroke="#ff7b9c" stroke-width="1.4"/>
+      <text x="500" y="825" text-anchor="middle" fill="#e6e9ef" font-size="11" font-weight="600">no tool call, hop cap hit, or stuck-loop guard</text>
+      <text x="500" y="840" text-anchor="middle" fill="#9aa5b8" font-size="9.5">the model's plain text (or a guard message) becomes the answer</text>
+      <text x="500" y="854" text-anchor="middle" fill="#ff7b9c" font-size="8.5">NEW: same tool + same args failing 3x in a row stops here too</text>
+
+      <!-- repeated-failure guard: same call, same args, error, 3x in a row -->
+      <path d="M810,814 C 810,868 660,868 668,832" stroke="#ff7b9c" stroke-width="1.4" fill="none" stroke-dasharray="4,3" marker-end="url(#arrowRed)"/>
+
+      <line x1="500" y1="868" x2="500" y2="900" stroke="#7c8aa5" stroke-width="1.5"/>
+
+      <!-- persistence -->
+      <rect x="150" y="945" width="700" height="60" rx="10" fill="#1c2230" stroke="#9aa5b8" stroke-width="1.3"/>
+      <text x="500" y="970" text-anchor="middle" fill="#e6e9ef" font-size="13" font-weight="600">store.py + runtime/ state files</text>
+      <text x="500" y="988" text-anchor="middle" fill="#9aa5b8" font-size="10.5">each chat is one JSON file; tool evidence, GPU-busy flags and route decisions are recorded here</text>
+
+      <line x1="500" y1="900" x2="500" y2="945" stroke="#7c8aa5" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <line x1="500" y1="1005" x2="500" y2="1035" stroke="#7c8aa5" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <path d="M500,1035 C 500,1065 175,1065 175,1035" stroke="#7c8aa5" stroke-width="1.3" fill="none" stroke-dasharray="4,3"/>
+      <path d="M500,1035 C 500,1065 825,1065 825,1035" stroke="#7c8aa5" stroke-width="1.3" fill="none" stroke-dasharray="4,3"/>
+      <text x="500" y="1055" text-anchor="middle" fill="#7c8aa5" font-size="10.5">streamed back token-by-token (SSE) to whichever interface asked</text>
+
+      <!-- ===== Side systems band ===== -->
+      <text x="500" y="1115" text-anchor="middle" fill="#9aa5b8" font-size="12" font-weight="600" letter-spacing="0.5">SURROUNDING SYSTEMS &mdash; not part of every turn, but always present</text>
+
+      <rect x="40" y="1140" width="290" height="90" rx="10" fill="#241a2e" stroke="#c792ea" stroke-width="1.4"/>
+      <text x="185" y="1164" text-anchor="middle" fill="#e6e9ef" font-size="12.5" font-weight="600">Memory &amp; retrieval</text>
+      <text x="185" y="1183" text-anchor="middle" fill="#9aa5b8" font-size="10">Chroma-backed exemplars,</text>
+      <text x="185" y="1197" text-anchor="middle" fill="#9aa5b8" font-size="10">operating memory, BM25 doc</text>
+      <text x="185" y="1211" text-anchor="middle" fill="#9aa5b8" font-size="10">search, continuity summaries</text>
+
+      <rect x="355" y="1140" width="290" height="90" rx="10" fill="#2a2410" stroke="#ffb454" stroke-width="1.4"/>
+      <text x="500" y="1164" text-anchor="middle" fill="#e6e9ef" font-size="12.5" font-weight="600">Media watcher</text>
+      <text x="500" y="1183" text-anchor="middle" fill="#9aa5b8" font-size="10">starts a vision/whisper</text>
+      <text x="500" y="1197" text-anchor="middle" fill="#9aa5b8" font-size="10">runtime only for a real queued</text>
+      <text x="500" y="1211" text-anchor="middle" fill="#9aa5b8" font-size="10">image/video/audio job</text>
+
+      <rect x="670" y="1140" width="290" height="90" rx="10" fill="#233047" stroke="#5eb3ff" stroke-width="1.4"/>
+      <text x="815" y="1164" text-anchor="middle" fill="#e6e9ef" font-size="12.5" font-weight="600">Phone bridge</text>
+      <text x="815" y="1183" text-anchor="middle" fill="#9aa5b8" font-size="10">remote_security.py grants</text>
+      <text x="815" y="1197" text-anchor="middle" fill="#9aa5b8" font-size="10">per-identity tool access;</text>
+      <text x="815" y="1211" text-anchor="middle" fill="#9aa5b8" font-size="10">most actions default-deny</text>
+
+      <rect x="40" y="1250" width="450" height="90" rx="10" fill="#241a1c" stroke="#ff7b9c" stroke-width="1.4"/>
+      <text x="265" y="1274" text-anchor="middle" fill="#e6e9ef" font-size="12.5" font-weight="600">Sandbox (run_code)</text>
+      <text x="265" y="1293" text-anchor="middle" fill="#9aa5b8" font-size="10">every script gets its own sandbox/run_&lt;id&gt;/ folder,</text>
+      <text x="265" y="1307" text-anchor="middle" fill="#9aa5b8" font-size="10">audit-hook enforced (fixed 2026-08-30), CPU-only,</text>
+      <text x="265" y="1321" text-anchor="middle" fill="#9aa5b8" font-size="10">network off unless explicitly allowed</text>
+
+      <rect x="510" y="1250" width="450" height="90" rx="10" fill="#241a1c" stroke="#ff7b9c" stroke-width="1.4"/>
+      <text x="735" y="1274" text-anchor="middle" fill="#e6e9ef" font-size="12.5" font-weight="600">Equal Shares specialist mode</text>
+      <text x="735" y="1293" text-anchor="middle" fill="#9aa5b8" font-size="10">only loads when the request names it directly;</text>
+      <text x="735" y="1307" text-anchor="middle" fill="#9aa5b8" font-size="10">its render pipeline is explicitly paused right now</text>
+      <text x="735" y="1321" text-anchor="middle" fill="#9aa5b8" font-size="10">(operator decision, 2026-08-30)</text>
+
+      <rect x="40" y="1360" width="920" height="125" rx="10" fill="#1a2230" stroke="#9aa5b8" stroke-width="1.3" stroke-dasharray="6,4"/>
+      <text x="500" y="1384" text-anchor="middle" fill="#e6e9ef" font-size="12.5" font-weight="600">Worker farm (Mac spoke over WireGuard &mdash; local_agent/worker_farm/)</text>
+      <text x="500" y="1403" text-anchor="middle" fill="#9aa5b8" font-size="10">Redis stays on this PC (127.0.0.1:6379). Task Scheduler \local-agent-tunnel-relay (logon, rhine) publishes 10.90.90.1:6379.</text>
+      <text x="500" y="1417" text-anchor="middle" fill="#9aa5b8" font-size="10">Mac Ollama + Celery are system LaunchDaemons (com.local-agent.ollama / celery-worker) as rhineduran uid 503 &mdash; not user LaunchAgents.</text>
+      <text x="500" y="1431" text-anchor="middle" fill="#9aa5b8" font-size="10">WSL/Docker at boot: \local-agent-wsl-docker-boot (S4U / BootTrigger, rhine, now a local admin). Registered; not yet proven at reboot.</text>
+      <text x="500" y="1445" text-anchor="middle" fill="#9aa5b8" font-size="10">Live turns offload summarize/embed to the Mac (local fallback). Distill stays workstation-local. Not loopback-only.</text>
+
+      <rect x="40" y="1505" width="920" height="130" rx="10" fill="#1c1f14" stroke="#7ee787" stroke-width="1.3" stroke-dasharray="6,4"/>
+      <text x="500" y="1531" text-anchor="middle" fill="#e6e9ef" font-size="12.5" font-weight="600">Threaded through everything above</text>
+      <text x="500" y="1553" text-anchor="middle" fill="#9aa5b8" font-size="10.5">Action-integrity guard (can't claim it did something without tool evidence) &middot; protected-file refusal for manifests/evidence</text>
+      <text x="500" y="1571" text-anchor="middle" fill="#9aa5b8" font-size="10.5">&middot; thermal/CPU-thread cap &middot; GPU-busy detection (render/VRAM/port 8188) fails safe &middot; scope isolation between general chat and Equal Shares</text>
+      <text x="500" y="1589" text-anchor="middle" fill="#9aa5b8" font-size="10.5">&middot; nothing above ever binds outside 127.0.0.1 except the opt-in phone bridge and the WireGuard hub publish at 10.90.90.1:6379</text>
+
+      <text x="500" y="1660" text-anchor="middle" fill="#5b6883" font-size="10.5" font-style="italic">Every arrow above is a real call path in the current code, not a plan. Dashed boxes/lines are optional or occasional, not part of every turn.</text>
+    </svg>
+
+    <div class="legend">
+      <span><span class="dot" style="background:#5eb3ff"></span>core turn path</span>
+      <span><span class="dot" style="background:#ffb454"></span>model backends</span>
+      <span><span class="dot" style="background:#7ee787"></span>tools</span>
+      <span><span class="dot" style="background:#c792ea"></span>memory &amp; retrieval</span>
+      <span><span class="dot" style="background:#ff7b9c"></span>safety / sandboxing</span>
+      <span><span class="dot" style="background:#9aa5b8"></span>storage &amp; separate pipelines</span>
+    </div>
+  </div>
+
+  <h2 class="group-title">1 &middot; How a message actually travels</h2>
+
+  <section class="part">
+    <h2><span class="num">1</span> server.py</h2>
+    <p>A small standard-library HTTP server bound only to <code>127.0.0.1:8760</code> &mdash; nothing on the network can reach it except this machine (or a paired phone over its own separate bridge). It streams the reply back token-by-token over Server-Sent Events, so the GUI can show words appearing live instead of waiting for the whole answer.</p>
+  </section>
+
+  <section class="part">
+    <h2><span class="num">2</span> agent.py &mdash; the turn loop</h2>
+    <p>This is the actual brain of the request handling, not the language model itself. For every message it: runs safety/scope checks first, gathers whatever context is actually relevant (not everything, on purpose), asks <code class="file">router.py</code> which backend gets this turn, streams the model's response, and if the model asked to use a tool, runs that tool and gives the result back to the model for another pass &mdash; up to 6 rounds before it's forced to just answer with what it has.</p>
+    <p class="small">Today's fix lived here: a safety check that was supposed to catch the model <i>falsely claiming</i> it already did something was instead triggering on ordinary "I will do X" phrasing and replacing perfectly good answers with a confusing refusal. Narrowed so it only catches genuine false claims.</p>
+  </section>
+
+  <section class="part backend">
+    <h2><span class="num">2a</span> The agentic loop, in detail (loop engineering)</h2>
+    <p>This is the part in the diagram bounded by the dashed blue box. It is deliberately a bounded, deterministic loop rather than "keep calling the model until it feels done": each pass (a <b>hop</b>) starts with <code class="file">router.py</code> re-deciding the backend from scratch (the GPU could have become busy mid-conversation), then the chosen model generates one turn, then a fixed check asks one question &mdash; did that output contain a tool call? If yes, <code class="file">tools.py</code> runs the exact named tool, the result is appended to the conversation, the hop counter increments, and control returns to the top of the loop for another pass. If no, the model's text is the final answer and the loop exits immediately.</p>
+    <p>The loop is capped at <b>6 hops</b>. If the model is still asking for a tool at hop 6, the loop exits anyway and whatever text exists becomes the answer &mdash; a runaway "let me just check one more thing" chain can't turn into an unbounded chain of GPU calls. This is the actual mechanism behind "the agent used a tool and then answered": it's not one big reasoning step, it's this small loop running two, three, sometimes six times per message, each time re-checking GPU state and re-picking the model before doing anything.</p>
+    <p class="small">Re-deciding the backend on every hop, not once per message, is why a render can start midway through a long tool-using answer and the very next hop will already have moved to the CPU model instead of fighting the render for the card.</p>
+    <p><b>New (2026-08-31): a third way to exit the loop.</b> Until now the only exits were "no tool call" and the 6-hop cap. Nothing noticed if the model called the exact same tool with the exact same arguments and kept getting an error &mdash; it could burn all 6 hops retrying something that could never succeed. Now the last 3 attempts are tracked; if all 3 are the identical tool, identical arguments, and identical failure, the turn stops immediately with a message naming the tool and the error, instead of continuing to hop 6. Verified it does <i>not</i> fire on a tool called with different arguments each time, or on a failure that recovers on a later try.</p>
+  </section>
+
+  <section class="part safety">
+    <h2><span class="num">3</span> Safety gates, before the model even sees the message</h2>
+    <p>A few things are decided by fixed code, not by asking a small local model to judge correctly every time: refusing help with bypassing a paywall/login/license, keeping old render conversation from leaking into an unrelated request, and handling an exact "stop render" or "start render" command deterministically rather than letting the model guess which tool that means.</p>
+  </section>
+
+  <section class="part memory">
+    <h2><span class="num">4</span> Context prefetch</h2>
+    <p>Before the model is asked anything, the agent quietly checks: is there an unfinished task from earlier in this chat (a "checkpoint")? Did the operator supply a URL that should be fetched first? Is this question actually about a document in the project? Are there approved past examples worth including? Each of these has its own budget in characters, so one huge tool result can't crowd out everything else the model needs to see.</p>
+  </section>
+
+  <h2 class="group-title">2 &middot; Where the model actually runs</h2>
+
+  <section class="part backend">
+    <h2><span class="num">5</span> router.py &mdash; decide() every single turn</h2>
+    <p>Checked fresh before every reply, not just once at startup: is the GPU idle, or does a render (or something else) already own it? Three independent signals are checked (a render-queue lock file, whether ComfyUI's port is listening, and actual VRAM usage), and if even the GPU-check tool itself fails to run, the router assumes the GPU is busy rather than risk a conflict.</p>
+    <p>Based on that, it hands the turn to one of three places:</p>
+  </section>
+
+  <section class="part backend">
+    <h2><span class="num">5a</span> GPU Ollama &mdash; the good case</h2>
+    <p>When the card is free, a bigger local model (Huihui Qwen3 14B) answers here. There's also an optional, manually-installed 20B model ("Heretic") a person can pick for one chat &mdash; it's GPU-only and will refuse rather than quietly switch to something smaller.</p>
+  </section>
+
+  <section class="part backend">
+    <h2><span class="num">5b</span> CPU Ollama &mdash; the safe fallback</h2>
+    <p>The moment a render (or anything else) claims the GPU, new chat turns move to a smaller model on four CPU threads instead &mdash; slower, but it never fights the render for the card, and it actively evicts its own GPU model rather than leaving it loaded uselessly.</p>
+  </section>
+
+  <section class="part backend">
+    <h2><span class="num">5c</span> PowerInfer &mdash; opt-in, experimental, not production yet</h2>
+    <p>A newer, separate backend for a sparsity-accelerated model. It's GPU-only, text-only (no native tool calling yet), and the router will only offer it when its own server process is already running &mdash; it never starts or stops that process itself. As of today there's no model that's actually passed a real quality review, so this exists in the picker but isn't a working option to rely on yet.</p>
+  </section>
+
+  <h2 class="group-title">3 &middot; What the model is allowed to actually do</h2>
+
+  <section class="part tools">
+    <h2><span class="num">6</span> tools.py &mdash; a fixed whitelist, not a shell</h2>
+    <p>The model never runs an arbitrary command. It can only call a small set of named, pre-built actions: reading/writing files, running code in an isolated sandbox, searching or fetching the web, analyzing an attached image/audio/video, controlling Sonic Pi for live music, or starting a guarded batch render. Anything not on this list simply doesn't exist to the model.</p>
+    <p class="small"><b>New (2026-08-31): <code>read_artifact</code>.</b> A tool result too large to fit the context budget is stored in full locally and replaced with a pointer (<code>artifact_id=...</code>) &mdash; but until now nothing could ever resolve that pointer back into text; it was a dead end by design (the code's own comment called it "future purpose-built retrieval"). <code>read_artifact</code> closes that: given an artifact id, it returns one bounded slice of the original text plus a <code>next_offset</code> to page through the rest. It's a deliberate paging read, not an automatic re-inject, so the model always knows exactly how much of a large result it has actually seen.</p>
+  </section>
+
+  <section class="part safety">
+    <h2><span class="num">7</span> The sandbox (run_code)</h2>
+    <p>Every piece of code the model wants to run gets its own throwaway folder. It can't see the rest of the project, can't reach the network unless explicitly allowed, and is capped on time and output size. <b>This was the actual bug fixed today:</b> a script using Python's <code>pathlib</code> could read or write files completely outside that folder, bypassing the intended wall. Fixed with a lower-level enforcement hook that can't be sidestepped the same way, with tests added for the exact gap.</p>
+  </section>
+
+  <h2 class="group-title">4 &middot; What sits alongside the main loop</h2>
+
+  <section class="part memory">
+    <h2><span class="num">8</span> Memory &amp; retrieval</h2>
+    <p>Conversations persist as individual JSON files. Separately, there's a small local vector database (Chroma) for operator-approved reusable examples, a plain-English "operating memory" file for stable facts and preferences, and a keyword search index over the project's own documentation &mdash; so the agent can look something up instead of guessing.</p>
+  </section>
+
+  <section class="part">
+    <h2><span class="num">9</span> Media watcher</h2>
+    <p>Vision and speech-to-text models are not loaded at startup. They only spin up when there's an actual image, video, or audio job waiting, and they release the GPU again as soon as that batch is done &mdash; so an ordinary text chat never pays for a model it isn't using.</p>
+  </section>
+
+  <section class="part">
+    <h2><span class="num">10</span> Phone bridge</h2>
+    <p>An explicitly paired phone can chat with the agent over a private radio/Wi-Fi bridge (Sideband/Reticulum), never over the open internet. Anything beyond reading and simple tools &mdash; writing files, running code, starting a render &mdash; is denied by default until the desktop operator grants that exact permission to that exact device.</p>
+  </section>
+
+  <section class="part">
+    <h2><span class="num">11</span> Worker farm &mdash; Mac spoke over WireGuard</h2>
+    <p>Lives in <code class="file">local_agent/worker_farm/</code>. Redis still listens only on this PC (<code>127.0.0.1:6379</code>); a registered Task Scheduler job <code>\local-agent-tunnel-relay</code> (logon trigger, user <code>rhine</code>) publishes that port on the WireGuard hub at <code>10.90.90.1:6379</code>. That listener is no longer a manually-started process. On the Mac, Ollama and the Celery worker are <b>system LaunchDaemons</b> <code>com.local-agent.ollama</code> and <code>com.local-agent.celery-worker</code>, running as <code>rhineduran</code> / uid 503 &mdash; not user LaunchAgents, and they do not wait for a GUI login. Bringing WSL/Docker up so Redis can exist after a cold boot is a separate S4U BootTrigger task <code>\local-agent-wsl-docker-boot</code> under <code>rhine</code> (now a local Administrator). That task is registered; it has not yet been proven across a delayed-login reboot. Live chat turns <i>do</i> use this farm: summarize and embed can run on the Mac, with a local fallback if it doesn't answer. Distilling old chat exports is still a separate workstation-only queue.</p>
+    <p class="small">The farm routing picture (queues, fallback, what <code>agent.py</code> actually calls) lives in <code class="file">docs/ARCHITECTURE.md</code>. This page is the GPU/CPU visual plus the persistence owners as they stand today.</p>
+  </section>
+
+  <section class="part">
+    <h2><span class="num">12</span> Equal Shares specialist mode</h2>
+    <p>A large, project-specific reference (film production rules, voice pipeline, render safety rules) that only gets loaded into the conversation when a message unmistakably names Equal Shares, a clip ID, or one of its specific terms. Otherwise the agent behaves like an ordinary assistant. Its actual render pipeline is explicitly paused right now by operator decision &mdash; this mode is preserved, not deleted, for whenever that changes.</p>
+  </section>
+
+  <footer>
+    Built from the actual code (<code>agent.py</code>, <code>router.py</code>, <code>tools.py</code>, <code>server.py</code>, <code>sandbox_guard.py</code>, <code>artifacts.py</code>, <code>local_agent/README.md</code>). Loop-guard and <code>read_artifact</code> notes are from 2026-08-31. Farm persistence box and section 11 refreshed 2026-09-03 from live launchd / Task Scheduler (LaunchDaemons as uid 503, <code>\local-agent-tunnel-relay</code> logon job, <code>\local-agent-wsl-docker-boot</code> S4U BootTrigger) &mdash; not from the 2026-09-02 nohup / manual-relay picture.
+  </footer>
+
+</div>
+</body>
+</html>

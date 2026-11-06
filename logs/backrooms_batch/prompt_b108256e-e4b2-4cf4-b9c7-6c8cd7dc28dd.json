@@ -1,0 +1,173 @@
+{
+  "30": {
+    "class_type": "VHS_LoadVideoPath",
+    "inputs": {
+      "video": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\br24_C017_00001_aud.mp4",
+      "force_rate": 8,
+      "custom_width": 1280,
+      "custom_height": 720,
+      "frame_load_cap": 17,
+      "skip_first_frames": 0,
+      "select_every_nth": 1,
+      "format": "None"
+    }
+  },
+  "32": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "wan2.1_t2v_1.3B_fp16.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "32b": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": [
+        "32",
+        0
+      ],
+      "lora_name": "wan2.1_tile_control.safetensors",
+      "strength_model": 0.65
+    }
+  },
+  "32c": {
+    "class_type": "ModelSamplingSD3",
+    "inputs": {
+      "model": [
+        "32b",
+        0
+      ],
+      "shift": 8.0
+    }
+  },
+  "33": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "type": "wan",
+      "device": "default"
+    }
+  },
+  "34": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "wan_2.1_vae.safetensors"
+    }
+  },
+  "36": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "[Handheld POV] Hand pushes off the carpet; camera rises and faces the corridor. Handheld walking momentum, first-person camcorder tracking, heavy VHS artifacting, handheld walking momentum, continuous unbroken shot, realistic camera shake, and 1990s home video aesthetic. photorealistic VHS grain, analog camcorder grit, damp concrete texture, sickly yellow wallpaper fiber, 1990s home-video grain, no geometry change",
+      "clip": [
+        "33",
+        0
+      ]
+    }
+  },
+  "37": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "morphing, warping, new geometry, extra limbs, text, watermark",
+      "clip": [
+        "33",
+        0
+      ]
+    }
+  },
+  "38": {
+    "class_type": "InstructPixToPixConditioning",
+    "inputs": {
+      "positive": [
+        "36",
+        0
+      ],
+      "negative": [
+        "37",
+        0
+      ],
+      "vae": [
+        "34",
+        0
+      ],
+      "pixels": [
+        "30",
+        0
+      ]
+    }
+  },
+  "39": {
+    "class_type": "VAEEncode",
+    "inputs": {
+      "pixels": [
+        "30",
+        0
+      ],
+      "vae": [
+        "34",
+        0
+      ]
+    }
+  },
+  "40": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": [
+        "32c",
+        0
+      ],
+      "positive": [
+        "38",
+        0
+      ],
+      "negative": [
+        "38",
+        1
+      ],
+      "latent_image": [
+        "39",
+        0
+      ],
+      "seed": 42,
+      "steps": 4,
+      "cfg": 4.0,
+      "sampler_name": "uni_pc",
+      "scheduler": "simple",
+      "denoise": 0.35
+    }
+  },
+  "41": {
+    "class_type": "VAEDecodeTiled",
+    "inputs": {
+      "samples": [
+        "40",
+        0
+      ],
+      "vae": [
+        "34",
+        0
+      ],
+      "tile_size": 512,
+      "overlap": 64,
+      "temporal_size": 16,
+      "temporal_overlap": 4
+    }
+  },
+  "42": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": [
+        "41",
+        0
+      ],
+      "frame_rate": 8.0,
+      "loop_count": 0,
+      "filename_prefix": "dspy_opt/photoreal_video_C017",
+      "format": "video/h264-mp4",
+      "pix_fmt": "yuv420p",
+      "crf": 18,
+      "save_metadata": true,
+      "pingpong": false,
+      "save_output": true
+    }
+  }
+}

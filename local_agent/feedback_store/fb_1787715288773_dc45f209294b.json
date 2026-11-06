@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "algorithm": "AES-256-GCM",
+  "id": "fb_1787715288773_dc45f209294b",
+  "is_encrypted": true,
+  "nonce": "uRJCa6/GgHdqdz8A",
+  "ciphertext": "B983BAZWzliW+pyp7YytM06ydHdRdde5BrOyHKxR+3eY/ud6v7cYsN5GNz5K/dzEOIOvtSdCdFgp3JsycdbiKUJpywUedZ+F/V5pxG7gw1yN/FCZynsch4FtScY+R2m1gqAYm3xxhNXTaMwvql9UeHGTi69NzXdnszH01YXbg2UxO46Fi3KjOSpFJrEpeEuxnUy88QErfOKd75N8GCDz8a3Bsdi/7EJqCWvdTTtutBHjzEJCKF8kVcl3PaZSBkboabmCkAoFIvAt3vskDnefQ9h7J8/e+Rsq0z/eR1fF7seS1AqKJMID1LRbcZkCgngXoghrG0EqJFVqpCfjmltW83cyaijz5RXvlGk8kbG6BTRQWeIMtBPh9ekKoRwGEuAjAQh13jQ1LBluu9DIfdnum566wA514N89wiyzMfp23V8V199UJ8XO4KClygUb1Aa2nA5iNxgw85KnGxGxPLCo8z2+HkMRgqwmwMbBRC6hfthoouatMuW581XCkO4="
+}

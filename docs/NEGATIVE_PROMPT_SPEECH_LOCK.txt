@@ -1,0 +1,39 @@
+NEGATIVE PROMPT - SPEECH LOCK
+=============================
+Only text inside quotation marks in the prompt may be spoken.
+
+FOR A CLIP WITH DIALOGUE  (paste into the negative box)
+------------------------------------------------------
+speech not enclosed in quotation marks, invented dialogue, improvised lines, paraphrase, added words, filler words, stutters, false starts, repeated lines, mumbling, gibberish, background voices, crowd chatter, whispering, singing, humming, music
+
+FOR A CLIP WITH NO DIALOGUE
+---------------------------
+any speech, any human voice, dialogue, mumbling, gibberish, background voices, crowd chatter, whispering, singing, humming, music
+
+PAIR IT WITH THIS ONE SENTENCE IN THE POSITIVE PROMPT
+-----------------------------------------------------
+Spoken words appear only inside quotation marks in DIALOGUE TIMING. Say
+those words exactly, once each, in their assigned window, and say nothing
+else.
+
+WHY BOTH
+--------
+A negative prompt can only suppress. It cannot establish that quoted text
+is the script, because the negation has nothing to attach to until the
+positive prompt defines the convention. The sentence sets the rule; the
+negative list closes the ways around it.
+
+Say the rule once. Do not restate it elsewhere in the prompt - see
+PROMPT_REPETITION_RULE.md. And remember that when a clip is rendered
+through minimax_story_runner.py the AUDIO LOCK block is appended
+automatically and already carries the exact line, so the positive prompt
+must not carry it as well.
+
+VISUAL NEGATIVES ARE SEPARATE
+-----------------------------
+This file covers speech only. The optimized prompts carry their visual
+prohibitions as sentences in their own DO NOT section, which is the form
+the MiniMax H3 guide recommends. If you want a visual negative as well,
+the project's existing one still applies:
+
+cruel sneering people, obvious villain, dystopian grime, identity drift, face change, wardrobe change, continuity error, duplicate person, missing person, deformed anatomy, extra limbs, flicker, jump cut, text artifacts, watermark, low quality, blurry

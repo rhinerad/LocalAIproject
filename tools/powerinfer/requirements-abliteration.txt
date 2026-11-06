@@ -1,0 +1,10 @@
+# Install into the isolated .venv-ablit environment.
+# Select the current official PyTorch CUDA 12.8 wheel for the host before
+# installing this file; do not mix CPU-only and CUDA wheels.
+torch>=2.7
+transformers>=4.41,<5
+accelerate>=0.30
+bitsandbytes>=0.46
+safetensors>=0.4
+sentencepiece>=0.2
+protobuf>=4.25

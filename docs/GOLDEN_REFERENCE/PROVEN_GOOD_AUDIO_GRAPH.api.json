@@ -1,0 +1,408 @@
+{
+  "92": {
+    "inputs": {
+      "filename_prefix": "video/MiniMax_H3",
+      "format": "auto",
+      "codec": "auto",
+      "video": [
+        "130",
+        0
+      ]
+    },
+    "class_type": "SaveVideo",
+    "_meta": {
+      "title": "Save Video"
+    }
+  },
+  "115": {
+    "inputs": {
+      "aspect_ratio": "16:9 (Widescreen)",
+      "megapixels": 0.2,
+      "multiple": 32
+    },
+    "class_type": "ResolutionSelector",
+    "_meta": {
+      "title": "Resolution Selector (Size)"
+    }
+  },
+  "119": {
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "120": {
+    "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "121": {
+    "inputs": {
+      "samples": [
+        "125",
+        0
+      ],
+      "vae": [
+        "120",
+        0
+      ]
+    },
+    "class_type": "VAEDecodeAudio",
+    "_meta": {
+      "title": "VAE Decode Audio"
+    }
+  },
+  "122": {
+    "inputs": {
+      "samples": [
+        "125",
+        0
+      ],
+      "vae": [
+        "119",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "123": {
+    "inputs": {
+      "sampler_name": "res_multistep"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "124": {
+    "inputs": {
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0,
+      "model": [
+        "127",
+        0
+      ]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "BasicScheduler"
+    }
+  },
+  "125": {
+    "inputs": {
+      "noise": [
+        "129",
+        0
+      ],
+      "guider": [
+        "126",
+        0
+      ],
+      "sampler": [
+        "123",
+        0
+      ],
+      "sigmas": [
+        "124",
+        0
+      ],
+      "latent_image": [
+        "136",
+        1
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
+    }
+  },
+  "126": {
+    "inputs": {
+      "model": [
+        "127",
+        0
+      ],
+      "conditioning": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "BasicGuider",
+    "_meta": {
+      "title": "Basic Guider"
+    }
+  },
+  "127": {
+    "inputs": {
+      "unet_name": "minimax_h3_ref2va_pruned_nvfp4.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "128": {
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "Load CLIP"
+    }
+  },
+  "129": {
+    "inputs": {
+      "noise_seed": 75225532875015
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "RandomNoise"
+    }
+  },
+  "130": {
+    "inputs": {
+      "fps": 24.0,
+      "bit_depth": 8,
+      "images": [
+        "122",
+        0
+      ],
+      "audio": [
+        "121",
+        0
+      ]
+    },
+    "class_type": "CreateVideo",
+    "_meta": {
+      "title": "Create Video"
+    }
+  },
+  "131": {
+    "inputs": {
+      "expression": "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17",
+      "values.a": [
+        "132",
+        0
+      ]
+    },
+    "class_type": "ComfyMathExpression",
+    "_meta": {
+      "title": "Math Expression"
+    }
+  },
+  "132": {
+    "inputs": {
+      "value": 9.0
+    },
+    "class_type": "PrimitiveFloat",
+    "_meta": {
+      "title": "Float (Duration)"
+    }
+  },
+  "136": {
+    "inputs": {
+      "prompt": [
+        "138",
+        0
+      ],
+      "width": [
+        "115",
+        0
+      ],
+      "height": [
+        "115",
+        1
+      ],
+      "length": [
+        "131",
+        1
+      ],
+      "ref_image_size": "match",
+      "clip": [
+        "128",
+        0
+      ],
+      "vae": [
+        "119",
+        0
+      ],
+      "audio_vae": [
+        "120",
+        0
+      ],
+      "ref_images.ref_image_0": [
+        "137",
+        0
+      ],
+      "ref_audios.ref_audio_0": [
+        "146",
+        2
+      ]
+    },
+    "class_type": "MiniMaxH3ReferenceToVideo",
+    "_meta": {
+      "title": "MiniMax H3 Reference to Video"
+    }
+  },
+  "137": {
+    "inputs": {
+      "image": "boundary_00.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    },
+    "is_changed": [
+      "55c60d1dea61f327d6429270c1c4b3ce189a3bc82ad81a66c79d19fb46294e92"
+    ]
+  },
+  "138": {
+    "inputs": {
+      "value": "subject_definitions:\n<Subject 1> is Narrator in <Picture 1>, a man in his late fifties. Long lean face, deep-set pale eyes under a heavy straight brow, pronounced lines from nose to mouth, straight prominent nose, thin mouth. Dark hair combed straight back off the forehead in a high smooth wave, grey at the temples, no visible parting. Dark charcoal single-breasted suit, white shirt with a narrow collar, plain black tie, no pocket square. He must never resemble Kent Brentwood.\n<Subject 2> is the location of this shot: A bright city sidewalk, held frozen mid-moment, with the Narrator standing in the foreground.\n<Picture 1> is the first frame of [Shot 1].\n<Audio 1> is the voice-timbre reference for <Subject 1> (S1), containing a single dry spoken English vocal layer.\n\nsummary:\n[keyframe completion + audio reference] The target video is one continuous shot in which <Subject 1> (S1) appears in <Subject 2>. The shot begins exactly on <Picture 1>. <Audio 1> supplies voice timbre only and is never audible in the target video.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - Narrator's face, hair, and clothing are identical in the last frame to the first.\n<Subject 2> (appears in [Shot 1]): fully_preserved - every fixture and prop stays in its established position for the whole shot.\n<Picture 1> ([Shot 1] first frame): fully_preserved - the shot matches this composition exactly.\n<Audio 1>: reference - S1 follows <Audio 1>'s voice timbre, pitch, accent, and delivery without copying the original signal; none of its words, breaths, or room tone appear in the target video.\n\ndetailed_description:\nThe target video is live-action in black-and-white 1960s anthology-television realism, flat and evenly lit with no colour anywhere in frame.\n[Shot 1] The shot begins from <Picture 1>. The camera holds a static shot for the entire shot and there is no cut. Exactly one person moves in this shot: the Narrator, in the foreground under a spotlight.\nKent walking in colour, then stopping dead mid-stride - one foot still off the ground, coat mid-swing, held like a photograph. The street around him freezes at the same instant. <Subject 1> (S1) using the voice timbre referenced from <Audio 1>, says: <d>[English] Kent is at an inflection point that some call midlife. He\u2019s done everything he can in life to be a good person.</d> He closes his mouth and says nothing further for the rest of the shot. The street's colour and brightness drop away to a dim wash. Kent stays frozen, still the brightest thing in frame. The Narrator walks in from screen-left into the foreground and stops. A hard spotlight finds him. He turns to camera. Kent and the frozen street sit dim behind him. The Narrator delivers to camera, still, hands at his sides. Nothing behind him moves. Held. Narrator lit, Kent frozen and dim behind.\nThere is only one spoken line in this entire shot, and <Subject 1> delivers it at an unhurried natural pace. When the last line is finished \u2014 however early in the shot that falls \u2014 every voice stops. Nobody speaks, mutters, hums, sighs, or makes any vocal sound for the whole remainder of the shot and the shot plays out on room tone alone. No extra words are invented to fill the remaining time.\nNobody enters or leaves frame, no person is duplicated, and no face, hairstyle, facial hair, or item of clothing changes between the first frame and the last. No lettering, signage, labels, captions, subtitles, watermarks, or logos appear on any surface. No hand, finger, face, or limb is distorted or deformed.\n\noverall_soundscape:\nQuiet natural location room tone continues evenly throughout the shot, with only the physical action sounds the described movements would make. Most of this shot has no speech in it at all, and silence is correct wherever no line is assigned. Never more than one voice at a time: no second voice, no quieter duplicate, no echo, no reverb tail, no whisper, no chorus, and no backing vocal under the speaker. Once the assigned lines are finished the voices stop and only room tone continues to the final frame.\n\nnon_diegetic_music:\nN/A\n"
+    },
+    "class_type": "PrimitiveStringMultiline",
+    "_meta": {
+      "title": "Input Text (Prompt)"
+    }
+  },
+  "143": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "format": "png",
+      "format.bit_depth": "8-bit",
+      "format.input_color_space": "sRGB",
+      "images": [
+        "142:3",
+        0
+      ]
+    },
+    "class_type": "SaveImageAdvanced",
+    "_meta": {
+      "title": "Save Image (Advanced)"
+    }
+  },
+  "144": {
+    "inputs": {
+      "images": [
+        "143",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "146": {
+    "inputs": {
+      "video": "\"A:\\Users\\rhine\\ComfyUI-Shared\\output\\video\\1.mp4\"",
+      "force_rate": 0.0,
+      "custom_width": 0,
+      "custom_height": 0,
+      "frame_load_cap": 0,
+      "skip_first_frames": 0,
+      "select_every_nth": 3,
+      "format": "AnimateDiff"
+    },
+    "class_type": "VHS_LoadVideoPath",
+    "_meta": {
+      "title": "Load Video (Path) \ud83c\udfa5\ud83c\udd65\ud83c\udd57\ud83c\udd62"
+    },
+    "is_changed": [
+      "DNE"
+    ]
+  },
+  "147": {
+    "inputs": {
+      "image": "boundary_seated_close_v3.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    },
+    "is_changed": [
+      "cc9ad57f3a7141bbc32a1ac58b7f00bcf7bac2c189d6886dc909a51efbfbe19b"
+    ]
+  },
+  "142:1": {
+    "inputs": {
+      "video": [
+        "92",
+        0
+      ]
+    },
+    "class_type": "GetVideoComponents",
+    "_meta": {
+      "title": "Get Video Components"
+    }
+  },
+  "142:2": {
+    "inputs": {
+      "image": [
+        "142:1",
+        0
+      ]
+    },
+    "class_type": "GetImageSize",
+    "_meta": {
+      "title": "Get Image Size"
+    }
+  },
+  "142:3": {
+    "inputs": {
+      "batch_index": [
+        "142:99",
+        1
+      ],
+      "length": 1,
+      "image": [
+        "142:1",
+        0
+      ]
+    },
+    "class_type": "ImageFromBatch",
+    "_meta": {
+      "title": "Get Image from Batch"
+    }
+  },
+  "142:99": {
+    "inputs": {
+      "expression": "min(max(int(a if a >= 0 else b + a), 0), b - 1)",
+      "values.a": [
+        "142:100",
+        0
+      ],
+      "values.b": [
+        "142:2",
+        2
+      ]
+    },
+    "class_type": "ComfyMathExpression",
+    "_meta": {
+      "title": "Math Expression"
+    }
+  },
+  "142:100": {
+    "inputs": {
+      "value": 242
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Int"
+    }
+  }
+}

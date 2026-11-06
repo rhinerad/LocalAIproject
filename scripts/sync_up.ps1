@@ -1,0 +1,76 @@
+<#
+.SYNOPSIS
+  Stage, commit (timestamped) and push local tweaks + debug output to GitHub.
+.EXAMPLE
+  .\sync_up.ps1
+  .\sync_up.ps1 -Message "tweaked sampler steps"
+#>
+param([string]$Message)
+
+$ErrorActionPreference = 'Stop'
+$ProjectRoot = 'A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09'
+if (-not (Test-Path $ProjectRoot)) { $ProjectRoot = Split-Path -Parent $PSScriptRoot }
+Set-Location $ProjectRoot
+
+function Pause-IfDoubleClicked {
+    if ($Host.Name -eq 'ConsoleHost') { Read-Host 'Press Enter to close' | Out-Null }
+}
+
+try {
+    $branch = git rev-parse --abbrev-ref HEAD
+    Write-Host "==> Project: $ProjectRoot  [branch: $branch]" -ForegroundColor Cyan
+
+    git add -A
+    $staged = git diff --cached --name-only
+    if (-not $staged) {
+        Write-Host '==> Nothing to commit.' -ForegroundColor Yellow
+    } else {
+        # Warn about big files (GitHub rejects >100 MB; models/renders belong in .gitignore)
+        foreach ($f in $staged) {
+            if ((Test-Path $f) -and ((Get-Item $f).Length -gt 50MB)) {
+                git reset -q -- $f
+                Write-Host "  skipped large file (>50MB): $f  -- add it to .gitignore" -ForegroundColor Yellow
+            }
+        }
+        # Refuse to commit secrets or private data (2026-11 audit). Patterns
+        # match the files that were found committed; .gitignore now excludes
+        # them, but a force-add or a renamed copy would get past it.
+        $secretPatterns = @('transport_identity', '/ratchets/', '\.env($|\.)', '\.key$', '\.pem$',
+                            'id_rsa', 'credentials', 'local_agent/chats/', 'local_agent/uploads/')
+        foreach ($f in $staged) {
+            foreach ($pat in $secretPatterns) {
+                if ($f -match $pat) {
+                    git reset -q -- $f
+                    throw "refusing to commit '$f' (matches secret/private pattern '$pat'); add it to .gitignore or run scripts/untrack_private_data.ps1"
+                }
+            }
+        }
+        if (-not $Message) { $Message = "Local sync $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') from $env:COMPUTERNAME" }
+        git commit -m $Message
+        if ($LASTEXITCODE) { throw 'git commit failed' }
+    }
+
+    # Pick up any cloud edits on this branch before pushing.
+    # Git writes progress to stderr, and PowerShell turns stderr into a
+    # terminating error under $ErrorActionPreference='Stop', so the pull must
+    # run with 'Continue' for both the preference and the native error stream.
+    # Without this the push below is skipped even though the commit succeeded.
+    $prevEAP = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+        git pull --rebase --autostash origin $branch 2>&1 | Out-Null
+    } finally {
+        $ErrorActionPreference = $prevEAP
+    }
+
+    git push -u origin $branch
+    if ($LASTEXITCODE) { throw 'git push failed' }
+
+    Write-Host "`n==> Pushed to origin/$branch" -ForegroundColor Green
+    git log --oneline -3
+} catch {
+    Write-Host "ERROR: $_" -ForegroundColor Red
+    Pause-IfDoubleClicked
+    exit 1
+}
+Pause-IfDoubleClicked

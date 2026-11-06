@@ -1,0 +1,10 @@
+{
+  "id": "76881805aaff43b1",
+  "kind": "video_action",
+  "args": {
+    "video_path": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\uploads\\dc4323b0bbee9c02_joss-miss-and-bja-pov-sulbas3d_1080p.mp4"
+  },
+  "queued_at": "2026-08-24T20:00:18Z",
+  "cancelled_at": "2026-08-24T20:00:48Z",
+  "cancel_reason": "operator cleared media queue"
+}

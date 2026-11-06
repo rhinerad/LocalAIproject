@@ -1,0 +1,18 @@
+{
+  "id": "f1026c8868a54cf0",
+  "title": "What are the exact duration ladder rungs for 00B…",
+  "created": 1787108047.1552513,
+  "updated": 1787108153.551634,
+  "messages": [
+    {
+      "role": "user",
+      "content": "What are the exact duration ladder rungs for 00B?",
+      "at": 1787108047.1632526
+    },
+    {
+      "role": "assistant",
+      "content": "The duration ladder rungs for **00B** are calculated based on its base scripted duration of **15 seconds**. The exact rungs are:  \n- **Base**: 15 seconds  \n- **+1**: 16 seconds  \n- **−1**: 14 seconds  \n- **+2**: 17 seconds  \n- **−2**: 13 seconds  \n- **+3**: 18 seconds  \n- **−3**: 12 seconds  \n\nThese adjustments follow the project's rule of modifying duration, not seed, to fix speech issues. The ladder ensures the model hits the correct speech rate for each attempt.",
+      "at": 1787108153.551634
+    }
+  ]
+}

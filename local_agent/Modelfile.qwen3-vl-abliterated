@@ -1,0 +1,20 @@
+# Import the local abliterated Qwen3-VL 8B GGUF into Ollama as a vision model.
+#
+# Files already on disk (no download needed):
+#   Q8_0 weights : ...\Qwen3-VL-8B-Instruct-c_abliterated-v3.Q8_0.gguf      (8.7 GB)
+#   vision proj  : ...\Qwen3-VL-8B-Instruct-c_abliterated-v3.mmproj-f16.gguf (1.16 GB)
+#
+# The SECOND FROM line is the vision projector (mmproj). Both are required for
+# the watcher to actually see images/video. ~9.9 GB total — fits a 16 GB card.
+#
+# Create it (run on the Windows host where Ollama lives, GPU server on :11434):
+#   ollama create qwen3-vl-abliterated:8b-q8_0 -f local_agent\Modelfile.qwen3-vl-abliterated
+# Then confirm vision is retained:
+#   ollama show qwen3-vl-abliterated:8b-q8_0        # capabilities must list: vision
+#
+# If `ollama show` does NOT list vision (a known GGUF-import quirk), fall back to
+# the packaged build, which the watcher already prefers next:
+#   ollama pull huihui_ai/qwen3-vl-abliterated:8b-instruct-q8_0
+
+FROM A:\Users\rhine\ComfyUI-Shared\models\LLM\GGUF\mradermacher\Qwen3-VL-8B-Instruct-c_abliterated-v3-GGUF\Qwen3-VL-8B-Instruct-c_abliterated-v3.Q8_0.gguf
+FROM A:\Users\rhine\ComfyUI-Shared\models\LLM\GGUF\mradermacher\Qwen3-VL-8B-Instruct-c_abliterated-v3-GGUF\Qwen3-VL-8B-Instruct-c_abliterated-v3.mmproj-f16.gguf

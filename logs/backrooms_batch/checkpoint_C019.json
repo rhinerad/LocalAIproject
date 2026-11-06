@@ -1,0 +1,19 @@
+{
+  "id": "C019",
+  "injected": {
+    "start": "Chest-height forward-facing empty yellow room, sleeve cuff visible. Heavy VHS artifacting, continuous unbroken shot, and 1990s home video aesthetic. First-person camcorder tracking, handheld walking momentum, and realistic camera shake.",
+    "end": "Doorway fills the frame. Heavy VHS artifacting, continuous unbroken shot, and 1990s home video aesthetic. First-person camcorder tracking, handheld walking momentum, and realistic camera shake.",
+    "motion": "[Handheld] Walks toward the opening; breathing on the track. Static tripod shot of a yellow hallway. Heavy VHS artifacting, continuous unbroken shot, and 1990s home video aesthetic. First-person camcorder tracking, handheld walking momentum, and realistic camera shake."
+  },
+  "stage": "complete",
+  "start_png": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\br24_C019_start_00001_.png",
+  "end_png": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\br24_C019_end_00001_.png",
+  "mp4": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\br24_C019_00001.mp4",
+  "video_prompt_id": "4c072a4c-a7df-48a1-8b95-415961d81c93",
+  "photoreal_mp4": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\photoreal_video_C019.mp4",
+  "raw_photoreal_mp4": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\photoreal_video_C019_00001.mp4",
+  "tile_prompt_id": "e2619250-22a4-435d-918d-5fa36bbced5e",
+  "photoreal_bytes": 716416,
+  "sha256": "00a0a026e61aeba58dda15c8b28cc9d6c10e12dc0af0c0753f2a8168cef4a8a8",
+  "completed_at": 1789456912.5685647
+}

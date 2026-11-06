@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is the young woman in <Picture 1>, with long dark hair and a blue cardigan.
+<Subject 2> is the park setting in <Picture 2>, featuring a stone bench and autumn trees.
+<Subject 3> is the companion figure in <Picture 3>, a woman in a red coat seen from behind.
+
+summary:
+[reference generation] The target video shows <Subject 1> walking through <Subject 2> at dusk, with <Subject 3> visible in the distance.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1]): fully_preserved - the woman's face, hair, and cardigan are retained.
+<Subject 2> (appears in [Shot 1]): fully_preserved - the park setting, bench, and trees are retained.
+<Subject 3> (appears in [Shot 1]): weak_reference - only the silhouette and red coat colour are referenced.
+
+detailed_description:
+The target video is in a naturalistic cinematic style with warm autumn light.
+[Shot 1] A medium shot establishes <Subject 2>. In the background, <Subject 3> is a red-coated figure on the far path. <Subject 1> walks into frame from the left, her pace unhurried. She stops at the bench and sits, looking toward the horizon. The camera holds static throughout.
+
+overall_soundscape:
+Quiet outdoor autumn ambience — distant birdsong and a light breeze.
+
+non_diegetic_music:
+N/A

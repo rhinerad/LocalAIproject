@@ -1,0 +1,1 @@
+# FLUX.1 + MiniMax I2V template\n\nDrop the ComfyUI API-format workflow export here as:\n\n  `flux_minimax_i2v_api.json`\n\nRequired placeholders (string values Comfy will replace via orchestrator):\n- `{{START_PROMPT}}` on the FLUX text-encode node\n- `{{VIDEO_PROMPT}}` on the MiniMax I2V prompt field\n- frame/length input will be forced to **192** (8s @ 24fps)\n

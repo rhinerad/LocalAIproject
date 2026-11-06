@@ -1,0 +1,71 @@
+{
+  "1": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "RealVisXL_V5.0_fp16.safetensors"
+    }
+  },
+  "2": {
+    "class_type": "ADE_AnimateDiffLoaderGen1",
+    "inputs": {
+      "model": ["1", 0],
+      "model_name": "hsxl_temporal_layers.safetensors",
+      "beta_schedule": "linear (HotshotXL/default)"
+    }
+  },
+  "3": {
+    "class_type": "BatchPromptSchedule",
+    "inputs": {
+      "text": "\"0\": \"empty yellow corridor, fluorescent lights, handheld camera\",\n\"7\": \"walking down an empty yellow corridor, fluorescent lights\"",
+      "clip": ["1", 1],
+      "max_frames": 8,
+      "print_output": false,
+      "start_frame": 0,
+      "end_frame": 8
+    }
+  },
+  "4": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "text, watermark, logo, people",
+      "clip": ["1", 1]
+    }
+  },
+  "5": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {
+      "width": 512,
+      "height": 512,
+      "batch_size": 8
+    }
+  },
+  "6": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 1,
+      "steps": 4,
+      "cfg": 5.0,
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "denoise": 1.0,
+      "model": ["2", 0],
+      "positive": ["3", 0],
+      "negative": ["4", 0],
+      "latent_image": ["5", 0]
+    }
+  },
+  "7": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": ["6", 0],
+      "vae": ["1", 2]
+    }
+  },
+  "8": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": ["7", 0],
+      "filename_prefix": "gvd_tool_router/ad_fizz_smoke"
+    }
+  }
+}

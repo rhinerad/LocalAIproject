@@ -1,0 +1,20 @@
+{
+  "id": "14c0918c58dc47d2",
+  "kind": "vision",
+  "args": {
+    "images": [
+      "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\uploads\\df48f96817f053a2_ComfyUI_00049_.png"
+    ],
+    "question": "Describe the image for the prompt.",
+    "instruction": null
+  },
+  "priority": "interactive",
+  "queued_at": "2026-09-05T23:45:35Z",
+  "claimed_at": "2026-09-05T23:46:35Z",
+  "started_at": "2026-09-05T23:46:35Z",
+  "progress": {
+    "stage": "analyzing"
+  },
+  "done_at": "2026-09-05T23:46:40Z",
+  "result": "{\n  \"available\": true,\n  \"tier\": \"gpu\",\n  \"host\": \"127.0.0.1:11436\",\n  \"runtime\": \"llama.cpp\",\n  \"model\": \"qwen25-vl-nsfw-caption:v4-q4_k_m\",\n  \"analysis\": \"**Subjects and Stable Appearance:**  \\n- Futuristic, spacious interior with curved white walls, ceiling, and floor.  \\n- Large windows with panoramic city views (skyscrapers, greenery, blue sky).  \\n- Modern furniture: round bed with white bedding, wooden dining tables, dark chairs, bookshelf.  \\n- Digital screens displaying \\\"C\\\" logo and data.  \\n- Potted plants, exit sign, and door with blue light.  \\n\\n**Setting:**  \\n- Futuristic living space (likely a high-tech apartment or spacecraft module).  \\n- Bright, airy atmosphere with natural light from windows.  \\n\\n**Lighting/Color:**  \\n- Dominant colors: white, gray, blue, wood tones.  \\n- Soft blue LED lighting along ceiling curves.  \\n- Natural light from windows, creating bright, even illumination.  \\n\\n**Composition:**  \\n- Wide-angle, panoramic view capturing entire room.  \\n- Symmetrical layout with bed on left, dining area on right, bookshelf in back.  \\n- Curved lines (walls, ceiling, floor) create futuristic aesthetic.  \\n\\n**Camera/Shot:**  \\n- Wide-angle, possibly 360° or fisheye lens.  \\n- Shot from dining table perspective, looking toward bed and windows.  \\n\\n**Visible Action:**  \\n- No people present.  \\n- Static scene with no movement.  \\n\\n**Spatial Relationships:**  \\n- Bed positioned left of center, adjacent to windows.  \\n- Dining tables arranged along right wall, facing windows.  \\n- Bookshelf located at back right, near door.  \\n- Digital screens mounted above windows.  \\n\\n**Continuity Details:**  \\n- Consistent futuristic design throughout (curved surfaces, digital elements).  \\n- Repeating \\\"C\\\" logo on screens.  \\n- Blue accent lighting (ceiling, door, exit sign) unifies color scheme.\"\n}"
+}

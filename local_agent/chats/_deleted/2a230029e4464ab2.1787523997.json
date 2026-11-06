@@ -1,0 +1,18 @@
+{
+  "id": "2a230029e4464ab2",
+  "title": "How many native prompts have been generated and …",
+  "created": 1787120960.9500973,
+  "updated": 1787120970.3190753,
+  "messages": [
+    {
+      "role": "user",
+      "content": "How many native prompts have been generated and how many manifest records are there?",
+      "at": 1787120960.9616053
+    },
+    {
+      "role": "assistant",
+      "content": "There are 124 native prompts generated and 0 manifest records in the current state.",
+      "at": 1787120970.3190753
+    }
+  ]
+}

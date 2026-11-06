@@ -1,0 +1,421 @@
+{
+  "saved": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\models\\dspy_compiled\\generalized_video_director_mipro_2row.json",
+  "optimizer": "mipro",
+  "mock": false,
+  "auto": null,
+  "trials": 1,
+  "trainset": 2,
+  "ids": "GVD-B01,GVD-D01",
+  "last_feedback": "{\"mock\": false, \"clip_id\": \"GVD-B01\", \"category\": \"backrooms\", \"hparams\": {\"cfg_scale\": 6.0, \"denoise\": 1.0, \"step_count\": 32.0}, \"step_count_int\": 32, \"scores\": {\"text_video_alignment\": 0.0, \"temporal_consistency\": 0.0, \"aesthetic_quality\": 0.0}, \"mean\": 0.0, \"minimum\": 0.0, \"threshold\": 0.6, \"iteration\": 0, \"passes_curriculum\": false, \"mipro\": 0.0, \"reasons\": [\"minimum score 0.00 below curriculum threshold 0.60\"], \"hparam_warnings\": [], \"video_path\": \"A:\\\\Users\\\\rhine\\\\ComfyUI-Shared\\\\output\\\\dspy_opt\\\\gvd_GVD-B01_cced79437a_00001.mp4\", \"vram_trace\": [{\"label\": \"after_prepare_comfy\", \"ts\": 1789599937.4318347, \"used_mib\": 473, \"free_mib\": 15505, \"total_mib\": 16303, \"owner\": {\"owner\": \"comfyui\", \"reason\": \"Wan 2.1 generation\", \"since\": 1789599937.4308324}}, {\"label\": \"after_wan\", \"ts\": 1789600373.9247487, \"used_mib\": 12028, \"free_mib\": 3950, \"total_mib\": 16303, \"owner\": {\"owner\": \"comfyui\", \"reason\": \"Wan 2.1 generation\", \"since\": 1789599937.4308324}}, {\"label\": \"after_release_comfy\", \"ts\": 1789600376.8260734, \"used_mib\": 476, \"free_mib\": 15502, \"total_mib\": 16303, \"owner\": {\"owner\": \"idle\", \"reason\": \"ComfyUI /free called\", \"since\": 1789600373.9894433}}, {\"label\": \"after_prepare_vlm\", \"ts\": 1789600377.3699615, \"used_mib\": 476, \"free_mib\": 15502, \"total_mib\": 16303, \"owner\": {\"owner\": \"vlm\", \"reason\": \"Qwen2.5-VL judge\", \"since\": 1789600377.3689613}}, {\"label\": \"after_vlm\", \"ts\": 1789600426.5337183, \"used_mib\": 11107, \"free_mib\": 4871, \"total_mib\": 16303, \"owner\": {\"owner\": \"vlm\", \"reason\": \"Qwen2.5-VL judge\", \"since\": 1789600377.3689613}}, {\"label\": \"after_release_vlm\", \"ts\": 1789600431.1518912, \"used_mib\": 476, \"free_mib\": 15502, \"total_mib\": 16303, \"owner\": {\"owner\": \"idle\", \"reason\": \"Qwen2.5-VL complete\", \"since\": 1789600431.150891}}], \"vlm_raw\": \"{\\n  \\\"text_video_alignment\\\": 0.00,\\n  \\\"temporal_consistency\\\": 0.00,\\n  \\\"aesthetic_quality\\\": 0.00,\\n  \\\"rationale\\\": {\\n    \\\"text_video_alignment\\\": \\\"No handheld camcorder, walking motion, or VHS artifacts are visible; the static hallway shot does not match the prompt's dynamic description.\\\",\\n    \\\"temporal_consistency\\\": \\\"No motion or change across frames; the hallway remains completely static, failing to show walking momentum.\\\",\\n    \\\"aesthetic_quality\\\": \\\"No watermarks or burned-in text are present, but the static, unchanging shot lacks the dynamic, home video aesthetic described.\\\"\\n  }\\n}\"}",
+  "history_n": 4,
+  "history": [
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 1.0,
+        "step_count": 32.0
+      },
+      "step_count_int": 32,
+      "scores": {
+        "text_video_alignment": 0.0,
+        "temporal_consistency": 0.0,
+        "aesthetic_quality": 0.0
+      },
+      "mean": 0.0,
+      "minimum": 0.0,
+      "threshold": 0.6,
+      "iteration": 0,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "reasons": [
+        "minimum score 0.00 below curriculum threshold 0.60"
+      ],
+      "hparam_warnings": [],
+      "video_path": "A:\\Users\\rhine\\ComfyUI-Shared\\output\\dspy_opt\\gvd_GVD-D01_48058fda8a_00001.mp4",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789597332.3260138,
+          "used_mib": 490,
+          "free_mib": 15488,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789597332.3260138
+          }
+        },
+        {
+          "label": "after_wan",
+          "ts": 1789598461.2597973,
+          "used_mib": 12026,
+          "free_mib": 3952,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789597332.3260138
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789598464.2205865,
+          "used_mib": 474,
+          "free_mib": 15504,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789598461.337204
+          }
+        },
+        {
+          "label": "after_prepare_vlm",
+          "ts": 1789598464.291507,
+          "used_mib": 474,
+          "free_mib": 15504,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789598464.290981
+          }
+        },
+        {
+          "label": "after_vlm",
+          "ts": 1789598520.5928614,
+          "used_mib": 11113,
+          "free_mib": 4865,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789598464.290981
+          }
+        },
+        {
+          "label": "after_release_vlm",
+          "ts": 1789598525.242256,
+          "used_mib": 482,
+          "free_mib": 15496,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Qwen2.5-VL complete",
+            "since": 1789598525.2412574
+          }
+        }
+      ],
+      "vlm_raw": "{\n  \"text_video_alignment\": 0.00,\n  \"temporal_consistency\": 0.00,\n  \"aesthetic_quality\": 0.00,\n  \"rationale\": {\n    \"text_video_alignment\": \"The frames are static still images, not a video, and lack the described drone flyover motion, golden hour lighting, or nesting seabirds.\",\n    \"temporal_consistency\": \"The frames are identical stills, showing no motion or temporal progression.\",\n    \"aesthetic_quality\": \"The frames are low-quality stills with visible compression artifacts, crushed shadows, and no cinematic composition or watermark-free quality.\"\n  }\n}"
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 5.0,
+        "denoise": 1.0,
+        "step_count": 32.0
+      },
+      "step_count_int": 32,
+      "scores": {
+        "text_video_alignment": 0.0,
+        "temporal_consistency": 0.0,
+        "aesthetic_quality": 0.0
+      },
+      "mean": 0.0,
+      "minimum": 0.0,
+      "threshold": 0.6,
+      "iteration": 0,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "reasons": [
+        "minimum score 0.00 below curriculum threshold 0.60"
+      ],
+      "hparam_warnings": [],
+      "video_path": "A:\\Users\\rhine\\ComfyUI-Shared\\output\\dspy_opt\\gvd_GVD-B01_6411d07136_00001.mp4",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789598546.0065687,
+          "used_mib": 482,
+          "free_mib": 15496,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789598546.0055692
+          }
+        },
+        {
+          "label": "after_wan",
+          "ts": 1789599150.473562,
+          "used_mib": 12026,
+          "free_mib": 3952,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789598546.0055692
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789599153.4515898,
+          "used_mib": 474,
+          "free_mib": 15504,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789599150.6341493
+          }
+        },
+        {
+          "label": "after_prepare_vlm",
+          "ts": 1789599153.5420558,
+          "used_mib": 474,
+          "free_mib": 15504,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789599153.5410511
+          }
+        },
+        {
+          "label": "after_vlm",
+          "ts": 1789599196.474221,
+          "used_mib": 11107,
+          "free_mib": 4871,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789599153.5410511
+          }
+        },
+        {
+          "label": "after_release_vlm",
+          "ts": 1789599201.0896857,
+          "used_mib": 474,
+          "free_mib": 15504,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Qwen2.5-VL complete",
+            "since": 1789599201.0896857
+          }
+        }
+      ],
+      "vlm_raw": "{\n  \"text_video_alignment\": 0.00,\n  \"temporal_consistency\": 0.00,\n  \"aesthetic_quality\": 0.00,\n  \"rationale\": {\n    \"text_video_alignment\": \"No first-person camcorder, wet carpet, or fluorescent lights are visible; the scene is a static hallway without motion or camera movement.\",\n    \"temporal_consistency\": \"No motion or change across frames; the hallway remains static with no flicker or variation.\",\n    \"aesthetic_quality\": \"No VHS artifacts, watermarks, or burned-in text; the image is a clean, static hallway with no over-smoothing or crushed detail.\"\n  }\n}"
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 1.0,
+        "step_count": 28.5
+      },
+      "step_count_int": 28,
+      "scores": {
+        "text_video_alignment": 0.5,
+        "temporal_consistency": 0.0,
+        "aesthetic_quality": 0.0
+      },
+      "mean": 0.1667,
+      "minimum": 0.0,
+      "threshold": 0.6,
+      "iteration": 0,
+      "passes_curriculum": false,
+      "mipro": 0.05000999999999999,
+      "reasons": [
+        "minimum score 0.00 below curriculum threshold 0.60"
+      ],
+      "hparam_warnings": [],
+      "video_path": "A:\\Users\\rhine\\ComfyUI-Shared\\output\\dspy_opt\\gvd_GVD-D01_7e6e1f32da_00001.mp4",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789599224.4546988,
+          "used_mib": 474,
+          "free_mib": 15504,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789599224.4536996
+          }
+        },
+        {
+          "label": "after_wan",
+          "ts": 1789599863.953071,
+          "used_mib": 12035,
+          "free_mib": 3943,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789599224.4536996
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789599867.0178313,
+          "used_mib": 473,
+          "free_mib": 15505,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789599864.0721378
+          }
+        },
+        {
+          "label": "after_prepare_vlm",
+          "ts": 1789599867.1393259,
+          "used_mib": 473,
+          "free_mib": 15505,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789599867.1383245
+          }
+        },
+        {
+          "label": "after_vlm",
+          "ts": 1789599912.3628716,
+          "used_mib": 11106,
+          "free_mib": 4872,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789599867.1383245
+          }
+        },
+        {
+          "label": "after_release_vlm",
+          "ts": 1789599916.9989042,
+          "used_mib": 473,
+          "free_mib": 15505,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Qwen2.5-VL complete",
+            "since": 1789599916.9979029
+          }
+        }
+      ],
+      "vlm_raw": "{\n  \"text_video_alignment\": 0.50,\n  \"temporal_consistency\": 0.00,\n  \"aesthetic_quality\": 0.00,\n  \"rationale\": {\n    \"text_video_alignment\": \"The frames show a static aerial view of cliffs and ocean, but lack the continuous drone movement, golden hour lighting, and seabirds described in the prompt.\",\n    \"temporal_consistency\": \"The frames are identical stills with no motion, violating the continuous aerial move constraint and causing flicker.\",\n    \"aesthetic_quality\": \"The frames are low-resolution, blurry, and lack detail, with no cinematic composition or golden hour coloration.\"\n  }\n}"
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 6.0,
+        "denoise": 1.0,
+        "step_count": 32.0
+      },
+      "step_count_int": 32,
+      "scores": {
+        "text_video_alignment": 0.0,
+        "temporal_consistency": 0.0,
+        "aesthetic_quality": 0.0
+      },
+      "mean": 0.0,
+      "minimum": 0.0,
+      "threshold": 0.6,
+      "iteration": 0,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "reasons": [
+        "minimum score 0.00 below curriculum threshold 0.60"
+      ],
+      "hparam_warnings": [],
+      "video_path": "A:\\Users\\rhine\\ComfyUI-Shared\\output\\dspy_opt\\gvd_GVD-B01_cced79437a_00001.mp4",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789599937.4318347,
+          "used_mib": 473,
+          "free_mib": 15505,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789599937.4308324
+          }
+        },
+        {
+          "label": "after_wan",
+          "ts": 1789600373.9247487,
+          "used_mib": 12028,
+          "free_mib": 3950,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789599937.4308324
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789600376.8260734,
+          "used_mib": 476,
+          "free_mib": 15502,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789600373.9894433
+          }
+        },
+        {
+          "label": "after_prepare_vlm",
+          "ts": 1789600377.3699615,
+          "used_mib": 476,
+          "free_mib": 15502,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789600377.3689613
+          }
+        },
+        {
+          "label": "after_vlm",
+          "ts": 1789600426.5337183,
+          "used_mib": 11107,
+          "free_mib": 4871,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789600377.3689613
+          }
+        },
+        {
+          "label": "after_release_vlm",
+          "ts": 1789600431.1518912,
+          "used_mib": 476,
+          "free_mib": 15502,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Qwen2.5-VL complete",
+            "since": 1789600431.150891
+          }
+        }
+      ],
+      "vlm_raw": "{\n  \"text_video_alignment\": 0.00,\n  \"temporal_consistency\": 0.00,\n  \"aesthetic_quality\": 0.00,\n  \"rationale\": {\n    \"text_video_alignment\": \"No handheld camcorder, walking motion, or VHS artifacts are visible; the static hallway shot does not match the prompt's dynamic description.\",\n    \"temporal_consistency\": \"No motion or change across frames; the hallway remains completely static, failing to show walking momentum.\",\n    \"aesthetic_quality\": \"No watermarks or burned-in text are present, but the static, unchanging shot lacks the dynamic, home video aesthetic described.\"\n  }\n}"
+    }
+  ]
+}

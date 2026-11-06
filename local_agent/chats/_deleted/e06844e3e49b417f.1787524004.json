@@ -1,0 +1,20 @@
+{
+  "id": "e06844e3e49b417f",
+  "title": "Reply with exactly MODEL_PIN_OK.",
+  "created": 1787453904.8642828,
+  "updated": 1787453931.2582643,
+  "model": "qwen2.5-coder:14b",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Reply with exactly MODEL_PIN_OK.",
+      "at": 1787453904.8718162
+    },
+    {
+      "role": "assistant",
+      "content": "MODEL_PIN_OK",
+      "at": 1787453931.2483253
+    }
+  ],
+  "last_tier": "gpu"
+}

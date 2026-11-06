@@ -1,0 +1,18 @@
+{
+  "1": {"class_type": "LoadImage", "inputs": {"image": "CANDIDATE_UPLOAD.png"}},
+  "50": {
+    "class_type": "LoadImageRewardVerifier",
+    "inputs": {"ir_verifier_id": "ImageReward-v1.0", "device": "cuda"}
+  },
+  "92": {
+    "class_type": "GVDRewardReport",
+    "inputs": {
+      "image": ["1", 0],
+      "verifier": ["50", 0],
+      "text": "CONCISE_AUDIT_CAPTION",
+      "attempt_id": "ATTEMPT_ID",
+      "image_sha256": "CANDIDATE_SHA256",
+      "profile_id": "LOCKED_REWARD_PROFILE"
+    }
+  }
+}

@@ -1,0 +1,554 @@
+{
+  "id": "e33dc77b94e4450c",
+  "title": "AGENT TASK: make START and LAST still frames for…",
+  "created": 1788650781.2926872,
+  "updated": 1788651949.1487942,
+  "model": "huihui_ai/qwen3-abliterated:14b",
+  "workspace": "auto",
+  "messages": [
+    {
+      "role": "user",
+      "content": "AGENT TASK: make START and LAST still frames for an 8-clip POV scene.\nDo not generate video yet. Images only.\n\nI will attach:\n- Image A = Bulma character sheet. Use this for Bulma’s face, aqua-blue high ponytail, red ribbon, slim hourglass body, D-cup, skin, and identity. Adult woman. Photoreal. Not cartoon.\n- Image B = Android 18 character sheet. Use this for 18’s face, short blonde bob, bangs, blue eyes, fuller round bust, small waist, rounder butt, skin, and identity. Adult woman. Photoreal. Not cartoon.\n- Image C = Capsule Corp setting sheet. Use this for the room only: gray panels, C logo, white bed, city windows, lighting.\n- Image D = kneeling POV plate. Use this ONLY for camera and cock placement. Both women kneel facing the camera. The man’s penis enters from the BOTTOM CENTER of the frame. This is first-person male POV. Keep that geometry in every frame. Do not put the man’s face, torso, or legs in frame. Do not move the cock to the side, top, or corner.\n\nHARD LOCK\n- Photoreal live-action. No anime, no illustration.\n- Same two women in every frame. No new faces.\n- Same room in every frame.\n- Cock always bottom-center, coming toward camera-near / out of the unseen man.\n- Full bodies visible enough to read pose. Not extreme cropped faces unless the shot is oral close.\n- If a frame breaks identity, room, or cock placement, discard and redo that frame only.\n\nMAKE 16 IMAGES\nFor each clip below, make:\n1) START frame = first frame of the clip\n2) LAST frame = end pose of the clip, so it can become the next clip’s start\n\nCLIP 1 START: both kneel on the white bed, Bulma stroking the bottom-center cock with both hands, both looking up at camera.\nCLIP 1 LAST: they have glanced at each other and now look back at the camera, still stroking.\n\nCLIP 2 START: Android 18’s hand over Bulma’s, both stroking the bottom-center cock, looking up.\nCLIP 2 LAST: they lean closer to the cock, mouths parted, still looking up.\n\nCLIP 3 START: they lean in toward each other, Bulma still stroking the bottom-center cock.\nCLIP 3 LAST: they have just broken a wet kiss and look up at camera, Bulma still stroking.\n\nCLIP 4 START: both licking the bottom-center cock together, eyes up.\nCLIP 4 LAST: Bulma’s mouth on the tip, Android 18 licking the side, both eyes up.\n\nCLIP 5 START: both mouths on the cock together, tongues meeting, looking up.\nCLIP 5 LAST: saliva strings, still sharing the bottom-center cock, looking up.\n\nCLIP 6 START: Android 18 deeper on the cock, watery eyes up; Bulma stroking and kissing 18’s cheek.\nCLIP 6 LAST: they share the cock again, messier, looking up.\n\nCLIP 7 START: Bulma on her back on the white bed, legs open, the bottom-center cock at her entrance / just starting inside her. Android 18 kneels beside the bed watching. Camera still male POV from above.\nCLIP 7 LAST: slow-thrust pose, Bulma looking up, breasts settled from a deep push, Android 18 still watching beside her.\n\nCLIP 8 START: harder missionary, Bulma looking up at camera, breasts moving, Android 18 watching and touching herself. Cock still bottom-center into Bulma.\nCLIP 8 LAST: peak pose, Bulma reaching toward camera, Android 18 looking at camera, same room, same bodies.\n\nOUTPUT FORMAT\nLabel files:\nclip01_start.png\nclip01_last.png\n...\nclip08_start.png\nclip08_last.png\n\nFor each image also print a one-line prompt used.\n\nThen stop. Do not stitch. Do not make video until I approve the 16 frames.\n\n--- attached image: 5b0e03cb1ee24a14b5d5e259d8bce550-1200688d4edb9c5f.png ---\nlocal path: A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\uploads\\68df742585ca907e_5b0e03cb1ee24a14b5d5e259d8bce550-1200688d4edb9c5f.png\nsize: 992985 bytes\nCall analyze_image on this path now. Do not describe the image from memory or imagination — you cannot see it without the tool.\n\n--- attached image: ca5743f3117f410dad523358f39511ff-e1a78316352af004.png ---\nlocal path: A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\uploads\\96ed1f140ebd0c8f_ca5743f3117f410dad523358f39511ff-e1a78316352af004.png\nsize: 1030485 bytes\nCall analyze_image on this path now. Do not describe the image from memory or imagination — you cannot see it without the tool.\n\n--- attached image: ComfyUI_00049_.png ---\nlocal path: A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\uploads\\df48f96817f053a2_ComfyUI_00049_.png\nsize: 2050732 bytes\nCall analyze_image on this path now. Do not describe the image from memory or imagination — you cannot see it without the tool.\n\n--- attached image: d80bdf4415714da2be7a8bc822f15da0-12620a39462a7271.jpeg ---\nlocal path: A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\uploads\\a25118f659cd6abc_d80bdf4415714da2be7a8bc822f15da0-12620a39462a7271.jpeg\nsize: 710586 bytes\nCall analyze_image on this path now. Do not describe the image from memory or imagination — you cannot see it without the tool.",
+      "at": 1788650781.298742,
+      "source": "desktop"
+    },
+    {
+      "role": "assistant",
+      "content": "The vision analysis for all attached images has been queued and will be processed when the GPU is free. Since the actual image descriptions are not yet available, I cannot generate the specific prompts or images requested. The analysis results will provide the necessary details to create the prompts for each frame. Once the analysis is complete, I will use the descriptions to formulate the one-line prompts and generate the images as specified. Please wait for the analysis results before proceeding.",
+      "at": 1788651949.143286,
+      "retrieved_exemplar_ids": [],
+      "tool_evidence": [
+        {
+          "tool": "list_tools",
+          "outcome": "result",
+          "summary": "{   \"categories\": {     \"project\": [       {         \"name\": \"search_docs\",         \"summary\": \"Hybrid lexical+embedding search over project docs (CHANGELOG, docs/, CLAUDE.md, UPGRADE notes).\"       },       {         \"name\": \"agentic_searc"
+        },
+        {
+          "tool": "describe_tool",
+          "outcome": "error",
+          "summary": "ERROR: no visible tool 'analyze_image'. Visible: search_docs, agentic_search_docs, project_state, clip_info, read_prompt, validate_prompt, validate_powerinfer_calibration, repair_jsonl_format, duration_ladder, read_doc, list_changelog, run_"
+        },
+        {
+          "tool": "see_image",
+          "outcome": "result",
+          "summary": "{   \"queued\": true,   \"reason\": \"queued for the next safe media GPU window\",   \"job_id\": \"dc1d1c5a2fab4e8e\",   \"free_mb\": 15905,   \"message\": \"Vision analysis queued. The background watcher will run it when the GPU is free.\" }",
+          "reason": "queued for the next safe media GPU window"
+        },
+        {
+          "tool": "see_image",
+          "outcome": "result",
+          "summary": "{   \"queued\": true,   \"reason\": \"queued for the next safe media GPU window\",   \"job_id\": \"c491a90d21e74283\",   \"free_mb\": 6300,   \"message\": \"Vision analysis queued. The background watcher will run it when the GPU is free.\" }",
+          "reason": "queued for the next safe media GPU window"
+        },
+        {
+          "tool": "see_image",
+          "outcome": "result",
+          "summary": "{   \"queued\": true,   \"reason\": \"queued for the next safe media GPU window\",   \"job_id\": \"14c0918c58dc47d2\",   \"free_mb\": 6300,   \"message\": \"Vision analysis queued. The background watcher will run it when the GPU is free.\" }",
+          "reason": "queued for the next safe media GPU window"
+        },
+        {
+          "tool": "see_image",
+          "outcome": "result",
+          "summary": "{   \"queued\": true,   \"reason\": \"queued for the next safe media GPU window\",   \"job_id\": \"d2bb0ca34164491b\",   \"free_mb\": 6300,   \"message\": \"Vision analysis queued. The background watcher will run it when the GPU is free.\" }",
+          "reason": "queued for the next safe media GPU window"
+        }
+      ],
+      "media_artifacts": [],
+      "activity": [
+        {
+          "kind": "route",
+          "state": "result",
+          "source": "observation",
+          "tier": "cpu",
+          "model": "huihui_ai/qwen3-abliterated:8b",
+          "backend": "ollama",
+          "reason": "GPU reserved; continuing primary-Huihui chat on paired CPU fallback huihui_ai/qwen3-abliterated:8b. GPU reserved; using Huihui 8B on CPU (num_gpu=0, 4 threads). 8462 MB of VRAM already in use (threshold 2500 MB)",
+          "gpu_busy": true,
+          "capability": "logic",
+          "host": "127.0.0.1:11434",
+          "label": "cpu huihui_ai/qwen3-abliterated:8b",
+          "hop": 0
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Reviewing the request and available evidence",
+          "stage": "review",
+          "hop": 0
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Deciding the next safe action",
+          "stage": "decide",
+          "hop": 0
+        },
+        {
+          "kind": "tool_call",
+          "state": "announced",
+          "source": "proposal",
+          "tool": "list_tools",
+          "label": "list_tools",
+          "args": {
+            "keys": [],
+            "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "json_bytes": 2
+          },
+          "hop": 0
+        },
+        {
+          "kind": "tool_result",
+          "state": "result",
+          "source": "observation",
+          "outcome": "result",
+          "summary": "{   \"categories\": {     \"project\": [       {         \"name\": \"search_docs\",         \"summary\": \"Hybrid lexical+embedding search over project docs (CHANGELOG, docs/, CLAUDE.md, UPGRADE notes).\"       },       {         \"name\": \"agentic_searc",
+          "label": "list_tools",
+          "tool": "list_tools"
+        },
+        {
+          "kind": "verification",
+          "state": "announced",
+          "source": "observation",
+          "label": "Reviewing tool results before the next step",
+          "stage": "evidence",
+          "hop": 0
+        },
+        {
+          "kind": "route",
+          "state": "result",
+          "source": "observation",
+          "tier": "cpu",
+          "model": "huihui_ai/qwen3-abliterated:8b",
+          "backend": "ollama",
+          "reason": "GPU reserved; continuing primary-Huihui chat on paired CPU fallback huihui_ai/qwen3-abliterated:8b. GPU reserved; using Huihui 8B on CPU (num_gpu=0, 4 threads). 8462 MB of VRAM already in use (threshold 2500 MB); GPU Ollama residents were n",
+          "gpu_busy": true,
+          "capability": "logic",
+          "host": "127.0.0.1:11434",
+          "label": "cpu huihui_ai/qwen3-abliterated:8b",
+          "hop": 1
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Reviewing the request and available evidence",
+          "stage": "review",
+          "hop": 1
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Deciding the next safe action",
+          "stage": "decide",
+          "hop": 1
+        },
+        {
+          "kind": "tool_call",
+          "state": "announced",
+          "source": "proposal",
+          "tool": "describe_tool",
+          "label": "describe_tool",
+          "args": {
+            "keys": [
+              "name"
+            ],
+            "sha256": "a59b2179dcf4f9f5b72c7aa1a20c1f48d9f49a5d5a3d1e9cafd56cb7e64c5a9f",
+            "json_bytes": 25,
+            "name": "analyze_image"
+          },
+          "hop": 1
+        },
+        {
+          "kind": "tool_result",
+          "state": "error",
+          "source": "observation",
+          "outcome": "error",
+          "summary": "ERROR: no visible tool 'analyze_image'. Visible: search_docs, agentic_search_docs, project_state, clip_info, read_prompt, validate_prompt, validate_powerinfer_calibration, repair_jsonl_format, duration_ladder, read_doc, list_changelog, run_",
+          "label": "describe_tool",
+          "tool": "describe_tool"
+        },
+        {
+          "kind": "verification",
+          "state": "announced",
+          "source": "observation",
+          "label": "Reviewing tool results before the next step",
+          "stage": "evidence",
+          "hop": 1
+        },
+        {
+          "kind": "route",
+          "state": "result",
+          "source": "observation",
+          "tier": "gpu",
+          "model": "huihui_ai/qwen3-abliterated:8b",
+          "backend": "ollama",
+          "reason": "GPU free — media VRAM pressure",
+          "gpu_busy": false,
+          "capability": "logic",
+          "host": "127.0.0.1:11434",
+          "label": "gpu huihui_ai/qwen3-abliterated:8b",
+          "hop": 2
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Reviewing the request and available evidence",
+          "stage": "review",
+          "hop": 2
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Deciding the next safe action",
+          "stage": "decide",
+          "hop": 2
+        },
+        {
+          "kind": "tool_call",
+          "state": "announced",
+          "source": "proposal",
+          "tool": "see_image",
+          "label": "see_image",
+          "args": {
+            "keys": [
+              "path",
+              "question"
+            ],
+            "sha256": "228fea80b495c32dfd458974ec53a37de4e72677088d10d7939fe670876c28cc",
+            "json_bytes": 282,
+            "path": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\uploads\\68df742585ca907e_5b0e03cb1ee24a14b5d5e259d8bce550-1200688d4edb9c5f.png"
+          },
+          "hop": 2
+        },
+        {
+          "kind": "queued",
+          "state": "announced",
+          "source": "observation",
+          "label": "queued for the next safe media GPU window",
+          "job_id": "dc1d1c5a2fab4e8e"
+        },
+        {
+          "kind": "tool_result",
+          "state": "result",
+          "source": "observation",
+          "outcome": "result",
+          "summary": "{   \"queued\": true,   \"reason\": \"queued for the next safe media GPU window\",   \"job_id\": \"dc1d1c5a2fab4e8e\",   \"free_mb\": 15905,   \"message\": \"Vision analysis queued. The background watcher will run it when the GPU is free.\" }",
+          "label": "see_image",
+          "reason": "queued for the next safe media GPU window",
+          "tool": "see_image"
+        },
+        {
+          "kind": "verification",
+          "state": "announced",
+          "source": "observation",
+          "label": "Reviewing tool results before the next step",
+          "stage": "evidence",
+          "hop": 2
+        },
+        {
+          "kind": "route",
+          "state": "result",
+          "source": "observation",
+          "tier": "gpu",
+          "model": "huihui_ai/qwen3-abliterated:8b",
+          "backend": "ollama",
+          "reason": "GPU free — media VRAM pressure",
+          "gpu_busy": false,
+          "capability": "logic",
+          "host": "127.0.0.1:11434",
+          "label": "gpu huihui_ai/qwen3-abliterated:8b",
+          "hop": 3
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Reviewing the request and available evidence",
+          "stage": "review",
+          "hop": 3
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Deciding the next safe action",
+          "stage": "decide",
+          "hop": 3
+        },
+        {
+          "kind": "tool_call",
+          "state": "announced",
+          "source": "proposal",
+          "tool": "see_image",
+          "label": "see_image",
+          "args": {
+            "keys": [
+              "path",
+              "question"
+            ],
+            "sha256": "26783cb50c7ab7abc10c08182a27a6474a9eb5dba39c66b2f566935d23446922",
+            "json_bytes": 282,
+            "path": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\uploads\\96ed1f140ebd0c8f_ca5743f3117f410dad523358f39511ff-e1a78316352af004.png"
+          },
+          "hop": 3
+        },
+        {
+          "kind": "queued",
+          "state": "announced",
+          "source": "observation",
+          "label": "queued for the next safe media GPU window",
+          "job_id": "c491a90d21e74283"
+        },
+        {
+          "kind": "tool_result",
+          "state": "result",
+          "source": "observation",
+          "outcome": "result",
+          "summary": "{   \"queued\": true,   \"reason\": \"queued for the next safe media GPU window\",   \"job_id\": \"c491a90d21e74283\",   \"free_mb\": 6300,   \"message\": \"Vision analysis queued. The background watcher will run it when the GPU is free.\" }",
+          "label": "see_image",
+          "reason": "queued for the next safe media GPU window",
+          "tool": "see_image"
+        },
+        {
+          "kind": "verification",
+          "state": "announced",
+          "source": "observation",
+          "label": "Reviewing tool results before the next step",
+          "stage": "evidence",
+          "hop": 3
+        },
+        {
+          "kind": "route",
+          "state": "result",
+          "source": "observation",
+          "tier": "gpu",
+          "model": "huihui_ai/qwen3-abliterated:8b",
+          "backend": "ollama",
+          "reason": "GPU free — predictive context-length protection",
+          "gpu_busy": false,
+          "capability": "logic",
+          "host": "127.0.0.1:11434",
+          "label": "gpu huihui_ai/qwen3-abliterated:8b",
+          "hop": 4
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Reviewing the request and available evidence",
+          "stage": "review",
+          "hop": 4
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Deciding the next safe action",
+          "stage": "decide",
+          "hop": 4
+        },
+        {
+          "kind": "tool_call",
+          "state": "announced",
+          "source": "proposal",
+          "tool": "see_image",
+          "label": "see_image",
+          "args": {
+            "keys": [
+              "path",
+              "question"
+            ],
+            "sha256": "3418ccd0431c0da24bd375935807b48de3ff93d6ad236dc7059f378aaa60f62f",
+            "json_bytes": 247,
+            "path": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\uploads\\df48f96817f053a2_ComfyUI_00049_.png"
+          },
+          "hop": 4
+        },
+        {
+          "kind": "queued",
+          "state": "announced",
+          "source": "observation",
+          "label": "queued for the next safe media GPU window",
+          "job_id": "14c0918c58dc47d2"
+        },
+        {
+          "kind": "tool_result",
+          "state": "result",
+          "source": "observation",
+          "outcome": "result",
+          "summary": "{   \"queued\": true,   \"reason\": \"queued for the next safe media GPU window\",   \"job_id\": \"14c0918c58dc47d2\",   \"free_mb\": 6300,   \"message\": \"Vision analysis queued. The background watcher will run it when the GPU is free.\" }",
+          "label": "see_image",
+          "reason": "queued for the next safe media GPU window",
+          "tool": "see_image"
+        },
+        {
+          "kind": "verification",
+          "state": "announced",
+          "source": "observation",
+          "label": "Reviewing tool results before the next step",
+          "stage": "evidence",
+          "hop": 4
+        },
+        {
+          "kind": "route",
+          "state": "result",
+          "source": "observation",
+          "tier": "gpu",
+          "model": "huihui_ai/qwen3-abliterated:8b",
+          "backend": "ollama",
+          "reason": "GPU free — predictive context-length protection",
+          "gpu_busy": false,
+          "capability": "logic",
+          "host": "127.0.0.1:11434",
+          "label": "gpu huihui_ai/qwen3-abliterated:8b",
+          "hop": 5
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Reviewing the request and available evidence",
+          "stage": "review",
+          "hop": 5
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Deciding the next safe action",
+          "stage": "decide",
+          "hop": 5
+        },
+        {
+          "kind": "tool_call",
+          "state": "announced",
+          "source": "proposal",
+          "tool": "see_image",
+          "label": "see_image",
+          "args": {
+            "keys": [
+              "path",
+              "question"
+            ],
+            "sha256": "6d58f8fe3556de807ed810aaf25404674a0aee29763b5ebb39550018039a6ffd",
+            "json_bytes": 283,
+            "path": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\uploads\\a25118f659cd6abc_d80bdf4415714da2be7a8bc822f15da0-12620a39462a7271.jpeg"
+          },
+          "hop": 5
+        },
+        {
+          "kind": "queued",
+          "state": "announced",
+          "source": "observation",
+          "label": "queued for the next safe media GPU window",
+          "job_id": "d2bb0ca34164491b"
+        },
+        {
+          "kind": "tool_result",
+          "state": "result",
+          "source": "observation",
+          "outcome": "result",
+          "summary": "{   \"queued\": true,   \"reason\": \"queued for the next safe media GPU window\",   \"job_id\": \"d2bb0ca34164491b\",   \"free_mb\": 6300,   \"message\": \"Vision analysis queued. The background watcher will run it when the GPU is free.\" }",
+          "label": "see_image",
+          "reason": "queued for the next safe media GPU window",
+          "tool": "see_image"
+        },
+        {
+          "kind": "verification",
+          "state": "announced",
+          "source": "observation",
+          "label": "Reviewing tool results before the next step",
+          "stage": "evidence",
+          "hop": 5
+        },
+        {
+          "kind": "route",
+          "state": "result",
+          "source": "observation",
+          "tier": "gpu",
+          "model": "huihui_ai/qwen3-abliterated:8b",
+          "backend": "ollama",
+          "reason": "GPU free — predictive context-length protection",
+          "gpu_busy": false,
+          "capability": "logic",
+          "host": "127.0.0.1:11434",
+          "label": "gpu huihui_ai/qwen3-abliterated:8b",
+          "hop": 6
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Reviewing the request and available evidence",
+          "stage": "review",
+          "hop": 6
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Deciding the next safe action",
+          "stage": "decide",
+          "hop": 6
+        },
+        {
+          "kind": "planning",
+          "state": "announced",
+          "source": "proposal",
+          "label": "Drafting the response",
+          "stage": "write",
+          "hop": 6
+        },
+        {
+          "kind": "complete",
+          "state": "result",
+          "source": "observation",
+          "label": "Turn complete"
+        }
+      ],
+      "route": {
+        "tier": "gpu",
+        "host": "127.0.0.1:11434",
+        "model": "huihui_ai/qwen3-abliterated:8b",
+        "gpu_busy": false,
+        "reason": "GPU free — predictive context-length protection",
+        "detail": {
+          "queue_owner": "queue owner released",
+          "comfy_port_8188": "closed",
+          "vram_used_mb": 9678,
+          "compute_processes": [
+            "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+            "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+            "A:\\Users\\rhine\\AppData\\Local\\Programs\\Ollama\\lib\\ollama\\llama-server.exe"
+          ],
+          "gpu_resident_ollama_models": [
+            "huihui_ai/qwen3-abliterated:8b"
+          ],
+          "gpu_owned_ollama_models": [
+            "huihui_ai/qwen3-abliterated:8b"
+          ],
+          "capability": "logic",
+          "adaptive_fallback": {
+            "from": "huihui_ai/qwen3-abliterated:14b",
+            "to": "huihui_ai/qwen3-abliterated:8b",
+            "estimated_prompt_tokens": 16690,
+            "threshold": 16000,
+            "reason": "predictive context-length protection"
+          }
+        },
+        "backend": "ollama",
+        "adaptive_ctx": 32768,
+        "effective_ctx": 32768,
+        "ctx_ceiling": null,
+        "hop": 6
+      },
+      "source": "desktop"
+    }
+  ],
+  "last_tier": "gpu"
+}

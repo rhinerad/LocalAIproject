@@ -1,0 +1,97 @@
+{
+  "saved": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\models\\dspy_compiled\\generalized_video_director_mipro.json",
+  "optimizer": "mipro",
+  "mock": false,
+  "auto": null,
+  "trials": 1,
+  "trainset": 2,
+  "ids": "GVD-B01,GVD-D01",
+  "last_feedback": "{\"mock\": false, \"clip_id\": \"GVD-B01\", \"category\": \"backrooms\", \"hparams\": {\"cfg_scale\": 4.0, \"denoise\": 1.0, \"step_count\": 25.0}, \"step_count_int\": 25, \"scores\": null, \"mean\": null, \"minimum\": null, \"threshold\": null, \"passes_curriculum\": false, \"mipro\": 0.01, \"error\": \"start_prompt or video_motion_prompt is empty; skipped GPU\", \"video_path\": null, \"positive_prompt\": \"\", \"vram_trace\": []}",
+  "history_n": 4,
+  "history": [
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 1.0,
+        "step_count": 20.0
+      },
+      "step_count_int": 20,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.01,
+      "error": "start_prompt or video_motion_prompt is empty; skipped GPU",
+      "video_path": null,
+      "positive_prompt": "",
+      "vram_trace": []
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 1.0,
+        "step_count": 16.0
+      },
+      "step_count_int": 16,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.01,
+      "error": "start_prompt or video_motion_prompt is empty; skipped GPU",
+      "video_path": null,
+      "positive_prompt": "",
+      "vram_trace": []
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 8.0,
+        "denoise": 1.0,
+        "step_count": 40.0
+      },
+      "step_count_int": 40,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.01,
+      "error": "start_prompt or video_motion_prompt is empty; skipped GPU",
+      "video_path": null,
+      "positive_prompt": "",
+      "vram_trace": []
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 1.0,
+        "step_count": 25.0
+      },
+      "step_count_int": 25,
+      "scores": null,
+      "mean": null,
+      "minimum": null,
+      "threshold": null,
+      "passes_curriculum": false,
+      "mipro": 0.01,
+      "error": "start_prompt or video_motion_prompt is empty; skipped GPU",
+      "video_path": null,
+      "positive_prompt": "",
+      "vram_trace": []
+    }
+  ]
+}

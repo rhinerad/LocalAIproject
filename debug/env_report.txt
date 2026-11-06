@@ -1,0 +1,77 @@
+================================================================================
+ENVIRONMENT REPORT
+================================================================================
+Generated : 2026-09-26 02:15 EDT (GMT-4)
+Host      : DuranGamingPC (Windows 11)
+Project   : COMFYUI_STORY_HANDOFF_2026-08-09
+Branch    : claude/zealous-johnson-g4xoz1
+Purpose   : Pipeline service health check (report-only, nothing was changed)
+
+Hardware  : RTX 5080 (16 GB) / Ryzen 7 9800X3D
+
+--------------------------------------------------------------------------------
+1. COMFYUI  --  http://127.0.0.1:8188/system_stats
+--------------------------------------------------------------------------------
+STATUS: DOWN / NOT RUNNING
+
+  PowerShell: Invoke-RestMethod http://127.0.0.1:8188/system_stats
+  Result    : UNAVAILABLE: Unable to connect to the remote server
+
+Note: ComfyUI is not running at the time of this report. Its last log entry was
+a global interrupt at 22:29, and the render owner file was set to "released".
+This is expected idle state, not an error. Any render or still-generation step
+will fail until ComfyUI is started.
+
+--------------------------------------------------------------------------------
+2. OLLAMA  --  http://127.0.0.1:11434/api/tags
+--------------------------------------------------------------------------------
+STATUS: UP
+
+Models available (1):
+  qwen2.5:1.5b
+    format            : gguf
+    family            : qwen2
+    parameter_size    : 1.5B
+    quantization      : Q4_K_M
+    context_length    : 32768
+    embedding_length  : 1536
+    size              : 986,061,892 bytes (~940 MB)
+    digest            : 65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b
+    modified_at       : 2026-09-15T00:15:45-04:00
+
+Note: Only a single small model is present. Judge/QA steps that expect a larger
+local model will not find one registered here.
+
+--------------------------------------------------------------------------------
+3. GPU  --  nvidia-smi
+--------------------------------------------------------------------------------
+STATUS: HEALTHY / IDLE
+
+  Driver Version    : 610.88  (KMD 610.88, CUDA UMD 13.3)
+  GPU               : NVIDIA GeForce RTX 5080  (WDDM)
+  Bus-Id            : 00000000:01:00.0
+  Fan               : 0%
+  Temperature       : 32 C
+  Perf State        : P8
+  Power             : 13 W / 360 W
+  Memory-Usage      : 63 MiB / 16303 MiB
+  GPU-Util          : 0%
+  Compute Mode      : Default
+
+Processes using the GPU:
+  PID 11152  C+G  brave.exe   (N/A)
+  PID 26816  C+G  brave.exe   (N/A)
+
+Note: The GPU is idle with essentially no VRAM allocated. Only browser
+processes hold a graphics context. No compute workload is resident, which is
+consistent with ComfyUI being down and no render in flight.
+
+--------------------------------------------------------------------------------
+SUMMARY
+--------------------------------------------------------------------------------
+  ComfyUI (8188) : DOWN      -- no render pipeline available
+  Ollama (11434) : UP        -- 1 model (qwen2.5:1.5b)
+  GPU (RTX 5080) : IDLE      -- 63 MiB / 16303 MiB, 32 C, 0% util
+
+No settings, services, or model files were modified while producing this report.
+================================================================================

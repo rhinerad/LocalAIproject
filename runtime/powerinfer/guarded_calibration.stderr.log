@@ -1,0 +1,25 @@
+A:\Users\rhine\AppData\Local\Programs\Python\Python312\python.exe: can't open file 'A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\tools\\powerinfer\\train_predictor_layer.py --dataset A:\\PowerInferModels\\relu-llama-7b\\relu-llama-7b-source-20260829\\predictor_data --out A:\\Users\\rhine\\Documents\\Codex\\PowerInferStaging\\relu-llama-7b-source-20260829\\predictor_raw --L 20 --hidden-size 4096 --intermediate-size 11008 --N 25000 --D 256 --batch-size 256 --epochs 2 --lr 0.001': [Errno 22] Invalid argument
+python failed: A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HAN
+DOFF_2026-08-09\tools\powerinfer\train_predictor_layer.py --dataset 
+A:\PowerInferModels\relu-llama-7b\relu-llama-7b-source-20260829\predictor_data --out 
+A:\Users\rhine\Documents\Codex\PowerInferStaging\relu-llama-7b-source-20260829\predictor_raw --L 20 --hidden-size 4096 
+--intermediate-size 11008 --N 25000 --D 256 --batch-size 256 --epochs 2 --lr 0.001
+At A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08
+-09\tools\powerinfer\run_pipeline.ps1:87 char:32
++     if ($LASTEXITCODE -ne 0) { throw "python failed: $Args" }
++                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (python failed: ...hs 2 --lr 0.001:String) [], RuntimeException
+    + FullyQualifiedErrorId : python failed: A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation 
+   -this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\train_predictor_layer.py --dataset A:\PowerInferMo  
+  dels\relu-llama-7b\relu-llama-7b-source-20260829\predictor_data --out A:\Users\rhine\Documents\Codex\PowerInferSta   
+ ging\relu-llama-7b-source-20260829\predictor_raw --L 20 --hidden-size 4096 --intermediate-size 11008 --N 25000 --D    
+ 256 --batch-size 256 --epochs 2 --lr 0.001
+ 
+Layer 20 failed with exit code .
+At A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08
+-09\tools\powerinfer\resume_calibration_guarded.ps1:104 char:9
++         throw "Layer $layer failed with exit code $($child.ExitCode). ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Layer 20 failed with exit code .:String) [], RuntimeException
+    + FullyQualifiedErrorId : Layer 20 failed with exit code .
+ 

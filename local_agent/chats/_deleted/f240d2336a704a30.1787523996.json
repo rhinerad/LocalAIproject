@@ -1,0 +1,18 @@
+{
+  "id": "f240d2336a704a30",
+  "title": "What is the difference between a lossy and lossl…",
+  "created": 1787109171.781335,
+  "updated": 1787109189.3326833,
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the difference between a lossy and lossless audio codec?",
+      "at": 1787109171.7873356
+    },
+    {
+      "role": "assistant",
+      "content": "A lossy audio codec compresses audio data by permanently removing some of it, trading off quality for smaller file sizes. This compression reduces the amount of data needed to represent the audio, but some information is discarded in the process, resulting in a loss of audio fidelity.\n\nOn the other hand, a lossless audio codec compresses audio data without removing any of it, preserving the original audio quality. Lossless codecs use algorithms that allow them to represent the audio data more efficiently without losing any information, resulting in files that are smaller but still contain all the original audio data.\n\nIn summary, lossy codecs reduce file size by discarding some audio data, while lossless codecs compress audio without losing any of the original data.",
+      "at": 1787109189.3326833
+    }
+  ]
+}

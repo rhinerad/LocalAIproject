@@ -1,0 +1,12 @@
+{
+  "policy_id": "observed_5080_c017_end_reroll_v1",
+  "metrics_profile": "unmeasured_clip",
+  "qwen_profile": "caption_v4_unmeasured",
+  "reward_profile": "imagereward_unmeasured",
+  "clip_text_min": 0.0,
+  "clip_unit": "torchmetrics_clipscore_0_100",
+  "required_ids": ["yellow_surfaces", "corridor"],
+  "max_attempts": 2,
+  "calibration": "none",
+  "note": "Same C017-end rubric with two generation seeds. CLIP min 0 is finite-only. Not production calibration."
+}

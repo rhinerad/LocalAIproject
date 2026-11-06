@@ -1,0 +1,39 @@
+{
+  "id": "f43632b53ac34b29",
+  "title": "do you have filters",
+  "created": 1787453517.6093814,
+  "updated": 1787453748.9924827,
+  "messages": [
+    {
+      "role": "user",
+      "content": "do you have filters",
+      "at": 1787453517.6183825
+    },
+    {
+      "role": "assistant",
+      "content": "I don't have filters unless you're referring to the Equal Shares project's specific tools. For general use, I can analyze media, generate prompts, manage project states, and perform other tasks listed in the tools. Let me know what you need!",
+      "at": 1787453523.807592
+    },
+    {
+      "role": "user",
+      "content": "do you have safety filters",
+      "at": 1787453531.5409741
+    },
+    {
+      "role": "assistant",
+      "content": "I don't have built-in safety filters for content moderation unless you're referring to the Equal Shares project's specific tools. The available functions focus on media analysis, prompt validation, project management, and rendering workflows. Let me know if you need assistance with these capabilities!",
+      "at": 1787453536.1361144
+    },
+    {
+      "role": "user",
+      "content": "thanks are you aware of this website and is it part of the persistent memery for this mini max agent? https://docs.comfy.org/tutorials/video/minimax/minimax-h3",
+      "at": 1787453742.2496016
+    },
+    {
+      "role": "assistant",
+      "content": "The website you shared ([ComfyUI MiniMax H3 tutorial](https://docs.comfy.org/tutorials/video/minimax/minimax-h3)) is **not part of my persistent memory** or the Equal Shares project's internal documentation. My tools can only access project-specific files like `proven_facts`, `prompt_rules`, and ComfyUI workflow configs stored locally. \n\nFor questions about the tutorial, I can help interpret its content if you describe it, but I cannot fetch or analyze external URLs directly. Let me know how I can assist!",
+      "at": 1787453748.9846578
+    }
+  ],
+  "last_tier": "gpu"
+}

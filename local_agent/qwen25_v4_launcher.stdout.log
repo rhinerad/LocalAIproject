@@ -1,0 +1,32 @@
+  stopped stale media watcher (PID 32816)
+  replacing stale local-agent instance (PID 37508) ...
+
+Routing check
+GPU busy   : True  — another compute process is on the GPU: A:\Users\rhine\ComfyUI-Shared\runtimes\llama.cpp-cuda\llama-server.exe
+routing to : CPU  None  @ 127.0.0.1:11435
+cpu server : down  []
+gpu server : up  ['qwen3vl-abl:latest', 'qwen3.6:latest', 'dolphin3:latest', 'qwen3:8b', 'qwen2.5-coder:14b']
+{
+  "queue_owner": "queue owner released",
+  "comfy_port_8188": "closed",
+  "vram_used_mb": 8479,
+  "compute_processes": [
+    "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+    "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+    "A:\\Users\\rhine\\ComfyUI-Shared\\runtimes\\llama.cpp-cuda\\llama-server.exe"
+  ]
+}
+
+Refreshing knowledge from current project state
+system prompt : 3.9 KB  (597 words)
+                A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\local_agent\knowledge\SYSTEM_PROMPT.md
+state         : A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\local_agent\knowledge\PROJECT_STATE.json
+
+speakers 18 = 10 recurring + 8 one-off
+prompts 124 | manifest records 0 | auditions 0 rendered, 0 chosen
+
+retrieval index: 94 files  344 chunks  1721.3 KB
+
+Starting media queue watcher
+
+Starting the app

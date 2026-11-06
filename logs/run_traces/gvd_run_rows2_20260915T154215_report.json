@@ -1,0 +1,539 @@
+{
+  "elapsed_s": 2322.7,
+  "exit_code": 0,
+  "error": null,
+  "slice": [
+    "GVD-B01",
+    "GVD-D01"
+  ],
+  "saved": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\models\\dspy_compiled\\generalized_video_director_mipro_2row.json",
+  "preflight": {
+    "comfy_8188": true,
+    "qwen_11436": false,
+    "ollama_11434": true,
+    "vram": {
+      "used_mib": 525,
+      "free_mib": 15453,
+      "total_mib": 16303,
+      "temp_c": 33.0,
+      "util": 0.0,
+      "ts": 1789501335.321026
+    }
+  },
+  "final_vram": {
+    "used_mib": 702,
+    "free_mib": 15276,
+    "total_mib": 16303,
+    "temp_c": 40.0,
+    "util": 0.0,
+    "ts": 1789503658.016573
+  },
+  "history": [
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 4.0,
+        "denoise": 0.75,
+        "step_count": 24.0
+      },
+      "step_count_int": 24,
+      "scores": {
+        "text_video_alignment": 0.0,
+        "temporal_consistency": 0.0,
+        "aesthetic_quality": 0.0
+      },
+      "mean": 0.0,
+      "minimum": 0.0,
+      "threshold": 0.6,
+      "iteration": 0,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "reasons": [
+        "minimum score 0.00 below curriculum threshold 0.60"
+      ],
+      "hparam_warnings": [],
+      "video_path": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\gvd_GVD-D01_8299c9e453_00001.mp4",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789501390.4211836,
+          "used_mib": 525,
+          "free_mib": 15453,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789501390.4211836
+          }
+        },
+        {
+          "label": "after_wan",
+          "ts": 1789501896.8721464,
+          "used_mib": 705,
+          "free_mib": 15273,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789501390.4211836
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789501896.954046,
+          "used_mib": 705,
+          "free_mib": 15273,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789501896.9083846
+          }
+        },
+        {
+          "label": "after_prepare_vlm",
+          "ts": 1789501897.0266125,
+          "used_mib": 705,
+          "free_mib": 15273,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789501897.0266125
+          }
+        },
+        {
+          "label": "after_vlm",
+          "ts": 1789501934.9191034,
+          "used_mib": 11340,
+          "free_mib": 4638,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789501897.0266125
+          }
+        },
+        {
+          "label": "after_release_vlm",
+          "ts": 1789501939.621385,
+          "used_mib": 705,
+          "free_mib": 15273,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Qwen2.5-VL complete",
+            "since": 1789501939.6203835
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 5.0,
+        "denoise": 0.8,
+        "step_count": 24.0
+      },
+      "step_count_int": 24,
+      "scores": {
+        "text_video_alignment": 0.0,
+        "temporal_consistency": 0.0,
+        "aesthetic_quality": 0.0
+      },
+      "mean": 0.0,
+      "minimum": 0.0,
+      "threshold": 0.6,
+      "iteration": 0,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "reasons": [
+        "minimum score 0.00 below curriculum threshold 0.60"
+      ],
+      "hparam_warnings": [],
+      "video_path": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\gvd_GVD-B01_4c2570b383_00001.mp4",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789501957.818631,
+          "used_mib": 705,
+          "free_mib": 15273,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789501957.8176303
+          }
+        },
+        {
+          "label": "after_wan",
+          "ts": 1789502407.5075066,
+          "used_mib": 705,
+          "free_mib": 15273,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789501957.8176303
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789502407.5886445,
+          "used_mib": 705,
+          "free_mib": 15273,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789502407.5514936
+          }
+        },
+        {
+          "label": "after_prepare_vlm",
+          "ts": 1789502407.644649,
+          "used_mib": 705,
+          "free_mib": 15273,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789502407.644649
+          }
+        },
+        {
+          "label": "after_vlm",
+          "ts": 1789502445.961057,
+          "used_mib": 11340,
+          "free_mib": 4638,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789502407.644649
+          }
+        },
+        {
+          "label": "after_release_vlm",
+          "ts": 1789502450.6473718,
+          "used_mib": 705,
+          "free_mib": 15273,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Qwen2.5-VL complete",
+            "since": 1789502450.6473718
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-D01",
+      "category": "drone_high_kinematics",
+      "hparams": {
+        "cfg_scale": 5.5,
+        "denoise": 0.85,
+        "step_count": 30.0
+      },
+      "step_count_int": 30,
+      "scores": {
+        "text_video_alignment": 0.0,
+        "temporal_consistency": 0.0,
+        "aesthetic_quality": 0.0
+      },
+      "mean": 0.0,
+      "minimum": 0.0,
+      "threshold": 0.6,
+      "iteration": 0,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "reasons": [
+        "minimum score 0.00 below curriculum threshold 0.60"
+      ],
+      "hparam_warnings": [],
+      "video_path": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\gvd_GVD-D01_ca0e9ccb83_00001.mp4",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789502468.9355783,
+          "used_mib": 705,
+          "free_mib": 15273,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789502468.9355783
+          }
+        },
+        {
+          "label": "after_wan",
+          "ts": 1789502969.2110868,
+          "used_mib": 727,
+          "free_mib": 15251,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789502468.9355783
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789502969.307182,
+          "used_mib": 727,
+          "free_mib": 15251,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789502969.261997
+          }
+        },
+        {
+          "label": "after_prepare_vlm",
+          "ts": 1789502969.3668694,
+          "used_mib": 727,
+          "free_mib": 15251,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789502969.3663402
+          }
+        },
+        {
+          "label": "after_vlm",
+          "ts": 1789503019.7946904,
+          "used_mib": 11337,
+          "free_mib": 4641,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789502969.3663402
+          }
+        },
+        {
+          "label": "after_release_vlm",
+          "ts": 1789503024.4875321,
+          "used_mib": 700,
+          "free_mib": 15278,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Qwen2.5-VL complete",
+            "since": 1789503024.4865308
+          }
+        }
+      ]
+    },
+    {
+      "mock": false,
+      "clip_id": "GVD-B01",
+      "category": "backrooms",
+      "hparams": {
+        "cfg_scale": 8.0,
+        "denoise": 0.35,
+        "step_count": 40.0
+      },
+      "step_count_int": 40,
+      "scores": {
+        "text_video_alignment": 0.0,
+        "temporal_consistency": 0.0,
+        "aesthetic_quality": 0.0
+      },
+      "mean": 0.0,
+      "minimum": 0.0,
+      "threshold": 0.6,
+      "iteration": 0,
+      "passes_curriculum": false,
+      "mipro": 0.0,
+      "reasons": [
+        "minimum score 0.00 below curriculum threshold 0.60"
+      ],
+      "hparam_warnings": [],
+      "video_path": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\gvd_GVD-B01_8162b078bb_00001.mp4",
+      "vram_trace": [
+        {
+          "label": "after_prepare_comfy",
+          "ts": 1789503053.0669103,
+          "used_mib": 700,
+          "free_mib": 15278,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789503053.065915
+          }
+        },
+        {
+          "label": "after_wan",
+          "ts": 1789503609.7068393,
+          "used_mib": 702,
+          "free_mib": 15276,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "comfyui",
+            "reason": "Wan 2.1 generation",
+            "since": 1789503053.065915
+          }
+        },
+        {
+          "label": "after_release_comfy",
+          "ts": 1789503609.7951474,
+          "used_mib": 702,
+          "free_mib": 15276,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "ComfyUI /free called",
+            "since": 1789503609.7537866
+          }
+        },
+        {
+          "label": "after_prepare_vlm",
+          "ts": 1789503609.8529134,
+          "used_mib": 702,
+          "free_mib": 15276,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789503609.851904
+          }
+        },
+        {
+          "label": "after_vlm",
+          "ts": 1789503650.1422367,
+          "used_mib": 11337,
+          "free_mib": 4641,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "vlm",
+            "reason": "Qwen2.5-VL judge",
+            "since": 1789503609.851904
+          }
+        },
+        {
+          "label": "after_release_vlm",
+          "ts": 1789503654.8629627,
+          "used_mib": 702,
+          "free_mib": 15276,
+          "total_mib": 16303,
+          "owner": {
+            "owner": "idle",
+            "reason": "Qwen2.5-VL complete",
+            "since": 1789503654.8619666
+          }
+        }
+      ]
+    }
+  ],
+  "gvd_b01": {
+    "mock": false,
+    "clip_id": "GVD-B01",
+    "category": "backrooms",
+    "hparams": {
+      "cfg_scale": 8.0,
+      "denoise": 0.35,
+      "step_count": 40.0
+    },
+    "step_count_int": 40,
+    "scores": {
+      "text_video_alignment": 0.0,
+      "temporal_consistency": 0.0,
+      "aesthetic_quality": 0.0
+    },
+    "mean": 0.0,
+    "minimum": 0.0,
+    "threshold": 0.6,
+    "iteration": 0,
+    "passes_curriculum": false,
+    "mipro": 0.0,
+    "reasons": [
+      "minimum score 0.00 below curriculum threshold 0.60"
+    ],
+    "hparam_warnings": [],
+    "video_path": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\runtime\\dspy_opt\\gvd_GVD-B01_8162b078bb_00001.mp4",
+    "vram_trace": [
+      {
+        "label": "after_prepare_comfy",
+        "ts": 1789503053.0669103,
+        "used_mib": 700,
+        "free_mib": 15278,
+        "total_mib": 16303,
+        "owner": {
+          "owner": "comfyui",
+          "reason": "Wan 2.1 generation",
+          "since": 1789503053.065915
+        }
+      },
+      {
+        "label": "after_wan",
+        "ts": 1789503609.7068393,
+        "used_mib": 702,
+        "free_mib": 15276,
+        "total_mib": 16303,
+        "owner": {
+          "owner": "comfyui",
+          "reason": "Wan 2.1 generation",
+          "since": 1789503053.065915
+        }
+      },
+      {
+        "label": "after_release_comfy",
+        "ts": 1789503609.7951474,
+        "used_mib": 702,
+        "free_mib": 15276,
+        "total_mib": 16303,
+        "owner": {
+          "owner": "idle",
+          "reason": "ComfyUI /free called",
+          "since": 1789503609.7537866
+        }
+      },
+      {
+        "label": "after_prepare_vlm",
+        "ts": 1789503609.8529134,
+        "used_mib": 702,
+        "free_mib": 15276,
+        "total_mib": 16303,
+        "owner": {
+          "owner": "vlm",
+          "reason": "Qwen2.5-VL judge",
+          "since": 1789503609.851904
+        }
+      },
+      {
+        "label": "after_vlm",
+        "ts": 1789503650.1422367,
+        "used_mib": 11337,
+        "free_mib": 4641,
+        "total_mib": 16303,
+        "owner": {
+          "owner": "vlm",
+          "reason": "Qwen2.5-VL judge",
+          "since": 1789503609.851904
+        }
+      },
+      {
+        "label": "after_release_vlm",
+        "ts": 1789503654.8629627,
+        "used_mib": 702,
+        "free_mib": 15276,
+        "total_mib": 16303,
+        "owner": {
+          "owner": "idle",
+          "reason": "Qwen2.5-VL complete",
+          "since": 1789503654.8619666
+        }
+      }
+    ]
+  },
+  "gvd_b01_n": 2
+}

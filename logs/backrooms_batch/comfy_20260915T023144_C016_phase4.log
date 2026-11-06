@@ -1,0 +1,317 @@
+[32m[INFO][0m setup plugin alembic.autogenerate.schemas
+[32m[INFO][0m setup plugin alembic.autogenerate.tables
+[32m[INFO][0m setup plugin alembic.autogenerate.types
+[32m[INFO][0m setup plugin alembic.autogenerate.constraints
+[32m[INFO][0m setup plugin alembic.autogenerate.defaults
+[32m[INFO][0m setup plugin alembic.autogenerate.comments
+[1m[33m[WARNING][0m On windows we are currently forcing single GPU mode in ComfyUI due to a Nvidia related issue, if you want to disable this use: --cuda-device all
+[32m[INFO][0m Adding extra search path checkpoints A:\Users\rhine\ComfyUI-Shared\models\checkpoints
+[32m[INFO][0m Adding extra search path loras A:\Users\rhine\ComfyUI-Shared\models\loras
+[32m[INFO][0m Adding extra search path controlnet A:\Users\rhine\ComfyUI-Shared\models\controlnet
+[32m[INFO][0m Adding extra search path clip_vision A:\Users\rhine\ComfyUI-Shared\models\clip_vision
+[32m[INFO][0m Adding extra search path ipadapter A:\Users\rhine\ComfyUI-Shared\models\ipadapter
+[32m[INFO][0m Adding extra search path text_encoders A:\Users\rhine\ComfyUI-Shared\models\text_encoders
+[32m[INFO][0m Adding extra search path insightface A:\Users\rhine\ComfyUI-Shared\models\insightface
+[32m[INFO][0m Adding extra search path liveportrait A:\Users\rhine\ComfyUI-Shared\models\liveportrait
+[32m[INFO][0m Adding extra search path ultralytics A:\Users\rhine\ComfyUI-Shared\models\ultralytics
+[32m[INFO][0m Adding extra search path ultralytics_bbox A:\Users\rhine\ComfyUI-Shared\models\ultralytics\bbox
+[32m[INFO][0m Adding extra search path ultralytics_segm A:\Users\rhine\ComfyUI-Shared\models\ultralytics\segm
+[32m[INFO][0m Adding extra search path unet A:\Users\rhine\ComfyUI-Shared\models\unet
+[32m[INFO][0m Adding extra search path unet A:\Users\rhine\ComfyUI-Shared\models\diffusion_models
+[32m[INFO][0m Adding extra search path vae A:\Users\rhine\ComfyUI-Shared\models\vae
+[32m[INFO][0m Adding extra search path diffusion_models A:\Users\rhine\Downloads\minimax and realprovisualXL
+[32m[INFO][0m Adding extra search path checkpoints A:\Users\rhine\Downloads\minimax and realprovisualXL
+[32m[INFO][0m Adding extra search path controlnet A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui_controlnet_aux\ckpts\hr16\ControlNet-HandRefiner-pruned
+[32m[INFO][0m Prestartup Skipping ComfyUI-Easy-Use due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Prestartup Skipping comfyui-manager due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Prestartup Skipping rgthree-comfy due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Found comfy_kitchen backend triton: {'available': True, 'disabled': True, 'unavailable_reason': None, 'capabilities': ['adaln', 'apply_rope', 'apply_rope1', 'apply_rope1_', 'apply_rope_', 'apply_rope_split_half', 'apply_rope_split_half1', 'apply_rope_split_half1_', 'apply_rope_split_half_', 'dequantize_nvfp4', 'dequantize_per_tensor_fp8', 'int8_linear', 'na3d', 'quantize_and_rotate_rowwise', 'quantize_int8_rowwise', 'quantize_mxfp8', 'quantize_nvfp4', 'quantize_per_tensor_fp8', 'rms_adaln', 'rms_rope', 'rms_rope1', 'rms_rope1_', 'rms_rope_', 'rms_rope_split_half', 'rms_rope_split_half1', 'rms_rope_split_half1_', 'rms_rope_split_half_', 'w4a8_int8_linear']}
+[32m[INFO][0m Found comfy_kitchen backend hip: {'available': False, 'disabled': False, 'unavailable_reason': 'PyTorch ROCm/HIP runtime not available', 'capabilities': []}
+[32m[INFO][0m Found comfy_kitchen backend eager: {'available': True, 'disabled': False, 'unavailable_reason': None, 'capabilities': ['adaln', 'apply_rope', 'apply_rope1', 'apply_rope1_', 'apply_rope_', 'apply_rope_split_half', 'apply_rope_split_half1', 'apply_rope_split_half1_', 'apply_rope_split_half_', 'convrot_w4a4_linear', 'dequantize_convrot_w4a4_weight', 'dequantize_int8_convrot_weight', 'dequantize_int8_convrot_weight_dtype', 'dequantize_int8_embedding', 'dequantize_int8_simple', 'dequantize_int8_simple_dtype', 'dequantize_mxfp8', 'dequantize_nvfp4', 'dequantize_per_tensor_fp8', 'dequantize_w4a8_int8_weight', 'gemv_awq_w4a16', 'int8_linear', 'na3d', 'prepare_int4_weight_for_int8_linear', 'quantize_and_rotate_rowwise', 'quantize_convrot_w4a4_weight', 'quantize_int8_convrot_weight', 'quantize_int8_rowwise', 'quantize_int8_tensorwise', 'quantize_mxfp8', 'quantize_nvfp4', 'quantize_per_tensor_fp8', 'quantize_svdquant_w4a4', 'quantize_w4a8_int8_weight', 'rms_adaln', 'rms_rope', 'rms_rope1', 'rms_rope1_', 'rms_rope_', 'rms_rope_split_half', 'rms_rope_split_half1', 'rms_rope_split_half1_', 'rms_rope_split_half_', 'rotate_int8_convrot_weight', 'scaled_mm_mxfp8', 'scaled_mm_nvfp4', 'scaled_mm_svdquant_w4a4', 'stochastic_rounding_fp8', 'w4a8_int8_linear']}
+[32m[INFO][0m Found comfy_kitchen backend cuda: {'available': True, 'disabled': False, 'unavailable_reason': None, 'capabilities': ['adaln', 'apply_rope', 'apply_rope1', 'apply_rope1_', 'apply_rope_', 'apply_rope_split_half', 'apply_rope_split_half1', 'apply_rope_split_half1_', 'apply_rope_split_half_', 'convrot_w4a4_linear', 'dequantize_convrot_w4a4_weight', 'dequantize_int8_convrot_weight', 'dequantize_int8_convrot_weight_dtype', 'dequantize_int8_simple', 'dequantize_int8_simple_dtype', 'dequantize_nvfp4', 'dequantize_per_tensor_fp8', 'dequantize_w4a8_int8_weight', 'gemv_awq_w4a16', 'int8_linear', 'na3d', 'prepare_int4_weight_for_int8_linear', 'quantize_and_rotate_rowwise', 'quantize_convrot_w4a4_weight', 'quantize_int8_convrot_weight', 'quantize_int8_rowwise', 'quantize_int8_tensorwise', 'quantize_mxfp8', 'quantize_nvfp4', 'quantize_per_tensor_fp8', 'quantize_svdquant_w4a4', 'quantize_w4a8_int8_weight', 'rms_adaln', 'rms_rope', 'rms_rope1', 'rms_rope1_', 'rms_rope_', 'rms_rope_split_half', 'rms_rope_split_half1', 'rms_rope_split_half1_', 'rms_rope_split_half_', 'rotate_int8_convrot_weight', 'scaled_mm_nvfp4', 'scaled_mm_svdquant_w4a4', 'stochastic_rounding_fp8', 'w4a8_int8_linear']}
+[32m[INFO][0m Checkpoint files will always be loaded safely.
+[32m[INFO][0m Total VRAM 16303 MB, total RAM 31621 MB
+[32m[INFO][0m pytorch version: 2.10.0+cu130
+[32m[INFO][0m Set vram state to: NORMAL_VRAM
+[32m[INFO][0m Device: cuda:0 NVIDIA GeForce RTX 5080 : cudaMallocAsync
+[32m[INFO][0m Using async weight offloading with 2 streams
+[32m[INFO][0m Enabled pinned memory 12648.0
+[32m[INFO][0m working around nvidia conv3d memory bug.
+[32m[INFO][0m Using pytorch attention
+[32m[INFO][0m aimdo: src-win/cuda-detour.c:38:INFO:aimdo_setup_hooks: installing 6 hooks
+[32m[INFO][0m aimdo: src/control.c:262:INFO:comfy-aimdo NVML pressure enabled
+[32m[INFO][0m aimdo: src-win/shmem-detect.c:80:INFO:comfy-aimdo WDDM adapter match: NVIDIA GeForce RTX 5080 runtime_luid=00000000:00011e4e dxgi_luid=00000000:00011e4e
+[32m[INFO][0m aimdo: src/control.c:277:INFO:comfy-aimdo inited for GPU: NVIDIA GeForce RTX 5080 (VRAM: 16302 MB)
+[32m[INFO][0m DynamicVRAM support detected and enabled
+[32m[INFO][0m Python version: 3.13.12 (main, Feb 12 2026, 00:38:53) [MSC v.1944 64 bit (AMD64)]
+[32m[INFO][0m ComfyUI version: 0.34.0
+[32m[INFO][0m comfy-aimdo version: 0.5.1
+[32m[INFO][0m comfy-kitchen version: 0.2.31
+[32m[INFO][0m comfyui-frontend-package version: 1.51.9
+[32m[INFO][0m comfyui-workflow-templates version: 0.11.54
+[32m[INFO][0m comfyui-embedded-docs version: 0.5.10
+[32m[INFO][0m comfy-kitchen version: 0.2.31
+[32m[INFO][0m comfy-aimdo version: 0.5.1
+[32m[INFO][0m [Prompt Server] web root: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\comfyui_frontend_package\static
+[32m[INFO][0m Asset seeder disabled
+[32m[INFO][0m No OpenGL_accelerate module loaded: No module named 'OpenGL_accelerate'
+[32m[INFO][0m Skipping cg-use-everywhere due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfy-image-saver due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfy-pilot due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyLiterals due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-advancedliveportrait due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-agent-panel due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-art-venture due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-AutoCropFaces due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-custom-scripts due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-DaSiWa-Nodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-DBZ-Voice due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-dream-project due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-Easy-Use due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping Comfyui-ergouzi-Nodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-feihou-easy-h3 due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-find-perfect-resolution due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-florence2 due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-frame-interpolation due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-FramePackWrapper due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-FreeMemory due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m ComfyUI-GGUF: Allowing full torch compile
+[32m[INFO][0m Skipping ComfyUI-GIMM-VFI due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-Hunyuan3DWrapper due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-image-saver due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m ### Loading: ComfyUI-Impact-Pack (V8.28.3)
+[1m[33m[WARNING][0m 
+----------------------------------------------------------------------------
+[Impact Pack] The SAM2 functionality is unavailable because the `facebook/sam2` dependency is not installed.
+
+Installation command:
+A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Scripts\python.exe -m pip install git+https://github.com/facebookresearch/sam2
+----------------------------------------------------------------------------
+
+[1m[33m[WARNING][0m 
+----------------------------------------------------------------------------
+[Impact Pack] The SAM2 functionality is unavailable because the `facebook/sam2` dependency is not installed.
+
+Installation command:
+A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Scripts\python.exe -m pip install git+https://github.com/facebookresearch/sam2
+----------------------------------------------------------------------------
+
+[1m[33m[WARNING][0m [Impact Pack] custom_wildcards path not found: A:\Users\rhine\Documents\ComfyUI\custom_nodes\comfyui-impact-pack\custom_wildcards. Using default path.
+[32m[INFO][0m [Impact Pack] Wildcard total size (0.00 MB) is within cache limit (50.00 MB). Using full cache mode.
+[32m[INFO][0m [Impact Pack] Wildcards loading done.
+[32m[INFO][0m ### Loading: ComfyUI-Impact-Subpack (V1.3.5)
+[32m[INFO][0m [Impact Pack/Subpack] Using folder_paths to determine whitelist path: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\user\default\ComfyUI-Impact-Subpack\model-whitelist.txt
+[32m[INFO][0m [Impact Pack/Subpack] Ensured whitelist directory exists: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\user\default\ComfyUI-Impact-Subpack
+[32m[INFO][0m [Impact Pack/Subpack] Loaded 0 model(s) from whitelist: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\user\default\ComfyUI-Impact-Subpack\model-whitelist.txt
+[32m[INFO][0m [Impact Subpack] ultralytics_bbox: A:\Users\rhine\ComfyUI-Shared\models\ultralytics\bbox, A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\models\ultralytics\bbox
+[32m[INFO][0m [Impact Subpack] ultralytics_segm: A:\Users\rhine\ComfyUI-Shared\models\ultralytics\segm, A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\models\ultralytics\segm
+[32m[INFO][0m Skipping ComfyUI-Inpaint-CropAndStitch due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-K3NK-ComfyUI-Nodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-kjnodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-levelpixel due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-LTXVideo due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-ltxvideo-registry-mattabyte due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-manager due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-MaxedOut due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-mcp-throwaway-probe due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-MediaMixer due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-MelBandRoFormer due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping Comfyui-Memory_Cleanup due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-mickmumpitz-nodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-MiniMax-H3-Turbo due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-mmaudio due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-mmaudio-suite due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-mxtoolkit due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-NovaSR due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-Olm-DragCrop due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-PainterI2V due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-PainterLongVideo due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-pause due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-preview-text-fix due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-ProportionChanger due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-propost due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-QwenVL-Mod due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-RIFE-TensorRT-Auto due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-rvtools_v2 due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-SeedVR2_VideoUpscaler due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-SUPIR due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-tara-llm-integration due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-unload-model due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-Upscaler-Tensorrt due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-various due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-VFI due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-vslinx-nodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-WanMoeKSampler due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-WanVideoWrapper due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-wd14-tagger due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI-Whisper due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui-workflow-encrypt due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui_audio_sanitizer due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui_birefnet_ll due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI_Comfyroll_CustomNodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui_controlnet_aux due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui_essentials due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui_ipadapter_plus due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI_JPS-Nodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI_KokoroTTS_MW due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui_layerstyle due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui_nvidia_rtx_nodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI_pose_inter due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI_ProPainter_Nodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI_SeedVR2_Tiler due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI_Selectors due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI_Sonic due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ComfyUI_tinyterraNodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping comfyui_ultimatesdupscale due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping demonalone-nodes-comfyui due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping derfuu_comfyui_moddednodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping efficiency-nodes-comfyui due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping feihou-toolbox due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping focus_nodes due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping gguf due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping HF-Flux-ComfyUI due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping model_attention_backend_compat due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping ostris_nodes_comfyui due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping RES4LYF due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping rgthree-comfy due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping smartmodelloaders-mxd due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping wan22fmlf due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping was-extras due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping was-node-suite-comfyui due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping was-ns due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping websocket_image_save.py due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping whiterabbit due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m Skipping zz_sage_dtype_compat due to disable_all_custom_nodes and whitelist_custom_nodes
+[32m[INFO][0m 
+Import times for custom nodes:
+[32m[INFO][0m    0.0 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-GGUF
+[32m[INFO][0m    0.1 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-impact-subpack
+[32m[INFO][0m    0.2 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\comfyui-impact-pack
+[32m[INFO][0m    0.3 seconds: A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\custom_nodes\ComfyUI-VideoHelperSuite
+[32m[INFO][0m 
+[32m[INFO][0m Context impl SQLiteImpl.
+[32m[INFO][0m Will assume non-transactional DDL.
+[32m[INFO][0m Disabling intermediate node cache.
+[32m[INFO][0m Starting server
+
+[32m[INFO][0m To see the GUI go to: http://127.0.0.1:8188
+[32m[INFO][0m got prompt
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m Using pytorch attention in VAE
+[32m[INFO][0m VAE load device: cuda:0, offload device: cpu, dtype: torch.bfloat16
+[32m[INFO][0m Requested to load WanVAE
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[32m[INFO][0m Found quantization metadata version 1
+[32m[INFO][0m Using MixedPrecisionOps for text encoder
+[32m[INFO][0m CLIP/text encoder model load device: cuda:0, offload device: cpu, current: cpu, dtype: torch.float16
+[32m[INFO][0m Requested to load WanTEModel
+[32m[INFO][0m Model WanTEModel prepared for dynamic VRAM loading. 6419MB Staged. 0 patches attached. Force pre-loaded 73 weights: 488 KB.
+[32m[INFO][0m Model WanTEModel prepared for dynamic VRAM loading. 6419MB Staged. 0 patches attached. Force pre-loaded 73 weights: 488 KB.
+[32m[INFO][0m 0 models unloaded.
+[32m[INFO][0m Model WanVAE prepared for dynamic VRAM loading. 241MB Staged. 0 patches attached. Force pre-loaded 60 weights: 61 KB.
+[32m[INFO][0m model weight dtype torch.float16, manual cast: None
+[32m[INFO][0m model_type FLOW
+[32m[INFO][0m Requested to load WAN21
+[32m[INFO][0m Module diffusion_model.patch_embedding has resizing Lora - force loading
+[32m[INFO][0m Model WAN21 prepared for dynamic VRAM loading. 2705MB Staged. 240 patches attached. Force pre-loaded 182 weights: 1317 KB.
+  0%|          | 0/4 [00:00<?, ?it/s][1m[31m[ERROR][0m !!! Exception during processing !!! 'charmap' codec can't encode characters in position 6-8: character maps to <undefined>
+[1m[31m[ERROR][0m Traceback (most recent call last):
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\tqdm\std.py", line 1191, in __iter__
+    self.update(n - last_print_n)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\tqdm\std.py", line 1242, in update
+    self.refresh(lock_args=self.lock_args)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\tqdm\std.py", line 1347, in refresh
+    self.display()
+    ~~~~~~~~~~~~^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\tqdm\std.py", line 1495, in display
+    self.sp(self.__str__() if msg is None else msg)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\tqdm\std.py", line 457, in print_status
+    fp_write('\r' + s + (' ' * max(last_len[0] - len_s, 0)))
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\tqdm\std.py", line 450, in fp_write
+    fp.write(str(s))
+    ~~~~~~~~^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\tqdm\utils.py", line 175, in inner
+    return func(*args, **kwargs)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\app\logger.py", line 70, in write
+    super().write(data)
+    ~~~~~~~~~~~~~^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\standalone-env\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 6-8: character maps to <undefined>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\execution.py", line 545, in execute
+    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)
+                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\execution.py", line 344, in get_output_data
+    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\execution.py", line 318, in _async_map_node_over_list
+    await process_inputs(input_dict, i)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\execution.py", line 306, in process_inputs
+    result = f(**inputs)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\nodes.py", line 1624, in sample
+    return common_ksampler(model, seed, steps, cfg, sampler_name, scheduler, positive, negative, latent_image, denoise=denoise)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\nodes.py", line 1588, in common_ksampler
+    samples = comfy.sample.sample(model, noise, steps, cfg, sampler_name, scheduler, positive, negative, latent_image,
+                                  denoise=denoise, disable_noise=disable_noise, start_step=start_step, last_step=last_step,
+                                  force_full_denoise=force_full_denoise, noise_mask=noise_mask, callback=callback, disable_pbar=disable_pbar, seed=seed)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\sample.py", line 82, in sample
+    samples = sampler.sample(noise, positive, negative, cfg=cfg, latent_image=latent_image, start_step=start_step, last_step=last_step, force_full_denoise=force_full_denoise, denoise_mask=noise_mask, sigmas=sigmas, callback=callback, disable_pbar=disable_pbar, seed=seed)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1463, in sample
+    return sample(self.model, noise, positive, negative, cfg, self.device, sampler, sigmas, self.model_options, latent_image=latent_image, denoise_mask=denoise_mask, callback=callback, disable_pbar=disable_pbar, seed=seed)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1353, in sample
+    return cfg_guider.sample(noise, latent_image, sampler, sigmas, denoise_mask, callback, disable_pbar, seed)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1335, in sample
+    output = executor.execute(noise, latent_image, sampler, sigmas, denoise_mask, callback, disable_pbar, seed, latent_shapes=latent_shapes)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\patcher_extension.py", line 113, in execute
+    return self.original(*args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1262, in outer_sample
+    output = self.inner_sample(noise, latent_image, device, sampler, sigmas, denoise_mask, callback, disable_pbar, seed, latent_shapes=latent_shapes)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1237, in inner_sample
+    samples = executor.execute(self, sigmas, extra_args, callback, noise, latent_image, denoise_mask, disable_pbar)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\patcher_extension.py", line 113, in execute
+    return self.original(*args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\samplers.py", line 1005, in sample
+    samples = self.sampler_function(model_k, noise, sigmas, extra_args=extra_args, callback=k_callback, disable=disable_pbar, **self.extra_options)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\extra_samplers\uni_pc.py", line 868, in sample_unipc
+    x = uni_pc.sample(noise, timesteps=timesteps, skip_type="time_uniform", method="multistep", order=order, lower_order_final=True, callback=callback, disable_pbar=disable)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\comfy\extra_samplers\uni_pc.py", line 712, in sample
+    for step_index in trange(steps, disable=disable_pbar):
+                      ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\tqdm\std.py", line 1196, in __iter__
+    self.close()
+    ~~~~~~~~~~^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\tqdm\std.py", line 1302, in close
+    self.display(pos=0)
+    ~~~~~~~~~~~~^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\tqdm\std.py", line 1495, in display
+    self.sp(self.__str__() if msg is None else msg)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\tqdm\std.py", line 457, in print_status
+    fp_write('\r' + s + (' ' * max(last_len[0] - len_s, 0)))
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\tqdm\std.py", line 450, in fp_write
+    fp.write(str(s))
+    ~~~~~~~~^^^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\.venv\Lib\site-packages\tqdm\utils.py", line 175, in inner
+    return func(*args, **kwargs)
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI\app\logger.py", line 70, in write
+    super().write(data)
+    ~~~~~~~~~~~~~^^^^^^
+  File "A:\Users\rhine\ComfyUI-Installs\Rockernow\standalone-env\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 6-8: character maps to <undefined>
+
+[32m[INFO][0m [32mPrompt executed in 64.04 seconds[0m

@@ -1,0 +1,183 @@
+Projected abliteration calibration draft - validation report
+Filename date: 2026-09-01
+Created: 2026-09-02 America/New_York
+Status: DRAFT, not operator-approved. GPU/predictors must remain locked.
+
+== Permission checks ==
+- Python code-execution: OK (Python 3.12.10), pre-verified and used for file write plus validators.
+- Repo write: OK (pre-verified probe created and removed; this run wrote only files in the isolated review-only directory).
+- Desktop/machine local-exec: connected (machineId 8845f352-ff51-48db-a7f9-198015c5a9ab).
+
+== Pre-edit GPU snapshot ==
+Date: 2026-09-02 local America/New_York.
+Tool used: nvidia-smi (project script tools/powerinfer/check_gpu_preflight.py was blocked by Auto-review as unbound executable; nvidia-smi is the read-only GPU/status fallback).
+Verbatim pre-edit nvidia-smi (already taken before this work):
+index, name, memory.used [MiB], memory.total [MiB], utilization.gpu [%], utilization.memory [%]
+0, NVIDIA GeForce RTX 5080, 57 MiB, 16303 MiB, 0 %, 0 %
+---APPS---
+pid, process_name, used_gpu_memory [MiB]
+3492, C:\Program Files\WindowsApps\OpenAI.Codex_26.831.1445.0_x64__2p2nqsd0c76g0\app\ChatGPT.exe, [N/A]
+15212, C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe, [N/A]
+23628, C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe, [N/A]
+Idle. No ComfyUI, no PowerInfer dump/train, no model load started by this work.
+
+python -c pipeline_lib snapshot (requested retry of GPU tool as import, not as unbound .py script):
+- First two attempts rejected with: "The reviewed shell target changed before execution; retry the command for a new review."
+- Smart-mode approval was NOT requested.
+- Subsequent python -c import succeeded and matched idle 57 MiB:
+{
+  "gpu": {
+    "nvidia_smi": true,
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 5080",
+        "memory_used_mb": 57,
+        "memory_total_mb": 16303,
+        "memory_free_mb": 15921
+      }
+    ],
+    "compute_apps": [
+      {
+        "pid": "3492",
+        "name": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.831.1445.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe",
+        "used_memory": "[N/A]"
+      },
+      {
+        "pid": "15212",
+        "name": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+        "used_memory": "[N/A]"
+      },
+      {
+        "pid": "23628",
+        "name": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+        "used_memory": "[N/A]"
+      }
+    ]
+  },
+  "ram": {
+    "total_mb": 31621.3,
+    "available_mb": 7972.2,
+    "used_mb": 23649.1,
+    "load_percent": 74
+  },
+  "owners": []
+}
+
+== Files created (this isolated directory only) ==
+1. A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\review-only\turbosparse-mistral-projected-abliteration\draft-calibration-32-pairs.UNAPPROVED.2026-09-01.jsonl
+   bytes: 10377
+   sha256: AB9C774085D7CF744066347ED5989BF91B05624AFE1099A72F6374B7EF41211A
+2. A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\review-only\turbosparse-mistral-projected-abliteration\reviewer-worksheet.md
+   bytes: 7399
+   sha256: 03FF609082FD8FCF0B94E9980279738098C60F032760A6444F98A8FDCF8F87DD
+3. A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\review-only\turbosparse-mistral-projected-abliteration\DRAFT-NOT-OPERATOR-APPROVED.md
+   bytes: 2474
+   sha256: FA293E2A631D16EA9F9D269474F60958C16290D0CEE733A03CB96BAD39E9A53C
+4. A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\review-only\turbosparse-mistral-projected-abliteration\validation-report.2026-09-01.txt
+   bytes: this evidence file; sha256 is of the on-disk bytes after this rewrite and is recorded in the trailing inventory.
+
+JSONL / worksheet / DRAFT hashes for the markdown files are finalized after this ASCII rewrite (em-dash in titles had been corrupted to "?" by the PowerShell pipe). JSONL was not rewritten.
+
+== Existing subset jsonl hash unchanged ==
+Path: A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\review-only\turbosparse-mistral-projected-abliteration\operator-source-safe-subset.UNAPPROVED.jsonl
+bytes: 431
+sha256 before: 3E7C457216F50F594591D86CA50C746D82385B45B22CD727939BCE43568F2E1F
+sha256 after:  3E7C457216F50F594591D86CA50C746D82385B45B22CD727939BCE43568F2E1F
+match: YES. File left untouched (label list only).
+
+== Other repo files ==
+git status: not a git repository (fatal: not a git repository or any of the parent directories: .git).
+No CHANGELOG entry written. No files created or modified outside this isolated directory. Parked checkpoint not touched.
+
+== Tests from tools/powerinfer ==
+Relative `python <script.py>` with working_directory was Auto-review unbound ("executable content could not be bound"). Re-ran via absolute script paths. Tests themselves were not edited.
+
+1) python test_approved_calibration_pairs.py
+   Ran 3 tests in 0.015s
+   OK
+
+2) python validate_approved_calibration_pairs.py <path-to-new-jsonl>
+   MUST FAIL because operator_approved is false / approval_id is null.
+   Exit code: 1
+   Expected reject treated as SUCCESS for this stage.
+   stdout: (empty)
+   stderr:
+Traceback (most recent call last):
+  File "A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\validate_approved_calibration_pairs.py", line 62, in <module>
+    print(json.dumps(validate(args.path, args.minimum), indent=2))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09\tools\powerinfer\validate_approved_calibration_pairs.py", line 30, in validate
+    raise ValueError(f"line {lineno}: {key} must be a non-empty string")
+ValueError: line 1: approval_id must be a non-empty string
+   Note: the strict gate checks approval_id is a non-empty string before operator_approved is true. JSON null on approval_id is the first reject; operator_approved is also false on every row.
+
+3) python validate_calibration_pairs.py <path-to-new-jsonl>
+   PASS
+   {"pairs": 32}
+
+== JSONL mechanical checks ==
+line count = 32
+unique pair_ids = pa-001 .. pa-032 (32 unique, expected sequence True)
+every operator_approved is JSON false
+every approval_id is JSON null
+category = contrastive_refusal
+source = operator_authored
+schema_version = projected-abliteration-v1
+prompts at least 3 words each: True
+curly apostrophes: none (straight ASCII apostrophes only)
+
+== Post-test GPU snapshot ==
+nvidia-smi (same query as pre-edit):
+index, name, memory.used [MiB], memory.total [MiB], utilization.gpu [%], utilization.memory [%]
+0, NVIDIA GeForce RTX 5080, 57 MiB, 16303 MiB, 0 %, 0 %
+---APPS---
+pid, process_name, used_gpu_memory [MiB]
+3492, C:\Program Files\WindowsApps\OpenAI.Codex_26.831.1445.0_x64__2p2nqsd0c76g0\app\ChatGPT.exe, [N/A]
+15212, C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe, [N/A]
+23628, C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe, [N/A]
+
+python -c pipeline_lib snapshot:
+{
+  "gpu": {
+    "nvidia_smi": true,
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 5080",
+        "memory_used_mb": 57,
+        "memory_total_mb": 16303,
+        "memory_free_mb": 15921
+      }
+    ],
+    "compute_apps": [
+      {
+        "pid": "3492",
+        "name": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.831.1445.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe",
+        "used_memory": "[N/A]"
+      },
+      {
+        "pid": "15212",
+        "name": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+        "used_memory": "[N/A]"
+      },
+      {
+        "pid": "23628",
+        "name": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+        "used_memory": "[N/A]"
+      }
+    ]
+  },
+  "ram": {
+    "total_mb": 31621.3,
+    "available_mb": 8936.1,
+    "used_mb": 22685.3,
+    "load_percent": 71
+  },
+  "owners": []
+}
+
+Compare memory.used: 57 MiB pre-edit vs 57 MiB post-test. Unchanged.
+No NEW compute workload appeared that this work started.
+Existing ChatGPT.exe / Brave entries are not a failure.
+
+== Conclusion ==
+Draft prepared; not approved; parked checkpoint untouched; GPU idle.

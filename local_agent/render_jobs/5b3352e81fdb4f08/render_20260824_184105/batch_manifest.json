@@ -1,0 +1,14 @@
+{
+  "job": "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\render_jobs\\5b3352e81fdb4f08\\render_20260824_184105",
+  "created": "2026-08-24T18:41:06",
+  "renders": {
+    "0001": {
+      "status": "failed",
+      "error": "2 attempts failed: 0001: timed out after 120 min"
+    },
+    "0002": {
+      "status": "failed",
+      "error": "2 attempts failed: 0002: timed out after 120 min"
+    }
+  }
+}

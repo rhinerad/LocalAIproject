@@ -1,0 +1,7 @@
+{
+  "id": "C002",
+  "dialogue": "Okay, that was better in my head",
+  "notes": "STAGED: use MiniMaxH3ReferenceToVideo with C001_ref_still.png + C001_master_voice.wav; MiniMax-native audio mux; skip Fish/F5. Apply PATCH_minimax_ref2vid.md before --force.",
+  "minimax_ref2vid": true,
+  "minimax_mode": "ref2vid"
+}

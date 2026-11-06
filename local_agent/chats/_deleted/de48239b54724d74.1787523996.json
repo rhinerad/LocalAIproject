@@ -1,0 +1,18 @@
+{
+  "id": "de48239b54724d74",
+  "title": "What are the exact duration ladder rungs for 00B…",
+  "created": 1787108819.234522,
+  "updated": 1787108958.8683171,
+  "messages": [
+    {
+      "role": "user",
+      "content": "What are the exact duration ladder rungs for 00B?",
+      "at": 1787108819.2395215
+    },
+    {
+      "role": "assistant",
+      "content": "The duration ladder rungs for clip 00B are as follows:\n\n- Base: 14.375 seconds, 345 frames\n- Rung 2: 13.375 seconds, 328 frames (-0.708 from base)\n- Rung 4: 12.375 seconds, 311 frames (-1.417 from base)\n- Rung 6: 11.375 seconds, 277 frames (-2.833 from base)\n- Rung 8: 10.375 seconds, 260 frames (-3.542 from base)\n\nThese are the exact duration ladder rungs for clip 00B as provided by the tool.",
+      "at": 1787108958.8683171
+    }
+  ]
+}

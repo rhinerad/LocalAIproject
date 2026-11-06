@@ -1,0 +1,7 @@
+# Runtime dependencies that the local assistant's optional features import.
+# The core (local_agent/server.py, agent.py, router.py, tools.py, ollama_client.py)
+# is standard-library only and runs with none of these installed.
+numpy>=1.26
+Pillow>=10.0
+cryptography>=42,<47
+psutil>=5.9

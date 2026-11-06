@@ -1,0 +1,4 @@
+# Phase 1 Sideband bridge dependencies, installed locally under local_agent/vendor.
+rns==1.5.0
+lxmf==1.1.1
+pyserial==3.5

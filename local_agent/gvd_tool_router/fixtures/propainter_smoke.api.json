@@ -1,0 +1,46 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "gvd_identity_ref.png"
+    }
+  },
+  "2": {
+    "class_type": "RepeatImageBatch",
+    "inputs": {
+      "image": ["1", 0],
+      "amount": 2
+    }
+  },
+  "3": {
+    "class_type": "SolidMask",
+    "inputs": {
+      "value": 1.0,
+      "width": 512,
+      "height": 512
+    }
+  },
+  "4": {
+    "class_type": "ProPainterInpaint",
+    "inputs": {
+      "image": ["2", 0],
+      "mask": ["3", 0],
+      "width": 512,
+      "height": 512,
+      "mask_dilates": 2,
+      "flow_mask_dilates": 2,
+      "ref_stride": 10,
+      "neighbor_length": 2,
+      "subvideo_length": 2,
+      "raft_iter": 5,
+      "fp16": "enable"
+    }
+  },
+  "5": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": ["4", 0],
+      "filename_prefix": "gvd_tool_router/propainter_smoke"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "4238dc2b08174a37",
+  "title": "I need you to send a message over sideband to th…",
+  "created": 1787673452.0823362,
+  "updated": 1787673824.079984,
+  "model": "huihui_ai/qwen3-abliterated:8b",
+  "messages": [
+    {
+      "role": "user",
+      "content": "I need you to send a message over sideband to the cellphone every 20 seconds for the next 30 minutes. Each message should be a number. Starting from one and then adding one, so the next number is 2 and so on and so forth. ",
+      "at": 1787673452.0918443,
+      "source": "desktop"
+    },
+    {
+      "role": "assistant",
+      "content": "The sideband message interval of 20 seconds for 30 minutes has been confirmed with starting number 1. All parameters are set and ready to execute.",
+      "at": 1787673824.0738823,
+      "retrieved_exemplar_ids": [],
+      "source": "desktop"
+    }
+  ],
+  "last_tier": "cpu"
+}

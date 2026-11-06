@@ -1,0 +1,4 @@
+[
+  {"id": "yellow_surfaces", "criterion": "Yellow surfaces such as carpet, wallpaper, or walls are clearly visible."},
+  {"id": "empty_floor", "criterion": "The frame is an empty interior floor or hallway receding from a first-person POV; no human face or full body is visible."}
+]

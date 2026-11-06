@@ -1,0 +1,15 @@
+{
+  "profile_id": "caption_v4_5080_smoke_20260921",
+  "runtime": "llama.cpp",
+  "model": "qwen25-vl-nsfw-caption:v4-q4_k_m",
+  "host": "127.0.0.1:11436",
+  "gpu": "NVIDIA GeForce RTX 5080",
+  "peak_gpu_mib": 10888,
+  "idle_after_release_mib": 359,
+  "still": "local_agent/runtime/dspy_opt/br24_C017_start_00001_.png",
+  "checks": {
+    "yellow_walls": "fail",
+    "person_visible": "pass"
+  },
+  "note": "Single still smoke. Not a CLIP/ImageReward calibration. Caption V4 was unloaded after the run."
+}

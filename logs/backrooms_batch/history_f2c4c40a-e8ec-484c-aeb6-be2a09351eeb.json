@@ -1,0 +1,202 @@
+{
+  "prompt": [
+    0,
+    "f2c4c40a-e8ec-484c-aeb6-be2a09351eeb",
+    {
+      "1": {
+        "class_type": "UnetLoaderGGUF",
+        "inputs": {
+          "unet_name": "wan2.2_i2v_high_noise_14B_Q4_K_M.gguf"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+          "type": "wan",
+          "device": "cpu"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "wan_2.1_vae.safetensors"
+        }
+      },
+      "4": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Shaky tracking, slow walk toward the nearest doorway. First-person camcorder tracking, heavy VHS artifacting, handheld walking momentum, continuous unbroken shot, realistic camera shake, and 1990s home video aesthetic.",
+          "clip": [
+            "2",
+            0
+          ]
+        }
+      },
+      "5": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "static shot, morphing, still image, text, watermark",
+          "clip": [
+            "2",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "br24_C018_start_00001_.png"
+        }
+      },
+      "7": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "br24_C018_end_00001_.png"
+        }
+      },
+      "8": {
+        "class_type": "WanFirstLastFrameToVideo",
+        "inputs": {
+          "positive": [
+            "4",
+            0
+          ],
+          "negative": [
+            "5",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "width": 512,
+          "height": 288,
+          "length": 17,
+          "batch_size": 1,
+          "start_image": [
+            "6",
+            0
+          ],
+          "end_image": [
+            "7",
+            0
+          ]
+        }
+      },
+      "9": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "8",
+            0
+          ],
+          "negative": [
+            "8",
+            1
+          ],
+          "latent_image": [
+            "8",
+            2
+          ],
+          "seed": 42,
+          "steps": 4,
+          "cfg": 4.0,
+          "sampler_name": "uni_pc",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "9",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ]
+        }
+      },
+      "11": {
+        "class_type": "VHS_VideoCombine",
+        "inputs": {
+          "images": [
+            "10",
+            0
+          ],
+          "frame_rate": 8.0,
+          "loop_count": 0,
+          "filename_prefix": "dspy_opt/br24_C018",
+          "format": "video/h264-mp4",
+          "pingpong": false,
+          "save_output": true
+        }
+      }
+    },
+    {
+      "client_id": "media-pipeline-4e3cf28be432",
+      "create_time": 1789455477343
+    },
+    [
+      "11"
+    ]
+  ],
+  "outputs": {
+    "11": {
+      "gifs": [
+        {
+          "filename": "br24_C018_00001.mp4",
+          "subfolder": "dspy_opt",
+          "type": "output",
+          "format": "video/h264-mp4",
+          "frame_rate": 8.0,
+          "workflow": "br24_C018_00001.png",
+          "fullpath": "A:\\Users\\rhine\\ComfyUI-Installs\\Rockernow\\ComfyUI\\output\\dspy_opt\\br24_C018_00001.mp4"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "f2c4c40a-e8ec-484c-aeb6-be2a09351eeb",
+          "timestamp": 1789455477344
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "f2c4c40a-e8ec-484c-aeb6-be2a09351eeb",
+          "timestamp": 1789455477345
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "f2c4c40a-e8ec-484c-aeb6-be2a09351eeb",
+          "timestamp": 1789455882350
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "11": {
+      "node_id": "11",
+      "display_node": "11",
+      "parent_node": null,
+      "real_node_id": "11"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "id": "bb0ffa24543e490a",
+  "title": "clear media thats in que",
+  "created": 1787597295.091481,
+  "updated": 1787597578.240819,
+  "model": "huihui_ai/qwen3-abliterated:8b",
+  "messages": [
+    {
+      "role": "user",
+      "content": "clear media thats in que",
+      "at": 1787597295.0990026,
+      "source": "desktop"
+    },
+    {
+      "role": "assistant",
+      "content": "The queue is empty. No media is waiting to be processed. The system status confirms all prompts, clips, and audio paths are correctly configured with no pending tasks. The audio gate is currently blocked due to unselected voices, but this does not indicate queued media — it signifies a configuration state.",
+      "at": 1787597578.2328198,
+      "source": "desktop"
+    }
+  ],
+  "last_tier": "cpu"
+}

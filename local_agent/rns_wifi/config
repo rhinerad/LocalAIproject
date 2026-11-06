@@ -1,0 +1,41 @@
+[reticulum]
+# The direct TCP server is a Reticulum transport so a connected Sideband phone
+# can receive this bridge's LXMF announces and replies. This routes Reticulum
+# packets only; it never exposes the localhost HTTP UI.
+enable_transport = Yes
+share_instance = No
+instance_name = equal_shares_lxmf_wifi
+
+[logging]
+loglevel = 4
+
+[interfaces]
+  [[Equal Shares WiFi]]
+    type = AutoInterface
+    enabled = Yes
+    # Keep both active adapters. The workstation normally uses Ethernet while
+    # the phone is on Wi-Fi; both are on the same private LAN.
+    devices = "{B3C25D80-8CB7-45DD-9E1A-5C6C532A2EBA}", "{7BD5276E-53B8-48F6-B354-8F4F6E105C4A}"
+    discovery_scope = link
+
+  # Fallback for Wi-Fi routers that isolate IPv6 multicast between wireless
+  # and wired clients. This is Reticulum/LXMF only (never the HTTP GUI), bound
+  # to this workstation's Ethernet adapter rather than every network address.
+  [[Equal Shares Direct LAN]]
+    type = TCPServerInterface
+    enabled = Yes
+    device = "{B3C25D80-8CB7-45DD-9E1A-5C6C532A2EBA}"
+    port = 4242
+
+  # USB-attached workstation RNode 3B90. The active phone-side RNode B8EE
+  # Sideband profile is mirrored here. This is Reticulum/LXMF transport only
+  # and never exposes the HTTP GUI.
+  [[Equal Shares RNode LoRa]]
+    type = RNodeInterface
+    enabled = Yes
+    port = COM11
+    frequency = 914875000
+    bandwidth = 500000
+    txpower = 10
+    spreadingfactor = 12
+    codingrate = 5

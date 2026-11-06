@@ -1,0 +1,22 @@
+﻿{
+    "last_successful_sync":  "2026-08-10T02:22:44.0840894-04:00",
+    "project_root":  "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2",
+    "handoff_root":  "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09",
+    "configured_clips":  124,
+    "valid_clips":  44,
+    "unresolved_clips":  80,
+    "first_unresolved_clip":  "10B",
+    "interval_seconds":  60,
+    "copied_roots":  [
+                         {
+                             "source":  "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\outputs",
+                             "destination":  "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\outputs",
+                             "robocopy_exit_code":  0
+                         },
+                         {
+                             "source":  "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\work",
+                             "destination":  "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\work",
+                             "robocopy_exit_code":  2
+                         }
+                     ]
+}

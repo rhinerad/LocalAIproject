@@ -1,0 +1,466 @@
+{
+  "facts": [
+    {
+      "id": 0,
+      "category": "preferences",
+      "text": "Prefers concise answers — answer, then stop. No preamble, no restating the question.",
+      "fp": "",
+      "added": "2026-08-22"
+    },
+    {
+      "id": 1,
+      "category": "hardware",
+      "text": "On a phone hotspot. Downloads need explicit approval before initiating.",
+      "fp": "",
+      "added": "2026-08-22"
+    },
+    {
+      "id": 2,
+      "category": "hardware",
+      "text": "Workstation has an RTX 5080 with 16 GB VRAM.",
+      "fp": "",
+      "added": "2026-08-22"
+    },
+    {
+      "id": 3,
+      "category": "project",
+      "text": "Only the operator can accept a take by ear. The agent cannot hear and must never claim a take sounds correct.",
+      "fp": "",
+      "added": "2026-08-22"
+    },
+    {
+      "id": 4,
+      "category": "goal",
+      "text": "End goal: a Reticulum mesh linking the operator's phone and workstation, with an Android client acting as a thin terminal onto this agent. All compute stays on the workstation. When 'add remote access' is requested, this is what it means — not an open HTTP port.",
+      "fp": "",
+      "added": "2026-08-22"
+    },
+    {
+      "id": 5,
+      "category": "project",
+      "text": "The MiniMax H3 documentation outlines T2V, I2V, and R2V workflows in ComfyUI, including model file locations (diffusion models, text encoders, VAEs, LoRA), resolution settings via the Resolution Selector node (aspect ratio, megapixels, multiple parameters), and native stereo audio support. Models are hosted on Hugging Face in the Comfy-Org/MiniMax-H3 repository.",
+      "fp": "2f05b647b48e",
+      "added": "2026-08-23"
+    },
+    {
+      "id": 6,
+      "category": "hardware",
+      "text": "Preferred away-from-home phone-to-workstation transport: a paired set of ESP32 LoRa V3 development boards, each connected by Bluetooth to its host (phone and workstation). They must run compatible RNode firmware and share the same legal frequency, bandwidth, spreading factor, coding rate, and any network-name/passphrase settings. Local Wi-Fi/TCP remains the nearby-house fallback; HTTP remains localhost-only.",
+      "fp": "",
+      "added": "2026-08-23"
+    },
+    {
+      "id": 7,
+      "category": "local-agent GPU rule",
+      "text": "Real renders always win. With no live render owner and port 8188 closed, queued media must reclaim an idle GPU chat model: coexist if possible, otherwise downgrade 14B to 8B, then evict chat; drain the media batch and release vision. Never interrupt a streaming chat or delete media. Source: local_agent/UPGRADE/15_vram_arbitration.md.",
+      "fp": "a79f7a53b0d2",
+      "added": "2026-08-24"
+    },
+    {
+      "id": 8,
+      "category": "local-agent GPU rule",
+      "text": "The Qwen2.5-VL vision server is lazy: normal local-agent startup and text chat never load it. Only the media watcher starts the exact configured GGUF/mmproj pair for a queued image/video batch after router.plan_vision_vram approves a safe window; it releases the VLM after the batch. Foreground media requests queue rather than evict chat. The queue-clear control only preserves pending job records in cancelled/ and never deletes uploads, results, or evidence.",
+      "fp": "",
+      "added": "2026-08-24"
+    },
+    {
+      "id": 9,
+      "category": "goal",
+      "text": "High-priority local-agent goal: implement the agentic reasoning and execution loop specified in local_agent/UPGRADE/16_agentic_reasoning_execution_loop.md. It must strengthen plan→native-tool→observation→evidence-check iterations, durable task checkpoints, bounded tool context, and cross-chat continuation without exposing chain-of-thought or weakening safeguards.",
+      "fp": "d0679db79c03",
+      "added": "2026-08-24"
+    },
+    {
+      "id": 10,
+      "category": "goal",
+      "text": "The full requested agentic-loop requirements are persistent in UPGRADE/16: ReAct-style structured multi-tool execution; retrieval-grounded and cross-source verification; self-checking of evidence-backed claims; output pruning; rolling context summaries/checkpoints; and only runtime-supported KV/prefix-cache optimization under GPU arbitration. Require regression tests, 124/124 prompt validation, and measured context/latency evidence before calling it complete.",
+      "fp": "3850dac780cb",
+      "added": "2026-08-24"
+    },
+    {
+      "id": 11,
+      "category": "goal",
+      "text": "Implementation priority: build the local agent’s high-priority agentic reasoning/execution harness now, using the operator-supplied ReAct, Self-RAG, Plan-and-Solve, and orchestration references as design input. Adapt patterns to the current stdlib/native-Ollama system; do not add framework dependencies or weaken safeguards.",
+      "fp": "37a189d78491",
+      "added": "2026-08-24"
+    },
+    {
+      "id": 12,
+      "category": "goal",
+      "text": "Reference map for the agentic-loop goal: smolagents ToolCallingAgent and Aider for ReAct/tool execution; LangGraph local Self-RAG and self-rag research for retrieval/relevance/support checks; LangGraph plan-and-execute and Aider Architect Mode for planning/replanning; LangGraph/FastMCP/Mem0 for harness, schema, and durable-memory concepts. Full source list is recorded in UPGRADE/16.",
+      "fp": "e1221ab87daf",
+      "added": "2026-08-24"
+    },
+    {
+      "id": 13,
+      "category": "goal",
+      "text": "Agentic harness stages 1–2 are implemented: durable operator-visible task checkpoints, native multi-tool observations, continuation replanning, and conservative local-doc retrieve-decision with deterministic relevance filtering. Model-driven self-grading and planner/replanner calls remain evaluation-gated; safeguards stay unchanged.",
+      "fp": "d99143ec3800",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 14,
+      "category": "goal",
+      "text": "Agentic harness stage 3 is implemented: new substantive tasks can use one sequential local Ollama JSON-schema plan proposal. It is strictly validated as an inert checklist; execution verbs are rejected, it has no tools or authority, and recorded tool observations—not the planner—determine completion.",
+      "fp": "b3592817195c",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 15,
+      "category": "goal",
+      "text": "Agentic harness stage 4 baseline is implemented: agentic_eval.py runs five mocked, no-model/no-render checks for multi-tool execution, source-labelled retrieval, checkpoint continuation, blocked failures, and phone render denial. Keep the baseline green before future harness changes; real-task evaluation requires operator-approved anonymized cases.",
+      "fp": "21e486135b57",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 16,
+      "category": "goal",
+      "text": "Opt-in learning is enabled in the local-agent GUI: Helpful feedback is audit-only. Only an operator-typed rule submitted through Correct & remember is saved as a user-confirmed rule; silence is never approval, raw replies are not copied into memory, and safety-weakening rules are refused.",
+      "fp": "7df01ff9f24a",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 17,
+      "category": "project",
+      "text": "The local agent is a general desktop assistant. ComfyUI, rendering, prompts, clips, video work, and creative requests are general by default; Equal Shares context is used only when the operator explicitly identifies Equal Shares, MiniMax H3, an Equal Shares clip ID, or an Equal Shares file/path.",
+      "fp": "",
+      "added": "2026-08-24"
+    },
+    {
+      "id": 18,
+      "category": "goal",
+      "text": "Deferred high-priority agentic upgrade: add operator-approved feedback promotion and curated exemplar retrieval for video prompts, ComfyUI workflows, and screenplay beats, plus stronger dense video-action evaluation. Preserve explicit feedback/privacy, the exact Qwen2.5-VL Caption V4 setup, lazy GPU queueing, whitelist, and render guards. MiniCPM is out of scope; require approval before raw-chat retention, Chroma/nomic, or external-corpus downloads.",
+      "fp": "",
+      "added": "2026-08-24"
+    },
+    {
+      "id": 19,
+      "category": "goal",
+      "text": "Upgrade 17 resolutions: feedback defaults to rule-only SHA-256-fingerprinted records with operator-supplied rules; full sanitized payloads are opt-in only. Redact paths, emails, tokens and keys; encrypt feedback at rest with AES-256-GCM only when CPU/GPU are idle, with key material stored separately and no plaintext fallback. External exemplars must be staged with provenance/license, explicitly approved/edited/rejected, pre-screened/deduplicated, and attributed to explicit feedback; archive poor examples reversibly. Native H3 examples must pass the linter and use six sections/one-based tags, never [start-end s] timing blocks.",
+      "fp": "",
+      "added": "2026-08-24"
+    },
+    {
+      "id": 20,
+      "category": "goal",
+      "text": "Upgrade 17 privacy/curation foundation is implemented locally without downloads: idle-only AES-256-GCM feedback with rule-only default and opt-in sanitised payloads; staged licensed exemplar review, deterministic screening, H3-safe normalisation, ID-only feedback attribution and reversible low-score archive. No exemplar is embedded, retrieved, or activated until the operator separately approves a local embedding backend.",
+      "fp": "cc9826f7c429",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 21,
+      "category": "goal",
+      "text": "Operator approved ChromaDB and local Ollama nomic-embed-text. Approved exemplars now use CPU-only local embedding (num_gpu 0, four threads, unload after request); pending/rejected examples cannot be retrieved. Prompt/workflow/screenplay replies inject at most two provenance-labelled approved examples under an 800-token cap, and explicit feedback updates their lifecycle attribution. No external corpus has been downloaded or ingested.",
+      "fp": "21cd65e0f6d6",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 22,
+      "category": "project",
+      "text": "For short reference-video prompt building, use dense second-by-second visual evidence. The Qwen2.5-VL action extractor must remain lazy and queued behind render work, label every sampled frame/window explicitly, and report skipped labels as evidence gaps rather than inventing actions. Use 2 FPS only when half-second detail is actually needed; do not use bracketed timing blocks as native H3 grammar.",
+      "fp": "",
+      "added": "2026-08-24"
+    },
+    {
+      "id": 23,
+      "category": "user-confirmed rule",
+      "text": "The local agent may improve through explicit operator feedback and operator-approved anonymized evaluation cases, never by silently mining chat transcripts. Evaluation cases begin pending, require an explicit approval move, and score only stated tool/response expectations; live model runs remain separately requested and must never start renders.",
+      "fp": "",
+      "added": "2026-08-24"
+    },
+    {
+      "id": 24,
+      "category": "user-confirmed rule",
+      "text": "Optimization decisions must be measured per active runtime. SageAttention 2 is already installed for ComfyUI but its CUDA backend is unsupported on this RTX 5080 sm120 and its Triton fallback was slower with changed output; keep it disabled. Original SageAttention v1 is an older Triton implementation upstream says is slower, so do not substitute it. Neither accelerates Ollama or llama.cpp. The next agent optimization candidate is a separately approved, measured Ollama Flash Attention plus q8_0 KV-cache test with VRAM, latency, quality, and yield-to-render checks.",
+      "fp": "",
+      "added": "2026-08-24"
+    },
+    {
+      "id": 25,
+      "category": "user-confirmed rule",
+      "text": "Resource safety policy: background planning and queued Ollama vision must release immediately; interactive chat may retain its model briefly. Direct media requests outrank batch work, and any render pre-empts video work at safe boundaries by requeueing it with audit evidence. For normal file edits, the agent must show a protected-file-aware unified diff before an operator explicitly asks to write it.",
+      "fp": "",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 26,
+      "category": "user-confirmed rule",
+      "text": "Media-queue UX policy: the Queue control must expose each local media job's progress, elapsed time, priority, and concrete wait reason. An operator may cancel only a media job; cancellation preserves its JSON record under cancelled/ and processing work stops cooperatively at a safe boundary. This must never kill, alter, or claim an unrelated generation job.",
+      "fp": "",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 27,
+      "category": "goal",
+      "text": "General image/storyboard roadmap Phase 0 is complete: work/notes/image_stack_inventory.md records existing DreamShaper XL/SDXL/ControlNet assets and missing InstantID/PuLID components. Do not download, install nodes, load an image model, or generate an image until the operator separately approves the selected path. Prefer the no-download DreamShaper XL dry-run first; all outputs must stay under outputs/stories/, preserve consent boundaries, and use the existing GPU lock and thermal guard.",
+      "fp": "",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 28,
+      "category": "project state",
+      "text": "The exact approved photoreal still-image checkpoint RealVisXL_V5.0_fp16.safetensors is installed in the shared ComfyUI checkpoints directory and SHA-256 verified as 6a35a7855770ae9820a3c931d4964c3817b6d9e3c6f9c4dabb5b3a94e5643b80. Its single approved isolated 1024x1024 smoke render passed visual and manifest audit, then released the GPU. The first transfer failed integrity and was preserved as evidence; never substitute or overwrite the verified model. Image work is for general storyboard/reference stills, not chat, vision analysis, or the Equal Shares render pipeline. Future image generations remain separately operator-approved.",
+      "fp": "",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 29,
+      "category": "project state",
+      "text": "The local agent has a read-only plan_story_image capability for general storyboards. It creates an inspectable core RealVisXL t2i/i2i graph only; it never starts ComfyUI, loads a model, uses GPU, writes output, or affects Equal Shares. A future actual still-image generation remains an explicitly operator-approved isolated-renderer action.",
+      "fp": "",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 30,
+      "category": "project state",
+      "text": "Character identity planning is consent-gated. work/character_library.py can only make a no-GPU LoRA training plan or register a character after an explicit consenting-adult confirmation; it stores no absolute photo path. It cannot invoke kohya_ss, download identity assets, load models, or train. Any real LoRA training or InstantID/IPAdapter/PuLID install is a distinct future approval gate.",
+      "fp": "",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 31,
+      "category": "user-confirmed rule",
+      "text": "General storyboard workflow rule: validated character/shot plans must remain locked behind a reference overview. Every character needs a recorded reference sheet and the operator must explicitly approve the overview before frame planning may unlock. This gate is persisted by work/storyboard_from_story.py and desktop native tools; its state-changing steps are default-denied to phone identities. It never starts a model, image generation, or video render by itself.",
+      "fp": "",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 32,
+      "category": "project state",
+      "text": "Current operating handoff is docs/LOCAL_AGENT_CURRENT_HANDOFF_2026-08-30.md. Equal Shares is paused while the general local assistant evolves. The current PowerInfer Bamboo-DPO candidate passed only its isolated native sparse mechanical gate; its frozen prompt contract is unresolved, so it is not registered, routed, or in the picker. COMFYUI_STORY_HANDOFF_2026-08-09 remains canonical; the parent outputs tree is a stale fork and must never receive state copies. The desktop EQUAL_SHARES_LOCAL_AGENT folder is a launcher bundle synchronized to point at this canonical handoff, not a separate source-of-truth repository.",
+      "fp": "",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 33,
+      "category": "goal",
+      "text": "Career-portfolio priority: organize the local-agent, multimodal inference, ComfyUI orchestration, privacy/safety, and Sideband/LXMF work into a job-application-ready evidence pack. Build sanitized case studies, architecture diagrams, reproducible tests/benchmarks, decision records, and a public-safe demo/repository. Never publish private creative media, absolute paths, identities, tokens, unverified claims, or license-restricted assets. Clearly distinguish verified work, active experiments, and planned work.",
+      "fp": "",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 34,
+      "category": "goal",
+      "text": "Portfolio evidence priorities: formalize the 124-prompt H3 validator as an eval harness; measure experimental ESP32 LoRa RNode transport delivery/loss/latency; benchmark lazy exact-Qwen2.5-VL GGUF+projector load, analysis, VRAM use, and release; produce a sanitized public-domain demo, architecture diagrams, and evidence-backed ADRs. Any public repository may contain only audited core orchestration, tool-router, and ComfyUI-preflight modules with synthetic fixtures; private workflows/UI/media/runtime data remain private.",
+      "fp": "",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 35,
+      "category": "project state",
+      "text": "RNode radio profile update: workstation USB RNode on COM11 and phone-side B8EE are configured for SF12. Workstation profile remains 914.875 MHz, 500 kHz bandwidth, coding rate 5, TX power 10 dBm. The workstation LXMF bridge was restarted successfully using this profile; phone Sideband must restart after its setting change. Mesh delivery remains experimental until measured end-to-end.",
+      "fp": "",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 36,
+      "category": "project state",
+      "text": "Portfolio evidence update: the MiniMax H3 private-safe evaluation harness is complete. local_agent/h3_evaluation.py records only aggregate counts, hashes, validator error codes, elapsed time, and synthetic negative-control outcomes; it never emits prompt text, prompt file names, paths, or media identifiers. Its 2026-08-25 baseline is 124/124 valid in 1644.92 ms with four deliberately broken controls correctly rejected. Portfolio ADRs live under docs/adr/ and must remain evidence-based and privacy-safe.",
+      "fp": "",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 37,
+      "category": "project",
+      "text": "sideband_message_interval: 20s",
+      "fp": "cfaac73469d3",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 38,
+      "category": "project",
+      "text": "sideband_duration: 30m",
+      "fp": "c9d4b0a19d28",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 39,
+      "category": "project",
+      "text": "sideband_start_num: 1",
+      "fp": "15f5ddfbc308",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 37,
+      "category": "project state",
+      "text": "No-GPU regression baseline on 2026-08-25: native function/tool calling 19/19, H3 evaluation harness 1/1, LXMF bridge 11/11, Sideband Tier B source overlay 4/4, and H3 corpus 124/124 valid. These are source-level checks only; they do not establish Android device acceptance, mesh reliability, performance, or render correctness.",
+      "fp": "",
+      "added": "2026-08-25"
+    },
+    {
+      "id": 40,
+      "category": "goal",
+      "text": "Operator is interested in implementing a measured, safety-gated loop-engineering architecture for the local agent, based on Addy Osmani's June 7, 2026 Loop Engineering article. Prioritize durable on-disk state, scheduled discovery and triage, separate implementation and verification, explicit evaluations, and operator review; never use loops to bypass render, download, permission, or evidence safeguards.",
+      "fp": "f9bfb9faa0e3",
+      "added": "2026-08-27"
+    },
+    {
+      "id": 41,
+      "category": "goal",
+      "text": "[Architecture][Security-Audit][Pending-Patches] VRAM Eviction Lock: router.py must block on /api/ps until the 14B model is fully evicted from RTX 5080 VRAM before CPU fallback. This prevents silent GPU-residency failures and OOM crashes when ComfyUI owns the card.",
+      "fp": "",
+      "added": "2026-08-27"
+    },
+    {
+      "id": 42,
+      "category": "goal",
+      "text": "[Architecture][Security-Audit][Pending-Patches] LXMF Race Condition: phone_scheduler.py needs a lease or lock before Reticulum send so a mesh-network crash cannot create phantom duplicate dispatches.",
+      "fp": "",
+      "added": "2026-08-27"
+    },
+    {
+      "id": 43,
+      "category": "goal",
+      "text": "[Architecture][Security-Audit][Pending-Patches] Memory Queue Unbounding: feedback_manager.py needs a hard cap on the background encryption queue, overflow spill/drop handling, and quarantine for poison records so RAM cannot grow without bound.",
+      "fp": "",
+      "added": "2026-08-27"
+    },
+    {
+      "id": 44,
+      "category": "goal",
+      "text": "[Architecture][Context-Optimization][Token-Pruning][Memory-Pipeline] Pillar 1: add a CPU-side rolling summarizer in local_agent/context_compactor.py using llama3.1:8b on router.CPU_HOST with keep_alive=\"0\" and strict JSON output for goal, decisions, open_questions, tool_state, hard_constraints, and notable_files.",
+      "fp": "",
+      "added": "2026-08-27"
+    },
+    {
+      "id": 45,
+      "category": "goal",
+      "text": "[Architecture][Context-Optimization][Token-Pruning][Memory-Pipeline] Pillar 2: add local_agent/artifacts.py to spill oversized tool outputs to runtime/artifacts/{id}.json with SHA-1 fingerprinting and replace live prompt content with a lightweight artifact pointer when output exceeds the cap.",
+      "fp": "",
+      "added": "2026-08-27"
+    },
+    {
+      "id": 46,
+      "category": "goal",
+      "text": "[Architecture][Context-Optimization][Token-Pruning][Memory-Pipeline] Pillar 3: add asynchronous post-turn memory extraction in local_agent/memory_extractor.py and call memory.remember() only for stable, non-sensitive operator facts/preferences gathered after the turn completes.",
+      "fp": "",
+      "added": "2026-08-27"
+    },
+    {
+      "id": 47,
+      "category": "goal",
+      "text": "[Architecture][Context-Optimization][Token-Pruning][Memory-Pipeline] Pillar 4: add local_agent/prompt_prefix.py with @lru_cache(maxsize=128) and keep static prompt prefix ordering byte-stable in local_agent/agent.py to improve local KV-cache reuse.",
+      "fp": "",
+      "added": "2026-08-27"
+    },
+    {
+      "id": 48,
+      "category": "goal",
+      "text": "[Architecture][Context-Optimization][Token-Pruning][Memory-Pipeline] Router bug fix: local_agent/router.py::decide() must block on /api/ps until the 14B model is fully evicted from VRAM before CPU fallback; skip_gpu_inventory must not suppress unloading.",
+      "fp": "",
+      "added": "2026-08-27"
+    },
+    {
+      "id": 49,
+      "category": "preference",
+      "text": "Operator requested exact local Ollama model gpt-oss-20b-heretic as an opt-in new-chat choice. It must remain GPU-only with num_ctx 8192, never download/preload automatically, never use CPU layer offload, and never silently fall back to the Huihui 8B model when GPU is busy. Its dedicated setup script verifies the exact Bartowski Q4_K_M GGUF before Ollama import.",
+      "fp": "",
+      "added": "2026-08-27"
+    },
+    {
+      "id": 50,
+      "category": "preference",
+      "text": "Operator authorizes downloads required to improve or complete the local-agent project. Do not stop merely to request download permission for scoped models, dependencies, or datasets; retain existing render, evidence-preservation, and destructive-action safeguards.",
+      "fp": "",
+      "added": "2026-08-27"
+    },
+    {
+      "id": 51,
+      "category": "preference",
+      "text": "Operator prefers a curated offline library of strong abliterated/Heretic models, not every available model. Qwen3 30B-A3B and DeepSeek-R1-Distill-Qwen 32B are constrained local-use candidates; DeepSeek-R1-Distill-Llama 70B Heretic and GPT-OSS 120B Heretic are archive-only on the current 16 GB VRAM / 32 GB RAM machine. Downloading or storing a model never means it is auto-registered, preloaded, or safe to use.",
+      "fp": "",
+      "added": "2026-08-27"
+    },
+    {
+      "id": 52,
+      "category": "goal",
+      "text": "Future plan: a private 10-node, 1-GbE Worker Farm is asynchronous only; the RTX workstation remains control plane. Use RabbitMQ/Celery/Ray batching, a controlled Chroma writer, encrypted raw artifacts, provenance and human-review gates. Treat distributed 70B judging as a benchmarked batch experiment, never live chat.",
+      "fp": "530ef9a5c76c",
+      "added": "2026-08-29"
+    },
+    {
+      "id": 53,
+      "category": "project",
+      "text": "Phase 1 Worker Farm is active only as a local CPU-only foundation at local_agent/worker_farm: loopback Redis, a conservative Celery worker, and a benign review-only historical-distillation sample. Raw artifacts use AES-256-GCM; deterministic JSON/HTML extraction is bounded and review-only; a SQLite metadata ledger deduplicates jobs and allows one claim. No Chroma promotion, rendering, command execution, model loading, remote worker, or exposed queue is permitted. Docker Desktop and isolated Celery/Redis dependencies are installed, but the loopback broker/sample run still awaits a normal desktop-account Docker launch.",
+      "fp": "",
+      "added": "2026-08-29"
+    },
+    {
+      "id": 54,
+      "category": "project",
+      "text": "Context compaction must never delay an ordinary one-message or system-insert-only turn. local_agent/agent.py invokes the optional CPU llama3.1 compactor only for at least two genuine older user/assistant/tool messages totaling 600+ characters; context_compactor.py is best-effort with a 12-second timeout and deterministic fallback.",
+      "fp": "",
+      "added": "2026-08-29"
+    },
+    {
+      "id": 55,
+      "category": "workflow",
+      "text": "The local-agent can upgrade itself by downloading newer versions of its models.",
+      "fp": "ef86fe0e5aec",
+      "added": "2026-09-01"
+    },
+    {
+      "id": 56,
+      "category": "workflow",
+      "text": "Upgrades depend on the operator’s permissions and available system resources.",
+      "fp": "f36d0217429a",
+      "added": "2026-09-01"
+    },
+    {
+      "id": 57,
+      "category": "workflow",
+      "text": "No external tools are needed for upgrades — it’s a built-in capability of the local-agent project.",
+      "fp": "312bb093072e",
+      "added": "2026-09-01"
+    },
+    {
+      "id": 63,
+      "category": "hardware",
+      "text": "comfortable indoor temperature for sleeping is 65-72°F",
+      "fp": "da07b8258f51",
+      "added": "2026-09-01"
+    }
+  ],
+  "_forgotten": [
+    {
+      "id": 58,
+      "category": "workflow",
+      "text": "The realpro flux model profile render has started successfully.",
+      "fp": "70eb164281fa",
+      "added": "2026-09-01",
+      "forgotten": "2026-09-01"
+    },
+    {
+      "id": 59,
+      "category": "workflow",
+      "text": "The job is running in the background.",
+      "fp": "9c7d85a3d8ca",
+      "added": "2026-09-01",
+      "forgotten": "2026-09-01"
+    },
+    {
+      "id": 60,
+      "category": "workflow",
+      "text": "The output manifest will be created at outputs/stories/Photoreal_live-action_35mm_full-bodies_Night_greenhouse_red_velvet_couch_behind_/manifests/image_*.json once the render completes.",
+      "fp": "bd9d400f42da",
+      "added": "2026-09-01",
+      "forgotten": "2026-09-01"
+    },
+    {
+      "id": 61,
+      "category": "workflow",
+      "text": "No image file exists yet — the rendering process is still ongoing, and the manifest has not been generated.",
+      "fp": "ef5dad44eeb9",
+      "added": "2026-09-01",
+      "forgotten": "2026-09-01"
+    },
+    {
+      "id": 62,
+      "category": "goal",
+      "text": "Open the file when it is done rendering",
+      "fp": "463edd4c4b30",
+      "added": "2026-09-01",
+      "forgotten": "2026-09-01"
+    }
+  ]
+}

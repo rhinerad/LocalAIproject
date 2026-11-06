@@ -1,0 +1,15 @@
+{
+  "id": "77abf371410c4275",
+  "kind": "vision",
+  "args": {
+    "images": [
+      "A:\\Users\\rhine\\Documents\\Codex\\2026-08-07\\referenced-chatgpt-conversation-this-is-an-2\\COMFYUI_STORY_HANDOFF_2026-08-09\\local_agent\\uploads\\lxmf\\1ddab9f8183effa9b53bf8a2d169adb7\\sideband_image.webp"
+    ],
+    "question": "",
+    "instruction": null
+  },
+  "priority": "interactive",
+  "queued_at": "2026-08-29T02:57:27Z",
+  "cancelled_at": "2026-08-29T06:10:26Z",
+  "cancel_reason": "operator cleared media queue"
+}

@@ -1,0 +1,6 @@
+Qwen2.5-VL NSFW Caption V3 local setup
+Required download: about 6.03 GB (4.68 GB Q4_K_M model + 1.35 GB f16 projector).
+Target directory: A:\Users\rhine\ComfyUI-Shared\models\LLM\GGUF\mradermacher\Qwen2.5-VL-7B-NSFW-Caption-V3-GGUF
+  already present: Qwen2.5-VL-7B-NSFW-Caption-V3.Q4_K_M.gguf
+  already present: Qwen2.5-VL-7B-NSFW-Caption-V3.mmproj-f16.gguf
+Importing the base GGUF and matching projector into Ollama ...

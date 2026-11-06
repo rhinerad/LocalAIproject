@@ -1,0 +1,41 @@
+{
+  "1": {"class_type": "LoadImage", "inputs": {"image": "CANDIDATE_UPLOAD.png"}},
+  "2": {"class_type": "LoadImage", "inputs": {"image": "REFERENCE_UPLOAD.png"}},
+  "20": {
+    "class_type": "Clip_Score-\ud83d\udd2c",
+    "inputs": {
+      "Source_Image": ["1", 0],
+      "Clip_Model": "openai/clip-vit-base-patch32",
+      "Target_Image": ["2", 0],
+      "Target_Prompt": "CONCISE_AUDIT_CAPTION"
+    }
+  },
+  "21": {
+    "class_type": "Dino_Score-\ud83d\udd2c",
+    "inputs": {"Source_Image": ["1", 0], "Target_Image": ["2", 0]}
+  },
+  "30": {
+    "class_type": "WD14Tagger|pysssss",
+    "inputs": {
+      "image": ["1", 0],
+      "model": "wd-v1-4-moat-tagger-v2",
+      "threshold": 0.35,
+      "character_threshold": 0.85,
+      "replace_underscore": true,
+      "trailing_comma": false,
+      "exclude_tags": ""
+    }
+  },
+  "90": {
+    "class_type": "GVDMetricReport",
+    "inputs": {
+      "clip_text": ["20", 0],
+      "clip_image": ["20", 1],
+      "dino": ["21", 0],
+      "clip_text_unit": "torchmetrics_clipscore_0_100",
+      "attempt_id": "ATTEMPT_ID",
+      "image_sha256": "CANDIDATE_SHA256",
+      "profile_id": "LOCKED_METRICS_PROFILE"
+    }
+  }
+}

@@ -1,0 +1,273 @@
+{
+  "1": {
+    "class_type": "VHS_LoadVideoPath",
+    "inputs": {
+      "video": "{{REFERENCE_VIDEO}}",
+      "force_rate": "{{FORCE_FPS}}",
+      "custom_width": 0,
+      "custom_height": 0,
+      "frame_load_cap": "{{FRAME_CAP}}",
+      "skip_first_frames": "{{SKIP_FIRST}}",
+      "select_every_nth": 1
+    }
+  },
+  "2": {
+    "class_type": "DWPreprocessor",
+    "inputs": {
+      "image": ["1", 0],
+      "detect_hand": "enable",
+      "detect_body": "enable",
+      "detect_face": "disable",
+      "resolution": 512,
+      "bbox_detector": "yolox_l.onnx",
+      "pose_estimator": "dw-ll_ucoco_384_bs5.torchscript.pt",
+      "scale_stick_for_xinsr_cn": "enable"
+    }
+  },
+  "3": {
+    "class_type": "SaveImage",
+    "inputs": {"images": ["2", 0], "filename_prefix": "{{PREFIX}}/pose"}
+  },
+  "4": {
+    "class_type": "SaveImage",
+    "inputs": {"images": ["1", 0], "filename_prefix": "{{PREFIX}}/src"}
+  },
+  "10": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {"ckpt_name": "RealVisXL_V5.0_fp16.safetensors"}
+  },
+  "12": {
+    "class_type": "ADE_StandardUniformContextOptions",
+    "inputs": {
+      "context_length": 16,
+      "context_stride": 1,
+      "context_overlap": 4,
+      "fuse_method": "pyramid",
+      "use_on_equal_length": false,
+      "start_percent": 0.0,
+      "guarantee_steps": 1
+    }
+  },
+  "11": {
+    "class_type": "ADE_AnimateDiffLoaderGen1",
+    "inputs": {
+      "model": ["10", 0],
+      "model_name": "mm_sdxl_v10_beta.ckpt",
+      "beta_schedule": "linear (AnimateDiff-SDXL)",
+      "context_options": ["12", 0]
+    }
+  },
+  "13": {
+    "class_type": "IPAdapterUnifiedLoader",
+    "inputs": {"model": ["11", 0], "preset": "PLUS FACE (portraits)"}
+  },
+  "14": {
+    "class_type": "LoadImage",
+    "inputs": {"image": "{{CHARACTER_FACE_IMAGE}}"}
+  },
+  "26": {
+    "class_type": "VHS_LoadImagesPath",
+    "inputs": {
+      "directory": "{{MASKS_DIR}}",
+      "image_load_cap": "{{FRAME_CAP}}",
+      "skip_first_images": 0,
+      "select_every_nth": 1
+    }
+  },
+  "27": {
+    "class_type": "ImageToMask",
+    "inputs": {"image": ["26", 0], "channel": "red"}
+  },
+  "15": {
+    "class_type": "IPAdapterAdvanced",
+    "inputs": {
+      "model": ["13", 0],
+      "ipadapter": ["13", 1],
+      "image": ["14", 0],
+      "weight": 0.8,
+      "weight_type": "linear",
+      "combine_embeds": "concat",
+      "start_at": 0.0,
+      "end_at": 1.0,
+      "embeds_scaling": "V only",
+      "attn_mask": ["27", 0]
+    }
+  },
+  "16": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {"text": "{{POSITIVE}}", "clip": ["10", 1]}
+  },
+  "17": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {"text": "{{NEGATIVE}}", "clip": ["10", 1]}
+  },
+  "18": {
+    "class_type": "ControlNetLoader",
+    "inputs": {"control_net_name": "controlnet-union-sdxl-1.0-promax.safetensors"}
+  },
+  "19": {
+    "class_type": "SetUnionControlNetType",
+    "inputs": {"control_net": ["18", 0], "type": "openpose"}
+  },
+  "20": {
+    "class_type": "ControlNetApplyAdvanced",
+    "inputs": {
+      "positive": ["16", 0],
+      "negative": ["17", 0],
+      "control_net": ["19", 0],
+      "image": ["2", 0],
+      "strength": 0.8,
+      "start_percent": 0.0,
+      "end_percent": 1.0,
+      "vae": ["10", 2]
+    }
+  },
+  "21": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {"width": "{{WIDTH}}", "height": "{{HEIGHT}}", "batch_size": "{{FRAME_CAP}}"}
+  },
+  "22": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": ["15", 0],
+      "seed": "{{SEED}}",
+      "steps": "{{STEPS}}",
+      "cfg": "{{CFG}}",
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "positive": ["20", 0],
+      "negative": ["20", 1],
+      "latent_image": ["21", 0],
+      "denoise": 1.0
+    }
+  },
+  "23": {
+    "class_type": "VAEDecode",
+    "inputs": {"samples": ["22", 0], "vae": ["10", 2]}
+  },
+  "24": {
+    "class_type": "SaveImage",
+    "inputs": {"images": ["23", 0], "filename_prefix": "{{PREFIX}}/frame"}
+  },
+  "25": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": ["23", 0],
+      "frame_rate": "{{FORCE_FPS}}",
+      "loop_count": 0,
+      "filename_prefix": "{{PREFIX}}/animatediff",
+      "format": "video/h264-mp4",
+      "pingpong": false,
+      "save_output": true
+    }
+  },
+  "40": {
+    "class_type": "UltralyticsDetectorProvider",
+    "inputs": {"model_name": "bbox/face_yolov8m.pt"}
+  },
+  "41": {
+    "class_type": "ImpactSimpleDetectorSEGS_for_AD",
+    "inputs": {
+      "bbox_detector": ["40", 0],
+      "image_frames": ["23", 0],
+      "bbox_threshold": 0.5,
+      "bbox_dilation": 0,
+      "crop_factor": 3.0,
+      "drop_size": 10,
+      "sub_threshold": 0.5,
+      "sub_dilation": 0,
+      "sub_bbox_expansion": 0,
+      "sam_mask_hint_threshold": 0.7,
+      "masking_mode": "Pivot SEGS",
+      "segs_pivot": "Combined mask"
+    }
+  },
+  "42": {
+    "class_type": "ImpactSEGSOrderedFilter",
+    "inputs": {
+      "segs": ["41", 0],
+      "target": "{{FACE_TARGET}}",
+      "order": "{{FACE_ORDER}}",
+      "take_start": 0,
+      "take_count": "{{FACE_TAKE}}"
+    }
+  },
+  "50": {
+    "class_type": "IPAdapterUnifiedLoaderFaceID",
+    "inputs": {
+      "model": ["11", 0],
+      "preset": "FACEID PLUS V2",
+      "lora_strength": 0.6,
+      "provider": "CPU"
+    }
+  },
+  "43": {
+    "class_type": "IPAdapterFaceID",
+    "inputs": {
+      "model": ["50", 0],
+      "ipadapter": ["50", 1],
+      "image": ["14", 0],
+      "weight": 0.8,
+      "weight_type": "linear",
+      "combine_embeds": "concat",
+      "start_at": 0.0,
+      "end_at": 1.0,
+      "embeds_scaling": "V only",
+      "weight_faceidv2": 1.0
+    }
+  },
+  "44": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {"text": "{{FD_POSITIVE}}", "clip": ["10", 1]}
+  },
+  "45": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {"text": "{{FD_NEGATIVE}}", "clip": ["10", 1]}
+  },
+  "46": {
+    "class_type": "ToBasicPipe",
+    "inputs": {
+      "model": ["43", 0],
+      "clip": ["10", 1],
+      "vae": ["10", 2],
+      "positive": ["44", 0],
+      "negative": ["45", 0]
+    }
+  },
+  "47": {
+    "class_type": "DetailerForEachPipeForAnimateDiff",
+    "inputs": {
+      "image_frames": ["23", 0],
+      "segs": ["42", 0],
+      "guide_size": 384,
+      "guide_size_for": true,
+      "max_size": 512,
+      "seed": "{{SEED}}",
+      "steps": "{{STEPS}}",
+      "cfg": "{{CFG}}",
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "denoise": "{{FD_DENOISE}}",
+      "feather": 8,
+      "basic_pipe": ["46", 0],
+      "refiner_ratio": 0.2,
+      "noise_mask_feather": 20
+    }
+  },
+  "48": {
+    "class_type": "SaveImage",
+    "inputs": {"images": ["47", 0], "filename_prefix": "{{PREFIX}}/fd_frame"}
+  },
+  "49": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": ["47", 0],
+      "frame_rate": "{{FORCE_FPS}}",
+      "loop_count": 0,
+      "filename_prefix": "{{PREFIX}}/animatediff_fd",
+      "format": "video/h264-mp4",
+      "pingpong": false,
+      "save_output": true
+    }
+  }
+}

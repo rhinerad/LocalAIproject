@@ -1,0 +1,88 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "fastvideo_fasth3_8step_v2_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "cpu"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": ["2", 0],
+      "vae": ["3", 0],
+      "prompt": "a handheld camera walks down an empty yellow corridor, fluorescent lights, no people",
+      "width": 608,
+      "height": 352,
+      "length": 5
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3TurboSampler",
+    "inputs": {}
+  },
+  "6": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 1
+    }
+  },
+  "7": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": ["1", 0],
+      "conditioning": ["4", 0]
+    }
+  },
+  "8": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": ["1", 0],
+      "scheduler": "simple",
+      "steps": 8,
+      "denoise": 1.0
+    }
+  },
+  "9": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": ["6", 0],
+      "guider": ["7", 0],
+      "sampler": ["5", 0],
+      "sigmas": ["8", 0],
+      "latent_image": ["4", 1]
+    }
+  },
+  "10": {
+    "class_type": "VAEDecodeTiled",
+    "inputs": {
+      "samples": ["9", 0],
+      "vae": ["3", 0],
+      "tile_size": 256,
+      "overlap": 32,
+      "temporal_size": 8,
+      "temporal_overlap": 4
+    }
+  },
+  "11": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": ["10", 0],
+      "filename_prefix": "gvd_tool_router/h3_fasth3_v2_smoke"
+    }
+  }
+}

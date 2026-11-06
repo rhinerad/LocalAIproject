@@ -1,0 +1,23 @@
+{
+  "profile_id": "backrooms_sitcom",
+  "display_name": "Backrooms Sitcom",
+  "category": "backrooms",
+  "intent_prefix": "Backrooms Sitcom clip.",
+  "constraints": [
+    "Backrooms Sitcom production clip.",
+    "No visible camera body in-frame; the viewer is looking through the camcorder POV.",
+    "Maintain analog handheld camcorder perspective, VHS softness, fluorescent flicker, and liminal yellow-wallpaper continuity.",
+    "No text, no watermark, no UI overlay."
+  ],
+  "focus": "scene, motion_smoothness, temporal_consistency",
+  "vhs_finishing": {
+    "enabled": false,
+    "rec_overlay": false,
+    "grain": 15,
+    "chroma_shift": 1.2,
+    "rec_blink_hz": 1.0
+  },
+  "backend_profile": "h3_distilled",
+  "quality_tier_default": "standard",
+  "motion_complexity_default": "moderate"
+}

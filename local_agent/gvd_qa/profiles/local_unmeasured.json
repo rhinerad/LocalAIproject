@@ -1,0 +1,12 @@
+{
+  "policy_id": "local_unmeasured_v1",
+  "metrics_profile": "unmeasured_clip",
+  "qwen_profile": "caption_v4_unmeasured",
+  "reward_profile": "imagereward_unmeasured",
+  "clip_text_min": 50.0,
+  "clip_unit": "torchmetrics_clipscore_0_100",
+  "required_ids": ["cast_count"],
+  "max_attempts": 4,
+  "calibration": "none",
+  "note": "Synthetic floor for tests and bootstrap only. Do not copy as production calibration on the 5080."
+}

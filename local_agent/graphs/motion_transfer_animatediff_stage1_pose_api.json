@@ -1,0 +1,39 @@
+{
+  "1": {
+    "class_type": "VHS_LoadVideoPath",
+    "inputs": {
+      "video": "{{REFERENCE_VIDEO}}",
+      "force_rate": "{{FORCE_FPS}}",
+      "custom_width": 0,
+      "custom_height": 0,
+      "frame_load_cap": "{{FRAME_CAP}}",
+      "skip_first_frames": "{{SKIP_FIRST}}",
+      "select_every_nth": 1
+    }
+  },
+  "2": {
+    "class_type": "DWPreprocessor",
+    "inputs": {
+      "image": ["1", 0],
+      "detect_hand": "enable",
+      "detect_body": "enable",
+      "detect_face": "disable",
+      "resolution": 512,
+      "bbox_detector": "yolox_l.onnx",
+      "pose_estimator": "dw-ll_ucoco_384_bs5.torchscript.pt",
+      "scale_stick_for_xinsr_cn": "enable"
+    }
+  },
+  "3": {
+    "class_type": "SaveImage",
+    "inputs": {"images": ["2", 0], "filename_prefix": "{{PREFIX}}/pose"}
+  },
+  "4": {
+    "class_type": "SaveImage",
+    "inputs": {"images": ["1", 0], "filename_prefix": "{{PREFIX}}/src"}
+  },
+  "5": {
+    "class_type": "SavePoseKpsAsJsonFile",
+    "inputs": {"pose_kps": ["2", 1], "filename_prefix": "{{PREFIX}}/pose_kps"}
+  }
+}
