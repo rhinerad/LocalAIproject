@@ -51,7 +51,7 @@ import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, asdict
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from urllib.parse import urlparse
 
 from atomic_io import atomic_write_text
@@ -654,7 +654,7 @@ def _resident_is_ours(resident: list[str]) -> bool:
 def _timeshare_powerinfer_procs(procs: list[str]) -> list[str]:
     """Names-only server.exe is occupancy only with backend_up. TCP 8080 alone is not."""
     maybe = any(
-        Path(p).stem.lower() == Path(POWERINFER_SERVER_EXE).stem.lower()
+        _exe_stem(p) == _exe_stem(POWERINFER_SERVER_EXE)
         or "powerinfer" in str(p).lower()
         for p in procs)
     backend_up = powerinfer_backend_listening() if maybe else False
@@ -924,16 +924,23 @@ def powerinfer_ready() -> tuple[bool, str]:
     return True, "PowerInfer proxy and backend are reachable"
 
 
+def _exe_stem(path: str) -> str:
+    """Lower-case stem of a process path. nvidia-smi and POWERINFER_SERVER_EXE
+    are Windows paths; PureWindowsPath parses both separators the same way on
+    every OS, where PosixPath would keep the whole ``A:\\...\\server`` string."""
+    return PureWindowsPath(str(path)).stem.lower() if path else ""
+
+
 def _is_powerinfer_compute(path: str, *, backend_up: bool = False) -> bool:
     """True when nvidia-smi named this agent's PowerInfer server, not a random server.exe."""
     text = str(path or "").lower().replace("/", "\\")
     if "powerinfer" in text:
         return True
-    stem = Path(path).stem.lower() if path else ""
-    configured = Path(POWERINFER_SERVER_EXE).stem.lower()
+    stem = _exe_stem(path)
+    configured = _exe_stem(POWERINFER_SERVER_EXE)
     if stem != configured:
         return False
-    configured_path = str(Path(POWERINFER_SERVER_EXE)).lower().replace("/", "\\")
+    configured_path = str(PureWindowsPath(POWERINFER_SERVER_EXE)).lower()
     if configured_path and configured_path in text:
         return True
     return bool(backend_up)
@@ -1192,7 +1199,7 @@ def gpu_busy() -> tuple[bool, str, dict]:
     # A status poll must not stall on that port, and an idle GPU with no such
     # process must keep the existing Ollama idle path.
     maybe_powerinfer = any(
-        Path(p).stem.lower() == Path(POWERINFER_SERVER_EXE).stem.lower()
+        _exe_stem(p) == _exe_stem(POWERINFER_SERVER_EXE)
         or "powerinfer" in str(p).lower()
         for p in procs)
     backend_up = powerinfer_backend_listening() if maybe_powerinfer else False
@@ -1650,7 +1657,10 @@ def _gateway():
     if _GATEWAY is None:
         root = str(ROOT)
         if root not in sys.path:
-            sys.path.insert(0, root)
+            # Append, never insert at 0: the repo root holds top-level
+            # modules (``gvd_qa.py``) that would shadow this package's
+            # ``gvd_qa/`` and break a later ``import tools``.
+            sys.path.append(root)
         try:
             import model_gateway as _mg
             _GATEWAY = _mg
