@@ -91,3 +91,28 @@ are named in the runbook but do not exist in the tree.
 - Root `atomic_io.py` and `local_agent/atomic_io.py` are byte-identical
   today; the root copy is still a collision waiting to happen if they
   diverge. Not touched.
+
+## 5. Workstation results (2026-11-06, reported by the workstation agent)
+
+Gateway worktree fast-forwarded cleanly to `dd5bd18`; no leftover v8 patch
+file existed. With the machine-wide override untouched (confirmed identical
+before and after):
+
+    test_capability_routing.py          Ran 44 tests in 1.246s    OK
+    test_router_comfy_timeshare.py      Ran 51 tests in 0.172s    OK
+    test_router_switching.py            Ran 54 tests in 16.470s   OK
+    test_router_status_busy.py          Ran 8 tests in 2.105s     OK
+    test_gpu_vram_num_ctx.py            Ran 7 tests in 0.835s     OK
+    test_native_tool_calling.py         Ran 118 tests in 41.726s  FAILED (failures=1)
+    model_gateway\test_policy.py        Ran 14 tests in 0.008s    OK
+    model_gateway\test_adapter_mock.py  Ran 16 tests in 0.986s    OK
+
+Sections 1 and 2 are therefore verified on Windows: the comfy-timeshare
+suite is green there, so the `server.exe` matching rewrite changed nothing
+on the platform it was written for. `git status --short` afterwards showed
+only the two untracked GUI-turn chat transcripts; nothing was edited.
+
+The one failure, `test_multiple_calls_one_hop_and_named_results`, is the
+same test that fails here, and section 4's second bullet was wrong: the
+gateway worktree has no `outputs/` either, so the durations file is absent
+there too. That is fixed in the test itself in `2026-11-06b`.
