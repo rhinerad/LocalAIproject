@@ -73,7 +73,7 @@ if (-not (Test-Phase1SecretFileAcl -LiteralPath $envFile)) {
     throw "Created $envFile but ACL lockdown failed; file is present -- inspect icacls before using it."
 }
 if ($LockdownProbe) {
-    Write-Output 'PASS: Initialize-Phase1Secrets.ps1 wrote a temp .env with SYSTEM+rhine (R,W), inheritance disabled'
+    Write-Output "PASS: Initialize-Phase1Secrets.ps1 wrote a temp .env with SYSTEM+$($script:Phase1SecretAclOwner) (R,W), inheritance disabled"
     return
 }
 Write-Output "Created local ignored configuration at $envFile"

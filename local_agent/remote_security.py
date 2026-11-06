@@ -26,9 +26,16 @@ AUDIT = RUNTIME / "remote_tool_audit.jsonl"
 PAIRING_AUDIT = RUNTIME / "pairing_audit.jsonl"
 UNPAIRED_AUDIT = RUNTIME / "unpaired_attempts.jsonl"
 
-# A phone can chat and use the read/sensory tools in REMOTE_DEFAULT_TOOLS.
-# Everything else is denied until that exact source hash is granted the tool.
+# A phone can chat and use the conversation / search / memory-read / media
+# sensory tools in REMOTE_DEFAULT_TOOLS. Everything else is denied until that
+# exact source hash is granted the tool with set_tool_grant (per identity).
 # A tool in neither set is denied. New tools stay denied until they are classified.
+#
+# Not in the default set, by design (audit 2026-11-02 #21): anything that
+# reads arbitrary workstation paths or reaches the network on the phone's
+# behalf -- read_file, list_dir, inspect_workspace, inspect_binary, fetch_url,
+# propose_file_diff, dispatch_subtasks. A paired phone is a verified LXMF
+# address, not the desktop operator; those tools need an explicit grant.
 REMOTE_DEFAULT_TOOLS = frozenset({
     "agentic_search_docs",
     "analyze_video",
@@ -41,10 +48,8 @@ REMOTE_DEFAULT_TOOLS = frozenset({
     "comfy_job_status",
     "compare_voice",
     "deep_research",
-    "dispatch_subtasks",
     "duration_ladder",
     "extract_video_actions",
-    "fetch_url",
     "gvd_family_status",
     "gvd_inventory",
     "gvd_plan_shot",
@@ -55,10 +60,7 @@ REMOTE_DEFAULT_TOOLS = frozenset({
     "gvd_qa_loop",
     "gvd_quality_gate",
     "gvd_route_shot",
-    "inspect_binary",
-    "inspect_workspace",
     "list_changelog",
-    "list_dir",
     "list_memory",
     "list_phone_schedules",
     "media_job_status",
@@ -66,10 +68,8 @@ REMOTE_DEFAULT_TOOLS = frozenset({
     "plan_video_from_reference",
     "project_state",
     "prompt_pack_status",
-    "propose_file_diff",
     "read_artifact",
     "read_doc",
-    "read_file",
     "read_prompt",
     "read_video_metadata",
     "schedule_phone_messages",
@@ -84,7 +84,17 @@ REMOTE_DEFAULT_TOOLS = frozenset({
     "video_frames",
     "web_search",
 })
+# Grantable per identity with set_tool_grant / `remote_security.py grant`.
 GATED_REMOTE_TOOLS = frozenset({
+    # Workstation file-system / network reach (moved out of the default set).
+    "read_file",
+    "list_dir",
+    "inspect_workspace",
+    "inspect_binary",
+    "fetch_url",
+    "propose_file_diff",
+    "dispatch_subtasks",
+    # Writers, renders, GPU and process control.
     "write_file",
     "apply_hex_patch",
     "run_code",

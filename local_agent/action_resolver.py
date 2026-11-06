@@ -170,6 +170,19 @@ class ActionPlan:
     steps: list[tuple[str, dict]] = field(default_factory=list)
 
 
+
+def _read_receipt(receipt) -> dict | None:
+    """Parse an anchor receipt; any unreadable/malformed receipt counts as "no receipt"."""
+    import json
+    try:
+        if not receipt.is_file():
+            return None
+        prior = json.loads(receipt.read_text(encoding='utf-8'))
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+    return prior if isinstance(prior, dict) else None
+
+
 def classify(
     latest_user: str,
     history: list[dict],
@@ -252,15 +265,12 @@ def classify(
         if progress and progress.get('kind') == 'prompt_pack' and not managed_prompt_pack.has_incomplete_export(cid):
             job = managed_prompt_pack.initial_frame_job(cid)
             receipt = managed_prompt_pack.anchor_receipt_path(cid)
-            if receipt.is_file() and not re.search(r'\b(?:retry|again|regenerate)\b', text, re.I):
-                import json
-                prior = json.loads(receipt.read_text(encoding='utf-8'))
+            prior = _read_receipt(receipt)
+            if prior is not None and not re.search(r'\b(?:retry|again|regenerate)\b', text, re.I):
                 return ActionPlan(intent='prompt_pack_render', steps=[
                     ('story_image_job_status', {k: prior[k] for k in ('story', 'pid', 'log') if k in prior}),
                 ])
-            if receipt.is_file():
-                import json
-                prior = json.loads(receipt.read_text(encoding='utf-8'))
+            if prior is not None and prior.get('pid') is not None:
                 job['story'] += '_retry_' + str(prior['pid'])
                 job['seed'] = 2
             return ActionPlan(intent='prompt_pack_render', steps=[
@@ -278,8 +288,8 @@ def classify(
                 ])
             steps: list[tuple[str, dict]] = []
             receipt = managed_prompt_pack.anchor_receipt_path(cid)
-            if receipt.is_file() and not (prod and prod.get("status") == "complete"):
-                prior = json.loads(receipt.read_text(encoding='utf-8'))
+            prior = _read_receipt(receipt)
+            if prior is not None and not (prod and prod.get("status") == "complete"):
                 return ActionPlan(intent='prompt_pack_render', steps=[
                     ('story_image_job_status', {k: prior[k] for k in ('story', 'pid', 'log') if k in prior}),
                 ])

@@ -59,7 +59,7 @@ HOST, PORT = "127.0.0.1", 8760
 APP_REVISION = "2026-09-22i-gvd-video-pipeline-readiness"
 SESSION_CSRF = secrets.token_hex(32)
 _LOCAL_HOSTS = frozenset({
-    f"127.0.0.1:{PORT}", "localhost:{PORT}", f"[::1]:{PORT}",
+    f"127.0.0.1:{PORT}", f"localhost:{PORT}", f"[::1]:{PORT}",
     "127.0.0.1", "localhost", "[::1]",
 })
 _LOCAL_ORIGINS = frozenset({
@@ -131,6 +131,17 @@ STORY_MEDIA_TOOLS = frozenset({
     "await_story_image_job",
 })
 COMFY_MEDIA_TOOLS = frozenset({"comfy_job_status"})
+# Tool names POST /api/action may dispatch (audit finding 20). static/index.html
+# has no caller of this route today; these are the two tools server.py already
+# runs on the GUI's behalf through dedicated routes (/api/state → project_state,
+# /api/stop_comfyui → stop_all_comfyui), so the route can do nothing the page
+# could not already trigger. Every other tool (write_file, run_code, renders…)
+# goes through the chat path, where the agent's own guards apply. Add a name
+# here only together with the GUI control that sends it.
+ACTION_ROUTE_ALLOWLIST = frozenset({"project_state", "stop_all_comfyui"})
+# `source` must stay "desktop": ToolContext.remote is `source != "desktop"` and
+# a remote context would deny every tool outside REMOTE_DEFAULT_TOOLS.
+ACTION_ROUTE_CONTEXT = remote_security.ToolContext(source="desktop", request_id="api_action")
 # A separate flag (rather than checking os.name directly at call time) so
 # tests can flip this without breaking pathlib, which dispatches Path() to
 # WindowsPath/PosixPath based on the real os.name and raises if the two
@@ -253,12 +264,77 @@ def resolve_story_image(subfolder: object, filename: object) -> Path | None:
     return resolve_generated_media("story_comfy", subfolder, filename)
 
 
+# A render can be a 1 GB video that the browser re-requests on every seek;
+# hashing it each time was the cost. Keyed on (path, mtime_ns, size) so an
+# in-place rewrite is never served under a stale digest.
+_SHA256_CACHE: dict[tuple[str, int, int], str] = {}
+_SHA256_CACHE_LIMIT = 256
+_sha256_cache_lock = threading.Lock()
+_MEDIA_CHUNK_BYTES = 1024 * 1024
+
+
+def _sha256_cache_key(path: Path) -> tuple[str, int, int] | None:
+    try:
+        st = path.stat()
+    except OSError:
+        return None
+    return (str(path), int(st.st_mtime_ns), int(st.st_size))
+
+
 def file_sha256(path: Path) -> str:
+    key = _sha256_cache_key(path)
+    if key is not None:
+        with _sha256_cache_lock:
+            cached = _SHA256_CACHE.get(key)
+        if cached:
+            return cached
     digest = hashlib.sha256()
     with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+        for chunk in iter(lambda: handle.read(_MEDIA_CHUNK_BYTES), b""):
             digest.update(chunk)
-    return digest.hexdigest()
+    result = digest.hexdigest()
+    if key is not None and key == _sha256_cache_key(path):
+        with _sha256_cache_lock:
+            while len(_SHA256_CACHE) >= _SHA256_CACHE_LIMIT:
+                _SHA256_CACHE.pop(next(iter(_SHA256_CACHE)))
+            _SHA256_CACHE[key] = result
+    return result
+
+
+def parse_byte_range(header: object, size: int) -> tuple[int, int] | None:
+    """One `Range: bytes=a-b` → (first, last) inclusive; None → serve the whole file.
+
+    Multiple ranges and malformed headers are ignored (full 200 response, as
+    RFC 9110 allows). A syntactically valid but unsatisfiable range raises
+    ValueError so the caller can answer 416.
+    """
+    raw = str(header or "").strip()
+    if not raw.lower().startswith("bytes="):
+        return None
+    spec = raw[len("bytes="):].strip()
+    if not spec or "," in spec or "-" not in spec:
+        return None
+    first_s, _, last_s = spec.partition("-")
+    first_s, last_s = first_s.strip(), last_s.strip()
+    if not (first_s.isdigit() or first_s == "") or not (last_s.isdigit() or last_s == ""):
+        return None
+    if first_s == "" and last_s == "":
+        return None
+    if size <= 0:
+        raise ValueError("empty file")
+    if first_s == "":
+        # suffix range: the last N bytes
+        suffix = int(last_s)
+        if suffix <= 0:
+            raise ValueError("empty suffix range")
+        return (max(0, size - suffix), size - 1)
+    first = int(first_s)
+    if first >= size:
+        raise ValueError("range start past end of file")
+    last = size - 1 if last_s == "" else min(int(last_s), size - 1)
+    if last < first:
+        raise ValueError("range end before start")
+    return (first, last)
 
 
 def media_kind_for_path(path: Path) -> str:
@@ -589,24 +665,45 @@ def extend_unique_artifacts(target: list[dict], new: list[dict]) -> list[dict]:
     return added
 
 
-def generated_media_payload(root_id: object, subfolder: object, filename: object,
-                            expected_sha256: object = None) -> tuple[object, int, str]:
-    """Re-resolve a stored locator. Missing → 404 JSON; hash mismatch → 409 JSON."""
+def generated_media_file(root_id: object, subfolder: object, filename: object,
+                         expected_sha256: object = None
+                         ) -> tuple[Path | None, str, dict | None, int]:
+    """Re-resolve a stored locator without reading the file.
+
+    Returns (path, content_type, None, 200) when servable, otherwise
+    (None, "application/json", error_body, code): missing → 404, hash
+    mismatch → 409.
+    """
     path = resolve_generated_media(root_id, subfolder, filename,
                                    kinds=media_kinds_for_root(root_id))
     if path is None:
-        return ({"error": "file missing", "status": "missing"}, 404, "application/json")
+        return (None, "application/json", {"error": "file missing", "status": "missing"}, 404)
     expected = str(expected_sha256 or "").strip().lower()
     if expected:
         actual = file_sha256(path)
         if actual != expected:
-            return ({"error": "file changed on disk since this turn; not showing a substitute",
-                     "status": "hash_mismatch"}, 409, "application/json")
+            return (None, "application/json",
+                    {"error": "file changed on disk since this turn; not showing a substitute",
+                     "status": "hash_mismatch"}, 409)
     suffix = path.suffix.lower()
     ctype = _IMAGE_CTYPES.get(suffix) or _VIDEO_CTYPES.get(suffix)
     if not ctype:
-        return ({"error": "file missing", "status": "missing"}, 404, "application/json")
-    return (path.read_bytes(), 200, ctype)
+        return (None, "application/json", {"error": "file missing", "status": "missing"}, 404)
+    return (path, ctype, None, 200)
+
+
+def generated_media_payload(root_id: object, subfolder: object, filename: object,
+                            expected_sha256: object = None) -> tuple[object, int, str]:
+    """Re-resolve a stored locator. Missing → 404 JSON; hash mismatch → 409 JSON.
+
+    Whole-file form kept for callers that want bytes; the HTTP route streams
+    through Handler._send_file instead.
+    """
+    path, ctype, error, code = generated_media_file(root_id, subfolder, filename,
+                                                    expected_sha256)
+    if error is not None:
+        return (error, code, "application/json")
+    return (path.read_bytes(), code, ctype)
 
 
 # Operator-visible activity trace. Sibling of tracing.py (investigator SQLite);
@@ -1027,9 +1124,67 @@ _BATCH_DONE_MARKER = "Batch complete:"   # last line work/batch_render_folder.py
 _RENDER_WATCH_KEEP_S = 24 * 3600     # finished records kept for a late tab
 _RENDER_WATCH_CHECK_TTL_S = 5.0      # several tabs polling must not stampede tasklist
 _render_watch_lock = threading.Lock()
+# Serialises only the slow check phase (tasklist / ComfyUI HTTP) so two pollers
+# never resolve the same watch twice; register_render_watch needs only
+# _render_watch_lock and is never blocked behind a subprocess.
+_render_watch_check_lock = threading.Lock()
 _render_watch_checked_at = 0.0
+# One in-flight turn per conversation. A turn is admitted only by claiming its
+# id here; only the claimant releases it, so a finishing turn can never clear
+# another turn's entry (audit finding 18).
 _active_turns: set[str] = set()
 _active_turns_lock = threading.Lock()
+
+
+def _claim_turn(cid: str) -> bool:
+    """True when this caller now owns the only in-flight turn for `cid`."""
+    with _active_turns_lock:
+        if cid in _active_turns:
+            return False
+        _active_turns.add(cid)
+        return True
+
+
+def _release_turn(cid: str) -> None:
+    with _active_turns_lock:
+        _active_turns.discard(cid)
+
+
+def turn_in_flight(cid: str) -> bool:
+    with _active_turns_lock:
+        return cid in _active_turns
+
+
+_ATTACHMENT_STR_FIELDS = ("kind", "name", "path", "content")
+
+
+def validate_turn_request(p: object) -> str | None:
+    """Shape check for /api/send bodies; returns an error message or None."""
+    if not isinstance(p, dict):
+        return "request body must be a JSON object"
+    cid = p.get("id")
+    if cid is not None and not isinstance(cid, str):
+        return "id must be a string"
+    message = p.get("message")
+    if message is not None and not isinstance(message, str):
+        return "message must be a string"
+    attachments = p.get("attachments")
+    if attachments is None:
+        return None
+    if not isinstance(attachments, list):
+        return "attachments must be a list"
+    for att in attachments:
+        if not isinstance(att, dict):
+            return "each attachment must be an object"
+        for field in _ATTACHMENT_STR_FIELDS:
+            value = att.get(field)
+            if value is not None and not isinstance(value, str):
+                return f"attachment {field} must be a string"
+        size = att.get("size")
+        if size is not None and (isinstance(size, bool)
+                                 or not isinstance(size, (int, str))):
+            return "attachment size must be a number or string"
+    return None
 
 
 def _load_render_watches() -> list[dict]:
@@ -1240,14 +1395,21 @@ def poll_render_watches(*, force: bool = False) -> dict:
     now = time.time()
     with _active_turns_lock:
         busy_chats = set(_active_turns)
+    # 1. Snapshot under the lock: which running watches are due for a check.
+    due = False
     with _render_watch_lock:
-        watches = _load_render_watches()
-        changed = False
         if force or time.monotonic() - _render_watch_checked_at >= _RENDER_WATCH_CHECK_TTL_S:
             _render_watch_checked_at = time.monotonic()
-            for watch in watches:
-                if watch.get("status") != "running" or watch.get("cid") in busy_chats:
-                    continue
+            due = True
+        candidates = [dict(w) for w in _load_render_watches()
+                      if due and w.get("status") == "running"
+                      and w.get("cid") not in busy_chats]
+    # 2. Check outside the lock: _check_render_watch spawns tasklist or calls
+    #    ComfyUI; a streaming turn's register_render_watch must not wait on it.
+    resolved: dict[str, dict] = {}
+    if candidates and _render_watch_check_lock.acquire(blocking=False):
+        try:
+            for watch in candidates:
                 status, arts, note = _check_render_watch(watch, now)
                 if status == "running":
                     continue
@@ -1259,8 +1421,20 @@ def poll_render_watches(*, force: bool = False) -> dict:
                              "note": note}]
                 added, title = _attach_late_artifacts(str(watch.get("cid") or ""),
                                                       str(watch.get("id")), arts)
-                watch.update({"status": status, "finished_at": now, "note": note,
-                              "artifacts": added, "title": title})
+                resolved[str(watch.get("id"))] = {
+                    "status": status, "finished_at": now, "note": note,
+                    "artifacts": added, "title": title}
+        finally:
+            _render_watch_check_lock.release()
+    # 3. Merge under the lock against a fresh read, so a watch registered
+    #    meanwhile is kept and a resolved one is stamped exactly once.
+    with _render_watch_lock:
+        watches = _load_render_watches()
+        changed = False
+        for watch in watches:
+            update = resolved.get(str(watch.get("id")))
+            if update is not None and watch.get("status") == "running":
+                watch.update(update)
                 changed = True
         kept = [w for w in watches if w.get("status") == "running"
                 or now - float(w.get("finished_at") or now) < _RENDER_WATCH_KEEP_S]
@@ -1370,6 +1544,54 @@ class Handler(BaseHTTPRequestHandler):
     def _json(self, obj, code: int = 200) -> None:
         self._send(code, json.dumps(obj).encode(), "application/json")
 
+    def _send_file(self, path: Path, ctype: str) -> None:
+        """Stream a media file in 1 MiB chunks; honour one `Range: bytes=a-b`."""
+        try:
+            size = int(path.stat().st_size)
+        except OSError:
+            self._json({"error": "file missing", "status": "missing"}, 404)
+            return
+        try:
+            byte_range = parse_byte_range(self.headers.get("Range"), size)
+        except ValueError:
+            self.send_response(416)
+            self.send_header("Content-Range", f"bytes */{size}")
+            self.send_header("Content-Length", "0")
+            self.send_header("Accept-Ranges", "bytes")
+            self.send_header("Cache-Control", "no-store")
+            self._csrf_cookie()
+            self.end_headers()
+            return
+        if byte_range is None:
+            code, first, last = 200, 0, size - 1
+        else:
+            code, (first, last) = 206, byte_range
+        length = max(0, last - first + 1)
+        self.send_response(code)
+        self.send_header("Content-Type", ctype)
+        self.send_header("Content-Length", str(length))
+        self.send_header("Accept-Ranges", "bytes")
+        if code == 206:
+            self.send_header("Content-Range", f"bytes {first}-{last}/{size}")
+        self.send_header("Cache-Control", "no-store")
+        self._csrf_cookie()
+        self.end_headers()
+        if length <= 0:
+            return
+        try:
+            with path.open("rb") as handle:
+                handle.seek(first)
+                remaining = length
+                while remaining > 0:
+                    chunk = handle.read(min(_MEDIA_CHUNK_BYTES, remaining))
+                    if not chunk:
+                        break
+                    self.wfile.write(chunk)
+                    remaining -= len(chunk)
+            self.wfile.flush()
+        except (BrokenPipeError, ConnectionAbortedError, ConnectionResetError):
+            self.close_connection = True
+
     # ── GET ──────────────────────────────────────────────────────────────────
     def do_OPTIONS(self) -> None:
         self._reject(403, "cross-origin requests are not allowed")
@@ -1413,16 +1635,16 @@ class Handler(BaseHTTPRequestHandler):
             root_id = (q.get("root") or ["story_comfy"])[0]
             if u.path == "/api/story_image_file":
                 root_id = "story_comfy"
-            body, code, ctype = generated_media_payload(
+            path, ctype, error, code = generated_media_file(
                 root_id,
                 (q.get("subfolder") or [""])[0],
                 (q.get("filename") or [""])[0],
                 (q.get("sha256") or [""])[0],
             )
-            if ctype == "application/json":
-                self._json(body, code)
+            if error is not None:
+                self._json(error, code)
                 return
-            self._send(code, body, ctype)
+            self._send_file(path, ctype)
 
         elif u.path == "/api/state":
             self._send(200, tools.call("project_state", {}).encode(), "application/json")
@@ -1449,14 +1671,27 @@ class Handler(BaseHTTPRequestHandler):
         if not self._mutation_guard():
             return
         u = urlparse(self.path)
-        n = int(self.headers.get("Content-Length", 0))
+        raw_length = self.headers.get("Content-Length")
+        try:
+            n = int(str(raw_length).strip()) if raw_length not in (None, "") else 0
+        except (TypeError, ValueError):
+            n = -1
+        if n < 0:
+            # The body was not read, so the connection cannot be reused.
+            self.close_connection = True
+            self._json({"error": "invalid Content-Length"}, 400)
+            return
         if n > MAX_JSON_BYTES:
+            self.close_connection = True
             self._json({"error": "request too large; media uploads are capped at 75 MB"}, 413)
             return
         try:
             p = json.loads(self.rfile.read(n) or b"{}")
         except (json.JSONDecodeError, UnicodeDecodeError):
             self._json({"error": "invalid JSON request"}, 400)
+            return
+        if not isinstance(p, dict):
+            self._json({"error": "request body must be a JSON object"}, 400)
             return
 
         if u.path == "/api/upload":
@@ -1506,7 +1741,16 @@ class Handler(BaseHTTPRequestHandler):
             store.truncate_after(conv["id"], last_user)
             self._send_turn({"id": conv["id"], "message": None, "prefer": p.get("prefer", "auto")})
         elif u.path == "/api/action":
-            self._json({"result": tools.call(p.get("action", ""), p.get("args") or {})})
+            action = str(p.get("action") or "")
+            args = p.get("args") or {}
+            if action not in ACTION_ROUTE_ALLOWLIST:
+                self._json({"error": f"action {action!r} is not allowed on this route",
+                            "allowed": sorted(ACTION_ROUTE_ALLOWLIST)}, 403)
+                return
+            if not isinstance(args, dict):
+                self._json({"error": "args must be an object"}, 400)
+                return
+            self._json({"result": tools.call(action, args, context=ACTION_ROUTE_CONTEXT)})
         elif u.path == "/api/feedback":
             try:
                 self._json(feedback.submit(p.get("id", ""), p.get("verdict", ""),
@@ -1629,6 +1873,10 @@ class Handler(BaseHTTPRequestHandler):
         return name if name in available else None
 
     def _send_turn(self, p: dict) -> None:
+        error = validate_turn_request(p)
+        if error:
+            self._json({"error": error}, 400)
+            return
         cid = p.get("id") or ""
         conv = store.load(cid)
         if not conv:
@@ -1661,6 +1909,20 @@ class Handler(BaseHTTPRequestHandler):
                 return
             conv = store.load(cid)
 
+        # Refuse a second concurrent turn on the same conversation: two turns
+        # would race on the stop flag, the saved transcript, and the render
+        # watch bookkeeping. The claim is released in _run_turn's caller only.
+        if not _claim_turn(cid):
+            self._json({"error": "a turn is already running on this conversation; "
+                                 "stop it or wait for it to finish",
+                        "status": "busy", "id": cid}, 409)
+            return
+        try:
+            self._run_turn(p, cid, conv)
+        finally:
+            _release_turn(cid)
+
+    def _run_turn(self, p: dict, cid: str, conv: dict) -> None:
         text = p.get("message")
         if text is not None:
             # Attachments are inlined into the user message. A local model has no
@@ -1768,8 +2030,7 @@ class Handler(BaseHTTPRequestHandler):
                 try:
                     parsed = json.loads(data)
                     if isinstance(parsed, dict):
-                        for key in ("path", "valid", "reason", "records", "file_changed",
-                                    "repaired", "next_step"):
+                        for key in _EVIDENCE_COPY_KEYS:
                             if key in parsed:
                                 evidence[key] = parsed[key]
                         if parsed.get("queued"):
@@ -1818,8 +2079,7 @@ class Handler(BaseHTTPRequestHandler):
                     if not (summary or tool):
                         continue
                     safe_item = {"tool": tool, "outcome": outcome, "summary": summary}
-                    for key in ("path", "valid", "reason", "records", "file_changed",
-                                "repaired", "next_step"):
+                    for key in _EVIDENCE_COPY_KEYS:
                         if key in item:
                             value = item[key]
                             if isinstance(value, str):
@@ -1844,9 +2104,8 @@ class Handler(BaseHTTPRequestHandler):
         def capture_exemplars(ids: list[str]) -> None:
             retrieved_exemplar_ids[:] = ids
         # Render watches for this chat wait until the turn is saved, so a late
-        # card attaches to this turn's reply rather than the previous one.
-        with _active_turns_lock:
-            _active_turns.add(cid)
+        # card attaches to this turn's reply rather than the previous one
+        # (the cid is held in _active_turns by _send_turn's claim).
         try:
             desktop_context = remote_security.ToolContext(source="desktop", conversation_id=cid)
             reply = agent.answer(history, push, prefer=p.get("prefer", "auto"),
@@ -1884,8 +2143,6 @@ class Handler(BaseHTTPRequestHandler):
         finally:
             with _stop_lock:
                 _stops.discard(cid)
-            with _active_turns_lock:
-                _active_turns.discard(cid)
 
 
 def main() -> int:

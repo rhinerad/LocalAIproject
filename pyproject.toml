@@ -32,4 +32,4 @@ norecursedirs = [
     "ble_runtime", "vendor_tools", "saf_pyjnius_spike", ".hf_cache",
     "review-only", "benchmark_profiles", "docs",
 ]
-addopts = "-p no:cacheprovider -q"
+addopts = "-p no:cacheprovider"

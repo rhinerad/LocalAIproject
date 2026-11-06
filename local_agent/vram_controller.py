@@ -147,14 +147,24 @@ def comfy_free_memory(
     return result
 
 
+class VramProbeError(RuntimeError):
+    """nvidia-smi could not be run or parsed: VRAM headroom is UNKNOWN, not free."""
+
+
 def wait_for_vram_headroom(
     *,
     required_free_mib: int = 10240,
     max_used_mib: int = 6144,
     timeout: float = 45.0,
     interval: float = 0.5,
-) -> None:
-    """Poll nvidia-smi until Comfy/Qwen can load without overlapping."""
+) -> bool:
+    """Poll nvidia-smi until Comfy/Qwen can load without overlapping.
+
+    Returns True once headroom is confirmed.  Fails CLOSED: if nvidia-smi
+    cannot be executed or parsed, raises VramProbeError instead of silently
+    returning as if the GPU were free (audit 2026-11-02).  Raises TimeoutError
+    when headroom is not reached in time.
+    """
     import subprocess
 
     deadline = time.time() + timeout
@@ -173,11 +183,13 @@ def wait_for_vram_headroom(
             used_s, free_s = raw.strip().splitlines()[0].split(",")
             used = int(float(used_s.strip()))
             free = int(float(free_s.strip()))
-            last = {"used_mib": used, "free_mib": free}
-            if free >= required_free_mib and used <= max_used_mib:
-                return
-        except Exception:
-            return
+        except Exception as exc:
+            raise VramProbeError(
+                f"nvidia-smi probe failed: {type(exc).__name__}: {exc}"
+            ) from exc
+        last = {"used_mib": used, "free_mib": free}
+        if free >= required_free_mib and used <= max_used_mib:
+            return True
         time.sleep(interval)
     raise TimeoutError(f"VRAM headroom not reached before Wan/Qwen handoff: {last}")
 
@@ -281,6 +293,9 @@ def release_after_comfyui(reason: str = "render complete") -> None:
     except TimeoutError:
         mark_gpu_idle(f"{reason}; VRAM headroom wait timed out")
         raise
+    except VramProbeError as exc:
+        set_vram_owner("comfyui_unverified", f"{reason}; {exc}")
+        raise
 
 
 def prepare_for_vlm(reason: str = "Qwen2.5-VL judge") -> None:
@@ -297,5 +312,8 @@ def release_after_vlm(reason: str = "Qwen2.5-VL complete") -> None:
         wait_for_vram_headroom()
     except TimeoutError:
         mark_gpu_idle(f"{reason}; VRAM headroom wait timed out")
+        raise
+    except VramProbeError as exc:
+        set_vram_owner("vlm_unverified", f"{reason}; {exc}")
         raise
     mark_gpu_idle(reason)

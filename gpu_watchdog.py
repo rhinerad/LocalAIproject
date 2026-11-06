@@ -69,9 +69,12 @@ from __future__ import annotations
 
 import json
 import logging
+import os
+import shlex
 import subprocess
 import sys
 import time
+import urllib.request
 from collections import deque
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -81,14 +84,18 @@ import psutil
 
 try:
     import pynvml
-except ImportError:
-    print("pynvml is required: pip install pynvml --break-system-packages", file=sys.stderr)
-    raise
+except ImportError:  # checked again in NvmlGpuMonitor.__init__ / main()
+    pynvml = None
 
 try:
     import requests
 except ImportError:
-    requests = None  # ComfyUI-progress detector will be skipped with a warning
+    requests = None  # urllib fallback below
+
+ROOT = Path(os.environ.get("GVD_ROOT") or Path(__file__).resolve().parent).resolve()
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+import gpu_lock as _gpu_lock  # noqa: E402
 
 
 # ----------------------------------------------------------------------------
@@ -103,7 +110,25 @@ COMFYUI_BASE_URL = f"http://{COMFYUI_HOST}:{COMFYUI_PORT}"
 POLL_INTERVAL_SEC = 15            # how often to sample GPU + ComfyUI state
 VRAM_HIGH_THRESHOLD_PCT = 80.0    # "high" VRAM allocation
 CONSECUTIVE_BAD_SAMPLES_REQUIRED = 12  # 12 * 15s = 3 min of sustained bad state
-COMFYUI_STALL_TIMEOUT_SEC = 300   # no queue/history progress for 5 min = stalled
+# No queue/history/step progress for this long = stalled.  Default 3900 s is
+# deliberately LONGER than the 3600 s WAN/MiniMax per-job timeout so a single
+# long legitimate job is never "stalled".  Env: GVD_WATCHDOG_STALL_S.
+DEFAULT_STALL_TIMEOUT_SEC = 3900.0
+
+
+def _env_float(name: str, default: float) -> float:
+    raw = os.environ.get(name)
+    if raw is None or not str(raw).strip():
+        return float(default)
+    try:
+        value = float(raw)
+    except ValueError:
+        return float(default)
+    return value if value > 0 else float(default)
+
+
+COMFYUI_STALL_TIMEOUT_SEC = _env_float("GVD_WATCHDOG_STALL_S", DEFAULT_STALL_TIMEOUT_SEC)
+GPU_ACTIVE_UTIL_PCT = 5.0         # nvidia-smi/NVML util at or above this counts as "working"
 
 VRAM_PLATEAU_TOLERANCE_MB = 64    # VRAM change smaller than this counts as "not still loading"
 GRACE_PERIOD_AFTER_LAUNCH_SEC = 90  # never act on a process younger than this
@@ -115,34 +140,49 @@ POST_KILL_VERIFY_RETRIES = 4
 MAX_CONSECUTIVE_RESTARTS = 3      # crash-loop guard
 RESTART_COOLDOWN_SEC = 30
 
-LOG_DIR = Path("./gpu_watchdog_logs")
+LOG_DIR = Path(os.environ.get("GVD_WATCHDOG_LOG_DIR") or (ROOT / "local_agent" / "runtime" / "logs" / "gpu_watchdog"))
 EVIDENCE_LOG_PATH = LOG_DIR / "gpu_watchdog_evidence.jsonl"
 
-COMFYUI_LAUNCH_CMD = [
-    # Replace with your real launch command / script.
-    "python", "main.py", "--listen", COMFYUI_HOST, "--port", str(COMFYUI_PORT),
-]
-COMFYUI_LAUNCH_CWD = None  # e.g. r"A:\path\to\ComfyUI"
+
+def _launch_cmd_from_env() -> list[str]:
+    """COMFYUI_LAUNCH_CMD (shell-style string) -> argv.  No placeholder default:
+    an unset command means the watchdog must NOT try to restart ComfyUI."""
+    raw = os.environ.get("COMFYUI_LAUNCH_CMD", "")
+    if not raw.strip():
+        return []
+    try:
+        return shlex.split(raw, posix=(os.name != "nt"))
+    except ValueError:
+        return []
+
+
+COMFYUI_LAUNCH_CMD: list[str] = _launch_cmd_from_env()
+COMFYUI_LAUNCH_CWD: Optional[str] = os.environ.get("COMFYUI_LAUNCH_CWD") or None
 
 
 # ----------------------------------------------------------------------------
 # Logging
 # ----------------------------------------------------------------------------
 
-LOG_DIR.mkdir(parents=True, exist_ok=True)
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler(LOG_DIR / "gpu_watchdog.log"),
-    ],
-)
 log = logging.getLogger("gpu_watchdog")
+
+
+def _setup_logging() -> None:
+    """File logging is configured from main(), not at import (tests import this module)."""
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        handlers=[
+            logging.StreamHandler(sys.stdout),
+            logging.FileHandler(LOG_DIR / "gpu_watchdog.log"),
+        ],
+    )
 
 
 def write_evidence(record: dict) -> None:
     record = {"logged_at": time.time(), **record}
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
     with EVIDENCE_LOG_PATH.open("a", encoding="utf-8") as f:
         f.write(json.dumps(record) + "\n")
 
@@ -160,15 +200,15 @@ def port_is_listening(host: str, port: int) -> bool:
 
 def render_lock_is_held_by_someone_else() -> bool:
     """
-    Return True if some other process/supervisor currently owns the
-    render pipeline and this watchdog must NOT start a new ComfyUI.
-
-    Replace this stub with a real check against your project's lock
-    mechanism (a lock file, a PID file, a supervisor heartbeat, etc.).
-    The one hard rule to preserve: exactly one process may bind the
-    ComfyUI port and hold the GPU at a time.
+    True if another live process owns the shared render lock (gpu_lock.py:
+    OS file lock + batch_render_queue_owner.json) and this watchdog must NOT
+    start a new ComfyUI.  Fails closed: an unreadable lock counts as held.
     """
-    return False  # placeholder — always assumes no external supervisor
+    try:
+        return bool(_gpu_lock.is_held_by_other())
+    except Exception as exc:
+        log.warning("render lock probe failed (%s) — assuming HELD.", exc)
+        return True
 
 
 def restart_comfyui() -> bool:
@@ -182,8 +222,18 @@ def restart_comfyui() -> bool:
     if port_is_listening(COMFYUI_HOST, COMFYUI_PORT):
         log.warning("Port %s is already listening — refusing to start a second ComfyUI.", COMFYUI_PORT)
         return False
+    if not COMFYUI_LAUNCH_CMD or not COMFYUI_LAUNCH_CWD:
+        log.error(
+            "COMFYUI_LAUNCH_CMD / COMFYUI_LAUNCH_CWD not set — refusing to restart ComfyUI "
+            "(no placeholder command is ever run)."
+        )
+        write_evidence({"event": "restart_refused_unconfigured"})
+        return False
+    if not Path(COMFYUI_LAUNCH_CWD).is_dir():
+        log.error("COMFYUI_LAUNCH_CWD %r is not a directory — refusing to restart.", COMFYUI_LAUNCH_CWD)
+        return False
 
-    log.info("Starting ComfyUI: %s", " ".join(COMFYUI_LAUNCH_CMD))
+    log.info("Starting ComfyUI: %s (cwd=%s)", " ".join(COMFYUI_LAUNCH_CMD), COMFYUI_LAUNCH_CWD)
     subprocess.Popen(
         COMFYUI_LAUNCH_CMD,
         cwd=COMFYUI_LAUNCH_CWD,
@@ -209,10 +259,20 @@ class GpuSample:
 
 class NvmlGpuMonitor:
     def __init__(self, gpu_index: int = 0):
+        if pynvml is None:
+            raise RuntimeError("pynvml is required: pip install pynvml --break-system-packages")
         pynvml.nvmlInit()
         self.handle = pynvml.nvmlDeviceGetHandleByIndex(gpu_index)
 
-    def sample(self) -> GpuSample:
+    def sample(self) -> Optional[GpuSample]:
+        """One NVML sample, or None when NVML fails (never crash the watchdog loop)."""
+        try:
+            return self._sample()
+        except Exception as exc:
+            log.warning("NVML sample failed: %s", exc)
+            return None
+
+    def _sample(self) -> GpuSample:
         mem = pynvml.nvmlDeviceGetMemoryInfo(self.handle)
         util = pynvml.nvmlDeviceGetUtilizationRates(self.handle)
 
@@ -246,7 +306,10 @@ class NvmlGpuMonitor:
         )
 
     def shutdown(self):
-        pynvml.nvmlShutdown()
+        try:
+            pynvml.nvmlShutdown()
+        except Exception:
+            pass
 
 
 # ----------------------------------------------------------------------------
@@ -264,41 +327,89 @@ class ComfyUiProgressMonitor:
         self.base_url = base_url
         self._last_progress_ts = time.time()
         self._last_signature: Optional[str] = None
+        self.last_step: Optional[dict] = None
 
     def _fetch(self, path: str) -> Optional[dict]:
-        if requests is None:
-            return None
         try:
-            r = requests.get(f"{self.base_url}{path}", timeout=5)
-            r.raise_for_status()
-            return r.json()
+            if requests is not None:
+                r = requests.get(f"{self.base_url}{path}", timeout=5)
+                r.raise_for_status()
+                return r.json()
+            with urllib.request.urlopen(f"{self.base_url}{path}", timeout=5) as resp:
+                return json.loads(resp.read().decode("utf-8") or "null")
         except Exception as e:
             log.debug("ComfyUI %s fetch failed: %s", path, e)
             return None
 
-    def poll(self) -> Optional[float]:
+    @staticmethod
+    def _step_counter(obj) -> Optional[dict]:
+        """Extract a /progress-style step counter ({value,max}/{step,total_steps}/...)
+        from any dict-ish payload, searching one level into nested dicts."""
+        if not isinstance(obj, dict):
+            return None
+        pairs = (("value", "max"), ("step", "total_steps"), ("current", "total"), ("progress", "max"))
+        for cur, tot in pairs:
+            if cur in obj and isinstance(obj.get(cur), (int, float)):
+                return {"value": obj.get(cur), "max": obj.get(tot), "node": obj.get("node")}
+        for key in ("progress", "status", "execution"):
+            nested = obj.get(key)
+            if isinstance(nested, dict):
+                found = ComfyUiProgressMonitor._step_counter(nested)
+                if found:
+                    return found
+        return None
+
+    def _running_ids_and_steps(self, running) -> tuple[list, Optional[dict]]:
+        ids: list = []
+        step = None
+        for item in running or []:
+            if isinstance(item, (list, tuple)):
+                # stock ComfyUI: [number, prompt_id, prompt, extra_data, outputs]
+                ids.append(item[1] if len(item) > 1 else item[0])
+                for part in item:
+                    step = step or self._step_counter(part)
+            elif isinstance(item, dict):
+                ids.append(item.get("prompt_id") or item.get("id"))
+                step = step or self._step_counter(item)
+        return ids, step
+
+    def poll(self, gpu_util_pct: Optional[float] = None) -> Optional[float]:
         """
         Returns seconds since last observed progress, or None if
         ComfyUI is unreachable (treated as "unknown", not "stalled" —
         a dead server is a different failure mode than a hung job).
+
+        Progress signature = running prompt ids + pending count + history
+        size/tail + the sampler STEP COUNTER (from /progress when the server
+        exposes it, else progress fields on the running item).  A GPU
+        utilization sample at/above GPU_ACTIVE_UTIL_PCT also counts as
+        progress, so one long job with a moving step counter or a busy GPU
+        is never reported as stalled.
         """
         queue = self._fetch("/queue")
         history = self._fetch("/history")
         if queue is None and history is None:
             return None
+        progress = self._fetch("/progress")  # optional endpoint; None on 404
 
         running = (queue or {}).get("queue_running", [])
         pending = (queue or {}).get("queue_pending", [])
         history_keys = tuple(sorted((history or {}).keys()))
+        running_ids, step = self._running_ids_and_steps(running)
+        step = self._step_counter(progress) or step
+        self.last_step = step
 
-        # Signature changes whenever the running job, pending count, or
-        # completed-history set changes — any of those is real progress.
-        signature = json.dumps([running, len(pending), history_keys[-5:]], sort_keys=True)
+        signature = json.dumps(
+            [running_ids, len(pending), len(history_keys), history_keys[-5:], step],
+            sort_keys=True, default=str,
+        )
 
         now = time.time()
         if signature != self._last_signature:
             self._last_signature = signature
             self._last_progress_ts = now
+        elif gpu_util_pct is not None and gpu_util_pct >= GPU_ACTIVE_UTIL_PCT:
+            self._last_progress_ts = now  # the card is working: not a stall
 
         # No job running and nothing pending = idle, not stalled.
         if not running and not pending:
@@ -462,7 +573,8 @@ def handle_stall(reason: str, sample: GpuSample, state: WatchdogState) -> None:
     write_evidence({"event": "restart_attempt", "pid": zombie_pid})
     time.sleep(RESTART_COOLDOWN_SEC)
     started = restart_comfyui()
-    state.consecutive_restarts += 1 if started else state.consecutive_restarts
+    if started:
+        state.consecutive_restarts += 1
     write_evidence({"event": "restart_result", "started": started})
     state.bad_sample_streak = 0
     state.vram_history.clear()
@@ -473,11 +585,16 @@ def handle_stall(reason: str, sample: GpuSample, state: WatchdogState) -> None:
 # ----------------------------------------------------------------------------
 
 def main() -> None:
+    _setup_logging()
     gpu = NvmlGpuMonitor(GPU_INDEX)
     comfy = ComfyUiProgressMonitor(COMFYUI_BASE_URL)
     state = WatchdogState()
 
-    log.info("GPU watchdog started. Polling every %ss.", POLL_INTERVAL_SEC)
+    log.info(
+        "GPU watchdog started. Polling every %ss; stall timeout %.0fs; restart %s.",
+        POLL_INTERVAL_SEC, COMFYUI_STALL_TIMEOUT_SEC,
+        "enabled" if (COMFYUI_LAUNCH_CMD and COMFYUI_LAUNCH_CWD) else "DISABLED (COMFYUI_LAUNCH_CMD/CWD unset)",
+    )
 
     try:
         while True:
@@ -486,12 +603,15 @@ def main() -> None:
                 break
 
             sample = gpu.sample()
+            if sample is None:
+                time.sleep(POLL_INTERVAL_SEC)
+                continue
             state.vram_history.append(sample.used_mb)
 
             stall_reason = None
 
-            # --- Primary detector: ComfyUI job progress ---
-            seconds_since_progress = comfy.poll()
+            # --- Primary detector: ComfyUI job progress (+ step counter, + GPU util) ---
+            seconds_since_progress = comfy.poll(gpu_util_pct=sample.gpu_util_pct)
             if seconds_since_progress is not None and seconds_since_progress > COMFYUI_STALL_TIMEOUT_SEC:
                 stall_reason = f"comfyui_no_progress_{int(seconds_since_progress)}s"
 

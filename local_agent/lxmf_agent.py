@@ -57,7 +57,26 @@ OUTBOUND_AUDIT_FILE = RUNTIME / "outbound_delivery_audit.jsonl"
 MEDIA_COMPLETION_AUDIT_FILE = RUNTIME / "media_completion_delivery.jsonl"
 UPLOADS_DIR = HERE / "uploads" / "lxmf"
 MAX_CHUNK_BYTES = 3500
+# ── abuse limits (audit 2026-11-02 #21) ──────────────────────────────────
+# Per-item cap (kept for the audit record) and, more importantly, a per-request
+# TOTAL: one Sideband message can carry a file list, an image and audio.
 MAX_ATTACHMENT_BYTES = 75 * 1024 * 1024
+MAX_REQUEST_ATTACHMENT_BYTES = 75 * 1024 * 1024
+# Disk a single paired identity may hold under uploads/lxmf/<identity>/.
+# Over quota -> the attachment is refused (never silently evicted: uploads are
+# immutable evidence that queued media jobs may still reference).
+IDENTITY_UPLOAD_QUOTA_BYTES = 1024 * 1024 * 1024
+# Bounded inbox between the LXMF router thread and the single agent worker.
+INBOX_MAX_PENDING = 32
+# Token bucket per paired identity: TURN_RATE_LIMIT turns per window.
+TURN_RATE_LIMIT = 10
+TURN_RATE_WINDOW_SECONDS = 600
+# Refusal replies are themselves rate-limited so a flood over LoRa cannot
+# make the bridge transmit 1:1. Unpaired senders hear "not authorised" at
+# most once per hour per source hash and are otherwise ignored (audited only).
+UNPAIRED_REFUSAL_INTERVAL_SECONDS = 3600
+LIMIT_REFUSAL_INTERVAL_SECONDS = 60
+_REFUSAL_MEMORY = 4096
 # Kept as literals so BridgeCore stays independently testable without loading
 # RNS/LXMF. They match LXMF.FIELD_FILE_ATTACHMENTS/IMAGE/AUDIO.
 FIELD_FILE_ATTACHMENTS = 0x05
@@ -186,8 +205,10 @@ class BridgeCore:
                  uploads_dir: Path = UPLOADS_DIR,
                  attachment_audit_path: Path = ATTACHMENT_AUDIT_FILE,
                  media_completion_audit_path: Path = MEDIA_COMPLETION_AUDIT_FILE,
-                 choose_model: Callable[[dict], str] | None = None):
+                 choose_model: Callable[[dict], str] | None = None,
+                 clock: Callable[[], float] = time.monotonic):
         self.send = send
+        self.clock = clock
         self.agent = agent_module
         self.store = store_module
         self.security = security_module
@@ -200,6 +221,87 @@ class BridgeCore:
         self.choose_model = choose_model or self._choose_model
         self._seen = set()
         self._seen_order = deque(maxlen=1024)
+        # identity -> (tokens, last_refill_clock)
+        self._turn_buckets: dict[str, tuple[float, float]] = {}
+        # "<kind>:<source hash>" -> clock of the last refusal reply sent
+        self._refusal_times: dict[str, float] = {}
+
+    # ── abuse limits ──────────────────────────────────────────────────────
+
+    def _refusal_allowed(self, key: str, interval: float) -> bool:
+        """True when a refusal reply may go out now for key (one per interval)."""
+        now = self.clock()
+        last = self._refusal_times.get(key)
+        if last is not None and now - last < interval:
+            return False
+        if len(self._refusal_times) >= _REFUSAL_MEMORY:
+            oldest = sorted(self._refusal_times, key=self._refusal_times.get)
+            for stale in oldest[:_REFUSAL_MEMORY // 4]:
+                del self._refusal_times[stale]
+        self._refusal_times[key] = now
+        return True
+
+    def _take_turn_token(self, identity: str) -> float:
+        """Token bucket per paired identity.
+
+        Returns 0.0 when a token was consumed, otherwise the number of seconds
+        until the next token becomes available.
+        """
+        now = self.clock()
+        rate = TURN_RATE_LIMIT / float(TURN_RATE_WINDOW_SECONDS)
+        tokens, last = self._turn_buckets.get(identity, (float(TURN_RATE_LIMIT), now))
+        tokens = min(float(TURN_RATE_LIMIT), tokens + max(0.0, now - last) * rate)
+        if tokens >= 1.0:
+            self._turn_buckets[identity] = (tokens - 1.0, now)
+            return 0.0
+        self._turn_buckets[identity] = (tokens, now)
+        return (1.0 - tokens) / rate
+
+    def _identity_upload_usage(self, identity: str) -> int:
+        """Bytes currently stored under uploads/lxmf/<identity>/."""
+        root = self.uploads_dir / identity
+        total = 0
+        try:
+            for path in root.rglob("*"):
+                try:
+                    if path.is_file():
+                        total += path.stat().st_size
+                except OSError:
+                    continue
+        except OSError:
+            pass
+        return total
+
+    def refuse_overflow(self, message) -> bool:
+        """Called from the transport when the bounded inbox is full.
+
+        Paired senders get a short "busy" reply at most once per minute;
+        unpaired senders get nothing. Returns True when a reply was sent.
+        """
+        source_hash = getattr(message, "source_hash", b"")
+        request_id = _request_id(message)
+        print(f"LXMF inbox full ({INBOX_MAX_PENDING} pending); dropped request "
+              f"{request_id[:16]} from {_hex(source_hash)[:16]}",
+              file=sys.stderr, flush=True)
+        try:
+            pair = self.security.get_pair(source_hash, self.pairings_path)
+        except Exception:
+            pair = None
+        if not pair:
+            return False
+        if not self._refusal_allowed("overflow:" + _hex(source_hash),
+                                     LIMIT_REFUSAL_INTERVAL_SECONDS):
+            return False
+        try:
+            self._reply(source_hash,
+                        f"The workstation inbox is full ({INBOX_MAX_PENDING} pending "
+                        "messages). This message was dropped; send it again shortly.",
+                        request_id, str(pair.get("conversation_id") or ""), "refused")
+        except Exception as exc:
+            print(f"  overflow refusal failed safely: {type(exc).__name__}: {exc}",
+                  file=sys.stderr, flush=True)
+            return False
+        return True
 
     @staticmethod
     def _choose_model(pair: dict) -> str:
@@ -368,8 +470,10 @@ class BridgeCore:
         if not isinstance(data, bytes) or not data or len(data) > MAX_ATTACHMENT_BYTES:
             return None
         safe_name = _safe_filename(name, fallback)
-        # A request-id directory is immutable; an existing file is never replaced.
-        folder = self.uploads_dir / request_id[:32]
+        # uploads/lxmf/<identity>/<request-id>/: the identity level is what the
+        # disk quota is measured on. A request-id directory is immutable; an
+        # existing file is never replaced.
+        folder = self.uploads_dir / identity / request_id[:32]
         folder.mkdir(parents=True, exist_ok=True)
         path = folder / safe_name
         if path.exists():
@@ -392,41 +496,72 @@ class BridgeCore:
         })
         return item
 
-    def _receive_attachments(self, message, identity: str, request_id: str) -> list[dict]:
-        """Decode the stock Sideband field shapes from a paired sender only."""
+    def _receive_attachments(self, message, identity: str,
+                             request_id: str) -> tuple[list[dict], list[str]]:
+        """Decode the stock Sideband field shapes from a paired sender only.
+
+        Returns (saved items, human-readable refusal reasons). Two budgets
+        apply: MAX_REQUEST_ATTACHMENT_BYTES across every item in this one
+        message, and IDENTITY_UPLOAD_QUOTA_BYTES across everything this
+        identity has ever stored under uploads/lxmf/<identity>/.
+        """
         fields = getattr(message, "fields", None)
         if not isinstance(fields, dict):
-            return []
-        items: list[dict] = []
+            return [], []
+        candidates: list[tuple[str, object, object, str]] = []
         attachments = fields.get(FIELD_FILE_ATTACHMENTS, [])
         if isinstance(attachments, (list, tuple)):
             for index, attachment in enumerate(attachments, 1):
                 if isinstance(attachment, (list, tuple)) and len(attachment) >= 2:
-                    item = self._save_attachment(identity, request_id, "file",
-                                                 attachment[0], attachment[1],
-                                                 f"attachment_{index}")
-                    if item:
-                        items.append(item)
+                    candidates.append(("file", attachment[0], attachment[1],
+                                       f"attachment_{index}"))
         image = fields.get(FIELD_IMAGE)
         if isinstance(image, (list, tuple)) and len(image) >= 2:
             fmt = str(image[0] or "webp").lower()
             ext = fmt if re.fullmatch(r"[a-z0-9]{1,8}", fmt) else "webp"
-            item = self._save_attachment(identity, request_id, "image",
-                                         f"sideband_image.{ext}", image[1],
-                                         "sideband_image.webp")
-            if item:
-                items.append(item)
+            candidates.append(("image", f"sideband_image.{ext}", image[1],
+                               "sideband_image.webp"))
         audio = fields.get(FIELD_AUDIO)
         if isinstance(audio, (list, tuple)) and len(audio) >= 2:
             # Sideband's normal microphone path uses Opus-in-Ogg. Preserve a
             # conservative .ogg label; unsupported codecs remain an honest
             # workstation-tool error instead of fabricated transcription.
-            item = self._save_attachment(identity, request_id, "audio",
-                                         "sideband_audio.ogg", audio[1],
-                                         "sideband_audio.ogg")
+            candidates.append(("audio", "sideband_audio.ogg", audio[1],
+                               "sideband_audio.ogg"))
+        if not candidates:
+            return [], []
+
+        items: list[dict] = []
+        refused: list[str] = []
+        request_budget = MAX_REQUEST_ATTACHMENT_BYTES
+        quota_left = IDENTITY_UPLOAD_QUOTA_BYTES - self._identity_upload_usage(identity)
+        for kind, name, data, fallback in candidates:
+            if not isinstance(data, bytes) or not data:
+                continue
+            size = len(data)
+            label = _safe_filename(name, fallback)
+            reason = ""
+            if size > MAX_ATTACHMENT_BYTES or size > request_budget:
+                reason = (f"{label} ({size} bytes) exceeds the "
+                          f"{MAX_REQUEST_ATTACHMENT_BYTES // (1024 * 1024)} MB per-message limit")
+            elif size > quota_left:
+                reason = (f"{label} ({size} bytes) would exceed this phone's "
+                          f"{IDENTITY_UPLOAD_QUOTA_BYTES // (1024 * 1024)} MB storage quota "
+                          "on the workstation; ask the operator to clear uploads/lxmf")
+            if reason:
+                refused.append(reason)
+                _append_jsonl(self.attachment_audit_path, {
+                    "at": time.time(), "event": "refused_attachment",
+                    "identity": identity, "request_id": request_id,
+                    "kind": kind, "name": label, "bytes": size, "reason": reason,
+                })
+                continue
+            item = self._save_attachment(identity, request_id, kind, name, data, fallback)
             if item:
                 items.append(item)
-        return items
+                request_budget -= size
+                quota_left -= size
+        return items, refused
 
     @staticmethod
     def _attachment_instructions(items: list[dict]) -> str:
@@ -515,20 +650,46 @@ class BridgeCore:
         if not pair:
             # Keep only the verified LXMF delivery address and request ID. This
             # lets the local operator pair the right Sideband identity without
-            # retaining content from an untrusted message.
+            # retaining content from an untrusted message. The refusal reply
+            # goes out at most once per hour per source hash; every other
+            # unpaired message is audited and then ignored, so an unknown
+            # sender cannot make this bridge transmit on demand.
             self.security.record_unpaired_attempt(
                 source_hash, request_id, self.unpaired_audit_path)
-            self._reply(source_hash,
-                        "Not authorised. Pair this Sideband LXMF address on the workstation first.",
-                        request_id, kind="refused")
+            if self._refusal_allowed("unpaired:" + _hex(source_hash),
+                                     UNPAIRED_REFUSAL_INTERVAL_SECONDS):
+                self._reply(source_hash,
+                            "Not authorised. Pair this Sideband LXMF address on the workstation first.",
+                            request_id, kind="refused")
             return
 
         identity = self.security.normalise_identity(source_hash)
-        attachments = self._receive_attachments(message, identity, request_id)
-        text = _message_text(message).strip() + self._attachment_instructions(attachments)
+        cid_hint = str(pair.get("conversation_id") or "")
+        wait = self._take_turn_token(identity)
+        if wait > 0:
+            # Nothing from a rate-limited turn is stored: no attachment bytes,
+            # no conversation record. The reply itself is throttled.
+            print(f"LXMF turn rate-limited for {identity[:16]}: retry in {wait:.0f}s",
+                  file=sys.stderr, flush=True)
+            if self._refusal_allowed("rate:" + identity, LIMIT_REFUSAL_INTERVAL_SECONDS):
+                self._reply(source_hash,
+                            f"Rate limit: this phone may send {TURN_RATE_LIMIT} turns per "
+                            f"{TURN_RATE_WINDOW_SECONDS // 60} minutes. "
+                            f"Try again in about {max(1, int(wait + 0.999))} s.",
+                            request_id, cid_hint, "refused")
+            return
+
+        attachments, refused = self._receive_attachments(message, identity, request_id)
+        body = _message_text(message).strip()
+        if refused:
+            body += "\n\n" + "\n".join(f"[Attachment not stored: {reason}]" for reason in refused)
+            if not attachments and not _message_text(message).strip():
+                self._reply(source_hash, "\n".join(refused), request_id, cid_hint, "refused")
+                return
+        text = body + self._attachment_instructions(attachments)
         if not text:
             self._reply(source_hash, "I received an empty or non-text message.",
-                        request_id, pair.get("conversation_id", ""), "refused")
+                        request_id, cid_hint, "refused")
             return
 
         cid = str(pair.get("conversation_id") or "")
@@ -602,11 +763,24 @@ class LXMFBridge:
         if self.source is None:
             raise RuntimeError("LXMF did not register the delivery identity")
         self.core = BridgeCore(self._send)
-        self.inbox: queue.Queue = queue.Queue()
+        # Bounded: the router thread must never be able to grow an unbounded
+        # backlog of undelivered turns on the workstation.
+        self.inbox: queue.Queue = queue.Queue(maxsize=INBOX_MAX_PENDING)
         self.stop_event = threading.Event()
         self.worker = threading.Thread(target=self._worker, name="lxmf-agent-worker",
                                        daemon=True)
-        self.router.register_delivery_callback(self.inbox.put)
+        self.router.register_delivery_callback(self._enqueue_inbound)
+
+    def _enqueue_inbound(self, message) -> None:
+        """LXMF delivery callback: queue or refuse, never block the router."""
+        try:
+            self.inbox.put_nowait(message)
+        except queue.Full:
+            try:
+                self.core.refuse_overflow(message)
+            except Exception as exc:
+                print(f"LXMF overflow handling failed safely: {type(exc).__name__}: {exc}",
+                      file=sys.stderr, flush=True)
 
     def _load_identity(self):
         if IDENTITY_FILE.is_file():

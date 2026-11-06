@@ -25,6 +25,17 @@ else:
 # actually being implemented, per that plan doc's own note; that is now.
 FARM_TUNNEL_HUB_HOST = "10.90.90.1"
 _ALLOWED_REDIS_HOSTS = {"127.0.0.1", FARM_TUNNEL_HUB_HOST}
+# Celery's timezone for beat/ETA math. The default is this workstation's;
+# other installs set FARM_TIMEZONE (IANA name). enable_utc stays on.
+TIMEZONE_ENV = "FARM_TIMEZONE"
+DEFAULT_TIMEZONE = "America/New_York"
+
+
+def farm_timezone() -> str:
+    raw = os.environ.get(TIMEZONE_ENV)
+    if raw is None or not str(raw).strip():
+        return DEFAULT_TIMEZONE
+    return str(raw).strip()
 
 
 def _is_authenticated_loopback_redis_url(value: str) -> bool:
@@ -89,7 +100,7 @@ def create_app():
             "local_agent.worker_farm.tasks.qwythos_evaluate": {"queue": "summarize"},
             "local_agent.worker_farm.tasks.embed_chunks": {"queue": "embed"},
         },
-        timezone="America/New_York", enable_utc=True,
+        timezone=farm_timezone(), enable_utc=True,
     )
     return app
 

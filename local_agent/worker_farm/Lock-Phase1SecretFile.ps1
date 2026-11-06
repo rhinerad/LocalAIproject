@@ -3,9 +3,16 @@ Windows chmod-600 equivalent for farm secret files (CHANGELOG 2026-09-03aj).
 
 Disables NTFS inheritance and grants only:
   NT AUTHORITY\SYSTEM:(R,W)
-  DURANGAMINGPC\rhine:(R,W)
+  <DOMAIN\user running this script>:(R,W)
 
-Administrators is intentionally not granted: that group still contains tiffa.
+The owner account is derived at runtime from
+[System.Security.Principal.WindowsIdentity]::GetCurrent().Name (never a
+hard-coded machine\user), so the scripts work on any workstation. Override
+with FARM_SECRET_OWNER=DOMAIN\user only when secrets must be owned by a
+different (service) account than the one running the script.
+
+Administrators is intentionally not granted: that group still contains other
+interactive users on this workstation.
 
 Dot-source this file to get Lock-Phase1SecretFile / Test-Phase1SecretFileAcl.
 Run directly with -Probe to write a dummy file under $env:TEMP, lock it, assert
@@ -25,7 +32,19 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $script:Phase1SecretAclSystem = 'NT AUTHORITY\SYSTEM'
-$script:Phase1SecretAclOwner = 'DURANGAMINGPC\rhine'
+
+function Get-Phase1SecretAclOwner {
+    if (-not [string]::IsNullOrWhiteSpace($env:FARM_SECRET_OWNER)) {
+        return $env:FARM_SECRET_OWNER.Trim()
+    }
+    $name = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+    if ([string]::IsNullOrWhiteSpace($name)) {
+        throw 'Lock-Phase1SecretFile: could not determine the current Windows account.'
+    }
+    return $name
+}
+
+$script:Phase1SecretAclOwner = Get-Phase1SecretAclOwner
 
 function Get-Phase1SecretIcacls {
     return (Join-Path $env:SystemRoot 'System32\icacls.exe')
@@ -120,7 +139,7 @@ function Invoke-Phase1SecretAclProbe {
             $after = (icacls $probeFile 2>&1 | Out-String)
             throw "Probe ACL mismatch after lock:`n$after"
         }
-        Write-Output 'PASS: probe file ACL is SYSTEM+rhine (R,W), inheritance disabled'
+        Write-Output "PASS: probe file ACL is SYSTEM+$($script:Phase1SecretAclOwner) (R,W), inheritance disabled"
     }
     finally {
         Remove-Item -LiteralPath $probeDir -Recurse -Force -ErrorAction SilentlyContinue

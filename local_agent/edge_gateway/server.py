@@ -5,11 +5,9 @@ import argparse
 import hmac
 import ipaddress
 import json
-import os
 import secrets
 import socket
 import ssl
-import subprocess
 import sys
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -30,7 +28,12 @@ from .constants import (
 )
 from .ledger import EdgeLedger, EdgeLedgerError
 from .logutil import edge_log
-from .tlsutil import TlsMaterial, cert_fingerprint_der
+from .tlsutil import (
+    TlsMaterial,
+    cert_fingerprint_der,
+    lock_secret_file,
+    write_private_bytes,
+)
 
 
 class BindPolicyError(ValueError):
@@ -415,28 +418,16 @@ def _read_admin_token(data_dir: Path) -> str:
 
 
 def _restrict_token_acl(path: Path) -> None:
-    if sys.platform != "win32":
-        path.chmod(0o600)
-        return
-    who = subprocess.run(
-        ["whoami"], capture_output=True, text=True, check=False,
-    )
-    user = (who.stdout or "").strip() or os.environ.get("USERNAME", "")
-    if not user:
-        return
-    subprocess.run(
-        [
-            "icacls", str(path), "/inheritance:r", "/grant:r",
-            "NT AUTHORITY\\SYSTEM:F", "BUILTIN\\Administrators:F", f"{user}:F",
-        ],
-        check=False, capture_output=True,
-    )
+    # SYSTEM + current user only; BUILTIN\Administrators is no longer granted
+    # (same policy as the farm Lock-Phase1SecretFile.ps1 helper). Raises on
+    # failure so a world-readable admin token is never silently accepted.
+    lock_secret_file(path)
 
 
 def ensure_admin_token(data_dir: Path) -> None:
     path = Path(data_dir) / "admin.token"
     if not path.is_file() or len(path.read_text(encoding="utf-8").strip()) < 24:
-        path.write_text(secrets.token_urlsafe(32) + "\n", encoding="utf-8")
+        write_private_bytes(path, (secrets.token_urlsafe(32) + "\n").encode("utf-8"))
         sys.stderr.write(f"admin token created at {path}; contents not shown\n")
     _restrict_token_acl(path)
 

@@ -100,12 +100,22 @@ foreach ($file in $generated) {
         throw "Empty password in $($file.Name); refusing to generate a replacement."
     }
 
-    $aclArgs = @('exec', $containerName, 'redis-cli', '-a', $redisPassword, '--no-auth-warning',
-                 'ACL', 'SETUSER', $username, 'on', ">$userPassword",
-                 '~*', '&*', 'nocommands', '+@all',
-                 '-flushall', '-flushdb', '-config', '-shutdown', '-acl', '-debug', '-cluster', '-replicaof')
+    # Same grant set as Add-Phase1SecondaryWorkerCredential.ps1 and
+    # redis-with-acl-restore.sh: explicit categories, @dangerous and the
+    # replication/module/admin verbs denied, SELECT denied (db 0 only).
+    $aclGrant = @('+@read', '+@write', '+@list', '+@hash', '+@string', '+@set',
+                  '+@sortedset', '+@stream', '+@pubsub', '+@scripting',
+                  '+@transaction', '+@connection')
+    $aclDeny = @('-@dangerous', '-slaveof', '-replicaof', '-module', '-keys', '-select',
+                 '-flushall', '-flushdb', '-config', '-shutdown', '-acl', '-debug', '-cluster')
+    $aclLine = (@('ACL', 'SETUSER', $username, 'on', ">$userPassword", '~*', '&*', 'nocommands') +
+                $aclGrant + $aclDeny) -join ' '
+    # Password goes to redis-cli on stdin; redis-cli authenticates from the
+    # container's REDIS_PASSWORD via REDISCLI_AUTH. Nothing secret on argv.
+    $inContainer = "tr -d '\r' | REDISCLI_AUTH=`$REDIS_PASSWORD redis-cli --no-auth-warning"
+    $aclArgs = @('exec', '-i', $containerName, 'sh', '-c', $inContainer)
     Write-Host "Reapplying ACL user '$username' from $($file.Name) (password not printed)." -ForegroundColor Cyan
-    $aclResult = Invoke-FarmDocker -Spec $spec -DockerArgs $aclArgs -PassThru
+    $aclResult = Invoke-FarmDocker -Spec $spec -DockerArgs $aclArgs -StdinLines @($aclLine) -PassThru
     if ($aclResult.ExitCode -ne 0 -or $aclResult.Text -notmatch 'OK') {
         throw "ACL SETUSER did not report OK for '$username'."
     }

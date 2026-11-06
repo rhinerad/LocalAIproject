@@ -1,7 +1,8 @@
 # gvd_watcher_keepalive.ps1 — restart gvd_watcher.py if dead while batch incomplete
 $ErrorActionPreference = 'Continue'
-$root = 'A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09'
-$py = 'A:\Users\rhine\AppData\Local\Programs\Python\Python312\python.exe'
+# GVD_ROOT / GVD_PYTHON env overrides; default root = this script's own folder (repo root).
+$root = if ($env:GVD_ROOT) { $env:GVD_ROOT } elseif ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $MyInvocation.MyCommand.Path }
+$py = if ($env:GVD_PYTHON) { $env:GVD_PYTHON } else { 'A:\Users\rhine\AppData\Local\Programs\Python\Python312\python.exe' }
 $logDir = Join-Path $root 'local_agent\runtime\logs'
 $progress = Join-Path $root 'local_agent\runtime\gvd_backrooms_batch\progress.json'
 $pidFile = Join-Path $logDir 'gvd_watcher_launcher.pid'
@@ -27,7 +28,10 @@ function Batch-Complete {
     $d = Get-Content $progress -Raw | ConvertFrom-Json
     $done = 0
     foreach ($p in $d.clips.PSObject.Properties) {
-      if ($p.Value.status -eq 'done') { $done++ }
+      # Same finished-clip vocabulary as batch_run_backrooms_gvd.already_done():
+      # the batch writes status 'selected' + pipeline_state 'SELECTED'; 'done' is legacy.
+      $v = $p.Value
+      if ($v.pipeline_state -eq 'SELECTED' -or $v.status -eq 'selected' -or $v.status -eq 'done') { $done++ }
     }
     return ($done -ge 102)
   } catch { return $false }

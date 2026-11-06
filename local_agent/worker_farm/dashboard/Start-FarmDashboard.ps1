@@ -23,13 +23,33 @@ $farmDir = Split-Path -Parent $dashDir
 $repoRoot = Split-Path -Parent (Split-Path -Parent $farmDir)
 $serverPy = Join-Path $dashDir 'server.py'
 
-# Prefer install-dir system Python 3.12 over PATH venvs.
-$systemPy = 'A:\Users\rhine\AppData\Local\Programs\Python\Python312\python.exe'
-if (-not (Test-Path -LiteralPath $systemPy)) {
-    $systemPy = (Get-Command python -ErrorAction SilentlyContinue | Select-Object -First 1).Source
+# System Python resolution, portable across workstations (no hard-coded
+# install path): FARM_DASHBOARD_PYTHON, then the `py -3` launcher, then
+# `python` on PATH. The dashboard is stdlib-only, so any CPython 3 works.
+function Resolve-DashboardPython {
+    if (-not [string]::IsNullOrWhiteSpace($env:FARM_DASHBOARD_PYTHON) -and
+        (Test-Path -LiteralPath $env:FARM_DASHBOARD_PYTHON)) {
+        return $env:FARM_DASHBOARD_PYTHON
+    }
+    $py = Get-Command py.exe -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($py) {
+        try {
+            $resolved = (& $py.Source -3 -c 'import sys; print(sys.executable)' 2>$null | Select-Object -First 1)
+            if ($LASTEXITCODE -eq 0 -and $resolved -and (Test-Path -LiteralPath $resolved.Trim())) {
+                return $resolved.Trim()
+            }
+        } catch { }
+    }
+    $onPath = Get-Command python -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($onPath -and (Test-Path -LiteralPath $onPath.Source)) {
+        return $onPath.Source
+    }
+    return $null
 }
-if (-not $systemPy -or -not (Test-Path -LiteralPath $systemPy)) {
-    throw "system Python not found"
+
+$systemPy = Resolve-DashboardPython
+if (-not $systemPy) {
+    throw "system Python not found: set FARM_DASHBOARD_PYTHON, install the py launcher, or put python on PATH"
 }
 if (-not (Test-Path -LiteralPath $serverPy)) {
     throw "server.py not found at $serverPy"

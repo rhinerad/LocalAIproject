@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -44,6 +45,18 @@ KEEP_ALIVE = "30m"
 HOST_ENV = "FARM_OLLAMA_HOST"
 MODEL_ENV = "FARM_JUDGE_MODEL"
 DEFAULT_HOST = "127.0.0.1:11434"
+# chat_id arrives in a Celery envelope from a secondary node and becomes a
+# file name under runtime/judge_semantic/. Anything outside this shape (path
+# separators, dots, empty, over-long) is rejected before a path is built.
+CHAT_ID_RE = re.compile(r"[A-Za-z0-9_-]{1,64}")
+
+
+def validate_chat_id(value: Any) -> str:
+    """Return chat_id as a safe file stem or raise ValueError."""
+    chat_id = str(value or "")
+    if not CHAT_ID_RE.fullmatch(chat_id):
+        raise ValueError("chat_id must match [A-Za-z0-9_-]{1,64}")
+    return chat_id
 
 JUDGE_SCHEMA = {
     "type": "object",
@@ -214,7 +227,7 @@ def _prompt_user(messages: list[dict], mechanical: dict[str, Any]) -> str:
 
 
 def _verdict_path(root: Path, chat_id: str) -> Path:
-    return _layout(root)["verdicts"] / f"{chat_id}.json"
+    return _layout(root)["verdicts"] / f"{validate_chat_id(chat_id)}.json"
 
 
 def _write_verdict(root: Path, payload: dict[str, Any]) -> dict[str, Any]:
@@ -247,10 +260,10 @@ def try_enqueue_followup(submit, envelope: dict[str, Any], mechanical: dict[str,
 
 def judge_chat(envelope: dict[str, Any], *, root: Path = DEFAULT_ROOT) -> dict[str, Any] | None:
     """Score one mechanical result + transcript. None if skipped."""
-    chat_id = str(envelope.get("chat_id") or "")
+    chat_id = validate_chat_id(envelope.get("chat_id"))
     messages = envelope.get("messages") or []
     mechanical = envelope.get("mechanical") or {}
-    if not chat_id or not isinstance(messages, list):
+    if not isinstance(messages, list):
         raise ValueError("semantic judge envelope needs chat_id and messages")
     if not isinstance(mechanical, dict) or not mechanical:
         raise ValueError("semantic judge envelope needs mechanical rubric output")
@@ -311,7 +324,10 @@ def judge_chat(envelope: dict[str, Any], *, root: Path = DEFAULT_ROOT) -> dict[s
 
 
 def load_paired_verdict(root: Path, chat_id: str) -> dict[str, Any] | None:
-    path = _verdict_path(root, chat_id)
+    try:
+        path = _verdict_path(root, chat_id)
+    except ValueError:
+        return None
     if not path.is_file():
         return None
     try:
@@ -334,7 +350,10 @@ def record_operator_grade(chat_id: str, score: int, *, root: Path = DEFAULT_ROOT
     grade = judge_eval._int_score(score)
     if grade is None:
         raise operator_eval.EvalCaseError("operator grade must be integer 0-5")
-    path = _verdict_path(root, chat_id)
+    try:
+        path = _verdict_path(root, chat_id)
+    except ValueError as exc:
+        raise operator_eval.EvalCaseError(str(exc)) from exc
     if not path.is_file():
         raise operator_eval.EvalCaseError("no semantic verdict sidecar for chat_id")
     data = json.loads(path.read_text(encoding="utf-8"))

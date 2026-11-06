@@ -47,11 +47,12 @@ import shutil
 import socket
 import subprocess
 import sys
+import threading
 import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, asdict
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from urllib.parse import urlparse
 
 from atomic_io import atomic_write_text
@@ -112,6 +113,13 @@ CAP_LOGIC = "logic"
 CAP_CODE = "code"
 CAP_IMAGE = "image"
 CAP_CREATIVE = "creative"  # large prompt/storyboard packs; not gpu_image
+
+# Model-thrash hysteresis (AUDIT_2026-11-02 fix 11). An unpinned turn whose
+# capability class differs from the 14B this agent already has resident keeps
+# that resident model until the class has differed for this many consecutive
+# real turns. Each 14B swap is a 9-10 GB reload, so one stray code question in
+# a chat (or one chat question in a coding session) must not pay for two.
+CAP_SWITCH_HYSTERESIS = 2
 
 _CODE_SIGNAL = re.compile(
     r"\b(?:python|javascript|typescript|rust|golang|\bjava\b|c\+\+|csharp|"
@@ -450,9 +458,28 @@ _BACKGROUND_GPU_COMPUTE = frozenset([
 ])
 
 
+def _proc_stem(path: str) -> str:
+    """Executable stem of an nvidia-smi process path, Windows or POSIX.
+
+    nvidia-smi on this workstation prints Windows paths. ``pathlib.Path`` on
+    a Linux host treats the backslashes as part of one long file name, so the
+    PowerInfer ``server.exe`` comparison silently failed off-workstation.
+    ``PureWindowsPath`` accepts both separators and is byte-identical to
+    ``WindowsPath.stem`` on the workstation itself.
+    """
+    return PureWindowsPath(str(path or "")).stem.lower() if path else ""
+
+
+def _names_powerinfer_server(procs: list[str]) -> bool:
+    """True when nvidia-smi named a server.exe-class or powerinfer process."""
+    configured = _proc_stem(POWERINFER_SERVER_EXE)
+    return any(_proc_stem(p) == configured or "powerinfer" in str(p).lower()
+               for p in procs)
+
+
 def _is_background_gpu_compute(path: str) -> bool:
     text = str(path or "").lower().replace("/", "\\")
-    stem = Path(path).stem.lower() if path else ""
+    stem = _proc_stem(path)
     if stem in _BACKGROUND_GPU_COMPUTE or "xmrig" in stem:
         return True
     return "\\salad\\" in text
@@ -503,9 +530,49 @@ class Decision:
         return asdict(self)
 
 
+# ── probe memoisation ─────────────────────────────────────────────────────────
+# One agent hop used to spawn up to 8 nvidia-smi and ~9 tasklist processes and
+# the 2-second GUI status poll another 4 nvidia-smi (AUDIT_2026-11-02 P2).
+# Every subprocess probe below is memoised for _CACHE_TTL seconds. Only
+# successful results are remembered: an unavailable nvidia-smi still fails
+# closed on every call and is never cached as "unknown". Tests set
+# ``_CACHE_TTL = 0`` or call ``clear_probe_cache()``.
+_CACHE_TTL = 1.0
+_PROBE_CACHE: dict[tuple, tuple[float, object]] = {}
+_PROBE_CACHE_LOCK = threading.Lock()
+
+
+def clear_probe_cache() -> None:
+    with _PROBE_CACHE_LOCK:
+        _PROBE_CACHE.clear()
+
+
+def _memo_probe(key: tuple, compute, *, cacheable=lambda value: True):
+    ttl = float(_CACHE_TTL or 0)
+    if ttl <= 0:
+        return compute()
+    with _PROBE_CACHE_LOCK:
+        hit = _PROBE_CACHE.get(key)
+        if hit is not None and time.monotonic() - hit[0] < ttl:
+            return hit[1]
+    value = compute()
+    if cacheable(value):
+        with _PROBE_CACHE_LOCK:
+            _PROBE_CACHE[key] = (time.monotonic(), value)
+    return value
+
+
 # ── busy detection ────────────────────────────────────────────────────────────
 
 def _pid_alive(pid: int) -> bool:
+    """Liveness of ``pid``; one tasklist spawn per PID per ``_CACHE_TTL``."""
+    pid = int(pid or 0)
+    if pid <= 0:
+        return False
+    return bool(_memo_probe(("pid_alive", pid), lambda: _pid_alive_uncached(pid)))
+
+
+def _pid_alive_uncached(pid: int) -> bool:
     if pid <= 0:
         return False
     if os.name == "nt":
@@ -653,10 +720,7 @@ def _resident_is_ours(resident: list[str]) -> bool:
 
 def _timeshare_powerinfer_procs(procs: list[str]) -> list[str]:
     """Names-only server.exe is occupancy only with backend_up. TCP 8080 alone is not."""
-    maybe = any(
-        Path(p).stem.lower() == Path(POWERINFER_SERVER_EXE).stem.lower()
-        or "powerinfer" in str(p).lower()
-        for p in procs)
+    maybe = _names_powerinfer_server(procs)
     backend_up = powerinfer_backend_listening() if maybe else False
     return [p for p in procs if _is_powerinfer_compute(p, backend_up=backend_up)]
 
@@ -929,8 +993,8 @@ def _is_powerinfer_compute(path: str, *, backend_up: bool = False) -> bool:
     text = str(path or "").lower().replace("/", "\\")
     if "powerinfer" in text:
         return True
-    stem = Path(path).stem.lower() if path else ""
-    configured = Path(POWERINFER_SERVER_EXE).stem.lower()
+    stem = _proc_stem(path)
+    configured = _proc_stem(POWERINFER_SERVER_EXE)
     if stem != configured:
         return False
     configured_path = str(Path(POWERINFER_SERVER_EXE)).lower().replace("/", "\\")
@@ -940,7 +1004,17 @@ def _is_powerinfer_compute(path: str, *, backend_up: bool = False) -> bool:
 
 
 def gpu_memory() -> tuple[int | None, list[str]]:
-    """(used MB, process names). (None, []) if nvidia-smi is unavailable."""
+    """(used MB, process names). (None, []) if nvidia-smi is unavailable.
+
+    Memoised for ``_CACHE_TTL`` seconds (two nvidia-smi spawns per call).
+    An unavailable result is never cached.
+    """
+    mb, names = _memo_probe(("gpu_memory",), _gpu_memory_uncached,
+                            cacheable=lambda v: v[0] is not None)
+    return mb, list(names)
+
+
+def _gpu_memory_uncached() -> tuple[int | None, list[str]]:
     exe = shutil.which("nvidia-smi")
     if not exe:
         return None, []
@@ -960,7 +1034,15 @@ def gpu_memory() -> tuple[int | None, list[str]]:
 
 
 def gpu_free_mb() -> int | None:
-    """Free VRAM in MB from nvidia-smi, or None if unavailable (treat as 0)."""
+    """Free VRAM in MB from nvidia-smi, or None if unavailable (treat as 0).
+
+    Memoised for ``_CACHE_TTL`` seconds; ``None`` is never cached.
+    """
+    return _memo_probe(("gpu_free_mb",), _gpu_free_mb_uncached,
+                       cacheable=lambda v: v is not None)
+
+
+def _gpu_free_mb_uncached() -> int | None:
     exe = shutil.which("nvidia-smi")
     if not exe:
         return None
@@ -1011,6 +1093,13 @@ def _name_matches_owned(name: str, configured: str) -> bool:
         configured, name)
 
 
+# gpu_owned_residents.json is read-modify-written from the hop loop, the
+# status poll (prune in _owned_gpu_residents) and the render-eviction thread.
+# The write itself is atomic (atomic_write_text); this lock makes the
+# read -> edit -> write sequence atomic within the process as well.
+_GPU_OWNED_LOCK = threading.RLock()
+
+
 def _load_gpu_owned() -> list[str]:
     try:
         data = json.loads(GPU_OWNED_FILE.read_text(encoding="utf-8"))
@@ -1045,23 +1134,25 @@ def note_gpu_owned(model: str | None) -> None:
     name = str(model or "").strip()
     if not name:
         return
-    owned = _load_gpu_owned()
-    if any(_name_matches_owned(name, tag) for tag in owned):
-        return
-    _save_gpu_owned([*owned, name])
+    with _GPU_OWNED_LOCK:
+        owned = _load_gpu_owned()
+        if any(_name_matches_owned(name, tag) for tag in owned):
+            return
+        _save_gpu_owned([*owned, name])
 
 
 def forget_gpu_owned(*models: str) -> None:
     """Drop ownership of tags this agent unloaded or never kept resident."""
-    if not models:
-        if GPU_OWNED_FILE.is_file():
-            _save_gpu_owned([])
-        return
-    owned = _load_gpu_owned()
-    kept = [tag for tag in owned
-            if not any(_name_matches_owned(tag, str(m or "")) for m in models)]
-    if kept != owned:
-        _save_gpu_owned(kept)
+    with _GPU_OWNED_LOCK:
+        if not models:
+            if GPU_OWNED_FILE.is_file():
+                _save_gpu_owned([])
+            return
+        owned = _load_gpu_owned()
+        kept = [tag for tag in owned
+                if not any(_name_matches_owned(tag, str(m or "")) for m in models)]
+        if kept != owned:
+            _save_gpu_owned(kept)
 
 
 def _owned_gpu_residents(resident: list[str] | None) -> list[str]:
@@ -1071,13 +1162,14 @@ def _owned_gpu_residents(resident: list[str] | None) -> list[str]:
     reload of the same tag is not ours). Do not prune during ``chat_busy``:
     the selected model may not have appeared in ``/api/ps`` yet.
     """
-    owned = _load_gpu_owned()
-    if resident is not None and not chat_busy():
-        kept = [tag for tag in owned
-                if any(_name_matches_owned(name, tag) for name in resident if name)]
-        if kept != owned:
-            _save_gpu_owned(kept)
-            owned = kept
+    with _GPU_OWNED_LOCK:
+        owned = _load_gpu_owned()
+        if resident is not None and not chat_busy():
+            kept = [tag for tag in owned
+                    if any(_name_matches_owned(name, tag) for name in resident if name)]
+            if kept != owned:
+                _save_gpu_owned(kept)
+                owned = kept
     if not resident or not owned:
         return []
     return [name for name in resident
@@ -1087,9 +1179,12 @@ def _owned_gpu_residents(resident: list[str] | None) -> list[str]:
 def set_media_pressure(active: bool) -> None:
     RUNTIME.mkdir(parents=True, exist_ok=True)
     if active:
-        MEDIA_PRESSURE_FILE.write_text(
-            json.dumps({"at": time.time(), "ttl_s": MEDIA_PRESSURE_TTL_S}),
-            encoding="utf-8")
+        # Readers (media_pressure / the status poll) must never see a
+        # half-written stamp; a torn JSON read used to be treated as "no
+        # ``at``" and fell back to st_mtime.
+        atomic_write_text(
+            MEDIA_PRESSURE_FILE,
+            json.dumps({"at": time.time(), "ttl_s": MEDIA_PRESSURE_TTL_S}))
     else:
         try:
             MEDIA_PRESSURE_FILE.unlink()
@@ -1191,10 +1286,7 @@ def gpu_busy() -> tuple[bool, str, dict]:
     # Probe 8080 only when nvidia-smi already named a server.exe-class process.
     # A status poll must not stall on that port, and an idle GPU with no such
     # process must keep the existing Ollama idle path.
-    maybe_powerinfer = any(
-        Path(p).stem.lower() == Path(POWERINFER_SERVER_EXE).stem.lower()
-        or "powerinfer" in str(p).lower()
-        for p in procs)
+    maybe_powerinfer = _names_powerinfer_server(procs)
     backend_up = powerinfer_backend_listening() if maybe_powerinfer else False
     if backend_up:
         detail["powerinfer_backend"] = "listening"
@@ -1204,7 +1296,7 @@ def gpu_busy() -> tuple[bool, str, dict]:
     foreign = [p for p in procs
                if "ollama" not in p.lower()
                and "insufficient permissions" not in p.lower()
-               and not any(b in Path(p).stem.lower() for b in _BROWSER_NAMES)
+               and not any(b in _proc_stem(p) for b in _BROWSER_NAMES)
                and not _is_background_gpu_compute(p)
                and not _is_powerinfer_compute(p, backend_up=backend_up)]
     background = [p for p in procs if _is_background_gpu_compute(p)]
@@ -1289,7 +1381,7 @@ def up(host: str) -> bool:
         return False
 
 
-def _pick(have: list[str], prefer: list[str]) -> str | None:
+def _pick(have: list[str], prefer: list[str], *, cpu_tier: bool = False) -> str | None:
     """First installed model from the preference list.
 
     TWO PASSES, and the order matters. A single pass that fell back to a
@@ -1300,6 +1392,11 @@ def _pick(have: list[str], prefer: list[str]) -> str | None:
 
     So: exact names first, across the whole list. Only if nothing matches exactly
     do we fall back to base-name matching.
+
+    ``cpu_tier=True`` (AUDIT_2026-11-02 fix 9) skips pass 2 entirely and
+    refuses a large (>8B by tag) last-resort pick: the family fallback is how
+    a 14B coder still ended up on four CPU threads. A CPU tier with no
+    acceptable model returns ``None`` and the caller reports it.
     """
     if not have:
         return None
@@ -1307,11 +1404,26 @@ def _pick(have: list[str], prefer: list[str]) -> str | None:
         compatible = _installed_variant(have, want)
         if compatible:
             return compatible
+    if cpu_tier:
+        for h in have:
+            if not _looks_large_model(h):
+                return h
+        return None
     for want in prefer:                   # pass 2 — same family, any tag
         for h in have:
             if h.split(":")[0] == want.split(":")[0]:
                 return h
     return have[0]
+
+
+_PARAM_SIZE_RE = re.compile(r"(?<![a-z0-9])(\d{1,3})b(?![a-z0-9])", re.I)
+CPU_MAX_PARAM_B = 8
+
+
+def _looks_large_model(name: str) -> bool:
+    """True when the tag advertises more than ``CPU_MAX_PARAM_B`` parameters."""
+    sizes = [int(m.group(1)) for m in _PARAM_SIZE_RE.finditer(str(name or ""))]
+    return bool(sizes) and max(sizes) > CPU_MAX_PARAM_B
 
 
 def unload(host: str, model: str) -> bool:
@@ -1402,7 +1514,13 @@ def thermal_blocks_gpu() -> str | None:
     work = str(ROOT / "work")
     if work not in sys.path:
         sys.path.insert(0, work)
-    import thermal_guard
+    try:
+        import thermal_guard
+    except ImportError as exc:
+        # work/ is gitignored; a fresh checkout has no thermal_guard. That is
+        # the same situation as unreadable telemetry: refuse, never raise.
+        return (f"thermal telemetry unavailable (thermal_guard not importable: "
+                f"{exc}); unknown GPU heat is never permission to swap a 14B model")
     try:
         sample = thermal_guard.sample_gpu()
     except thermal_guard.ThermalTelemetryError as exc:
@@ -1628,6 +1746,80 @@ def _decide_powerinfer(prefer: str, busy: bool, why: str, detail: dict) -> Decis
         detail, "powerinfer")
 
 
+_CAP_CLASS_CHAT = "chat"
+_CAP_SWITCH_STATE: dict = {"wanted": None, "streak": 0}
+_CAP_SWITCH_LOCK = threading.Lock()
+
+
+def reset_capability_hysteresis() -> None:
+    with _CAP_SWITCH_LOCK:
+        _CAP_SWITCH_STATE["wanted"] = None
+        _CAP_SWITCH_STATE["streak"] = 0
+
+
+def _capability_class_of(model: str | None) -> str | None:
+    """Which 14B class a resident tag belongs to, or None for anything else."""
+    if not model:
+        return None
+    if _is_configured_variant(model, JOSIEFIED_CODER_MODEL):
+        return CAP_CODE
+    if _is_configured_variant(model, DEEPSEEK_MODEL):
+        return CAP_LOGIC
+    if _is_configured_variant(model, PRIMARY_REASONING_MODEL):
+        return _CAP_CLASS_CHAT
+    return None
+
+
+def _resident_capability_model(detail: dict | None) -> str | None:
+    """Most recently loaded 14B-class tag this agent owns on the GPU host.
+
+    Prefers the ``/api/ps``-confirmed list gpu_busy() put in ``detail``;
+    otherwise the owned-residents file (append order, newest last).
+    """
+    names = detail.get("gpu_owned_ollama_models") if isinstance(detail, dict) else None
+    if not isinstance(names, list):
+        names = _load_gpu_owned()
+    for name in reversed(names):
+        if _capability_class_of(name):
+            return name
+    return None
+
+
+def _capability_hysteresis_hold(capability: str, detail: dict) -> str | None:
+    """Resident 14B to keep for this unpinned turn, or None to route normally.
+
+    ``CAP_CODE``/``CAP_LOGIC`` want the Josiefied/DeepSeek specialist; every
+    other class wants the Huihui primary. When the wanted class differs from
+    the resident one, the resident is kept until the same wanted class has
+    been seen ``CAP_SWITCH_HYSTERESIS`` turns in a row. The streak is
+    process-global and resets whenever the classes agree again.
+    """
+    wanted = capability if capability in (CAP_CODE, CAP_LOGIC) else _CAP_CLASS_CHAT
+    resident = _resident_capability_model(detail)
+    resident_class = _capability_class_of(resident)
+    with _CAP_SWITCH_LOCK:
+        if resident_class is None or wanted == resident_class:
+            _CAP_SWITCH_STATE["wanted"] = wanted
+            _CAP_SWITCH_STATE["streak"] = 0
+            return None
+        if _CAP_SWITCH_STATE["wanted"] == wanted:
+            _CAP_SWITCH_STATE["streak"] += 1
+        else:
+            _CAP_SWITCH_STATE["wanted"] = wanted
+            _CAP_SWITCH_STATE["streak"] = 1
+        streak = _CAP_SWITCH_STATE["streak"]
+    record = {"resident": resident, "resident_class": resident_class,
+              "wanted": wanted, "streak": streak,
+              "threshold": CAP_SWITCH_HYSTERESIS}
+    if streak >= CAP_SWITCH_HYSTERESIS:
+        record["action"] = "switch"
+        detail["capability_hysteresis"] = record
+        return None
+    record["action"] = "hold"
+    detail["capability_hysteresis"] = record
+    return resident
+
+
 def _finish_gpu_ollama(decision: Decision, *, ensure_gpu_evicted: bool) -> Decision:
     """Record a real GPU Ollama load. Status polls must not claim ownership."""
     if (ensure_gpu_evicted and decision.backend == "ollama"
@@ -1639,15 +1831,22 @@ def _finish_gpu_ollama(decision: Decision, *, ensure_gpu_evicted: bool) -> Decis
 
 def decide(prefer: str = "auto", model: str | None = None,
            prompt_tokens: int | None = None, *, ensure_gpu_evicted: bool = True,
-           prompt: str | None = None, skip_farm: bool = False) -> Decision:
+           prompt: str | None = None, skip_farm: bool = False,
+           snapshot: tuple | None = None) -> Decision:
     """Which tier answers the next turn.
 
     `prefer` is "auto", "gpu" or "cpu". A manual "gpu" is still refused while a
     render is running — the operator can force CPU, never force a conflict.
     ``prompt`` enables capability-based auto routing (tool/logic/code). With no
     prompt and no pin, behaviour matches the historical CPU/GPU auto path.
+    ``snapshot`` is a ``gpu_busy()`` result the caller already holds (the
+    status poll passes its own) so the probes are not repeated.
     """
-    busy, why, detail = gpu_busy()
+    if snapshot is None:
+        busy, why, detail = gpu_busy()
+    else:
+        busy, why, detail = snapshot
+        detail = dict(detail or {})
     busy, why, detail, capability = _maybe_comfy_timeshare(
         prefer, model, prompt, skip_farm, ensure_gpu_evicted, busy, why, detail)
     cpu_have = _tags(CPU_HOST) if up(CPU_HOST) else []
@@ -1736,6 +1935,14 @@ def decide(prefer: str = "auto", model: str | None = None,
              or _is_configured_variant(model, JOSIEFIED_CODER_MODEL)
              or is_coding_model(model))
     )
+    # Hysteresis applies to real, unpinned, GPU-eligible turns only. Status
+    # polls (ensure_gpu_evicted=False) never advance the streak, and a pinned
+    # model is the operator's explicit choice.
+    hysteresis_hold = None
+    if model is None and ensure_gpu_evicted and prefer != "cpu" and not busy:
+        hysteresis_hold = _capability_hysteresis_hold(capability, detail)
+    if want_capability_gpu and hysteresis_hold:
+        want_capability_gpu = False
     if want_capability_gpu:
         target_cfg = (
             JOSIEFIED_CODER_MODEL if capability == CAP_CODE else DEEPSEEK_MODEL
@@ -1852,7 +2059,7 @@ def decide(prefer: str = "auto", model: str | None = None,
                         _installed_variant(gpu_have, PRIMARY_REASONING_MODEL)
                         or _installed_variant(cpu_have, FALLBACK_REASONING_MODEL)
                         or _pick(gpu_have, GPU_MODELS)
-                        or _pick(cpu_have, CPU_MODELS)
+                        or _pick(cpu_have, CPU_MODELS, cpu_tier=True)
                     )
                 if fallback:
                     detail["unavailable_coding_model"] = {
@@ -1883,7 +2090,12 @@ def decide(prefer: str = "auto", model: str | None = None,
             why = refused["reason"]
 
     if want_gpu and up(GPU_HOST):
-        selected = (model if on_gpu else None) if model else _pick(gpu_have, GPU_MODELS)
+        if model:
+            selected = model if on_gpu else None
+        else:
+            selected = ((_installed_variant(gpu_have, hysteresis_hold)
+                         if hysteresis_hold else None)
+                        or _pick(gpu_have, GPU_MODELS))
         adaptive_reason = None
         # Predictive 14B→8B is a real token-estimate gate (not a leaked
         # flag). 8B then degenerates on long still-frame scripts
@@ -1920,7 +2132,8 @@ def decide(prefer: str = "auto", model: str | None = None,
         else:
             why = f"GPU server has no models; {why}"
 
-    selected = (model if on_cpu else None) if model else _pick(cpu_have, CPU_MODELS)
+    selected = ((model if on_cpu else None) if model
+                else _pick(cpu_have, CPU_MODELS, cpu_tier=True))
     cpu_host = CPU_HOST
 
     # This workstation's GPU Ollama service owns the already-downloaded Huihui
@@ -2052,9 +2265,108 @@ def _status_timeshare_idle(busy: bool, detail: dict) -> bool:
     return True
 
 
+# ── eviction between turns (AUDIT_2026-11-02 P1-10 / fix 1) ─────────────────
+# The only automatic evict_gpu_residents() used to run inside decide() at the
+# next chat hop, so a render that started 30 s after a reply sat next to a
+# resident 14B (keep_alive 5m). The GUI polls status() every 2 s; that poll
+# now triggers one eviction on a daemon thread when a render owns the card,
+# no chat is streaming, and /api/ps still lists a model *this agent* loaded.
+# Status stays read-only toward the GPU model: the thread only posts
+# keep_alive:0 (unload) and re-reads /api/ps.
+RENDER_EVICT_COOLDOWN_S = 30.0
+RENDER_EVICT_PROBE_INTERVAL_S = 5.0
+_RENDER_EVICT_LOCK = threading.Lock()
+_RENDER_EVICT_STATE: dict = {
+    "in_flight": False, "last_started": 0.0, "last_probe": 0.0,
+    "last_result": None, "thread": None,
+}
+
+
+def reset_render_eviction_state() -> None:
+    with _RENDER_EVICT_LOCK:
+        _RENDER_EVICT_STATE.update(in_flight=False, last_started=0.0,
+                                   last_probe=0.0, last_result=None, thread=None)
+
+
+def _render_evict_worker() -> None:
+    try:
+        result = evict_gpu_residents()
+    except Exception as exc:  # never let a poll-spawned thread die noisily
+        result = {"attempted": [], "remaining": None, "verified": False,
+                  "reason": f"eviction raised: {exc}"}
+    with _RENDER_EVICT_LOCK:
+        _RENDER_EVICT_STATE["in_flight"] = False
+        _RENDER_EVICT_STATE["last_result"] = result
+        _RENDER_EVICT_STATE["thread"] = None
+
+
+def maybe_evict_for_render(busy: bool | None = None, detail: dict | None = None,
+                           *, now: float | None = None) -> dict:
+    """Evict this agent's own GPU Ollama residents once a render owns the card.
+
+    Called from ``status()`` (the 2-second poll). Returns a small dict that
+    says whether an eviction thread was started and why not otherwise. It is
+    re-entrancy-safe (one eviction in flight at a time) and rate-limited by
+    ``RENDER_EVICT_COOLDOWN_S`` so the poll cannot stack keep_alive:0 posts.
+    Cheap checks (busy flag, chat_busy, owned-residents file) run before any
+    ``/api/ps`` read; the file is empty for most polls, so no network call.
+    """
+    if busy is None:
+        busy, _why, detail = gpu_busy()
+    detail = detail if isinstance(detail, dict) else {}
+    if not busy:
+        return {"triggered": False, "reason": "GPU not busy"}
+    if chat_busy():
+        return {"triggered": False, "reason": "chat turn streaming; not evicting"}
+    owned = _load_gpu_owned()
+    if not owned:
+        return {"triggered": False, "reason": "no owned GPU residents recorded"}
+    now = time.monotonic() if now is None else float(now)
+    with _RENDER_EVICT_LOCK:
+        if _RENDER_EVICT_STATE["in_flight"]:
+            return {"triggered": False, "reason": "eviction already in flight"}
+        since = now - float(_RENDER_EVICT_STATE["last_started"] or 0.0)
+        if _RENDER_EVICT_STATE["last_started"] and since < RENDER_EVICT_COOLDOWN_S:
+            return {"triggered": False, "reason": "eviction cooldown",
+                    "cooldown_remaining_s": round(RENDER_EVICT_COOLDOWN_S - since, 1),
+                    "last_result": _RENDER_EVICT_STATE["last_result"]}
+        since_probe = now - float(_RENDER_EVICT_STATE["last_probe"] or 0.0)
+        if _RENDER_EVICT_STATE["last_probe"] and since_probe < RENDER_EVICT_PROBE_INTERVAL_S:
+            return {"triggered": False, "reason": "resident probe interval"}
+        _RENDER_EVICT_STATE["last_probe"] = now
+    resident = detail.get("gpu_resident_ollama_models")
+    if not isinstance(resident, list):
+        resident = _running_models(GPU_HOST)
+    ours = _owned_gpu_residents(resident)
+    if not ours:
+        return {"triggered": False, "resident": resident,
+                "reason": ("GPU Ollama /api/ps unreadable" if resident is None
+                           else "no owned residents on /api/ps")}
+    with _RENDER_EVICT_LOCK:
+        if _RENDER_EVICT_STATE["in_flight"]:
+            return {"triggered": False, "reason": "eviction already in flight"}
+        _RENDER_EVICT_STATE["in_flight"] = True
+        _RENDER_EVICT_STATE["last_started"] = now
+        _RENDER_EVICT_STATE["last_result"] = None
+        thread = threading.Thread(target=_render_evict_worker, daemon=True,
+                                  name="router-render-evict")
+        _RENDER_EVICT_STATE["thread"] = thread
+    try:
+        thread.start()
+    except Exception as exc:
+        with _RENDER_EVICT_LOCK:
+            _RENDER_EVICT_STATE["in_flight"] = False
+            _RENDER_EVICT_STATE["thread"] = None
+        return {"triggered": False, "reason": f"could not start eviction thread: {exc}"}
+    return {"triggered": True, "residents": ours,
+            "reason": "render owns the GPU; evicting this agent's resident model(s)"}
+
+
 def status() -> dict:
     busy, why, detail = gpu_busy()
-    d = decide(ensure_gpu_evicted=False)
+    render_eviction = maybe_evict_for_render(busy, detail)
+    # Reuse this poll's gpu_busy() snapshot: decide() used to probe again.
+    d = decide(ensure_gpu_evicted=False, snapshot=(busy, why, dict(detail)))
     # Status is observational. During an *active* render it must not query the
     # GPU model catalogue; the next agent turn still makes its own authoritative
     # routing decision and will use the CPU fallback.
@@ -2084,6 +2396,7 @@ def status() -> dict:
         "gpu_models": gpu_models,
         "chat_models": chat_models(include_gpu=include_gpu),
         "coding_model": CODING_MODEL,
+        "render_eviction": render_eviction,
     }
 
 

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import tempfile
+import unittest
 from pathlib import Path
 import sys
 
@@ -14,6 +15,7 @@ def run() -> None:
         old = gpu_gate.STATE_FILE
         try:
             gpu_gate.STATE_FILE = Path(td) / "gate.json"
+            gpu_gate._LAST_GOOD = None
             first = gpu_gate.request("vision", source="test", key="a")
             assert not first["granted"] and first["request"]
             again = gpu_gate.request("vision", source="test", key="a")
@@ -27,7 +29,15 @@ def run() -> None:
             assert gpu_gate.request("chat", source="test", key="b")["granted"]
         finally:
             gpu_gate.STATE_FILE = old
+            gpu_gate._LAST_GOOD = None
     print("gpu gate tests: 6/6 passed")
+
+
+class GpuGateTests(unittest.TestCase):
+    """unittest wrapper so pytest / python -m unittest collect the checks above."""
+
+    def test_one_shot_flow_and_modes(self):
+        run()
 
 
 if __name__ == "__main__":

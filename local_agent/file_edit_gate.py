@@ -3,15 +3,26 @@ from __future__ import annotations
 import hashlib, json, threading, time, uuid
 from pathlib import Path
 
+from atomic_io import atomic_write_json
+
 STATE_FILE = Path(__file__).resolve().parent / "runtime" / "file_edit_gate.json"
 _LOCK = threading.Lock()
+_LAST_GOOD: dict | None = None
 
+def _blank(): return {"pending":[],"approved":[],"history":[]}
 def _load():
-    try:
-        d=json.loads(STATE_FILE.read_text(encoding="utf-8")); d.setdefault("pending",[]); d.setdefault("approved",[]); return d
-    except Exception: return {"pending":[],"approved":[],"history":[]}
+    """Blank only when the file is missing or not valid JSON; any other OSError propagates."""
+    global _LAST_GOOD
+    try: text=STATE_FILE.read_text(encoding="utf-8")
+    except FileNotFoundError: return _blank()
+    try: d=json.loads(text)
+    except ValueError: return _blank()
+    if not isinstance(d, dict): return _blank()
+    d.setdefault("pending",[]); d.setdefault("approved",[]); d.setdefault("history",[])
+    _LAST_GOOD=json.loads(json.dumps(d)); return d
 def _save(d):
-    STATE_FILE.parent.mkdir(parents=True,exist_ok=True); d["updated_at"]=time.time(); t=STATE_FILE.with_suffix('.tmp'); t.write_text(json.dumps(d,indent=2),encoding="utf-8"); t.replace(STATE_FILE)
+    global _LAST_GOOD
+    d["updated_at"]=time.time(); atomic_write_json(STATE_FILE, d); _LAST_GOOD=json.loads(json.dumps(d))
 def key(path, content): return hashlib.sha256((str(path)+"\0"+str(content)).encode("utf-8")).hexdigest()
 def request(path, content, metadata=None, *, consume=True):
     """Request one exact edit approval.
@@ -41,4 +52,8 @@ def decide(request_id, approve):
         if approve: d["approved"].append(x["key"])
         d.setdefault("history",[]); d["history"]=[x]+d["history"][:29]; _save(d); return x
 def snapshot():
-    with _LOCK: d=_load(); _save(d); return d
+    """Read-only. Never writes; a transient read error returns the last good state."""
+    with _LOCK:
+        try: return _load()
+        except OSError:
+            d=json.loads(json.dumps(_LAST_GOOD)) if _LAST_GOOD else _blank(); d["stale"]=True; return d

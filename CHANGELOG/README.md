@@ -4,8 +4,9 @@ Filenames are `YYYY-MM-DD` + sequential letter + `_slug.md`. Run
 `python scripts/next_changelog_id.py` for the next free id and
 `python scripts/build_changelog_index.py` to regenerate this index.
 
-## Entries (762)
+## Entries (763)
 
+- `2026-11-06a` — [2026-11-06a — Audit remediation, part 1: hygiene, docs, and the first pass of code fixes](2026-11-06a_audit_remediation_part1.md)
 - `2026-09-26l` — [2026-09-26l — `render_video_from_reference`: segment chaining built (opt-in), the held-frame seam measured as a visible cut, and the 26k "RAM scales with frames" model found wrong (RAM is weight-bound, ~13–15 GB per prompt whatever the length)](2026-09-26l_motion_transfer_segment_chaining_seam_investigation.md)
 - `2026-09-26k` — [2026-09-26k — `render_video_from_reference`: measured a 180-frame (15-window) run; cap raised 64 → 180 with a free-RAM refusal (system RAM, not VRAM, bounds length); fixed the identity check overflowing the Windows command line on long clips](2026-09-26k_render_video_from_reference_measured_180_frames.md)
 - `2026-09-26j` — [2026-09-26j — `render_video_from_reference` + `video_reference_job_status` built: background motion-transfer jobs with the measured AnimateDiff/FaceID configuration, automatic face crop and target-person selection, render_story_image's GPU discipline, file-evidence manifests; validated end to end on two real runs](2026-09-26j_render_video_from_reference_tool.md)

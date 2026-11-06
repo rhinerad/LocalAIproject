@@ -1,3 +1,5 @@
 traces.db
 traces.db-wal
 traces.db-shm
+retrieval_index.json
+retrieval_embeddings.json

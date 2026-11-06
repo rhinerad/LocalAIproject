@@ -658,3 +658,66 @@ class AgentAnswerIntegrationTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class AnchorReceiptTests(unittest.TestCase):
+    """A corrupt or malformed anchor receipt counts as "no receipt", never a crash."""
+
+    def test_read_receipt_tolerates_bad_files(self):
+        with tempfile.TemporaryDirectory() as td:
+            missing = Path(td) / "missing.json"
+            self.assertIsNone(action_resolver._read_receipt(missing))
+            bad = Path(td) / "bad.json"
+            bad.write_text("{not json", encoding="utf-8")
+            self.assertIsNone(action_resolver._read_receipt(bad))
+            listy = Path(td) / "list.json"
+            listy.write_text("[1, 2]", encoding="utf-8")
+            self.assertIsNone(action_resolver._read_receipt(listy))
+            good = Path(td) / "good.json"
+            good.write_text(json.dumps({"story": "s", "pid": 7, "log": "l"}), encoding="utf-8")
+            self.assertEqual({"story": "s", "pid": 7, "log": "l"}, action_resolver._read_receipt(good))
+            directory = Path(td) / "dir.json"
+            directory.mkdir()
+            self.assertIsNone(action_resolver._read_receipt(directory))
+
+    def test_classify_render_request_survives_corrupt_receipt(self):
+        mpp = action_resolver.managed_prompt_pack
+        with tempfile.TemporaryDirectory() as td:
+            receipt = Path(td) / "anchor_receipt.json"
+            receipt.write_text("{corrupt", encoding="utf-8")
+            with patch.object(mpp, "is_prompt_pack", return_value=False), \
+                 patch.object(mpp, "wants_explicit_render", return_value=True), \
+                 patch.object(mpp, "load_progress", return_value={"kind": "prompt_pack"}), \
+                 patch.object(mpp, "has_incomplete_export", return_value=False), \
+                 patch.object(mpp, "initial_frame_job", return_value={"story": "clip01", "seed": 1}), \
+                 patch.object(mpp, "anchor_receipt_path", return_value=receipt):
+                import prompt_pack_production
+                with patch.object(prompt_pack_production, "extract_pack_path", return_value=None), \
+                     patch.object(prompt_pack_production, "wants_full_production", return_value=False):
+                    plan = action_resolver.classify(
+                        "render it", [{"role": "user", "content": "render it"}], "chat-1",
+                        pending_calibration_path_fn=_NO_PATH, specialist_scope=False)
+        self.assertIsNotNone(plan)
+        self.assertEqual("prompt_pack_render", plan.intent)
+        self.assertEqual(["ingest_prompt_pack", "render_story_image"], [s[0] for s in plan.steps])
+        self.assertEqual("clip01", plan.steps[1][1]["story"], "no _retry_ suffix from a bad receipt")
+
+    def test_classify_receipt_without_pid_does_not_crash(self):
+        mpp = action_resolver.managed_prompt_pack
+        with tempfile.TemporaryDirectory() as td:
+            receipt = Path(td) / "anchor_receipt.json"
+            receipt.write_text(json.dumps({"story": "clip01"}), encoding="utf-8")
+            with patch.object(mpp, "is_prompt_pack", return_value=False), \
+                 patch.object(mpp, "wants_explicit_render", return_value=True), \
+                 patch.object(mpp, "load_progress", return_value={"kind": "prompt_pack"}), \
+                 patch.object(mpp, "has_incomplete_export", return_value=False), \
+                 patch.object(mpp, "initial_frame_job", return_value={"story": "clip01", "seed": 1}), \
+                 patch.object(mpp, "anchor_receipt_path", return_value=receipt):
+                import prompt_pack_production
+                with patch.object(prompt_pack_production, "extract_pack_path", return_value=None), \
+                     patch.object(prompt_pack_production, "wants_full_production", return_value=False):
+                    plan = action_resolver.classify(
+                        "render it again", [{"role": "user", "content": "render it again"}], "chat-1",
+                        pending_calibration_path_fn=_NO_PATH, specialist_scope=False)
+        self.assertEqual("prompt_pack_render", plan.intent)
+        self.assertEqual("clip01", plan.steps[1][1]["story"])

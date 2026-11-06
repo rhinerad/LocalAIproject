@@ -11,15 +11,24 @@ FOUR TIERS
   FILE/WEB  General-purpose file access and internet fetching.
             write_file refuses to overwrite protected project records.
 
-Nothing here deletes anything. The reset tool is deliberately excluded — it is
-destructive enough that it stays a human decision at a terminal.
+Destructive actions do exist here and are gated, never incidental:
+  * comfy_models remove / download_model and comfy_nodes install_custom_node
+    delete or add files in the shared ComfyUI tree. Each needs a one-shot
+    gateway approval (gpu_gate) and is audit-logged.
+  * apply_hex_patch rewrites bytes only after an exact-byte approval.
+  * write_file / repair_jsonl_format write only inside the project tree and
+    refuse protected records, Equal Shares evidence, and runtime state.
+The reset tool is deliberately excluded — it is destructive enough that it
+stays a human decision at a terminal.
 """
 from __future__ import annotations
 
 import html.parser
 import difflib
+import fnmatch
 import hashlib
 import inspect
+import ipaddress
 import json
 import logging
 import os
@@ -34,6 +43,7 @@ import urllib.request
 from pathlib import Path
 
 import artifacts
+import atomic_io
 import phone_scheduler
 import remote_security
 import sonic_pi
@@ -64,6 +74,7 @@ from gvd_qa.tools import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
+HERE = Path(__file__).resolve().parent
 EQ = ROOT / "outputs" / "equal_shares"
 PY = sys.executable or "python"
 DEV_WORKSPACE = Path(__file__).resolve().parent / "developer_workspace"
@@ -82,6 +93,43 @@ def _json(p: Path, default=None):
         return json.loads(p.read_text(encoding="utf-8-sig"))
     except Exception:
         return default if default is not None else {}
+
+
+class _Unreadable:
+    """Sentinel: the file exists but could not be read or parsed."""
+
+    def __repr__(self) -> str:
+        return "<UNREADABLE>"
+
+
+_UNREADABLE = _Unreadable()
+
+
+def _json_strict(p: Path, default=None):
+    """Like _json, but a file that exists and cannot be read/parsed is ``_UNREADABLE``.
+
+    Owner/lock files decide whether the GPU is free. A missing file means
+    "nobody owns it"; an unreadable one means "unknown", which callers must
+    treat as busy rather than free.
+    """
+    try:
+        text = p.read_text(encoding="utf-8-sig")
+    except FileNotFoundError:
+        return default if default is not None else {}
+    except OSError:
+        return _UNREADABLE
+    try:
+        return json.loads(text)
+    except ValueError:
+        return _UNREADABLE
+
+
+def _owner_record(p: Path):
+    """Owner file as a dict, ``{}`` when absent, ``_UNREADABLE`` when unknown."""
+    data = _json_strict(p, {})
+    if data is _UNREADABLE:
+        return _UNREADABLE
+    return data if isinstance(data, dict) else _UNREADABLE
 
 
 def project_state(_: dict) -> str:
@@ -225,12 +273,7 @@ def repair_jsonl_format(args: dict) -> str:
     raw = str(args.get("path", "")).strip()
     if not raw:
         raise ToolError("path is required")
-    path = (Path(raw) if Path(raw).is_absolute() else ROOT / raw).resolve()
-    root = ROOT.resolve()
-    try:
-        path.relative_to(root)
-    except ValueError as exc:
-        raise ToolError("JSONL repair path must be inside this project workspace") from exc
+    path = _resolve_in_root(raw)
     if path.suffix.lower() != ".jsonl" or not path.is_file():
         raise ToolError("path must be an existing .jsonl file")
     if path.stat().st_size > 2_000_000:
@@ -254,7 +297,7 @@ def repair_jsonl_format(args: dict) -> str:
             raise ToolError("JSON array must contain objects only; no file was changed")
         text = "\n".join(json.dumps(item, ensure_ascii=False, separators=(",", ":"))
                          for item in parsed) + "\n"
-        path.write_text(text, encoding="utf-8")
+        atomic_io.atomic_write_text(path, text)
         return json.dumps({
             "repaired": True,
             "path": str(path),
@@ -466,6 +509,14 @@ def start_batch_render(args: dict) -> str:
     if bool(args.get("force")):
         raise ToolError("force is not allowed from the local agent; existing evidence is never replaced")
 
+    # The whole preflight-to-Popen window runs under the same launch lock the
+    # still/motion renderers use, so two chat turns cannot both pass preflight
+    # against an idle GPU and then both launch.
+    with _IMAGE_RENDER_LAUNCH_LOCK:
+        return _start_batch_render_locked(args, folder, remote_identity)
+
+
+def _start_batch_render_locked(args: dict, folder: Path, remote_identity: str) -> str:
     # This sees resident Ollama as available but blocks a live owner or any
     # ComfyUI listener. That prevents the batch runner from interrupting a
     # backend it did not create.
@@ -488,7 +539,10 @@ def start_batch_render(args: dict) -> str:
             if gate.get("blocked"):
                 raise ToolError("GPU gateway is set to Block; no render was started")
             raise ToolError("GPU permission pending in the sidebar; approve the batch render once, then retry")
-    batch_owner = _json(ROOT / "batch_render_queue_owner.json", {})
+    batch_owner = _owner_record(ROOT / "batch_render_queue_owner.json")
+    if batch_owner is _UNREADABLE:
+        raise ToolError("render preflight refused: batch_render_queue_owner.json exists but is unreadable; "
+                        "GPU ownership is unknown, so no render was started")
     if _pid_is_live(batch_owner.get("pid")):
         raise ToolError(f"render preflight refused: another batch render owns the queue (pid={batch_owner['pid']})")
 
@@ -709,11 +763,11 @@ def stop_all_comfyui(_: dict) -> str:
     # is a small lock-state reset, never a render/evidence mutation.
     released = False
     if owner.get("pid") and not _pid_is_live(owner.get("pid")):
-        owner_path.write_text(json.dumps({
+        atomic_io.atomic_write_json(owner_path, {
             "pid": 0,
             "released_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
             "purpose": "emergency ComfyUI stop",
-        }, indent=2) + "\n", encoding="utf-8")
+        })
         released = True
 
     # Give Windows a moment to release the port and CUDA allocation before the
@@ -753,6 +807,48 @@ _LAST_COMFY_AUDIT: tuple | None = None
 _IMAGE_RENDER_OWNER = ROOT / "work" / "runtime" / "image_render_owner.json"
 _COMFY_WORKFLOW_MAX_BYTES = 4 * 1024 * 1024
 _ENQUEUE_PATH_KEYS = ("workflow_path", "path", "file", "filename")
+
+# Per-MCP-tool argument allowlists. Only these keys are forwarded to
+# comfyui-mcp; an unknown key is refused by name rather than passed through,
+# so a typo or a smuggled parameter is visible instead of silently acted on.
+# Reconcile with the installed comfyui-mcp `tools/list` when it changes.
+_COMFY_ALWAYS_KEYS = frozenset({"action"})
+_COMFY_TOOL_KEYS: dict[str, frozenset[str]] = {
+    "generate_image": frozenset({
+        "prompt", "negative_prompt", "width", "height", "steps", "cfg", "cfg_scale",
+        "seed", "sampler", "sampler_name", "scheduler", "denoise", "batch_size",
+        "model", "checkpoint", "ckpt_name", "filename_prefix", "image", "image_path",
+        "input_image", "control_image", "controlnet", "controlnet_model", "control_type",
+        "strength", "ip_adapter", "ip_adapter_model", "weight", "frames", "num_frames",
+        "fps", "video_model", "upscale_model", "scale", "scale_factor", "lora", "loras",
+        "lora_strength", "duration", "seconds", "audio_model", "text", "workflow",
+        "output_format",
+    }),
+    "enqueue_workflow": frozenset({"workflow", *_ENQUEUE_PATH_KEYS, "client_id", "prompt_id"}),
+    "queue": frozenset({"prompt_id", "prompt_ids", *_ENQUEUE_PATH_KEYS}),
+    "create_workflow": frozenset({"prompt", "description", "name", "nodes", "workflow",
+                                  "template", *_ENQUEUE_PATH_KEYS}),
+    "visualize_workflow": frozenset({"workflow", "format", *_ENQUEUE_PATH_KEYS}),
+    "get_workflow": frozenset({"name", "workflow_id", "id", *_ENQUEUE_PATH_KEYS}),
+    "save_workflow": frozenset({"name", "workflow", "overwrite", *_ENQUEUE_PATH_KEYS}),
+    "get_image": frozenset({"filename", "subfolder", "type", "path", "prompt_id", "index"}),
+    "upload_image": frozenset({"path", "image_path", "image", "filename", "subfolder",
+                               "overwrite", "type"}),
+    "download_model": frozenset({"url", "path", "model_type", "folder", "filename",
+                                 "civitai_id", "version_id", "id", "query", "limit"}),
+    "list_local_models": frozenset({"path", "filename", "name", "model_type", "folder", "filter", "query"}),
+    "search_custom_nodes": frozenset({"query", "limit"}),
+    "install_custom_node": frozenset({"url", "name", "repo", "node_id", "restart"}),
+    "node_pack": frozenset({"name", "url", "path", "node_id"}),
+    "get_system_stats": frozenset(),
+    "clear_vram": frozenset({"unload_models", "free_memory"}),
+    "get_history": frozenset({"prompt_id", "max_items", "limit"}),
+    "comfy_cli": frozenset({"command", "args", "cwd"}),
+    "restart_comfyui": frozenset({"wait", "timeout"}),
+}
+# `queue` actions that only read. Anything else (clear/cancel/run...) touches
+# the live render queue and needs the GPU preflight.
+_COMFY_QUEUE_READ_ACTIONS = frozenset({"", "status", "get", "list", "show", "pending", "running"})
 
 
 def _mcp_format(result) -> str:
@@ -880,6 +976,20 @@ def _comfy_audit(local_tool: str, mcp_tool: str, args: dict, extra: dict | None 
             "comfy audit span link failed", exc_info=True)
 
 
+def _check_mcp_keys(name: str, payload: dict) -> dict:
+    """Refuse any argument key that is not on the per-tool allowlist."""
+    allowed_keys = _COMFY_TOOL_KEYS.get(name)
+    if allowed_keys is None:
+        raise ToolError(f"no argument allowlist is defined for MCP tool {name!r}; refusing")
+    unknown = sorted(str(k) for k in payload if k not in allowed_keys and k not in _COMFY_ALWAYS_KEYS)
+    if unknown:
+        raise ToolError(
+            f"{name} does not accept argument(s) {unknown}; allowed keys: "
+            f"{sorted(allowed_keys | _COMFY_ALWAYS_KEYS)}"
+        )
+    return payload
+
+
 def _pop_mcp_tool(args: dict, allowed: frozenset[str], default: str | None = None) -> tuple[str, dict]:
     payload = dict(args or {})
     name = str(payload.pop("tool", "") or payload.pop("mcp_tool", "") or default or "").strip()
@@ -888,7 +998,57 @@ def _pop_mcp_tool(args: dict, allowed: frozenset[str], default: str | None = Non
             f"tool must be one of {sorted(allowed)}; got {name or '(missing)'!r}. "
             "This is not a raw MCP passthrough."
         )
-    return name, payload
+    return name, _check_mcp_keys(name, payload)
+
+
+def _comfy_gpu_preflight(workload: str, *, key: str, detail: str = "") -> None:
+    """The start_batch_render preflight, applied to every GPU-touching MCP wrapper.
+
+    ``router.gpu_busy()`` must be clear and ``gpu_gate.request`` must grant.
+    One documented carve-out: the MCP wrappers talk *to* the shared ComfyUI,
+    so a bare port-8188 listener is the backend itself, not a foreign job.
+    That case is accepted only when no supervisor/batch/image owner is live
+    and the backend's own queue is idle; an unreadable queue is unknown and
+    therefore busy.
+    """
+    import router
+    import gpu_gate
+    busy, reason, detail_map = router.gpu_busy()
+    if busy:
+        detail_map = detail_map if isinstance(detail_map, dict) else {}
+        listener_only = (detail_map.get("comfy_port_8188") == "listening"
+                         and "vram_used_mb" not in detail_map)
+        if not listener_only:
+            raise ToolError(f"{workload} refused: {reason}")
+        owner = _supervisor_owns_comfyui()
+        if owner:
+            raise ToolError(f"{workload} refused: {owner}")
+        queue = _comfy_queue_counts()
+        if not queue:
+            raise ToolError(f"{workload} refused: ComfyUI is listening on 8188 but its queue is "
+                            "unreadable; GPU state unknown")
+        if queue.get("running") or queue.get("pending"):
+            raise ToolError(f"{workload} refused: the shared ComfyUI backend is already rendering "
+                            f"({queue['running']} running, {queue['pending']} pending)")
+    gate = gpu_gate.request(workload, source="desktop tool", detail=detail[:500], key=key)
+    if not gate.get("granted"):
+        if gate.get("blocked"):
+            raise ToolError(f"GPU gateway is set to Block; {workload} was not started")
+        raise ToolError(f"GPU permission pending in the sidebar; approve {workload} once, then retry")
+
+
+def _comfy_approval(workload: str, *, key: str, detail: str = "") -> None:
+    """One-shot operator approval (no GPU check) for irreversible file actions."""
+    import gpu_gate
+    gate = gpu_gate.request(workload, source="desktop tool", detail=detail[:500], key=key)
+    if not gate.get("granted"):
+        if gate.get("blocked"):
+            raise ToolError(f"GPU gateway is set to Block; {workload} was not performed")
+        raise ToolError(f"operator approval pending in the sidebar; approve {workload} once, then retry")
+
+
+def _payload_digest(payload: dict) -> str:
+    return hashlib.sha256(json.dumps(payload, sort_keys=True, default=str).encode("utf-8")).hexdigest()[:16]
 
 
 def _resolve_workflow_file(raw: str) -> Path:
@@ -901,7 +1061,7 @@ def _resolve_workflow_file(raw: str) -> Path:
             "workflow path cannot be a URL; pass a local JSON file or the "
             "parsed graph object"
         )
-    p = (Path(text) if Path(text).is_absolute() else ROOT / text).resolve()
+    p = _resolve_readable(text)
     if not p.is_file():
         raise ToolError(f"workflow file not found: {p}")
     return p
@@ -1027,10 +1187,14 @@ def _supervisor_owns_comfyui() -> str | None:
     owned, why = router.queue_owner()
     if owned:
         return f"stage supervisor owns ComfyUI ({why})"
-    batch_owner = _json(ROOT / "batch_render_queue_owner.json", {})
+    batch_owner = _owner_record(ROOT / "batch_render_queue_owner.json")
+    if batch_owner is _UNREADABLE:
+        return "batch_render_queue_owner.json is unreadable; GPU ownership is unknown"
     if _pid_is_live(batch_owner.get("pid")):
         return f"batch render owns the queue (pid={batch_owner['pid']})"
-    image_owner = _json(_IMAGE_RENDER_OWNER, {})
+    image_owner = _owner_record(_IMAGE_RENDER_OWNER)
+    if image_owner is _UNREADABLE:
+        return f"{_IMAGE_RENDER_OWNER.name} is unreadable; GPU ownership is unknown"
     if _pid_is_live(image_owner.get("pid")):
         return f"image renderer owns ComfyUI (pid={image_owner['pid']})"
     return None
@@ -1063,6 +1227,11 @@ def comfy_generate(args: dict) -> str:
     payload.pop("mcp_tool", None)
     if not payload.get("action"):
         payload["action"] = "image"
+    payload = _check_mcp_keys(_COMFY_GENERATE_TOOL, payload)
+    action = str(payload.get("action"))
+    _comfy_gpu_preflight(
+        "ComfyUI MCP generate", key=f"comfy_generate:{action}:{_payload_digest(payload)}",
+        detail=f"action={action} prompt={str(payload.get('prompt') or '')[:160]}")
     extra = {"risk": "generate", "caller": _comfy_caller()}
     try:
         result = _mcp_call(_COMFY_GENERATE_TOOL, payload)
@@ -1251,6 +1420,13 @@ def comfy_workflow(args: dict) -> str:
     else:
         for key in _ENQUEUE_PATH_KEYS:
             payload.pop(key, None)
+    needs_gpu = (name == "enqueue_workflow"
+                 or (name == "queue" and action not in _COMFY_QUEUE_READ_ACTIONS)
+                 or action.startswith(("run", "enqueue", "execute", "submit")))
+    if needs_gpu:
+        _comfy_gpu_preflight(
+            f"ComfyUI MCP {name}", key=f"comfy_workflow:{name}:{action}:{_payload_digest(payload)}",
+            detail=f"{name} action={action or 'enqueue'}")
     return _mcp_format(_mcp_call(name, payload))
 
 
@@ -1265,8 +1441,14 @@ def comfy_models(args: dict) -> str:
     name, payload = _pop_mcp_tool(args, _COMFY_MODEL_TOOLS)
     action = str(payload.get("action") or "")
     if name == "list_local_models" and action == "remove":
+        target = str(payload.get("path") or payload.get("filename") or "?")
+        _comfy_approval("ComfyUI model delete", key=f"comfy_models:remove:{target}",
+                        detail=f"remove {target}")
         _comfy_audit("comfy_models", name, payload, {"risk": "model_delete"})
     elif name == "download_model" and action in {"download", "download_civitai"}:
+        source = str(payload.get("url") or payload.get("civitai_id") or payload.get("id") or "?")
+        _comfy_approval("ComfyUI model download", key=f"comfy_models:download:{source}",
+                        detail=f"{action} {source}")
         _comfy_audit("comfy_models", name, payload, {"risk": "model_download"})
     return _mcp_format(_mcp_call(name, payload))
 
@@ -1274,6 +1456,10 @@ def comfy_models(args: dict) -> str:
 def comfy_nodes(args: dict) -> str:
     """Wrap search_custom_nodes, install_custom_node, node_pack."""
     name, payload = _pop_mcp_tool(args, _COMFY_NODE_TOOLS)
+    if name == "install_custom_node":
+        source = str(payload.get("url") or payload.get("repo") or payload.get("name") or "?")
+        _comfy_approval("ComfyUI custom-node install", key=f"comfy_nodes:install:{source}",
+                        detail=f"install {source}")
     if name in {"install_custom_node", "node_pack"}:
         _comfy_audit("comfy_nodes", name, payload, {"risk": "custom_node_install"})
     return _mcp_format(_mcp_call(name, payload))
@@ -1284,6 +1470,12 @@ def comfy_system(args: dict) -> str:
     name, payload = _pop_mcp_tool(args, _COMFY_SYSTEM_TOOLS, default="get_system_stats")
     if name == "get_system_stats" and not payload.get("action"):
         payload["action"] = "stats"
+    # clear_vram unloads whatever is resident (possibly another pipeline's
+    # models); comfy_cli is an arbitrary CLI passthrough that can do the same.
+    if name in {"clear_vram", "comfy_cli"}:
+        action = str(payload.get("action") or payload.get("command") or "")
+        _comfy_gpu_preflight(f"ComfyUI MCP {name}", key=f"comfy_system:{name}:{action}",
+                             detail=f"{name} {action}"[:200])
     return _mcp_format(_mcp_call(name, payload))
 
 
@@ -1297,7 +1489,11 @@ def comfy_process(args: dict) -> str:
     action = str(payload.get("action"))
     if action not in {"start", "stop", "restart"}:
         raise ToolError("comfy_process action must be start, stop, or restart")
+    payload = _check_mcp_keys(_COMFY_PROCESS_TOOL, payload)
     comfy_process_preflight()
+    if action in {"start", "restart"}:
+        _comfy_gpu_preflight(f"ComfyUI process {action}", key=f"comfy_process:{action}",
+                             detail=f"restart_comfyui action={action}")
     _comfy_audit("comfy_process", _COMFY_PROCESS_TOOL, payload, {"risk": "process_control"})
     return _mcp_format(_mcp_call(_COMFY_PROCESS_TOOL, payload))
 
@@ -1474,12 +1670,88 @@ _PROTECTED_NAMES = frozenset([
 _MAX_HEX_INSPECT_BYTES = 4096
 _MAX_HEX_PATCH_BYTES = 4096
 
+# Read tools may look outside the project (it is a desktop assistant), but
+# never at credentials, private keys, chat transcripts, or runtime gate state.
+_READ_DENIED_NAME_PATTERNS = (".env*", "*credentials*", "*.key", "*.pem", "secrets.json")
+
+
+def _read_denied_roots() -> tuple[Path, ...]:
+    return (HERE / "chats", HERE / "runtime", HERE / "rns_wifi" / "storage",
+            ROOT / "work" / "runtime")
+
+
+def _write_denied_roots() -> tuple[tuple[Path, str], ...]:
+    return ((EQ, "Equal Shares evidence"),
+            (HERE / "runtime", "agent runtime state"),
+            (ROOT / "work" / "runtime", "render runtime state"))
+
+
+def _is_within(p: Path, root: Path) -> bool:
+    try:
+        p.relative_to(root)
+        return True
+    except ValueError:
+        return False
+
+
+def _resolve_user_path(raw) -> Path:
+    """Absolute or repo-relative path, resolved with symlinks followed."""
+    text = str(raw or "").strip()
+    if not text:
+        raise ToolError("path is required")
+    p = Path(text) if Path(text).is_absolute() else ROOT / text
+    try:
+        return p.resolve()
+    except (OSError, RuntimeError) as exc:
+        raise ToolError(f"cannot resolve {text}: {exc}") from exc
+
+
+def _resolve_in_root(raw, *, extra_roots=()) -> Path:
+    """Resolve a write/delete/move target and require it inside ROOT.
+
+    Symlinks are followed before the check, so a link out of the tree does
+    not escape it. Refuses protected record names, Equal Shares evidence,
+    and the agent/render runtime state directories (where the GPU gate and
+    owner files live). ``extra_roots`` lets a caller allow one explicit
+    additional tree.
+    """
+    p = _resolve_user_path(raw)
+    if p.name in _PROTECTED_NAMES:
+        raise ToolError(
+            f"{p.name} is a protected project file. Edit it at a terminal if certain.")
+    roots = [ROOT.resolve()] + [Path(r).resolve() for r in extra_roots]
+    if not any(_is_within(p, root) for root in roots):
+        raise ToolError(f"{p} is outside the project workspace {ROOT}; the agent only writes inside it")
+    for denied, why in _write_denied_roots():
+        if _is_within(p, denied.resolve()):
+            raise ToolError(f"{p} is under protected {why} ({denied}); refusing to write there")
+    return p
+
+
+def _read_refusal(p: Path) -> str | None:
+    name = p.name.lower()
+    for pattern in _READ_DENIED_NAME_PATTERNS:
+        if fnmatch.fnmatchcase(name, pattern):
+            return f"{p} matches the secrets deny-list ({pattern}); the agent never reads it"
+    for root in _read_denied_roots():
+        if _is_within(p, root.resolve()):
+            return f"{p} is under {root}, which holds private agent state; the agent never reads it"
+    return None
+
+
+def _resolve_readable(raw) -> Path:
+    p = _resolve_user_path(raw)
+    why = _read_refusal(p)
+    if why:
+        raise ToolError(why)
+    return p
+
 
 def read_file(args: dict) -> str:
     raw = str(args.get("path", "")).strip()
     if not raw:
         raise ToolError("path is required")
-    p = (Path(raw) if Path(raw).is_absolute() else ROOT / raw).resolve()
+    p = _resolve_readable(raw)
     if not p.is_file():
         raise ToolError(f"{p} is not a file or does not exist")
     try:
@@ -1518,16 +1790,13 @@ def write_file(args: dict) -> str:
     content = args.get("content")
     if content is None:
         raise ToolError("content is required")
-    p = (Path(raw) if Path(raw).is_absolute() else ROOT / raw).resolve()
-    if p.name in _PROTECTED_NAMES:
-        raise ToolError(
-            f"{p.name} is a protected project file. Edit it at a terminal if certain.")
+    # Containment: inside ROOT only, never EQ / runtime state / protected names.
+    p = _resolve_in_root(raw)
     # A concrete desktop-chat request already authorizes a normal text edit.
     # Protected records still refuse here; remote identities are gated at the
     # dispatch boundary, and binary patching retains exact-byte approval.
     existed = p.is_file()
-    p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(str(content), encoding="utf-8")
+    atomic_io.atomic_write_text(p, str(content))
     return f"{'overwrote' if existed else 'created'} {p}  ({len(str(content))} chars)"
 
 
@@ -1560,7 +1829,7 @@ def inspect_binary(args: dict) -> str:
     raw = str(args.get("path", "")).strip()
     if not raw:
         raise ToolError("path is required")
-    p = (Path(raw) if Path(raw).is_absolute() else ROOT / raw).resolve()
+    p = _resolve_readable(raw)
     if not p.is_file():
         raise ToolError(f"{p} is not a file or does not exist")
     try:
@@ -1655,9 +1924,11 @@ def apply_hex_patch(args: dict) -> str:
     raw = str(args.get("path", "")).strip()
     if not raw:
         raise ToolError("path is required")
-    p = (Path(raw) if Path(raw).is_absolute() else ROOT / raw).resolve()
-    if p.name in _PROTECTED_NAMES or p.is_relative_to(EQ):
-        raise ToolError("protected Equal Shares evidence cannot be changed with the hex editor")
+    try:
+        p = _resolve_in_root(raw)
+    except ToolError as exc:
+        raise ToolError(f"protected Equal Shares evidence / out-of-tree files cannot be changed "
+                        f"with the hex editor: {exc}") from exc
     if not p.is_file():
         raise ToolError(f"{p} is not a file or does not exist; the hex editor never creates files")
     try:
@@ -1760,7 +2031,7 @@ def run_safe_check(args: dict) -> str:
 
 def list_dir(args: dict) -> str:
     raw = str(args.get("path", "")).strip() or "."
-    p = (Path(raw) if Path(raw).is_absolute() else ROOT / raw).resolve()
+    p = _resolve_readable(raw)
     if not p.is_dir():
         raise ToolError(f"{p} is not a directory")
     entries = sorted(p.iterdir(), key=lambda x: (x.is_file(), x.name.lower()))
@@ -1815,15 +2086,55 @@ _BINARY_CTYPES = (
 )
 
 
+def _url_host_refusal(url: str) -> str | None:
+    """Refuse loopback / private / link-local targets (SSRF guard)."""
+    try:
+        parts = urllib.parse.urlsplit(url)
+        host = parts.hostname
+    except ValueError as exc:
+        return f"unparseable url: {exc}"
+    if not host:
+        return "url has no host"
+    host = host.strip("[]").lower().rstrip(".")
+    try:
+        ip = ipaddress.ip_address(host)
+    except ValueError:
+        ip = None
+    if ip is not None:
+        mapped = getattr(ip, "ipv4_mapped", None)
+        for candidate in (ip, mapped) if mapped is not None else (ip,):
+            if (candidate.is_loopback or candidate.is_private or candidate.is_link_local
+                    or candidate.is_reserved or candidate.is_multicast or candidate.is_unspecified):
+                return f"{host} is a loopback/private/link-local address; fetch_url only reaches public hosts"
+        return None
+    if host == "localhost" or host.endswith(".localhost") or host.endswith(".local"):
+        return f"{host} is a local hostname; fetch_url only reaches public hosts"
+    return None
+
+
+class _SafeRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Apply the same host policy to every redirect hop."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        why = _url_host_refusal(newurl)
+        if why:
+            raise urllib.error.URLError(f"refused redirect to {newurl}: {why}")
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
 def fetch_url(args: dict) -> str:
     url = str(args.get("url", "")).strip()
     if not url.startswith(("http://", "https://")):
         raise ToolError("url must start with http:// or https://")
+    why = _url_host_refusal(url)
+    if why:
+        raise ToolError(f"REFUSED: {why}")
     limit = int(args.get("max_chars", 8000))
     try:
         req = urllib.request.Request(
             url, headers={"User-Agent": "Mozilla/5.0 (compatible)"})
-        with urllib.request.urlopen(req, timeout=20) as resp:
+        opener = urllib.request.build_opener(_SafeRedirectHandler)
+        with opener.open(req, timeout=20) as resp:
             final_url = resp.geturl()
             ctype = resp.headers.get("Content-Type", "")
             if any(ctype.lower().startswith(p) for p in _BINARY_CTYPES):
@@ -2270,8 +2581,10 @@ def _describe_port_8188_holder() -> dict:
     elif pid:
         info["process"] = {"pid": pid, "exe": _process_path(pid)}
     info["queue"] = _comfy_queue_counts()
-    batch_owner = _json(ROOT / "batch_render_queue_owner.json", {}) or {}
-    if _pid_is_live(batch_owner.get("pid")):
+    batch_owner = _owner_record(ROOT / "batch_render_queue_owner.json")
+    if batch_owner is _UNREADABLE:
+        info["batch_render_owner"] = {"pid": None, "purpose": "owner file unreadable; GPU state unknown"}
+    elif _pid_is_live(batch_owner.get("pid")):
         info["batch_render_owner"] = {"pid": batch_owner.get("pid"), "purpose": batch_owner.get("purpose")}
 
     held_by = "an unidentified process"
@@ -2282,7 +2595,9 @@ def _describe_port_8188_holder() -> dict:
             held_by += f" (started {proc_info['created']})"
     if info.get("launcher", {}).get("cmd"):
         held_by += f", launched by {str(info['launcher']['cmd']).strip()[:240]}"
-    if info.get("batch_render_owner"):
+    if info.get("batch_render_owner") and info["batch_render_owner"].get("pid") is None:
+        held_by += ", and the batch-render owner file is unreadable (GPU state unknown)"
+    elif info.get("batch_render_owner"):
         held_by += (f", claimed by the batch renderer pid {info['batch_render_owner']['pid']}"
                     f" ({info['batch_render_owner'].get('purpose') or '?'})")
     queue = info["queue"]
@@ -2523,7 +2838,7 @@ def story_image_job_status(args: dict) -> str:
     story = str(args.get("story", "")).strip()
     log_path = str(args.get("log", "")).strip()
     # Only used to pick the QA continuity anchor (chat-scoped fallback).
-    conversation_id = str(args.get("__conversation_id") or args.get("conversation_id") or "").strip()
+    conversation_id = str(args.get("__conversation_id") or "").strip()
     if not story:
         raise ToolError("story is required")
     sys.path.insert(0, str(ROOT / "work"))
@@ -3112,8 +3427,7 @@ def await_story_image_job(args: dict) -> str:
             "story": story,
             "pid": args.get("pid"),
             "log": args.get("log", ""),
-            "__conversation_id": str(args.get("__conversation_id")
-                                     or args.get("conversation_id") or ""),
+            "__conversation_id": str(args.get("__conversation_id") or ""),
         }))
         state = str(last.get("state") or "")
         if state == "complete":
@@ -3336,7 +3650,7 @@ def _review_state_path(conversation_id: str) -> Path:
 
 def present_story_stills_for_review(args: dict) -> str:
     """Mark generated story stills as pending operator review (chat-scoped)."""
-    conversation_id = str(args.get("__conversation_id") or args.get("conversation_id") or "").strip()
+    conversation_id = str(args.get("__conversation_id") or "").strip()
     if not conversation_id:
         raise ToolError("present_story_stills_for_review requires the current chat id")
     story = str(args.get("story", "")).strip() or "story"
@@ -3377,7 +3691,7 @@ def approve_story_stills(args: dict) -> str:
             "story stills remain pending review: set operator_confirmed=true only "
             "after the operator explicitly approved the images"
         )
-    conversation_id = str(args.get("__conversation_id") or args.get("conversation_id") or "").strip()
+    conversation_id = str(args.get("__conversation_id") or "").strip()
     if not conversation_id:
         raise ToolError("approve_story_stills requires the current chat id")
     path = _review_state_path(conversation_id)
@@ -3420,7 +3734,7 @@ def approve_story_stills(args: dict) -> str:
 
 def story_stills_review_status(args: dict) -> str:
     """Read-only: pending/approved/none for this chat's story stills review."""
-    conversation_id = str(args.get("__conversation_id") or args.get("conversation_id") or "").strip()
+    conversation_id = str(args.get("__conversation_id") or "").strip()
     if not conversation_id:
         raise ToolError("story_stills_review_status requires the current chat id")
     path = _review_state_path(conversation_id)
@@ -3437,10 +3751,18 @@ def story_stills_review_status(args: dict) -> str:
 
 
 def _stills_review_blocks_video(conversation_id: str) -> str | None:
-    """Return a refusal reason when stills are awaiting review for this chat."""
+    """Return a refusal reason when stills are awaiting review for this chat.
+
+    An empty id is itself a refusal: without the server-injected chat id the
+    review state cannot be checked, and "unknown" must never pass as "approved".
+    """
     cid = str(conversation_id or "").strip()
     if not cid:
-        return None
+        return (
+            "this video action needs the current desktop chat id, which only the "
+            "server injects; none was present, so the stills-review state cannot "
+            "be checked and video is refused"
+        )
     path = _STORY_STILLS_REVIEW_DIR / (
         "".join(ch if ch.isalnum() or ch in "-_" else "-" for ch in cid)[:80] + ".json"
     )
@@ -3529,7 +3851,7 @@ def cancel_phone_schedule(args: dict) -> str:
 def ingest_prompt_pack(args: dict) -> str:
     """Save a large prompt pack as a managed task artifact (no rendering)."""
     import managed_prompt_pack
-    cid = str(args.get("__conversation_id") or args.get("conversation_id") or "").strip()
+    cid = str(args.get("__conversation_id") or "").strip()
     if not cid:
         raise ToolError("conversation_id is required to persist a managed prompt pack")
     text = args.get("text")
@@ -3583,7 +3905,7 @@ def ingest_prompt_pack(args: dict) -> str:
 def export_prompt_pack_outputs(args: dict) -> str:
     """Write the next chunk (or all remaining) clip output files to disk."""
     import managed_prompt_pack
-    cid = str(args.get("__conversation_id") or args.get("conversation_id") or "").strip()
+    cid = str(args.get("__conversation_id") or "").strip()
     if not cid:
         raise ToolError("conversation_id is required")
     chunk_size = int(args.get("chunk_size") or 24)
@@ -3618,7 +3940,7 @@ def prompt_pack_status(args: dict) -> str:
     """Read-only managed prompt-pack progress for this chat."""
     import managed_prompt_pack
     import prompt_pack_production
-    cid = str(args.get("__conversation_id") or args.get("conversation_id") or "").strip()
+    cid = str(args.get("__conversation_id") or "").strip()
     if not cid:
         raise ToolError("conversation_id is required")
     progress = managed_prompt_pack.load_progress(cid)
@@ -3651,7 +3973,7 @@ def run_prompt_pack_production(args: dict) -> str:
     """Unlock allow_render and start durable stills-then-videos production."""
     import prompt_pack_production
     import gpu_gate
-    cid = str(args.get("__conversation_id") or args.get("conversation_id") or "").strip()
+    cid = str(args.get("__conversation_id") or "").strip()
     if not cid:
         raise ToolError("conversation_id is required")
     operator_text = str(args.get("operator_text") or "")
@@ -5058,7 +5380,14 @@ def _public_args(args: dict) -> dict:
 
 def call(name: str, args: dict,
          context: remote_security.ToolContext | None = None,
-         *, include_project: bool | None = None) -> str:
+         *, include_project: bool | None = None, operator_text: str = "") -> str:
+    """Dispatch one tool.
+
+    ``operator_text`` is the operator's own utterance for this turn. It is
+    re-injected below the model as ``__operator_text`` (``_public_args``
+    strips any model-supplied copy) so the prompt-pack render gate can honour
+    an explicit "render it" from the operator and nothing else.
+    """
     context = context or remote_security.DESKTOP_CONTEXT
     args = dict(args or {})
     if "__invalid_tool_arguments__" in args:
@@ -5093,7 +5422,7 @@ def call(name: str, args: dict,
                                        "nested meta-tool")
             return result
         return call(inner_name, inner_args, context=context,
-                    include_project=include_project)
+                    include_project=include_project, operator_text=operator_text)
     name = _TOOL_ALIASES.get(name, name)
     if name not in TOOLS:
         result = f"ERROR: no tool {name!r}. Available: {', '.join(TOOLS)}"
@@ -5111,6 +5440,8 @@ def call(name: str, args: dict,
         args["__remote_render_identity"] = context.remote_identity
     if name in _CONVERSATION_BOUND_TOOLS:
         args["__conversation_id"] = str(context.conversation_id or "")
+        args["__operator_text"] = str(
+            operator_text or getattr(context, "operator_text", "") or "")
     # Managed prompt-pack dry-run: block still renders until explicitly unlocked.
     if name in {"render_story_image", "render_story_image_batch", "await_story_image_job"}:
         try:
@@ -5138,8 +5469,13 @@ def call(name: str, args: dict,
                                                    "placeholder prompt in batch")
                         return ("ERROR: refusing placeholder batch prompt "
                                 f"{job.get('prompt')!r}; use saved pack clips.")
-        except Exception:
-            pass
+        except Exception as exc:
+            # Fail closed: a gate that cannot be evaluated never grants a render.
+            logging.getLogger(__name__).exception(
+                "prompt-pack render gate crashed for %s", name)
+            remote_security.audit_tool(context, name, args or {}, "error",
+                                       f"prompt-pack gate unavailable: {type(exc).__name__}: {exc}")
+            return f"ERROR: prompt-pack render gate unavailable: {type(exc).__name__}: {exc}"
     block = None
     if name in _VIDEO_TOOLS_NEEDING_STILL_APPROVAL:
         block = _stills_review_blocks_video(str(args.get("__conversation_id") or context.conversation_id or ""))
@@ -5172,6 +5508,9 @@ def call(name: str, args: dict,
         remote_security.audit_tool(context, name, args or {}, "refused", str(e))
         return result
     except Exception as e:
+        # A gate or preflight that crashes must be visible in the server log,
+        # not only as an ERROR string the model may paraphrase away.
+        logging.getLogger(__name__).exception("tool %s crashed", name)
         result = f"ERROR: {type(e).__name__}: {e}"
         remote_security.audit_tool(context, name, args or {}, "error",
                                    f"{type(e).__name__}: {e}")

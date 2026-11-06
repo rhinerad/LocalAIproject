@@ -14,8 +14,19 @@ REQUIRED_ENV = (
     "REDIS_PASSWORD", "FARM_BROKER_URL", "FARM_RESULT_BACKEND",
     "FARM_ROOT", "FARM_ENCRYPTION_KEY_B64",
 )
-WSL_DISTRO = "Ubuntu-24.04"
+# Resolve-FarmRedisEngine.ps1 reads the same variable. The default is this
+# workstation's distro; other installs set FARM_WSL_DISTRO.
+WSL_DISTRO_ENV = "FARM_WSL_DISTRO"
+DEFAULT_WSL_DISTRO = "Ubuntu-24.04"
+WSL_DISTRO = DEFAULT_WSL_DISTRO  # kept for callers that import the constant
 _VALID_ENGINES = ("desktop", "wsl")
+
+
+def wsl_distro() -> str:
+    raw = os.environ.get(WSL_DISTRO_ENV)
+    if raw is None or not str(raw).strip():
+        return DEFAULT_WSL_DISTRO
+    return str(raw).strip()
 
 
 def redis_engine() -> str:
@@ -43,7 +54,7 @@ def docker_argv() -> list[str] | None:
         wsl = shutil.which("wsl") or shutil.which("wsl.exe")
         if not wsl:
             return None
-        return [wsl, "-d", WSL_DISTRO, "-e", "/usr/bin/docker"]
+        return [wsl, "-d", wsl_distro(), "-e", "/usr/bin/docker"]
     found = shutil.which("docker")
     if found:
         return [found]

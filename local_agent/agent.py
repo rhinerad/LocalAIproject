@@ -30,10 +30,13 @@ fallback and does not change prompts.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
 import sys
+import threading
+import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Callable
@@ -899,8 +902,8 @@ def system_prompt(history: list[dict] | None = None,
                   model: str | None = None,
                   rules: str | None = None) -> str:
     if not KNOWLEDGE.is_file():
-        raise SystemExit("knowledge pack missing. Run:\n"
-                         "    python local_agent\\build_knowledge_pack.py")
+        raise RuntimeError("knowledge pack missing. Run:\n"
+                           "    python local_agent\\build_knowledge_pack.py")
     if include_project is None:
         include_project = needs_project_context(history)
     try:
@@ -914,7 +917,6 @@ def system_prompt(history: list[dict] | None = None,
         # This is deliberately a small, reviewed policy record. It carries
         # cross-chat operating facts without treating a prior chat transcript
         # as authority or consuming the project handbook for ordinary chat.
-        text = OPERATING_MEMORY.read_text(encoding="utf8").strip()
         # Scope comes from reviewed Markdown sections, rather than deleting
         # lines that happen to contain project words.
         text = operating_memory.render(OPERATING_MEMORY,
@@ -1864,6 +1866,8 @@ def _gvd_router_questions(executed: list[tuple[str, str]],
             parsed = json.loads(result)
         except (TypeError, ValueError, json.JSONDecodeError):
             return None
+        if not isinstance(parsed, dict):
+            return None
         question = _gvd_router_question(
             name, parsed, shot_hint=hints[index] if index < len(hints) else None)
         if question:
@@ -1954,6 +1958,8 @@ def _tool_source_label(name: str, result: str) -> str | None:
     elif name == "search_docs":
         try:
             payload = json.loads(result)
+            if not isinstance(payload, dict):
+                payload = {}
             sources = [item.get("source") for item in payload.get("results", [])
                        if isinstance(item, dict) and item.get("source")]
             if sources:
@@ -2354,6 +2360,91 @@ def _trim_context(msgs: list[dict], num_ctx: int, tool_schemas: list[dict],
     return compacted
 
 
+# Audit finding 15: trimming only when prompt_tokens > num_ctx left zero room
+# for the reply, so Ollama shifted the window and silently dropped the system
+# prompt. Keep a reserve, and keep trimming (bounded) until the prompt fits.
+CONTEXT_TRIM_RESERVE_TOKENS = 2048
+CONTEXT_TRIM_MAX_ROUNDS = 8
+
+
+def _context_budget(num_ctx: int) -> int:
+    """Prompt tokens the window may hold once a reply reserve is set aside."""
+    num_ctx = int(num_ctx)
+    reserve = min(CONTEXT_TRIM_RESERVE_TOKENS, num_ctx // 4)
+    return max(1, num_ctx - reserve)
+
+
+def _leading_system_count(msgs: list[dict]) -> int:
+    count = 0
+    for message in msgs:
+        if message.get("role") != "system":
+            break
+        count += 1
+    return count
+
+
+def _drop_oldest_body_message(msgs: list[dict]) -> list[dict] | None:
+    """Drop the oldest non-system message that is not the latest user request.
+
+    A native tool-call assistant message takes its tool results with it so the
+    next request never carries an orphaned tool-protocol message. Returns None
+    when only the system prompt(s) and the last user message remain.
+    """
+    system_count = _leading_system_count(msgs)
+    body = list(msgs[system_count:])
+    last_user = max((i for i, m in enumerate(body) if m.get("role") == "user"), default=-1)
+    drop = next((i for i in range(len(body)) if i != last_user), None)
+    if drop is None:
+        return None
+    end = drop + 1
+    if body[drop].get("role") == "assistant" and body[drop].get("tool_calls"):
+        while end < len(body) and end != last_user and body[end].get("role") == "tool":
+            end += 1
+    del body[drop:end]
+    return list(msgs[:system_count]) + body
+
+
+def _fit_context(msgs: list[dict], num_ctx: int, tool_schemas: list[dict],
+                 emit: Callable[[str, str], None],
+                 *, max_rounds: int | None = None) -> list[dict]:
+    """Trim until the prompt fits num_ctx minus the reply reserve.
+
+    Round one is the existing _trim_context (digest/compaction, then clipping);
+    later rounds are deterministic and cheap — the oldest remaining message is
+    dropped and the estimate re-checked — until it fits, the bound is reached,
+    or only the system prompt and the latest user message remain.
+    """
+    rounds = CONTEXT_TRIM_MAX_ROUNDS if max_rounds is None else max(1, int(max_rounds))
+    budget = _context_budget(num_ctx)
+
+    def estimate(messages: list[dict]) -> int:
+        return router.estimate_context_tokens(messages, tool_schemas)
+
+    tokens = estimate(msgs)
+    if tokens <= budget:
+        return msgs
+    msgs = _trim_context(msgs, budget, tool_schemas, emit)
+    tokens = estimate(msgs)
+    dropped = 0
+    for _round in range(rounds - 1):
+        if tokens <= budget:
+            break
+        smaller = _drop_oldest_body_message(msgs)
+        if smaller is None:
+            break
+        dropped += len(msgs) - len(smaller)
+        msgs = smaller
+        tokens = estimate(msgs)
+    if dropped:
+        emit("note", f"context trimmed further: dropped {dropped} older message(s) "
+                     "to leave room for the reply")
+    if tokens > budget:
+        emit("note", f"context still exceeds the safe window after trimming "
+                     f"(~{tokens} of {budget} prompt tokens); the model may lose "
+                     "earlier context")
+    return msgs
+
+
 def _apply_ctx_ceiling(adaptive: int, ceiling: int | None) -> int:
     """Return min(adaptive, ceiling); ceiling=None means no cap."""
     if ceiling is None:
@@ -2361,14 +2452,50 @@ def _apply_ctx_ceiling(adaptive: int, ceiling: int | None) -> int:
     return min(adaptive, ceiling)
 
 
+_CHAT_BUSY_LOCK = threading.Lock()
+_chat_busy_depth = 0
+
+
+def _chat_busy_enter() -> int:
+    """Process-wide refcount. The cross-process marker is written only on 0→1."""
+    global _chat_busy_depth
+    with _CHAT_BUSY_LOCK:
+        _chat_busy_depth += 1
+        depth = _chat_busy_depth
+        if depth == 1:
+            try:
+                router.set_chat_busy(True)
+            except Exception:
+                _chat_busy_depth -= 1
+                raise
+    return depth
+
+
+def _chat_busy_exit() -> int:
+    """Clear the marker only when the last concurrent turn finishes (1→0)."""
+    global _chat_busy_depth
+    with _CHAT_BUSY_LOCK:
+        previous = _chat_busy_depth
+        _chat_busy_depth = max(0, previous - 1)
+        depth = _chat_busy_depth
+        if previous == 1:
+            router.set_chat_busy(False)
+    return depth
+
+
 def _chat_busy_guard(fn):
-    """Do not let the watcher evict an in-flight streaming chat response."""
+    """Do not let the watcher evict an in-flight streaming chat response.
+
+    Two turns can overlap (two tabs, or a regenerate racing a send). A plain
+    boolean let the first turn to finish clear the marker while the other was
+    still streaming on the GPU; the refcount keeps it until the last one ends.
+    """
     def wrapped(*args, **kwargs):
-        router.set_chat_busy(True)
+        _chat_busy_enter()
         try:
             return fn(*args, **kwargs)
         finally:
-            router.set_chat_busy(False)
+            _chat_busy_exit()
     return wrapped
 
 
@@ -2571,7 +2698,8 @@ def _prefetch_difficulty_plan(msgs: list[dict], operator_text: str, cid: str,
         import difficulty, gpu_gate
         gpu_busy, _, _ = router.gpu_busy()
         if difficulty.needs_escalation(operator_text) and not gpu_busy and prefer != "cpu":
-            key = f"escalate:{cid or 'adhoc'}:{hash(operator_text)}"
+            key = (f"escalate:{cid or 'adhoc'}:"
+                   f"{hashlib.sha256(operator_text.encode('utf-8')).hexdigest()[:16]}")
             grant = gpu_gate.request("14B reasoning escalation", source="8B chat",
                                      detail="one-time plan for a difficult request", key=key)
             if grant.get("granted"):
@@ -2599,6 +2727,61 @@ def _trace_record_decision(span, route, *, skip_farm: bool = False) -> None:
         tracing.record_decision(span, route, skip_farm=skip_farm, profile=profile)
     except Exception:
         return
+
+
+# Farm results are untrusted input (the Mac worker's Redis ACL is wide open):
+# only a str `content` survives, capped, and tool_calls are dropped.
+FARM_TEXT_MAX_CHARS = 64_000
+
+
+def _sanitize_farm_result(farm_result) -> tuple[str, int]:
+    """(text, dropped_tool_call_count) from a farm_offload result."""
+    if not isinstance(farm_result, dict) or "error" in farm_result:
+        return "", 0
+    content = farm_result.get("content")
+    text = content if isinstance(content, str) else ""
+    if len(text) > FARM_TEXT_MAX_CHARS:
+        text = text[:FARM_TEXT_MAX_CHARS]
+    calls = farm_result.get("tool_calls")
+    if isinstance(calls, (list, tuple)):
+        dropped = len(calls)
+    else:
+        dropped = 1 if calls else 0
+    return text, dropped
+
+
+# Mid-stream render guard (audit finding 10). While a hop streams on the GPU
+# route the two cheap signals are re-checked every N seconds of wall time: the
+# project's render-owner lock (router.queue_owner) and, when ComfyUI's port
+# answers, its /queue. Never router.gpu_busy(), which spawns nvidia-smi. Tests
+# set this to 0 to check on every chunk; None disables the guard.
+STREAM_RENDER_CHECK_SECONDS = 2.0
+
+
+class RenderClaimedGpu(Exception):
+    """A render claimed the GPU while a chat hop was streaming on it."""
+
+
+def render_claimed_gpu() -> tuple[bool, str]:
+    owner = getattr(router, "queue_owner", None)
+    if callable(owner):
+        try:
+            claimed, why = owner()
+        except Exception:
+            claimed, why = False, ""
+        if claimed:
+            return True, str(why)
+    listening = getattr(router, "comfy_listening", None)
+    queue_idle = getattr(router, "_comfy_queue_idle", None)
+    if callable(listening) and callable(queue_idle):
+        try:
+            if listening():
+                idle, why = queue_idle()
+                if not idle:
+                    return True, f"ComfyUI queue is not idle ({str(why)[:160]})"
+        except Exception:
+            pass
+    return False, ""
 
 
 def _trace_tool_call(name: str, args: dict, runner, *, parent=None,
@@ -2839,8 +3022,8 @@ def answer(history: list[dict],
                 agentic_state.observe_tool(cid, "start_current_chat_render", args, result)
                 try:
                     data = json.loads(result)
-                    launch = data.get("launch", {})
-                    if launch.get("started"):
+                    launch = data.get("launch") if isinstance(data, dict) else None
+                    if isinstance(launch, dict) and launch.get("started"):
                         final = (f"Batch render started: {launch.get('planned_renders')} planned render(s), "
                                  f"PID {launch.get('pid')}. Log: {launch.get('log')}")
                         agentic_state.finish_turn(cid, final)
@@ -3114,16 +3297,17 @@ def answer(history: list[dict],
                                       tier="farm", model=route.model):
                         farm_result = farm_offload.try_qwythos_on_farm(
                             msgs, tools=tool_schemas)
-                    farm_text = ""
-                    farm_calls: list = []
-                    if isinstance(farm_result, dict) and "error" not in farm_result:
-                        farm_text = str(farm_result.get("content") or "")
-                        farm_calls = farm_result.get("tool_calls") or []
-                    if farm_text.strip() or farm_calls:
+                    # Trust boundary (audit finding 5): the farm's reply is
+                    # text only. Any tool_calls it returns are discarded here
+                    # and never reach tools.call; hop_calls stays empty.
+                    farm_text, farm_dropped_calls = _sanitize_farm_result(farm_result)
+                    if farm_dropped_calls:
+                        emit("note", f"Mac Qwythos returned {farm_dropped_calls} tool call(s); "
+                                     "discarded — farm results never run tools on this "
+                                     "workstation")
+                    if farm_text.strip():
                         farm_handled = True
-                        hop_calls = farm_calls
-                        if farm_text:
-                            buf.append(farm_text)
+                        buf.append(farm_text)
                     else:
                         with tracing.span("route", name="router.decide") as rs:
                             route = router.decide(
@@ -3134,7 +3318,7 @@ def answer(history: list[dict],
                         hop_profile = apply_hop_profile(route)
                         maybe_cpu_action_nudge(hop_profile)
                         if isinstance(farm_result, dict) and "error" not in farm_result:
-                            emit("note", "Mac Qwythos returned no text and no tool calls; falling back locally")
+                            emit("note", "Mac Qwythos returned no usable text; falling back locally")
                         else:
                             emit("note", "Mac Qwythos farm path unavailable; falling back locally")
                 adaptive_ctx = route.options().get("num_ctx", 8192)
@@ -3147,11 +3331,13 @@ def answer(history: list[dict],
                     "label": "Reviewing the request and available evidence",
                 }))
 
-                # Trim to the effective (ceiling-applied) context window.
+                # Trim to the effective (ceiling-applied) context window, with
+                # headroom for the reply (see _fit_context / _context_budget).
                 num_ctx = effective_ctx
-                if prompt_tokens > num_ctx:
+                if prompt_tokens > _context_budget(num_ctx):
                     with tracing.span("compact", name="trim_context"):
-                        msgs = _trim_context(msgs, num_ctx, tool_schemas, emit)
+                        msgs = _fit_context(msgs, num_ctx, tool_schemas, emit)
+                    prompt_tokens = router.estimate_context_tokens(msgs, tool_schemas)
                 elif (not lightweight_turn and
                       prompt_tokens > compaction_prefetch.PROACTIVE_THRESHOLD * num_ctx):
                     # Prefetch-only: overflow in _trim_context never waits on the farm.
@@ -3174,7 +3360,8 @@ def answer(history: list[dict],
                 # A primary failure gets exactly one reactive retry on the paired 8B
                 # GPU model.  It is never retried on CPU layers, and a render that has
                 # claimed the GPU blocks the retry through router.py's normal guards.
-                for attempt in range(2 if not farm_handled else 0):
+                render_switch_used = False
+                for attempt in range(3 if not farm_handled else 0):
                     try:
                         emit("progress", json.dumps({
                             "stage": "decide",
@@ -3202,11 +3389,21 @@ def answer(history: list[dict],
                                 reason_span.set("think", stream_kw.get("think"))
                             except Exception:
                                 pass
+                            _guard_gpu = (getattr(route, "tier", None) == "gpu"
+                                          and STREAM_RENDER_CHECK_SECONDS is not None)
+                            _guard_last = time.monotonic()
                             for piece in oll.chat_stream(
                                     msgs, model=route.model, options=opts,
                                     host=route.host, should_stop=should_stop,
                                     tools=stream_tools, keep_alive="5m",
                                     **stream_kw):
+                                if _guard_gpu:
+                                    _now = time.monotonic()
+                                    if _now - _guard_last >= STREAM_RENDER_CHECK_SECONDS:
+                                        _guard_last = _now
+                                        _claimed, _why = render_claimed_gpu()
+                                        if _claimed:
+                                            raise RenderClaimedGpu(_why)
                                 if isinstance(piece, oll.ToolCall):
                                     hop_calls = piece.calls
                                 elif isinstance(piece, oll.StreamEnd):
@@ -3259,6 +3456,45 @@ def answer(history: list[dict],
                                     ctx_ceiling=ctx_ceiling)
                         emit("route", json.dumps(_fev))
                         emit("note", "14B request failed; continuing this turn on the 8B GPU fallback")
+                    except RenderClaimedGpu as exc:
+                        # Stop consuming the GPU stream, free the card for the
+                        # render, and re-run this hop on the CPU tier (the same
+                        # path a pending gate or busy GPU takes at decide time).
+                        if render_switch_used:
+                            raise oll.OllamaUnavailable(
+                                f"a render claimed the GPU again mid-reply ({exc}); "
+                                "not retrying this hop again")
+                        render_switch_used = True
+                        evict = getattr(router, "evict_gpu_residents", None)
+                        if callable(evict):
+                            try:
+                                evict()
+                            except Exception:
+                                pass
+                        buf.clear()
+                        hop_calls = []
+                        stream_end = None
+                        with tracing.span("route", name="router.decide") as rs:
+                            route = router.decide(
+                                "cpu", model=model, prompt_tokens=prompt_tokens,
+                                prompt=latest_user, skip_farm=True)
+                            _trace_record_decision(rs, route, skip_farm=True)
+                            rs.set("render_claimed_gpu", True)
+                        if not route.model:
+                            raise oll.OllamaUnavailable(
+                                f"a render claimed the GPU mid-reply ({exc}) and "
+                                f"no CPU model is available: {route.reason}")
+                        hop_profile = apply_hop_profile(route)
+                        maybe_cpu_action_nudge(hop_profile)
+                        _rad = route.options().get("num_ctx", 8192)
+                        _rev = route.as_dict()
+                        _rev.update(adaptive_ctx=_rad,
+                                    effective_ctx=_apply_ctx_ceiling(_rad, ctx_ceiling),
+                                    ctx_ceiling=ctx_ceiling)
+                        emit("route", json.dumps(_rev))
+                        emit("note", f"a render claimed the GPU mid-reply ({exc}); "
+                                     "released the GPU model and restarting this hop "
+                                     "on the CPU tier")
 
                 reply = "".join(buf).strip()
                 if _is_degenerate_completion(reply):
@@ -3276,7 +3512,7 @@ def answer(history: list[dict],
                 # emit a standalone {"name","arguments"} object in content instead of
                 # Ollama's <tool_call> XML; it is not the TOOL: fallback.
                 used_legacy = False
-                if not hop_calls:
+                if not hop_calls and not farm_handled:
                     promoted = parse_content_json_tool(reply, tool_schemas)
                     if promoted:
                         name, args = promoted

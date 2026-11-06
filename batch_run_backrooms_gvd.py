@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 import time
@@ -28,7 +29,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from types import SimpleNamespace
 
-ROOT = Path(__file__).resolve().parent
+# GVD_ROOT: repo root override (defaults to this file's directory, i.e. the checkout).
+ROOT = Path(os.environ.get("GVD_ROOT") or Path(__file__).resolve().parent).resolve()
 LOCAL_AGENT = ROOT / "local_agent"
 DEFAULT_PACK = ROOT / "Backrooms_Sitcom_Audition_Prompt_Pack_MERGED_FINAL.md"
 PROGRESS_DIR = LOCAL_AGENT / "runtime" / "gvd_backrooms_batch"
@@ -116,9 +118,15 @@ DEFAULT_STEPS = 28.0
 sys.path.insert(0, str(LOCAL_AGENT))
 sys.path.insert(0, str(ROOT))
 
+from local_agent.atomic_io import atomic_write_json  # noqa: E402
+
 
 def _now() -> str:
     return datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
+
+
+def _stamp() -> str:
+    return datetime.now(timezone.utc).astimezone().strftime("%Y%m%dT%H%M%S")
 
 
 def load_progress() -> dict:
@@ -133,9 +141,79 @@ def load_progress() -> dict:
 def save_progress(progress: dict) -> None:
     PROGRESS_DIR.mkdir(parents=True, exist_ok=True)
     progress["updated"] = _now()
-    tmp = PROGRESS_PATH.with_suffix(".tmp")
-    tmp.write_text(json.dumps(progress, indent=2, ensure_ascii=False), encoding="utf-8")
-    tmp.replace(PROGRESS_PATH)
+    # Unique temp name + replace (local_agent.atomic_io): two writers (batch +
+    # watcher) can no longer race over one shared ".tmp" sibling.
+    atomic_write_json(PROGRESS_PATH, progress)
+
+
+# --- Evidence preservation (audit 2026-11-02 finding 8) ------------------------
+# progress["clips"][cid] is MERGED, never replaced: a rerun or an error must not
+# drop a prior video_path / vlm_qa / continuity record.  Every terminal outcome
+# is appended to entry["attempts"] = [{at, status, video_path, elapsed_sec, error}].
+ATTEMPT_FIELDS = ("at", "status", "video_path", "elapsed_sec", "error")
+
+
+def attempt_record(entry: dict, **overrides) -> dict:
+    rec = {k: entry.get(k) for k in ATTEMPT_FIELDS}
+    if isinstance(entry.get("vlm_qa"), dict):
+        rec["vlm_qa"] = dict(entry["vlm_qa"])
+    if entry.get("pipeline_state"):
+        rec["pipeline_state"] = entry.get("pipeline_state")
+    rec.update(overrides)
+    return rec
+
+
+def record_attempt(entry: dict, **overrides) -> dict:
+    """Append the entry's current terminal state to entry['attempts'] (deduped, uncapped)."""
+    attempts = [a for a in (entry.get("attempts") or []) if isinstance(a, dict)]
+    rec = attempt_record(entry, **overrides)
+    if not attempts or attempts[-1] != rec:
+        attempts.append(rec)
+    entry["attempts"] = attempts
+    return entry
+
+
+def begin_attempt(existing: dict | None, **fields) -> dict:
+    """Return a merged copy of *existing* marked running; prior evidence is kept.
+
+    A prior terminal outcome (selected/error/qa_failed/...) is first pushed onto
+    the attempts list so a rerun never erases it; prior video_path / vlm_qa stay
+    on the entry until a NEW render replaces them (see finish_render)."""
+    entry = dict(existing or {})
+    prior_status = str(entry.get("status") or "").lower()
+    if prior_status and prior_status != "running":
+        record_attempt(entry)
+    entry.update(fields)
+    entry["status"] = "running"
+    entry.setdefault("attempts", [])
+    return entry
+
+
+def finish_render(entry: dict, **fields) -> dict:
+    """Merge a fresh render result into *entry*.
+
+    The previous video (if any) is remembered as previous_video_path, and the
+    previous vlm_qa -- which judged THAT video, not this one -- moves into the
+    attempts history instead of being silently carried over."""
+    prior_video = entry.get("video_path")
+    if prior_video and prior_video != fields.get("video_path"):
+        entry["previous_video_path"] = prior_video
+    if "vlm_qa" in entry:
+        record_attempt(entry)
+        entry.pop("vlm_qa", None)
+    entry.pop("error", None)
+    entry.update(fields)
+    return entry
+
+
+def fail_entry(entry: dict, error: str, **fields) -> dict:
+    """Mark *entry* error WITHOUT dropping video_path / vlm_qa / continuity."""
+    entry.update(fields)
+    entry["status"] = "error"
+    entry["error"] = error
+    entry["at"] = fields.get("at") or _now()
+    record_attempt(entry)
+    return entry
 
 
 def ingest_pack(pack_path: Path) -> list[dict]:
@@ -200,31 +278,44 @@ def clip_to_intent(clip: dict) -> str:
 
 
 # Lifecycle states (P0-6): RENDERED -> QA_PENDING -> SELECTED
-# Resume must NOT treat nonempty file / legacy "done" alone as selected.
+# Continuity chaining (is_selected) must NOT treat nonempty file / legacy "done"
+# alone as selected; resume/watcher/keepalive (already_done) also accept the
+# legacy done/ok/success vocabulary when the video is on disk.
 PIPELINE_SELECTED = "SELECTED"
 PIPELINE_QA_PENDING = "QA_PENDING"
 PIPELINE_RENDERED = "RENDERED"
 
 
-def already_done(entry: dict | None) -> bool:
-    """Resume skip only when SELECTED (QA-verified), not merely rendered."""
-    if not entry:
-        return False
+# Finished-clip vocabulary shared by batch, gvd_watcher.py and the keepalive.
+# (gvd_watcher_keepalive.ps1 mirrors DONE_STATUSES: SELECTED / selected / done.)
+SELECTED_STATUSES = frozenset({"selected", "verified", "qa_passed"})
+LEGACY_DONE_STATUSES = frozenset({"done", "ok", "success"})
+DONE_STATUSES = SELECTED_STATUSES | LEGACY_DONE_STATUSES
+FAILED_STATUSES = frozenset({"error", "failed", "qa_failed"})
+
+
+def _video_file_ok(entry: dict) -> bool:
     path = entry.get("video_path")
     if not path:
         return False
     p = Path(path)
     try:
-        file_ok = p.is_file() and p.stat().st_size > 10_000
+        return p.is_file() and p.stat().st_size > 10_000
     except OSError:
-        file_ok = False
-    if not file_ok:
+        return False
+
+
+def is_selected(entry: dict | None) -> bool:
+    """Strict: SELECTED / QA-verified with its video on disk (continuity chain source)."""
+    if not isinstance(entry, dict) or not entry:
+        return False
+    if not _video_file_ok(entry):
         return False
     pipeline_state = str(entry.get("pipeline_state") or entry.get("state") or "").upper()
     status = str(entry.get("status") or "").lower()
     if pipeline_state == PIPELINE_SELECTED:
         return True
-    if status in {"selected", "verified", "qa_passed"}:
+    if status in SELECTED_STATUSES:
         return True
     # Explicit verified flag after QA
     if entry.get("verified") is True:
@@ -234,10 +325,45 @@ def already_done(entry: dict | None) -> bool:
         # verified without QA object still counts if operator set it
         if entry.get("qa_required") is False:
             return True
-    # Legacy "done" / nonempty file alone is REJECTED for resume (P0-6)
+    # Legacy "done" / nonempty file alone is REJECTED as a chain source (P0-6)
     return False
 
 
+
+
+def already_done(entry: dict | None) -> bool:
+    """ONE finished-clip predicate for batch resume, gvd_watcher and the keepalive.
+
+    True when the entry is SELECTED (pipeline_state == "SELECTED" or status in
+    selected/verified/qa_passed), when it carries a legacy status in
+    done/ok/success, or the legacy ``ok: true`` + ``video_path`` shape -- and
+    in every case the video file is actually on disk (> 10 KB).  Entries whose
+    status is running/error/failed/qa_failed are never done.
+    """
+    if not isinstance(entry, dict) or not entry:
+        return False
+    status = str(entry.get("status") or "").lower()
+    if status in FAILED_STATUSES or status == "running":
+        return False
+    if is_selected(entry):
+        return True
+    if not _video_file_ok(entry):
+        return False
+    if status in LEGACY_DONE_STATUSES:
+        return True
+    if entry.get("ok") is True and entry.get("video_path"):
+        return True
+    return False
+
+
+def is_failed(entry: dict | None) -> bool:
+    """error / failed / qa_failed (status or pipeline_state) -- the only clips
+    --force-rerun-failed may force."""
+    if not isinstance(entry, dict):
+        return False
+    status = str(entry.get("status") or "").lower()
+    pipeline_state = str(entry.get("pipeline_state") or "").upper()
+    return status in FAILED_STATUSES or pipeline_state in {"FAILED", "QA_FAILED", "ERROR"}
 
 
 def load_clip_override(cid: str) -> dict:
@@ -262,43 +388,28 @@ def load_clip_override(cid: str) -> dict:
 
 
 def wants_literal(override: dict) -> bool:
-    return bool(
-        override.get("bypass_director")
-        or override.get("literal_prompt")
-        or override.get("bypass_director")
-        or override.get("literal_prompt")
-    )
+    return bool(override.get("bypass_director") or override.get("literal_prompt"))
 
 
 
 def pred_from_override(override: dict, clip: dict) -> tuple:
     """Build pred/hparams from override JSON, falling back to pack fields."""
     start = str(
-        override.get('start_prompt') or override.get('start_prompt')
+        override.get('start_prompt')
         or override.get('start_frame')
         or clip.get('start_frame')
         or ''
     ).strip()
-    video = str(
-        override.get('video_prompt') or override.get('video_prompt')
-        or clip.get('video_prompt')
-        or ''
-    ).strip()
+    video = str(override.get('video_prompt') or clip.get('video_prompt') or '').strip()
     # Empty string is intentional — do NOT fall through via `or` (FLUX concept bleed).
     if 'negative_prompt' in override:
         neg = str(override.get('negative_prompt') if override.get('negative_prompt') is not None else '')
-    elif 'negative_prompt' in override:
-        neg = str(override.get('negative_prompt') if override.get('negative_prompt') is not None else '')
     else:
-        neg = str(clip.get('start_frame_negative') or clip.get('start_frame_negative') or '')
+        neg = str(clip.get('start_frame_negative') or '')
     neg = neg.strip()
     # Literal / bypass: default empty negative (avoid concept bleed), but honor an
     # explicit non-empty override negative_prompt (e.g. hardware bans for POV).
-    _lit = bool(
-        override.get('bypass_director') or override.get('literal_prompt')
-        or override.get('bypass_director') or override.get('literal_prompt')
-    )
-    if _lit and not neg:
+    if wants_literal(override) and not neg:
         neg = ''
     if not start or not video:
         raise ValueError(f"literal override for {clip.get('id')} missing start/video prompt")
@@ -309,8 +420,8 @@ def pred_from_override(override: dict, clip: dict) -> tuple:
         start_prompt=start,
         video_prompt=video,
         negative_prompt=neg,
-        bypass_director=bool(override.get('bypass_director') or override.get('bypass_director')),
-        literal_prompt=bool(override.get('literal_prompt') or override.get('literal_prompt')),
+        bypass_director=bool(override.get('bypass_director')),
+        literal_prompt=bool(override.get('literal_prompt')),
         cfg_scale=cfg,
         step_count=steps,
         denoise=denoise,
@@ -433,6 +544,14 @@ C001_LITERAL_VLM_RULE = (
 )
 
 
+def vlm_qa_dump_paths(clip_id: str, stamp: str | None = None) -> tuple[Path, Path]:
+    """(timestamped dump path, latest-pointer path) for a clip's VLM QA evidence."""
+    cid = str(clip_id or "clip")
+    dump = PROGRESS_DIR / f"vlm_qa_{cid}_{stamp or _stamp()}.json"
+    latest = PROGRESS_DIR / f"vlm_qa_{cid}_latest.json"
+    return dump, latest
+
+
 def run_literal_vlm_qa(
     video_path: Path,
     *,
@@ -470,16 +589,18 @@ def run_literal_vlm_qa(
         parsed = judge(frames, user_prompt, system_prompt=sys_prompt)
     except TypeError:
         parsed = judge(frames, user_prompt)
-    # Persist full reasoning
-    dump = PROGRESS_DIR / f"vlm_qa_{override.get('id', 'clip')}.json"
-    PROGRESS_DIR.mkdir(parents=True, exist_ok=True)
-    dump.write_text(_json.dumps({
+    # Persist full reasoning: one timestamped dump per run (never overwritten on
+    # rerun) plus a small "latest" pointer file for operators/tools.
+    dump, latest = vlm_qa_dump_paths(str(override.get('id', 'clip')))
+    atomic_write_json(dump, {
         "video_path": str(video_path),
         "system_prompt": sys_prompt,
         "user_prompt": user_prompt,
         "parsed": parsed,
-    }, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"  VLM QA dump -> {dump}")
+        "at": _now(),
+    })
+    atomic_write_json(latest, {"latest": str(dump), "video_path": str(video_path), "at": _now()})
+    print(f"  VLM QA dump -> {dump} (latest pointer: {latest})")
     print(f"  VLM raw/rationale: {str((parsed or {}).get('raw') or (parsed or {}).get('rationale') or parsed)[:2000]}")
     # Fail closed
     scores = (parsed or {}).get("scores") or parsed or {}
@@ -868,7 +989,7 @@ def decide_continuity(
     if (ref2vid or _wants_ref2vid)(cid):
         rec["reason_code"] = "ref2vid_path_has_no_first_frame"
         return rec
-    if not already_done(prev_entry) or (prev_entry or {}).get("stills_only"):
+    if not is_selected(prev_entry) or (prev_entry or {}).get("stills_only"):
         rec["reason_code"] = "prev_clip_not_selected"
         return rec
     refine = policy == "refine_checkpoint"
@@ -1134,7 +1255,9 @@ def main(argv: list[str] | None = None) -> int:
                 _os.environ["GVD_SILENT_FALLBACK"] = "1"
                 print("  silent-fallback: GVD_F5_TTS=0 (skip Fish/F5 voice clone)")
 
-            progress["clips"][cid] = {"status": "running", "at": _now(), "continuity": continuity_rec}
+            progress["clips"][cid] = begin_attempt(
+                progress["clips"].get(cid), at=_now(), continuity=continuity_rec
+            )
             save_progress(progress)
             t0 = time.time()
             # Pack/override dialogue ONLY (never DSPy paraphrase) for F5 / C001 voice lock
@@ -1201,7 +1324,7 @@ def main(argv: list[str] | None = None) -> int:
             # P0-6: mark RENDERED then QA_PENDING before any SELECTED/done.
             # Never write status=done before VLM when QA is required.
             qa_required = bool(wants_literal(override) and (not args.stills_only))
-            progress["clips"][cid] = {
+            progress["clips"][cid] = finish_render(progress["clips"][cid], **{
                 "status": "rendered",
                 "pipeline_state": PIPELINE_RENDERED,
                 "qa_required": qa_required,
@@ -1219,7 +1342,7 @@ def main(argv: list[str] | None = None) -> int:
                     else "fresh_flux_still"
                 ),
                 "continuity": continuity_rec,
-            }
+            })
             save_progress(progress)
 
             # Promote to QA_PENDING before running VLM (or skip-QA selection).
@@ -1247,6 +1370,8 @@ def main(argv: list[str] | None = None) -> int:
                     progress["clips"][cid]["status"] = "qa_failed"
                     progress["clips"][cid]["pipeline_state"] = "QA_FAILED"
                     progress["clips"][cid]["verified"] = False
+                    progress["clips"][cid]["at"] = _now()
+                    record_attempt(progress["clips"][cid])
                     save_progress(progress)
                     print(f"[{cid}] VLM QA FAILED — stopping batch until this clip passes.")
                     print(f"  See {qa.get('dump')}")
@@ -1255,6 +1380,7 @@ def main(argv: list[str] | None = None) -> int:
                 progress["clips"][cid]["status"] = "selected"
                 progress["clips"][cid]["pipeline_state"] = PIPELINE_SELECTED
                 progress["clips"][cid]["verified"] = True
+                record_attempt(progress["clips"][cid])
                 save_progress(progress)
             else:
                 # No VLM required: RENDERED -> QA_PENDING -> SELECTED (auto)
@@ -1263,6 +1389,7 @@ def main(argv: list[str] | None = None) -> int:
                 progress["clips"][cid]["verified"] = True
                 # keep legacy alias for operators grepping "done"
                 progress["clips"][cid]["legacy_status"] = "done"
+                record_attempt(progress["clips"][cid])
                 save_progress(progress)
             print(f"[{cid}] SELECTED in {elapsed:.0f}s -> {video_path}")
             ran += 1
@@ -1272,12 +1399,13 @@ def main(argv: list[str] | None = None) -> int:
         except Exception as exc:
             failed += 1
             ran += 1
-            progress["clips"][cid] = {
-                "status": "error",
-                "error": f"{type(exc).__name__}: {exc}",
-                "at": _now(),
-                "continuity": continuity_rec,
-            }
+            # Merge, never replace: a prior video_path / vlm_qa survives the error.
+            progress["clips"][cid] = fail_entry(
+                dict(progress["clips"].get(cid) or {}),
+                f"{type(exc).__name__}: {exc}",
+                at=_now(),
+                continuity=continuity_rec,
+            )
             save_progress(progress)
             print(f"[{cid}] ERROR: {type(exc).__name__}: {exc}")
             traceback.print_exc()

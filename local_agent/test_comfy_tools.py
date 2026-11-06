@@ -51,6 +51,15 @@ class ComfyToolDispatchTests(unittest.TestCase):
         self.patcher = patch("mcp_client.call", side_effect=fake_call)
         self.patcher.start()
         self.addCleanup(self.patcher.stop)
+        # GPU preflight (audit finding 4): idle GPU and a granting gate by
+        # default; the ComfyGpuGateTests below cover the refusal paths.
+        for target, value in (
+            ("router.gpu_busy", (False, "GPU idle", {})),
+            ("gpu_gate.request", {"granted": True, "mode": "allow", "request": None}),
+        ):
+            gate = patch(target, return_value=value)
+            gate.start()
+            self.addCleanup(gate.stop)
 
     def test_all_seven_registered(self):
         for name in (
@@ -325,6 +334,13 @@ class ComfyProcessGuardrailTests(unittest.TestCase):
         self.audit_patch = patch.object(tools, "_COMFY_AUDIT_PATH", self.audit)
         self.audit_patch.start()
         self.addCleanup(self.audit_patch.stop)
+        for target, value in (
+            ("router.gpu_busy", (False, "GPU idle", {})),
+            ("gpu_gate.request", {"granted": True, "mode": "allow", "request": None}),
+        ):
+            gate = patch(target, return_value=value)
+            gate.start()
+            self.addCleanup(gate.stop)
 
     def test_refuses_when_supervisor_owns_process(self):
         with patch.object(tools, "_thermal_blocks_comfy_process", return_value=None), \
@@ -365,7 +381,7 @@ class ComfyProcessGuardrailTests(unittest.TestCase):
 
     def test_supervisor_check_uses_live_pid_same_as_start_batch_render(self):
         with patch("router.queue_owner", return_value=(False, "queue owner released")), \
-             patch.object(tools, "_json", return_value={"pid": 0}), \
+             patch.object(tools, "_owner_record", return_value={"pid": 0}), \
              patch.object(tools, "_pid_is_live", return_value=False):
             self.assertIsNone(tools._supervisor_owns_comfyui())
         with patch("router.queue_owner",
@@ -384,6 +400,165 @@ class ComfyProcessGuardrailTests(unittest.TestCase):
         record = json.loads(self.audit.read_text(encoding="utf-8").splitlines()[-1])
         self.assertEqual(record["mcp_tool"], "restart_comfyui")
         self.assertEqual(record["risk"], "process_control")
+
+
+class ComfyGpuGateTests(unittest.TestCase):
+    """Audit finding 4: every GPU-touching MCP wrapper runs the batch-render preflight."""
+
+    def setUp(self) -> None:
+        self.calls: list[tuple[str, dict]] = []
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        audit = patch.object(tools, "_COMFY_AUDIT_PATH", Path(tmp.name) / "audit.jsonl")
+        audit.start()
+        self.addCleanup(audit.stop)
+        import gpu_gate
+        gate_file = patch.object(gpu_gate, "STATE_FILE", Path(tmp.name) / "gpu_gate.json")
+        gate_file.start()
+        self.addCleanup(gate_file.stop)
+        mcp = patch("mcp_client.call",
+                    side_effect=lambda name, args, timeout=None: self.calls.append((name, dict(args))) or {"ok": True})
+        mcp.start()
+        self.addCleanup(mcp.stop)
+        thermal = patch.object(tools, "_thermal_blocks_comfy_process", return_value=None)
+        thermal.start()
+        self.addCleanup(thermal.stop)
+
+    _GRANT = {"granted": True, "mode": "allow", "request": None}
+    _PENDING = {"granted": False, "mode": "ask", "request": {"id": "gpu_x"}}
+    _BLOCK = {"granted": False, "mode": "block", "blocked": True, "request": None}
+
+    def _gpu_tools(self):
+        return [
+            ("comfy_generate", {"prompt": "a lamp"}),
+            ("comfy_workflow", {"tool": "enqueue_workflow", "workflow": {"1": {"class_type": "X", "inputs": {}}}}),
+            ("comfy_workflow", {"tool": "queue", "action": "clear"}),
+            ("comfy_system", {"tool": "clear_vram"}),
+            ("comfy_system", {"tool": "comfy_cli", "command": "launch"}),
+            ("comfy_process", {"action": "start"}),
+            ("comfy_process", {"action": "restart"}),
+        ]
+
+    def test_busy_gpu_refuses_every_gpu_wrapper_before_mcp(self):
+        for name, args in self._gpu_tools():
+            with self.subTest(tool=name, args=args):
+                self.calls.clear()
+                with patch("router.gpu_busy", return_value=(True, "another compute process is on the GPU: x.exe",
+                                                             {"comfy_port_8188": "closed", "vram_used_mb": 9000})), \
+                     patch("gpu_gate.request", return_value=self._GRANT) as gate, \
+                     patch.object(tools, "_supervisor_owns_comfyui", return_value=None):
+                    raw = tools.call(name, args)
+                self.assertTrue(raw.startswith("ERROR:"), raw)
+                self.assertIn("another compute process", raw)
+                self.assertEqual([], self.calls)
+                gate.assert_not_called()
+
+    def test_pending_or_blocked_gate_refuses_before_mcp(self):
+        for verdict, needle in ((self._PENDING, "pending"), (self._BLOCK, "Block")):
+            for name, args in self._gpu_tools():
+                with self.subTest(tool=name, verdict=needle):
+                    self.calls.clear()
+                    with patch("router.gpu_busy", return_value=(False, "GPU idle", {})), \
+                         patch("gpu_gate.request", return_value=verdict), \
+                         patch.object(tools, "_supervisor_owns_comfyui", return_value=None):
+                        raw = tools.call(name, args)
+                    self.assertTrue(raw.startswith("ERROR:"), raw)
+                    self.assertIn(needle, raw)
+                    self.assertEqual([], self.calls)
+
+    def test_granted_gate_on_idle_gpu_calls_mcp(self):
+        with patch("router.gpu_busy", return_value=(False, "GPU idle", {})), \
+             patch("gpu_gate.request", return_value=self._GRANT) as gate, \
+             patch.object(tools, "_supervisor_owns_comfyui", return_value=None):
+            tools.comfy_generate({"prompt": "a lamp"})
+        self.assertEqual("generate_image", self.calls[-1][0])
+        self.assertTrue(gate.call_args.kwargs["key"].startswith("comfy_generate:image:"))
+
+    def test_bare_backend_listener_with_idle_queue_is_allowed(self):
+        listener = (True, "a ComfyUI backend is listening on port 8188",
+                    {"queue_owner": "released", "comfy_port_8188": "listening"})
+        with patch("router.gpu_busy", return_value=listener), \
+             patch("gpu_gate.request", return_value=self._GRANT), \
+             patch.object(tools, "_supervisor_owns_comfyui", return_value=None), \
+             patch.object(tools, "_comfy_queue_counts", return_value={"running": 0, "pending": 0}):
+            tools.comfy_generate({"prompt": "a lamp"})
+        self.assertEqual("generate_image", self.calls[-1][0])
+
+    def test_backend_listener_with_live_queue_or_owner_is_refused(self):
+        listener = (True, "a ComfyUI backend is listening on port 8188",
+                    {"queue_owner": "released", "comfy_port_8188": "listening"})
+        with patch("router.gpu_busy", return_value=listener), \
+             patch("gpu_gate.request", return_value=self._GRANT), \
+             patch.object(tools, "_supervisor_owns_comfyui", return_value=None), \
+             patch.object(tools, "_comfy_queue_counts", return_value={"running": 1, "pending": 2}):
+            raw = tools.call("comfy_generate", {"prompt": "a lamp"})
+        self.assertIn("already rendering", raw)
+        with patch("router.gpu_busy", return_value=listener), \
+             patch("gpu_gate.request", return_value=self._GRANT), \
+             patch.object(tools, "_supervisor_owns_comfyui", return_value="batch render owns the queue (pid=7)"):
+            raw = tools.call("comfy_system", {"tool": "clear_vram"})
+        self.assertIn("batch render owns the queue", raw)
+        with patch("router.gpu_busy", return_value=listener), \
+             patch("gpu_gate.request", return_value=self._GRANT), \
+             patch.object(tools, "_supervisor_owns_comfyui", return_value=None), \
+             patch.object(tools, "_comfy_queue_counts", return_value=None):
+            raw = tools.call("comfy_workflow", {"tool": "enqueue_workflow",
+                                                "workflow": {"1": {"class_type": "X", "inputs": {}}}})
+        self.assertIn("unreadable", raw)
+        self.assertEqual([], self.calls)
+
+    def test_read_only_wrappers_skip_the_gpu_preflight(self):
+        with patch("router.gpu_busy", side_effect=AssertionError("read-only must not probe the GPU")), \
+             patch("gpu_gate.request", side_effect=AssertionError("read-only must not ask")):
+            tools.comfy_system({})
+            tools.comfy_system({"tool": "get_history", "prompt_id": "abc"})
+            tools.comfy_workflow({"tool": "queue", "action": "status"})
+            tools.comfy_workflow({"tool": "get_workflow", "name": "x"})
+            tools.comfy_assets({"filename": "a.png"})
+            tools.comfy_models({"tool": "list_local_models", "action": "list"})
+            tools.comfy_nodes({"tool": "search_custom_nodes", "query": "x"})
+        self.assertEqual(7, len(self.calls))
+
+    def test_process_stop_keeps_only_the_thermal_and_owner_preflight(self):
+        with patch("router.gpu_busy", side_effect=AssertionError("stop is not a GPU load")), \
+             patch("gpu_gate.request", side_effect=AssertionError("stop needs no gate")), \
+             patch.object(tools, "_supervisor_owns_comfyui", return_value=None):
+            tools.comfy_process({"action": "stop"})
+        self.assertEqual(("restart_comfyui", {"action": "stop"}), self.calls[-1])
+
+    def test_destructive_model_and_node_actions_need_one_shot_approval(self):
+        cases = [
+            ("comfy_models", {"tool": "list_local_models", "action": "remove", "path": "x.safetensors"},
+             "comfy_models:remove:x.safetensors"),
+            ("comfy_models", {"tool": "download_model", "action": "download", "url": "https://h/x"},
+             "comfy_models:download:https://h/x"),
+            ("comfy_nodes", {"tool": "install_custom_node", "url": "https://example.invalid/pack"},
+             "comfy_nodes:install:https://example.invalid/pack"),
+        ]
+        for name, args, key in cases:
+            with self.subTest(tool=name):
+                self.calls.clear()
+                with patch("gpu_gate.request", return_value=self._PENDING) as gate:
+                    raw = tools.call(name, args)
+                self.assertTrue(raw.startswith("ERROR:"), raw)
+                self.assertIn("approval pending", raw)
+                self.assertEqual([], self.calls, "no MCP call before approval")
+                self.assertEqual(key, gate.call_args.kwargs["key"])
+                with patch("gpu_gate.request", return_value=self._GRANT):
+                    tools.call(name, args)
+                self.assertEqual(1, len(self.calls))
+
+    def test_unknown_argument_keys_are_refused_by_name(self):
+        with patch("router.gpu_busy", return_value=(False, "GPU idle", {})), \
+             patch("gpu_gate.request", return_value=self._GRANT):
+            raw = tools.call("comfy_generate", {"prompt": "x", "shell": "rm -rf /"})
+            self.assertIn("does not accept", raw)
+            self.assertIn("shell", raw)
+            raw = tools.call("comfy_system", {"tool": "get_system_stats", "exec": "x"})
+            self.assertIn("does not accept", raw)
+            raw = tools.call("comfy_process", {"action": "stop", "cmd": "x"})
+            self.assertIn("does not accept", raw)
+        self.assertEqual([], self.calls)
 
 
 class _HistResp:

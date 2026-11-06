@@ -23,10 +23,12 @@ changes; the dated originals it was built from stay in `docs/backrooms/` and
   img2img init scheme measured 9.44 vs 2.47 median on a 2-segment run and is
   the lead candidate; it was not promoted because the 3-segment run has not
   been done.
-- **2026-11 remediation** (`CHANGELOG/2026-11-06a_audit_remediation.md`,
-  `AUDIT_2026-11-02.md`): secrets and private data untracked, tool path
-  containment, GPU gate hardening, farm output no longer executed, shared GPU
-  lock for the runners, watcher status vocabulary fixed, docs consolidated.
+- **2026-11 remediation is IN PROGRESS.** Hygiene and docs are done; the code
+  fixes from `AUDIT_2026-11-02.md` are partly applied (pipeline complete,
+  tools/server/farm mostly, router half, client/retrieval not started) and
+  committed as WIP with three known test regressions. The next agent starts
+  from `docs/HANDOFF_PROMPT_2026-11-06_finish_audit_remediation.md`.
+  Evidence: `CHANGELOG/2026-11-06a_audit_remediation_part1.md`.
   **Before the first pull on the workstation, read the "Pulling this branch"
   section below.**
 

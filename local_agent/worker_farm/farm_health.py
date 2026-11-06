@@ -47,9 +47,20 @@ EXPECTED_REGISTERED_TASKS = (
 )
 
 
+# Scheme-agnostic userinfo masker: redis://user:pw@, redis://:pw@, rediss://,
+# amqp://... The username is kept (it names the ACL user, useful when a
+# secondary node is misconfigured); only the password is replaced.
+_URL_CREDENTIAL_RE = re.compile(
+    r"(?i)\b([a-z][a-z0-9+.-]*://)([^\s/@:]*):?[^\s/@]*@")
+
+
+def redact_url_credentials(text: str) -> str:
+    return _URL_CREDENTIAL_RE.sub(r"\1\2:***@", text)
+
+
 def _redact(text: str) -> str:
     """Strip redis passwords out of exception text before returning it."""
-    return re.sub(r"(redis://:)[^@/]+@", r"\1***@", text, flags=re.IGNORECASE)
+    return redact_url_credentials(text)
 
 
 def _broker_tcp_check(broker_url: str, timeout_s: float) -> None:

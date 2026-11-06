@@ -1365,7 +1365,10 @@ class NativeToolTests(unittest.TestCase):
         self.assertNotIn("has been written", reply)
 
     def test_explicit_chat_text_edit_does_not_need_second_sidebar_approval(self):
+        # write_file is contained to ROOT (audit finding 3); point ROOT at the
+        # temp dir so the write itself is the thing under test.
         with tempfile.TemporaryDirectory() as td, \
+             patch.object(tools, "ROOT", Path(td).resolve()), \
              patch.object(file_edit_gate, "request") as approval:
             target = Path(td) / "agent_settings.json"
             result = tools.call("write_file", {"path": str(target), "content": "{}"})
@@ -1641,7 +1644,8 @@ class NativeToolTests(unittest.TestCase):
         self.assertIn("apply_hex_patch", tools.TOOLS)
         schema_names = {item["function"]["name"] for item in tools.schemas()}
         self.assertTrue({"inspect_binary", "apply_hex_patch"}.issubset(schema_names))
-        with tempfile.TemporaryDirectory() as td:
+        with tempfile.TemporaryDirectory() as td, \
+             patch.object(tools, "ROOT", Path(td).resolve()):
             path = Path(td) / "sample.bin"
             path.write_bytes(b"\x00ABC\xff")
             inspected = json.loads(tools.call("inspect_binary", {

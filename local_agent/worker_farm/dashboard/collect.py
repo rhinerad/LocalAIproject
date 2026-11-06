@@ -10,10 +10,12 @@ import json
 import os
 import re
 import subprocess
+import sys
+import threading
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 HERE = Path(__file__).resolve().parent
 FARM_DIR = HERE.parent
@@ -47,8 +49,27 @@ EXPECTED_REGISTERED_TASKS = (
     "local_agent.worker_farm.tasks.embed_chunks",
 )
 
-_PASSWORD_RE = re.compile(r"(redis://:)[^@/]+@", re.IGNORECASE)
-_MAC_WORKER_RE = re.compile(r"celery@.*(?:MBP|Mac|Louise)", re.IGNORECASE)
+# Scheme-agnostic userinfo masker (redis://user:pw@, redis://:pw@, rediss://,
+# amqp://...). Username is kept, password replaced. Same shape as
+# farm_health.redact_url_credentials and farm_core._URL_CREDENTIAL_RE.
+_PASSWORD_RE = re.compile(r"(?i)\b([a-z][a-z0-9+.-]*://)([^\s/@:]*):?[^\s/@]*@")
+# Worker-name pattern that identifies the Mac spoke. Override per deployment
+# with FARM_DASHBOARD_MAC_WORKER_RE (the default is this workstation's).
+MAC_WORKER_RE_ENV = "FARM_DASHBOARD_MAC_WORKER_RE"
+DEFAULT_MAC_WORKER_RE = r"celery@.*(?:MBP|Mac|Louise)"
+
+
+def _compile_mac_worker_re(raw: str | None = None) -> re.Pattern[str]:
+    value = raw if raw is not None else os.environ.get(MAC_WORKER_RE_ENV)
+    if value is None or not str(value).strip():
+        value = DEFAULT_MAC_WORKER_RE
+    try:
+        return re.compile(str(value), re.IGNORECASE)
+    except re.error:
+        return re.compile(DEFAULT_MAC_WORKER_RE, re.IGNORECASE)
+
+
+_MAC_WORKER_RE = _compile_mac_worker_re()
 _RELAY_PEER_RE = re.compile(
     r"('|\")?10\.90\.90\.2('|\")?|relay connection (?:from|closed).*10\.90\.90\.2",
     re.IGNORECASE,
@@ -58,13 +79,19 @@ _LOG_TS_RE = re.compile(
 )
 
 _cache: dict[str, tuple[float, Any]] = {}
+# Guards _cache itself; _cache_locks holds one lock per key so that a cache
+# miss is filled by exactly one thread while the others wait for its result
+# (single-flight), instead of every concurrent /api/dashboard request
+# spawning its own farm_health / powershell / docker subprocess.
+_cache_lock = threading.Lock()
+_cache_locks: dict[str, threading.Lock] = {}
 
 
 def redact_secrets(text: str | None) -> str | None:
-    """Strip redis passwords from broker URLs / exception text."""
+    """Strip passwords from broker URLs / exception text (any URL scheme)."""
     if text is None:
         return None
-    return _PASSWORD_RE.sub(r"\1***@", str(text))
+    return _PASSWORD_RE.sub(r"\1\2:***@", str(text))
 
 
 def parse_outage_events(text: str, n: int = EVENT_CAP) -> list[str]:
@@ -326,7 +353,8 @@ def resolve_bind_port(env_port: str | None = None) -> int:
 
 
 def _cache_get(key: str) -> Any | None:
-    item = _cache.get(key)
+    with _cache_lock:
+        item = _cache.get(key)
     if not item:
         return None
     ts, value = item
@@ -336,12 +364,44 @@ def _cache_get(key: str) -> Any | None:
 
 
 def _cache_set(key: str, value: Any) -> Any:
-    _cache[key] = (time.monotonic(), value)
+    with _cache_lock:
+        _cache[key] = (time.monotonic(), value)
     return value
 
 
 def clear_cache() -> None:
-    _cache.clear()
+    with _cache_lock:
+        _cache.clear()
+
+
+def _key_lock(key: str) -> threading.Lock:
+    with _cache_lock:
+        lock = _cache_locks.get(key)
+        if lock is None:
+            lock = _cache_locks[key] = threading.Lock()
+        return lock
+
+
+def cached_single_flight(key: str, compute: Callable[[], Any],
+                         use_cache: bool = True) -> Any:
+    """Return the cached value for key, or compute it exactly once per miss.
+
+    Concurrent callers that miss at the same time block on the per-key lock
+    and then read the value the first one stored, so a slow probe
+    (farm_health subprocess, Get-Service, docker ps) runs once per TTL
+    window no matter how many browser tabs poll. use_cache=False bypasses
+    both the cache and the lock.
+    """
+    if not use_cache:
+        return compute()
+    hit = _cache_get(key)
+    if hit is not None:
+        return hit
+    with _key_lock(key):
+        hit = _cache_get(key)
+        if hit is not None:
+            return hit
+        return _cache_set(key, compute())
 
 
 def read_farm_status(path: Path | None = None) -> dict[str, Any]:
@@ -419,12 +479,20 @@ def run_farm_health_json(
     timeout_s: float = FARM_HEALTH_TIMEOUT_S,
     use_cache: bool = True,
 ) -> dict[str, Any]:
-    """Invoke farm_health --json via farm venv. Cached ~30s. Never raises."""
-    if use_cache:
-        hit = _cache_get("farm_health")
-        if hit is not None:
-            return hit
+    """Cached, single-flight wrapper around _run_farm_health_json_uncached."""
+    return cached_single_flight(
+        "farm_health",
+        lambda: _run_farm_health_json_uncached(venv_py, cwd, timeout_s),
+        use_cache=use_cache,
+    )
 
+
+def _run_farm_health_json_uncached(
+    venv_py: Path | None = None,
+    cwd: Path | None = None,
+    timeout_s: float = FARM_HEALTH_TIMEOUT_S,
+) -> dict[str, Any]:
+    """Invoke farm_health --json via farm venv. Cached ~30s. Never raises."""
     section: dict[str, Any] = {
         "ok": False,
         "error": None,
@@ -440,7 +508,7 @@ def run_farm_health_json(
     work = Path(cwd) if cwd is not None else REPO_ROOT
     if not py.is_file():
         section["error"] = f"farm venv python missing: {py}"
-        return _cache_set("farm_health", section) if use_cache else section
+        return section
 
     try:
         proc = subprocess.run(
@@ -453,10 +521,10 @@ def run_farm_health_json(
         )
     except subprocess.TimeoutExpired:
         section["error"] = f"farm_health timed out after {timeout_s}s"
-        return _cache_set("farm_health", section) if use_cache else section
+        return section
     except Exception as exc:
         section["error"] = f"{type(exc).__name__}: {exc}"
-        return _cache_set("farm_health", section) if use_cache else section
+        return section
 
     stdout = redact_secrets(proc.stdout or "") or ""
     stderr = redact_secrets(proc.stderr or "") or ""
@@ -465,16 +533,16 @@ def run_farm_health_json(
             f"farm_health empty stdout (exit={proc.returncode})"
             + (f"; stderr={stderr.strip()[:240]}" if stderr.strip() else "")
         )
-        return _cache_set("farm_health", section) if use_cache else section
+        return section
     try:
         data = json.loads(stdout)
     except json.JSONDecodeError as exc:
         section["error"] = f"farm_health JSON decode: {exc}"
-        return _cache_set("farm_health", section) if use_cache else section
+        return section
 
     if not isinstance(data, dict):
         section["error"] = "farm_health returned non-object"
-        return _cache_set("farm_health", section) if use_cache else section
+        return section
 
     registered = data.get("registered_check") or {}
     # Prefer dedicated registered_check block when present.
@@ -510,7 +578,7 @@ def run_farm_health_json(
     section["error"] = redact_secrets(data.get("error"))
     # Keep distill_export visible if present; never treat missing distill as failure
     # (EXPECTED_REGISTERED_TASKS already excludes it).
-    return _cache_set("farm_health", section) if use_cache else section
+    return section
 
 
 def _run_ps(command: str, timeout_s: float = 8.0) -> tuple[int, str, str]:
@@ -530,10 +598,12 @@ def _run_ps(command: str, timeout_s: float = 8.0) -> tuple[int, str, str]:
 
 
 def check_wireguard_hub(use_cache: bool = True) -> dict[str, Any]:
-    if use_cache:
-        hit = _cache_get("wg_hub")
-        if hit is not None:
-            return hit
+    """Cached, single-flight wrapper around _check_wireguard_hub_uncached."""
+    return cached_single_flight(
+        "wg_hub", lambda: _check_wireguard_hub_uncached(), use_cache=use_cache)
+
+
+def _check_wireguard_hub_uncached() -> dict[str, Any]:
     section: dict[str, Any] = {
         "ok": False,
         "state": "unknown",
@@ -543,7 +613,7 @@ def check_wireguard_hub(use_cache: bool = True) -> dict[str, Any]:
     }
     if os.name != "nt":
         section["error"] = "WireGuard hub check is Windows-only"
-        return _cache_set("wg_hub", section) if use_cache else section
+        return section
     code, out, err = _run_ps(
         "$svc = Get-Service -Name 'WireGuardTunnel$hub' -ErrorAction Stop; "
         "Write-Output ($svc.Status.ToString() + '|' + $svc.StartType.ToString())"
@@ -551,18 +621,18 @@ def check_wireguard_hub(use_cache: bool = True) -> dict[str, Any]:
     if code != 0 or not out.strip():
         section["error"] = (err or out or "Get-Service failed").strip()[:300]
         section["state"] = "unknown"
-        return _cache_set("wg_hub", section) if use_cache else section
+        return section
     parts = out.strip().split("|", 1)
     if len(parts) != 2:
         section["error"] = f"unexpected Get-Service output: {out.strip()[:120]}"
-        return _cache_set("wg_hub", section) if use_cache else section
+        return section
     status, start_type = parts[0].strip(), parts[1].strip()
     section["status"] = status
     section["start_type"] = start_type
     running = status.lower() == "running"
     section["ok"] = running
     section["state"] = "up" if running else "down"
-    return _cache_set("wg_hub", section) if use_cache else section
+    return section
 
 
 def _relay_log_recent_peer(
@@ -637,10 +707,12 @@ def infer_wireguard_spoke(
 
 
 def check_tunnel_relay(use_cache: bool = True) -> dict[str, Any]:
-    if use_cache:
-        hit = _cache_get("tunnel_relay")
-        if hit is not None:
-            return hit
+    """Cached, single-flight wrapper around _check_tunnel_relay_uncached."""
+    return cached_single_flight(
+        "tunnel_relay", lambda: _check_tunnel_relay_uncached(), use_cache=use_cache)
+
+
+def _check_tunnel_relay_uncached() -> dict[str, Any]:
     section: dict[str, Any] = {
         "ok": False,
         "state": "unknown",
@@ -651,7 +723,7 @@ def check_tunnel_relay(use_cache: bool = True) -> dict[str, Any]:
     }
     if os.name != "nt":
         section["error"] = "tunnel_relay check is Windows-only"
-        return _cache_set("tunnel_relay", section) if use_cache else section
+        return section
 
     # Process command line
     code, out, err = _run_ps(
@@ -686,15 +758,17 @@ def check_tunnel_relay(use_cache: bool = True) -> dict[str, Any]:
         section["state"] = "up"
     else:
         section["state"] = "down"
-    return _cache_set("tunnel_relay", section) if use_cache else section
+    return section
 
 
 def check_redis_secondary(use_cache: bool = True) -> dict[str, Any]:
+    """Cached, single-flight wrapper around _check_redis_secondary_uncached."""
+    return cached_single_flight(
+        "redis_docker", lambda: _check_redis_secondary_uncached(), use_cache=use_cache)
+
+
+def _check_redis_secondary_uncached() -> dict[str, Any]:
     """Optional docker ps secondary display (not a ping)."""
-    if use_cache:
-        hit = _cache_get("redis_docker")
-        if hit is not None:
-            return hit
     section: dict[str, Any] = {
         "ok": False,
         "state": "unknown",
@@ -719,21 +793,21 @@ def check_redis_secondary(use_cache: bool = True) -> dict[str, Any]:
         )
     except FileNotFoundError:
         section["error"] = "docker not available"
-        return _cache_set("redis_docker", section) if use_cache else section
+        return section
     except Exception as exc:
         section["error"] = f"{type(exc).__name__}: {exc}"
-        return _cache_set("redis_docker", section) if use_cache else section
+        return section
     line = (proc.stdout or "").strip().splitlines()
     if not line:
         section["state"] = "down"
         section["error"] = "container not listed"
-        return _cache_set("redis_docker", section) if use_cache else section
+        return section
     parts = line[0].split("\t", 1)
     section["container"] = parts[0]
     section["status"] = parts[1] if len(parts) > 1 else ""
     section["ok"] = True
     section["state"] = "up"
-    return _cache_set("redis_docker", section) if use_cache else section
+    return section
 
 
 def build_dashboard_payload() -> dict[str, Any]:

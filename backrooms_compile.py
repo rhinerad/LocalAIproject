@@ -19,7 +19,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE / "local_agent"))
 
-from atomic_io import atomic_write_json  # noqa: E402
+from local_agent.atomic_io import atomic_write_json  # noqa: E402
 
 _FLUX_MARKERS = (
     "### 0. Flux",

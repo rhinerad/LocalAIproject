@@ -18,9 +18,17 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 from .celery_app import app
+
+# Same flat-import pattern semantic_judge.py uses for local_agent/ modules.
+_LOCAL_AGENT_DIR = str(Path(__file__).resolve().parent.parent)
+if _LOCAL_AGENT_DIR not in sys.path:
+    sys.path.insert(0, _LOCAL_AGENT_DIR)
+
+from atomic_io import atomic_write_json  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 CHATS_DIR = HERE.parent / "chats"
@@ -37,8 +45,9 @@ def _load_ledger() -> dict:
 
 
 def _save_ledger(ledger: dict) -> None:
-    LEDGER_PATH.parent.mkdir(parents=True, exist_ok=True)
-    LEDGER_PATH.write_text(json.dumps(ledger, indent=2, sort_keys=True), encoding="utf-8")
+    # Atomic temp-file + os.replace so a crash mid-write cannot truncate the
+    # ledger (which would re-submit every chat on the next run).
+    atomic_write_json(LEDGER_PATH, ledger)
 
 
 def _candidate_chats() -> list[Path]:

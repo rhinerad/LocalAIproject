@@ -21,7 +21,9 @@ _PATH_RE = re.compile(r"(?i)(?:[A-Z]:\\|/home/|/Users/)[^\s\"']+")
 _EMAIL_RE = re.compile(r"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}")
 _SECRET_RE = re.compile(r"(?i)\b(api[_ -]?key|token|password|secret)\b\s*[:=]\s*\S+")
 _BEARER_RE = re.compile(r"(?i)\bAuthorization\s*:\s*Bearer\s+\S+")
-_URL_CREDENTIAL_RE = re.compile(r"(?i)\b(https?://)[^\s/@:]+:[^\s/@]+@")
+# Scheme-agnostic: redis://user:pw@, redis://:pw@, rediss://, amqp://, http(s)
+# and anything else with a userinfo part. The whole userinfo is masked.
+_URL_CREDENTIAL_RE = re.compile(r"(?i)\b([a-z][a-z0-9+.-]*://)[^\s/@]*@")
 _KNOWN_TOKEN_RE = re.compile(r"\b(?:ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|hf_[A-Za-z0-9]{20,})\b")
 _MAX_EXTRACTED_CHARS = 500_000
 _MAX_SOURCE_BYTES = 25 * 1024 * 1024

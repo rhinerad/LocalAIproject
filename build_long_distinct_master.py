@@ -4,9 +4,14 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import subprocess
 import tempfile
 from pathlib import Path
+
+# Never let a wedged ffprobe/ffmpeg hang the assembly forever.
+FFPROBE_TIMEOUT_S = float(os.environ.get("GVD_FFPROBE_TIMEOUT_S", "120"))
+FFMPEG_TIMEOUT_S = float(os.environ.get("GVD_FFMPEG_TIMEOUT_S", "3600"))
 
 
 def sha256(path: Path) -> str:
@@ -32,6 +37,7 @@ def duration_s(path: Path) -> float:
         capture_output=True,
         text=True,
         check=True,
+        timeout=FFPROBE_TIMEOUT_S,
     )
     return float(cp.stdout.strip())
 
@@ -83,6 +89,7 @@ def main() -> int:
             ],
             capture_output=True,
             text=True,
+            timeout=FFMPEG_TIMEOUT_S,
         )
         if cp.returncode != 0:
             raise SystemExit(cp.stderr[-2000:] or "ffmpeg failed")

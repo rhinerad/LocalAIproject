@@ -49,7 +49,7 @@ def _trusted(body: bytes) -> Message:
 
 
 class HttpMutationGuardTests(unittest.TestCase):
-    def _post(self, headers: Message, body: bytes = b'{"action":"write_file","args":{}}'):
+    def _post(self, headers: Message, body: bytes = b'{"action":"project_state","args":{}}'):
         handler = _handler("/api/action", body, headers)
         with patch.object(server.tools, "call", return_value="wrote") as call:
             handler.do_POST()
@@ -57,7 +57,9 @@ class HttpMutationGuardTests(unittest.TestCase):
         return raw, call
 
     def test_trusted_local_post_reaches_the_tool(self) -> None:
-        body = b'{"action":"write_file","args":{"path":"x"}}'
+        # write_file is deliberately not on ACTION_ROUTE_ALLOWLIST (audit finding 20);
+        # project_state is, so a trusted local POST still reaches the tool.
+        body = b'{"action":"project_state","args":{}}'
         raw, call = self._post(_trusted(body), body)
         self.assertIn("200", raw.splitlines()[0])
         call.assert_called_once()
