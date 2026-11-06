@@ -268,10 +268,13 @@ class NativeToolTests(unittest.TestCase):
     def test_multiple_calls_one_hop_and_named_results(self):
         seen_messages = []
         events = []
+        # seconds= keeps the real tool on its data-free path. clip= reads
+        # outputs/equal_shares/audio_pass_durations.json, which is git-ignored,
+        # so that form only passed in the main checkout (CHANGELOG 2026-11-06b).
         turns = iter([
             [oll.ToolCall([
-                {"function": {"name": "duration_ladder", "arguments": {"clip": "00B"}}},
-                {"function": {"name": "duration_ladder", "arguments": {"clip": "00A"}}},
+                {"function": {"name": "duration_ladder", "arguments": {"seconds": 10}}},
+                {"function": {"name": "duration_ladder", "arguments": {"seconds": 12}}},
             ])],
             ["Both ladders were compared."],
         ])
