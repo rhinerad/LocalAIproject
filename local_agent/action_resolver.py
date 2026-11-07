@@ -280,7 +280,6 @@ def classify(
     if cid and managed_prompt_pack.is_follow_up(text):
         progress = managed_prompt_pack.load_progress(cid)
         if progress and progress.get("kind") == "prompt_pack":
-            import json
             prod = prompt_pack_production.load_production(cid)
             if prod and prod.get("status") in {"running", "queued", "error"}:
                 return ActionPlan(intent="prompt_pack_production", steps=[

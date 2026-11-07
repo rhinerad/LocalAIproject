@@ -64,11 +64,11 @@ def _acquire(fd: int) -> None:
             else:
                 fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
             return
-        except OSError:
+        except OSError as exc:
             if time.monotonic() >= deadline:
                 raise TimeoutError(
                     f"gpu_gate lock {_lock_path()} was held by another process for "
-                    f"more than {LOCK_TIMEOUT_SECONDS:.0f}s")
+                    f"more than {LOCK_TIMEOUT_SECONDS:.0f}s") from exc
             time.sleep(0.05)
 
 

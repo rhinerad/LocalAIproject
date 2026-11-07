@@ -19,7 +19,6 @@ import json
 import os
 import re
 from pathlib import Path
-from typing import Any
 
 C001_REF_STILL = os.environ.get("GVD_C001_REF_STILL", "C001_ref_still.png")
 C001_MASTER_VOICE_WAV = os.environ.get("GVD_C001_MASTER_VOICE_WAV", "C001_master_voice.wav")
@@ -38,9 +37,9 @@ if str(_ROOT) not in _sys.path:
 # Production Autogrow helper (shared). Prefer this over ad-hoc C001_master_voice defaults.
 try:
     from gvd_graph_builder import (  # type: ignore
-        AudioRef,
-        ImageRef,
-        RefBindingPlan,
+        AudioRef,  # noqa: F401 (import probe)
+        ImageRef,  # noqa: F401 (import probe)
+        RefBindingPlan,  # noqa: F401 (import probe)
         apply_ref2va_autogrow,
         assert_no_bare_ref_images_key,
     )

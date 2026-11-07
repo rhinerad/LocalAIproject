@@ -3,14 +3,11 @@ from __future__ import annotations
 
 import json
 import time
-from dataclasses import replace
-from pathlib import Path
 from typing import Any, Callable
 
 import asyncio
 
 from .adapters import BinderStaticValidator, LocalSearchAdapter, SqliteValidationQueue, WorkflowSourceResolver
-from .binder import inspect_graph
 from .catalog_seed import seed_implementations, write_seed_catalog
 from .discovery import ALLOWED_CAPABILITIES, discover_workflows
 from .executor import execution_blocked, reconcile, submit_stage
@@ -23,9 +20,8 @@ from .planner import plan_shot
 from .quarantine import QuarantineStore
 from .registry import Registry
 from .router import required_capabilities, route
-from .scheduler import expand_stages, group_ready, topological_stages
+from .scheduler import expand_stages, topological_stages
 from .schema import (
-    PUBLIC_TOOL_NAMES,
     ShotManifest,
     ToolImplementation,
     ToolName,

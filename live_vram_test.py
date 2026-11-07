@@ -422,7 +422,7 @@ def main() -> int:
         report["video_workflow"] = {
             "node": "WanFirstLastFrameToVideo",
             "unet": UNET_GGUF,
-            "clip": CLIP_GGUF,
+            "clip": CLIP_WAN_FP8,
             "vae": VAE_WAN,
             "width": VIDEO_WIDTH,
             "height": VIDEO_HEIGHT,

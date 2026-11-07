@@ -17,7 +17,7 @@ sys.path.insert(0, str(HERE))
 
 from PIL import Image
 from gvd_qa.local_client import LocalQaClient, checklist_from_mapping
-from gvd_qa.pipeline import load_policy, run_still_qa
+from gvd_qa.pipeline import run_still_qa
 
 _SPEC = importlib.util.spec_from_file_location("gvd_qa_ref", ROOT / "gvd_qa.py")
 gvd_qa = importlib.util.module_from_spec(_SPEC)

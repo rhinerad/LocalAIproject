@@ -563,7 +563,6 @@ def run_literal_vlm_qa(
 
     Fail-closed for bypass_director / literal_prompt clips.
     """
-    import json as _json
     from pathlib import Path as _Path
     import dspy_orchestrator as orch
     from media_accuracy_gate import (

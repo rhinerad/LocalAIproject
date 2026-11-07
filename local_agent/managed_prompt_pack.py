@@ -628,7 +628,8 @@ def ingest(
             diag_path = task / f"failed_ingest_{digest}.diagnostics.json"
             atomic_write_text(diag_path, json.dumps(diag, indent=2, ensure_ascii=False))
         except Exception:
-            raise exc
+            # Diagnostics are best effort; the parse failure is what matters.
+            raise exc from None
         counts = diag["counts"]
         raise ValueError(
             f"{exc} [parser branch={diag['branch']}; "

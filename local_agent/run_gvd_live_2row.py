@@ -103,7 +103,7 @@ def main() -> int:
     stamp = time.strftime("%Y%m%dT%H%M%S")
     compile_log = traces / f"gvd_run_rows2_{stamp}.log"
     vram_trace = traces / f"gvd_run_rows2_{stamp}_vram.jsonl"
-    print(f"cli: python local_agent/dspy_orchestrator.py --run --rows 2", flush=True)
+    print("cli: python local_agent/dspy_orchestrator.py --run --rows 2", flush=True)
     print(f"compile log: {compile_log}", flush=True)
 
     import subprocess

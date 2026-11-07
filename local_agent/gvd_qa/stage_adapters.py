@@ -1,7 +1,6 @@
 """Stage ComfyUI-GVD-QA into quarantine. Live custom_nodes copy needs a trust receipt."""
 from __future__ import annotations
 
-import json
 import shutil
 from pathlib import Path
 from typing import Any

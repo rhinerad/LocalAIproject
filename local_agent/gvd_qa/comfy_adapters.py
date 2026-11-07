@@ -26,7 +26,6 @@ def number(text):
 
 def to_pil(image):
     from PIL import Image
-    import numpy as np
     if image.ndim != 4 or image.shape[0] != 1:
         raise ValueError("GVD QA requires one image per request")
     pixels = (image[0].detach().cpu().clamp(0, 1).numpy() * 255).round().astype("uint8")

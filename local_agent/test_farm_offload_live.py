@@ -18,7 +18,6 @@ Scenarios (reported individually):
 from __future__ import annotations
 
 import json
-import os
 import subprocess
 import sys
 import tempfile
@@ -39,7 +38,6 @@ import retrieval
 import router
 from worker_farm.dashboard.collect import (
     is_farm_degraded,
-    is_stale,
     overall_from_snapshot,
     read_farm_status,
 )

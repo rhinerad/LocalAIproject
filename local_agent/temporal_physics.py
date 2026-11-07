@@ -232,7 +232,7 @@ def unload_ollama_model(host: str = OLLAMA_HOST, model: str | None = None) -> No
         model = str(model).split("/", 1)[-1]
     if not model:
         try:
-            import dspy
+            import dspy  # noqa: F401 (import probe)
             from dspy.dsp.utils.settings import settings
             lm = getattr(settings, "lm", None)
             model = getattr(lm, "model", None)
@@ -300,7 +300,7 @@ def configure_local_dspy_lm(
 
 def _dspy_lm_available() -> bool:
     try:
-        import dspy
+        import dspy  # noqa: F401 (import probe)
         from dspy.dsp.utils.settings import settings
         return getattr(settings, "lm", None) is not None
     except Exception:
@@ -360,7 +360,7 @@ def runtime_inject_temporal_physics(
             if compiled:
                 model_name = None
                 try:
-                    import dspy
+                    import dspy  # noqa: F401 (import probe)
                     from dspy.dsp.utils.settings import settings
                     lm = getattr(settings, "lm", None)
                     model_name = getattr(lm, "model", None)

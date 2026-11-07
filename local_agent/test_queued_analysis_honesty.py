@@ -30,7 +30,6 @@ import media_queue as mq  # noqa: E402
 import media_tools  # noqa: E402
 import ollama_client as oll  # noqa: E402
 import remote_security  # noqa: E402
-import router  # noqa: E402
 import tools  # noqa: E402
 
 

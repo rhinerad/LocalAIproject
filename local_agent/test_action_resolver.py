@@ -32,7 +32,6 @@ import action_resolver
 import agent
 import agentic_state
 import remote_security
-import tools
 
 # A pending-path callable that always returns None (no evidence)
 _NO_PATH = lambda h, c: None
@@ -552,7 +551,6 @@ class AgentAnswerIntegrationTests(unittest.TestCase):
 
     def test_ordinary_question_still_uses_model(self):
         """Resolver must return None for ordinary questions, leaving model in charge."""
-        import ollama_client as oll
 
         def fake_stream(_messages, **_kwargs):
             yield "PowerInfer is a sparse inference engine."

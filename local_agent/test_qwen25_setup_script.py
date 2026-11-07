@@ -15,7 +15,7 @@ class Qwen25SetupScriptTests(unittest.TestCase):
         self.assertIn(f"$ModelBytes = {capabilities.QWEN25_VL_WEIGHTS_BYTES}", script)
         self.assertIn(capabilities.QWEN25_VL_WEIGHTS_SHA256, script)
         self.assertIn(capabilities.QWEN25_VL_MMPROJ_SHA256, script)
-        self.assertIn(f"$ProjectorPath $ProjectorBytes", script)
+        self.assertIn("$ProjectorPath $ProjectorBytes", script)
 
 
 if __name__ == "__main__":

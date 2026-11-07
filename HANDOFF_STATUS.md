@@ -9,7 +9,7 @@ Regenerate from the repository root:
 python scripts/write_handoff_status.py
 ```
 
-Generated at: 2026-11-06 19:54:35 UTC (UTC+00:00) (local)
+Generated at: 2026-11-07 15:40:34 Eastern Standard Time (UTC-05:00) (local)
 
 `TODO.md` is the execution queue. Lettered `CHANGELOG/` entries are evidence. Farm *procedures* live in `docs/FARM_HEALTH_RUNBOOK.md` and `docs/RUNBOOK.md` — this file points to those runbooks and does **not** duplicate their checklists.
 
@@ -21,6 +21,7 @@ Generated at: 2026-11-06 19:54:35 UTC (UTC+00:00) (local)
 
 Newest first, so a new agent sees tonight first. Lettered files matching `YYYY-MM-DDx_...` only; same letter-order as `scripts/next_changelog_id.py` (`a` < `b` < … < `z` < `aa`). Same-day duplicate letters both appear, disambiguated by filename. Title is the first markdown `#` heading, else the filename slug.
 
+- 2026-11-06 · `2026-11-06b` · `2026-11-06b_audit_remediation_part2.md` — 2026-11-06b — Audit remediation, part 2: the last code fixes, verification, lint
 - 2026-11-06 · `2026-11-06a` · `2026-11-06a_audit_remediation_part1.md` — 2026-11-06a — Audit remediation, part 1: hygiene, docs, and the first pass of code fixes
 - 2026-09-26 · `2026-09-26l` · `2026-09-26l_motion_transfer_segment_chaining_seam_investigation.md` — 2026-09-26l — `render_video_from_reference`: segment chaining built (opt-in), the held-frame seam measured as a visible cut, and the 26k "RAM scales with frames" model found wrong (RAM is weight-bound, ~13–15 GB per prompt whatever the length)
 - 2026-09-26 · `2026-09-26k` · `2026-09-26k_render_video_from_reference_measured_180_frames.md` — 2026-09-26k — `render_video_from_reference`: measured a 180-frame (15-window) run; cap raised 64 → 180 with a free-RAM refusal (system RAM, not VRAM, bounds length); fixed the identity check overflowing the Windows command line on long clips
@@ -35,7 +36,6 @@ Newest first, so a new agent sees tonight first. Lettered files matching `YYYY-M
 - 2026-09-26 · `2026-09-26a` · `2026-09-26a_motion_transfer_video_face_detail_pass.md` — 2026-09-26a — Motion transfer: an Impact Pack video face-detail pass on the AnimateDiff clip; no added flicker (measured), late frames move toward the reference at denoise 0.5; faces stay soft because they are ~60 px at 768×448
 - 2026-09-25 · `2026-09-25v` · `2026-09-25v_motion_transfer_identity_face_crop_and_mask.md` — 2026-09-25v — Motion transfer identity, no download: a tight face crop of the character still fixes the 24-frame identity drift; an IP-Adapter attention mask confines colour bleed; adapter strength makes no difference; late-clip softening remains
 - 2026-09-25 · `2026-09-25u` · `2026-09-25u_advanced_controlnet_installed_multiwindow_clips_render.md` — 2026-09-25u — ComfyUI-Advanced-ControlNet installed (operator approval); 24-frame, two-window AnimateDiff-SDXL motion-transfer clips now render upright and follow the reference motion; identity drift is the remaining blocker
-- 2026-09-25 · `2026-09-25t` · `2026-09-25t_motion_transfer_inversion_root_cause_face_hand_keypoints.md` — 2026-09-25t — Motion transfer: the upside-down AnimateDiff-SDXL output is root-caused (DWPose face + hand keypoints drawn together, which xinsir's union model never saw); with face keypoints off, one 16-frame window renders upright and follows the reference motion
 
 ---
 

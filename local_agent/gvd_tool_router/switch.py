@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any, Callable, Protocol
 
-from .gpu_lease import LeaseContention, acquire
+from .gpu_lease import acquire
 from .paths import GvdLayout
 
 HEADROOM_MIB = 2048

@@ -224,7 +224,10 @@ class FileEditGateStateTests(unittest.TestCase):
     def test_save_is_atomic_with_no_fixed_tmp_name(self):
         req = file_edit_gate.request("x.py", "print(1)")
         file_edit_gate.decide(req["request"]["id"], True)
-        self.assertEqual(["file_edit_gate.json"], os.listdir(self.tmp.name))
+        # The .lock file is the cross-process lock (2026-11-06b); no temp file
+        # may be left behind.
+        self.assertEqual(["file_edit_gate.json", "file_edit_gate.json.lock"],
+                         sorted(os.listdir(self.tmp.name)))
         self.assertTrue(file_edit_gate.request("x.py", "print(1)")["granted"])
 
 

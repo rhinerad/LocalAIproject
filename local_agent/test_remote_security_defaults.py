@@ -8,6 +8,7 @@ per-identity grant through the existing set_tool_grant / permits() path.
 """
 from __future__ import annotations
 
+import json
 import sys
 import tempfile
 import unittest
@@ -101,7 +102,11 @@ class RemoteDefaultToolTests(unittest.TestCase):
         self.assertIn("not permitted", raw)
         self.assertNotIn("import", raw)
         self.assertTrue(audit.is_file())
-        self.assertIn('"refused"', audit.read_text(encoding="utf-8"))
+        # tools.call audits an ungranted capability as "denied" (the
+        # vocabulary test_lxmf_bridge pins); "refused" is for tool-level errors.
+        row = json.loads(audit.read_text(encoding="utf-8").splitlines()[-1])
+        self.assertEqual("denied", row["outcome"])
+        self.assertEqual("read_file", row["tool"])
 
     def test_module_docs_describe_the_default_set_honestly(self):
         source = (HERE / "remote_security.py").read_text(encoding="utf-8")

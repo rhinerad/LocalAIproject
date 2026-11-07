@@ -32,10 +32,11 @@ from __future__ import annotations
 import hashlib
 import json
 import math
-import os
+import operator
 import re
 import threading
 import time
+from array import array
 from pathlib import Path
 from typing import Protocol, runtime_checkable
 
@@ -63,6 +64,44 @@ _SKIP_DIR_PARTS: frozenset[str] = frozenset({"archive", "_quarantine"})
 _SKIP_NAME_RE = re.compile(r"_QUARANTINE_|\.BACKUP|SUPERSEDED", re.I)
 
 
+# ── precomputed lexical statistics ───────────────────────────────────────────
+#
+# BM25 needs per-chunk term frequencies and corpus document frequencies.  They
+# used to be recomputed (re-tokenising all ~2,000 chunks) on every query.  They
+# are now computed once per chunk list — load_index() warms them — and reused
+# while the same list object is being searched.  The cache holds a reference to
+# the list, so identity cannot be recycled while it is cached; a length check
+# guards against in-place appends.
+
+_LEX_LOCK = threading.Lock()
+_LEX_CACHE: dict = {}
+
+
+def _lexical_stats(chunks: list[dict]) -> tuple[list[dict[str, int]], dict[str, int], list[int]]:
+    with _LEX_LOCK:
+        cached = _LEX_CACHE.get("stats")
+        if (cached is not None and _LEX_CACHE.get("ref") is chunks
+                and _LEX_CACHE.get("len") == len(chunks)):
+            return cached
+    tf: list[dict[str, int]] = []
+    df: dict[str, int] = {}
+    lengths: list[int] = []
+    for ch in chunks:
+        toks = re.findall(r"[a-z0-9]+", str(ch.get("text", "")).lower())
+        lengths.append(len(toks))
+        freq: dict[str, int] = {}
+        for t in toks:
+            freq[t] = freq.get(t, 0) + 1
+        tf.append(freq)
+        for t in freq:
+            df[t] = df.get(t, 0) + 1
+    stats = (tf, df, lengths)
+    with _LEX_LOCK:
+        _LEX_CACHE.clear()
+        _LEX_CACHE.update({"ref": chunks, "len": len(chunks), "stats": stats})
+    return stats
+
+
 # ── scorer interface ──────────────────────────────────────────────────────────
 
 @runtime_checkable
@@ -85,19 +124,7 @@ class LexicalScorer:
         if not q_terms:
             return [(0.0, c) for c in chunks]
 
-        tf: list[dict[str, int]] = []
-        df: dict[str, int] = {}
-        lengths: list[int] = []
-        for ch in chunks:
-            toks = self._tok(ch.get("text", ""))
-            lengths.append(len(toks))
-            freq: dict[str, int] = {}
-            for t in toks:
-                freq[t] = freq.get(t, 0) + 1
-            tf.append(freq)
-            for t in set(freq):
-                df[t] = df.get(t, 0) + 1
-
+        tf, df, lengths = _lexical_stats(chunks)
         N = len(chunks)
         avgdl = sum(lengths) / max(N, 1)
         results: list[tuple[float, dict]] = []
@@ -121,6 +148,8 @@ EMBEDDING_CACHE_FILE = HERE / "knowledge" / "retrieval_embeddings.json"
 _EMBED_CACHE: dict | None = None
 _EMBED_CACHE_LOCK = threading.Lock()
 _EMBED_BATCH = 64
+# 2: vectors keyed by chunk-text sha1 (was chunk id + hash field).
+CACHE_VERSION = 2
 # Below this cosine similarity, a chunk is treated as unrelated rather than
 # a weak match — matches HybridScorer's "empty result means the docs don't
 # establish the claim" contract. Heuristic, not measured against this
@@ -133,15 +162,46 @@ def _chunk_hash(text: str) -> str:
     return hashlib.sha1(text.encode("utf-8", errors="replace")).hexdigest()
 
 
-def _cosine(a: list[float], b: list[float]) -> float:
+def _hash_of(chunk: dict) -> str:
+    """Content hash of a chunk; precomputed by load_index(), computed otherwise."""
+    h = chunk.get("hash")
+    if isinstance(h, str) and h:
+        return h
+    return _chunk_hash(chunk.get("text", ""))
+
+
+def _cosine(a, b) -> float:
     if not a or not b or len(a) != len(b):
         return 0.0
-    dot = sum(x * y for x, y in zip(a, b))
-    na = math.sqrt(sum(x * x for x in a))
-    nb = math.sqrt(sum(y * y for y in b))
+    dot = sum(map(operator.mul, a, b))
+    na = math.sqrt(sum(map(operator.mul, a, a)))
+    nb = math.sqrt(sum(map(operator.mul, b, b)))
     if na == 0.0 or nb == 0.0:
         return 0.0
     return dot / (na * nb)
+
+
+# In-memory scoring form of cached vectors: content hash -> (array('f'), norm).
+# 2,042 x 768 Python floats as lists cost ~50 MB and a norm recomputation per
+# query; float32 arrays with the norm precomputed cost ~6 MB and one dot each.
+_FAST_VECTORS: dict[str, tuple[array, float]] = {}
+_FAST_LOCK = threading.Lock()
+
+
+def _fast(vector) -> tuple[array, float]:
+    arr = vector if isinstance(vector, array) else array("f", (float(x) for x in vector))
+    return arr, math.sqrt(sum(map(operator.mul, arr, arr)))
+
+
+def _fast_for(h: str, vector) -> tuple[array, float]:
+    with _FAST_LOCK:
+        hit = _FAST_VECTORS.get(h)
+    if hit is not None and len(hit[0]) == len(vector):
+        return hit
+    hit = _fast(vector)
+    with _FAST_LOCK:
+        _FAST_VECTORS[h] = hit
+    return hit
 
 
 def _load_embedding_cache() -> dict:
@@ -154,24 +214,86 @@ def _load_embedding_cache() -> dict:
             cache = json.loads(EMBEDDING_CACHE_FILE.read_text(encoding="utf-8"))
         except Exception:
             cache = {}
+    if not isinstance(cache, dict):
+        cache = {}
     cache.setdefault("model", EMBED_MODEL)
-    cache.setdefault("vectors", {})
+    if not isinstance(cache.get("vectors"), dict):
+        cache["vectors"] = {}
+    _migrate_cache(cache)
     _EMBED_CACHE = cache
     return cache
 
 
+def _migrate_cache(cache: dict) -> None:
+    """Re-key legacy ``{chunk_id: {"hash", "vector"}}`` entries by content hash.
+
+    Content-hash keys mean a renamed/moved file or a chunk whose id shifted
+    does not force a re-embed, and identical text is embedded once.
+    """
+    vectors = cache["vectors"]
+    legacy = [k for k, v in vectors.items() if isinstance(v, dict)]
+    for key in legacy:
+        entry = vectors.pop(key)
+        h, vec = entry.get("hash"), entry.get("vector")
+        if isinstance(h, str) and isinstance(vec, list) and vec:
+            vectors.setdefault(h, vec)
+    cache["version"] = CACHE_VERSION
+
+
+def cached_vector(cache: dict, chunk: dict) -> list[float] | None:
+    """The cached vector for ``chunk``'s current text, or None if stale/missing.
+
+    Accepts both the content-hash layout and the legacy id-keyed layout (a
+    caller may hand in a cache dict that was never migrated)."""
+    vectors = cache.get("vectors") or {}
+    h = _hash_of(chunk)
+    vec = vectors.get(h)
+    if isinstance(vec, list) and vec:
+        return vec
+    entry = vectors.get(chunk.get("id"))
+    if isinstance(entry, dict) and entry.get("hash") == h and entry.get("vector"):
+        return entry["vector"]
+    return None
+
+
+def store_vector(cache: dict, chunk: dict, vector) -> None:
+    cache.setdefault("vectors", {})[_hash_of(chunk)] = [float(x) for x in vector]
+
+
 def _save_embedding_cache(cache: dict) -> None:
+    cache["version"] = CACHE_VERSION
     atomic_write_text(EMBEDDING_CACHE_FILE, json.dumps(cache))
+
+
+def prune_embedding_cache(live_hashes: set[str]) -> int:
+    """Drop cached vectors whose text no longer exists in the index.
+
+    Returns the number of entries removed (the file is rewritten only if >0).
+    """
+    with _EMBED_CACHE_LOCK:
+        cache = _load_embedding_cache()
+        vectors = cache["vectors"]
+        orphans = [h for h in vectors if h not in live_hashes]
+        for h in orphans:
+            del vectors[h]
+        if orphans:
+            _save_embedding_cache(cache)
+    with _FAST_LOCK:
+        for h in [h for h in _FAST_VECTORS if h not in live_hashes]:
+            del _FAST_VECTORS[h]
+    return len(orphans)
 
 
 class EmbeddingScorer:
     """Dense retrieval scorer backed by the local CPU-only `nomic-embed-text`
-    Ollama endpoint — same model, host, and `keep_alive="0"` convention
-    already proven by `exemplar_embeddings.py`. Never touches the RTX 5080.
+    Ollama endpoint (see `ollama_client.EMBED_KEEP_ALIVE`). Never touches the
+    RTX 5080.
 
-    Embeddings are cached on disk (`knowledge/retrieval_embeddings.json`),
-    keyed by each chunk's own id and validated by a hash of its text, so an
-    edited file only re-embeds the chunks that actually changed.
+    Embeddings are cached on disk (`knowledge/retrieval_embeddings.json`,
+    gitignored), keyed by a hash of each chunk's text, so an edited file only
+    re-embeds the chunks that actually changed and a moved file re-embeds
+    nothing.  New vectors are persisted after every batch, so an interrupted
+    first build keeps what it finished.
 
     UPGRADE 05 Job 2, implemented 2026-09-02 (see RAG_EVALUATION.md Stage 1).
     Used by the default `HybridScorer` path as of 2026-09-02ab.
@@ -187,17 +309,33 @@ class EmbeddingScorer:
         host = self.host or router.CPU_HOST
         return oll.embed(texts, model=self.model, host=host)
 
+    def _persist(self, new_vectors: dict[str, list[float]], ch_by_id: dict,
+                 result: dict[str, list[float]]) -> None:
+        """Write one batch of vectors to the cache file under the lock."""
+        changed = False
+        with _EMBED_CACHE_LOCK:
+            cache = _load_embedding_cache()
+            for cid, vector in new_vectors.items():
+                ch = ch_by_id.get(cid)
+                if ch is None or not vector:
+                    continue
+                store_vector(cache, ch, vector)
+                result[cid] = vector
+                changed = True
+            if changed:
+                cache["model"] = self.model
+                _save_embedding_cache(cache)
+
     def vectors_for(self, chunks: list[dict]) -> dict[str, list[float]]:
         """Return {chunk_id: vector}, embedding + caching only what's missing
         or stale. Public so HybridScorer/tests can reuse it without a second
         embedding pass.
 
-        Uses a 3-pass approach so the lock is never held during the potentially
-        slow embedding network call (farm or local Ollama):
-          Pass 1 — read cache under lock, identify stale chunks.
-          Pass 2 — compute vectors for stale chunks outside the lock
-                   (tries farm first, falls back to local _embed).
-          Pass 3 — write new vectors back to cache under lock.
+        The lock is never held during the potentially slow embedding call:
+          Pass 1 - read cache under lock, identify stale chunks.
+          Pass 2 - compute vectors for stale chunks outside the lock
+                   (farm first, then local _embed), persisting each batch
+                   under the lock as soon as it arrives.
         """
         if not chunks:
             return {}
@@ -208,22 +346,21 @@ class EmbeddingScorer:
         with _EMBED_CACHE_LOCK:
             cache = _load_embedding_cache()
             for ch in chunks:
-                entry = cache["vectors"].get(ch["id"])
-                h = _chunk_hash(ch.get("text", ""))
-                if entry and entry.get("hash") == h and entry.get("vector"):
-                    result[ch["id"]] = entry["vector"]
+                vec = cached_vector(cache, ch)
+                if vec:
+                    result[ch["id"]] = vec
                 else:
                     stale.append(ch)
 
         if not stale:
             return result
+        ch_by_id = {c["id"]: c for c in stale}
 
-        # Pass 2: compute embeddings outside the lock (network calls may be slow).
-        new_vectors: dict[str, list[float]] = {}
+        # Pass 2: farm slice first (validated by farm_offload), then local.
         # Farm embed is eligible when farm_status.json is healthy (dashboard
         # overall block). Warm mac_worker is ~0.58s so a short block on the
         # search_docs turn is acceptable; a down/stale farm skips Celery
-        # entirely and _embed() runs locally — same None-fallback as before.
+        # entirely and _embed() runs locally.
         try:
             import farm_offload
             if farm_offload.should_route(farm_offload.KIND_EMBED, blocking=True):
@@ -234,44 +371,31 @@ class EmbeddingScorer:
                 ]
                 fv = farm_offload.try_embed_on_farm(farm_slice)
                 if fv:
-                    new_vectors.update(fv)
+                    self._persist(fv, ch_by_id, result)
         except ImportError:
             pass
-        local_stale = [ch for ch in stale if ch["id"] not in new_vectors]
+        local_stale = [ch for ch in stale if ch["id"] not in result]
         for start in range(0, len(local_stale), _EMBED_BATCH):
             batch = local_stale[start:start + _EMBED_BATCH]
             embedded = self._embed([c.get("text", "") for c in batch])
-            for ch, vector in zip(batch, embedded):
-                new_vectors[ch["id"]] = vector
-
-        # Pass 3: write new vectors to cache under lock.
-        if new_vectors:
-            ch_by_id = {c["id"]: c for c in stale}
-            with _EMBED_CACHE_LOCK:
-                cache = _load_embedding_cache()
-                changed = False
-                for cid, vector in new_vectors.items():
-                    ch = ch_by_id.get(cid)
-                    if ch is None:
-                        continue
-                    h = _chunk_hash(ch.get("text", ""))
-                    cache["vectors"][cid] = {"hash": h, "vector": vector}
-                    result[cid] = vector
-                    changed = True
-                if changed:
-                    cache["model"] = self.model
-                    _save_embedding_cache(cache)
+            self._persist({ch["id"]: vector for ch, vector in zip(batch, embedded)},
+                          ch_by_id, result)
         return result
 
     def score(self, query: str, chunks: list[dict]) -> list[tuple[float, dict]]:
         if not chunks:
             return []
         vectors = self.vectors_for(chunks)
-        query_vector = self._embed([query])[0]
-        results = [
-            (_cosine(query_vector, vectors.get(ch["id"], [])), ch)
-            for ch in chunks
-        ]
+        qa, qn = _fast(self._embed([query])[0])
+        results: list[tuple[float, dict]] = []
+        for ch in chunks:
+            vec = vectors.get(ch["id"])
+            if not vec or qn == 0.0 or len(vec) != len(qa):
+                results.append((0.0, ch))
+                continue
+            va, vn = _fast_for(_hash_of(ch), vec)
+            sim = sum(map(operator.mul, qa, va)) / (qn * vn) if vn else 0.0
+            results.append((sim, ch))
         return sorted(results, key=lambda x: -x[0])
 
 
@@ -380,12 +504,21 @@ def _is_superseded(text: str) -> bool:
 
 # ── chunking ──────────────────────────────────────────────────────────────────
 
-def _file_key(path: Path) -> str:
+def _file_stat(path: Path) -> str:
     try:
         st = path.stat()
         return f"{int(st.st_mtime)}:{st.st_size}"
     except Exception:
         return "0:0"
+
+
+def _file_key(path: Path) -> str:
+    """Content key: sha1 of the file bytes (CRLF and LF checkouts differ, which
+    is correct: their chunk text differs too)."""
+    try:
+        return "sha1:" + hashlib.sha1(path.read_bytes()).hexdigest()
+    except Exception:
+        return "sha1:unreadable"
 
 
 def _heading_before(headings: list[tuple[int, str]], pos: int) -> str:
@@ -433,6 +566,7 @@ def _chunk(source_rel: str, text: str) -> list[dict]:
                 "source": source_rel,
                 "heading": _heading_before(headings, start),
                 "text": chunk_text,
+                "hash": _chunk_hash(chunk_text),
             })
             chunk_id += 1
 
@@ -470,7 +604,12 @@ def _collect_files() -> list[Path]:
 # ── index management ──────────────────────────────────────────────────────────
 
 def load_index(force_rebuild: bool = False) -> dict:
-    """Load the chunk index from disk, rebuilding only files whose mtime+size changed."""
+    """Load the chunk index from disk, re-chunking only files whose content changed.
+
+    Files are keyed by a hash of their bytes (audit P2: ``mtime:size`` keys made
+    every fresh clone re-chunk and rewrite the whole index); mtime+size is kept
+    only as a fast path that skips reading unchanged files.
+    """
     global _INDEX_CACHE
     stored: dict = {"files": {}}
     if not force_rebuild and INDEX_FILE.is_file():
@@ -483,34 +622,64 @@ def load_index(force_rebuild: bool = False) -> dict:
     new_files: dict = {}
     changed = False
 
+    stored_files = stored.get("files") if isinstance(stored.get("files"), dict) else {}
     for path in files:
         rel = str(path.relative_to(ROOT)).replace("\\", "/")
+        stat = _file_stat(path)
+        old = stored_files.get(rel)
+        if old and old.get("stat") == stat and old.get("key"):
+            new_files[rel] = old          # fast path: unchanged on this machine
+            continue
         key = _file_key(path)
-        old = stored.get("files", {}).get(rel)
         if old and old.get("key") == key:
-            new_files[rel] = old
+            # Same content, new mtime (a fresh clone, a checkout): keep the
+            # chunks and record the new stat so the next load is fast.
+            new_files[rel] = dict(old, stat=stat)
         else:
-            new_files[rel] = {"key": key, "chunks": _build_file_chunks(path)}
-            changed = True
-
-    if set(new_files) != set(stored.get("files", {})):
+            new_files[rel] = {"key": key, "stat": stat,
+                              "chunks": _build_file_chunks(path)}
         changed = True
 
+    if set(new_files) != set(stored_files):
+        changed = True
+
+    # Precompute content hashes (persisted in the index) for the embedding
+    # cache lookups; older index files lack them.
+    for fd in new_files.values():
+        for c in fd.get("chunks") or []:
+            if not c.get("hash"):
+                c["hash"] = _chunk_hash(c.get("text", ""))
+                changed = True
+
+    all_chunks = [c for fd in new_files.values() for c in fd.get("chunks") or []]
     if changed or "chunks" not in stored:
-        all_chunks = [c for fd in new_files.values() for c in fd["chunks"]]
         data: dict = {
             "files": new_files,
             "chunks": all_chunks,
             "built_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         }
         atomic_write_text(INDEX_FILE, json.dumps(data))
-        _INDEX_CACHE = data
-        return data
+        _prune_orphan_vectors(all_chunks)
+    else:
+        data = dict(stored, files=new_files, chunks=all_chunks)
+    _lexical_stats(all_chunks)            # warm BM25 tf/df for the first query
+    _INDEX_CACHE = data
+    return data
 
-    stored["chunks"] = stored.get("chunks") or [
-        c for fd in stored["files"].values() for c in fd["chunks"]]
-    _INDEX_CACHE = stored
-    return stored
+
+def _prune_orphan_vectors(chunks: list[dict]) -> None:
+    """Drop cached vectors for text that left the index.
+
+    Only when the embedding cache lives beside the index file, so a caller
+    (or test) that redirected one of the two cannot prune the other with an
+    unrelated chunk set.  Never fatal: a failed prune just leaves orphans.
+    """
+    if EMBEDDING_CACHE_FILE.parent != INDEX_FILE.parent or not EMBEDDING_CACHE_FILE.is_file():
+        return
+    try:
+        prune_embedding_cache({_hash_of(c) for c in chunks})
+    except Exception:
+        pass
 
 
 def _get_index() -> dict:

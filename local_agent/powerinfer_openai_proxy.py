@@ -53,7 +53,7 @@ def _require_registered_bundle() -> None:
     if str(tools_dir) not in sys.path:
         sys.path.insert(0, str(tools_dir))
     try:
-        from production_registry import RegistryError, load_registered_model
+        from production_registry import RegistryError, load_registered_model  # noqa: F401 (import probe)
         entry = load_registered_model(Path(REGISTRY_PATH), REGISTRY_MODEL_ID)
     except (ImportError, OSError, ValueError) as exc:
         raise SystemExit(f"PowerInfer proxy refused unverified registry entry: {exc}") from exc

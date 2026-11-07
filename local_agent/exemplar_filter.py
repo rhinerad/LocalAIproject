@@ -10,7 +10,6 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-from pathlib import Path
 
 _MJ_PARAMETER = re.compile(r"(?:^|\s)--(?:ar|v)\b", re.I)
 

@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from .paths import GvdLayout
-from .schema import ArtifactRef, require_sha256, sha256_bytes, sha256_json
+from .schema import ArtifactRef, sha256_bytes
 
 
 @dataclass(frozen=True)

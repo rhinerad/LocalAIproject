@@ -5,9 +5,7 @@ import json
 from typing import Any
 
 from .paths import GvdLayout
-from .schema import PUBLIC_TOOL_NAMES, shot_from_dict
 from .service import (
-    ensure_control_plane,
     execute_tool,
     family_status,
     inventory_report,

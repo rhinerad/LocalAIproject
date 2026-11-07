@@ -14,7 +14,7 @@ import tempfile
 import types
 import unittest
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parent
 for _p in (str(ROOT), str(ROOT / "local_agent")):

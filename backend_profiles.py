@@ -7,7 +7,6 @@ Never invent Wan/FLUX CFG + 16–40 steps for distilled H3.
 """
 from __future__ import annotations
 
-import json
 from copy import deepcopy
 from pathlib import Path
 from typing import Any

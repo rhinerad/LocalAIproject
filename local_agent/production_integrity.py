@@ -33,9 +33,10 @@ def process_lock(path: Path, timeout: float = 0):
                     fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
                 locked = True
                 break
-            except OSError:
+            except OSError as exc:
                 if time.monotonic() >= deadline:
-                    raise RuntimeError("another production operation owns the process lock")
+                    raise RuntimeError(
+                        "another production operation owns the process lock") from exc
                 time.sleep(.1)
         yield
     finally:

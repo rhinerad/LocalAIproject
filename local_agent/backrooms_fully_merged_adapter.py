@@ -6,7 +6,6 @@ records camera_mode for downstream QA.
 """
 from __future__ import annotations
 import re
-from pathlib import Path
 
 from backrooms_prompt_adapter import staticize_still_shot
 

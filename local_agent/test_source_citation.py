@@ -197,8 +197,6 @@ class NoStaleSpecialistSourceTests(unittest.TestCase):
     """Stale H3/ComfyUI context must not surface in unrelated answers."""
 
     def test_specialist_scope_guard_blocks_render_source_in_unrelated_turn(self):
-        import ollama_client as oll
-        import router
 
         class _Route:
             tier = "cpu"

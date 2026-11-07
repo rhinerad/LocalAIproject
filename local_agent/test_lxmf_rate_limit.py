@@ -144,7 +144,16 @@ class TurnRateLimitTests(_Base):
         self.core.handle(_message(seq=202))
         self.assertEqual(1, len(self._refusals()), "one refusal per minute per identity")
         self.now += lxmf_agent.LIMIT_REFUSAL_INTERVAL_SECONDS + 1
+        # The bucket refills one token per WINDOW/LIMIT seconds (60 s), which
+        # is no longer than the refusal interval, so the first message after
+        # the wait is a legitimate turn; the next one is limited again and,
+        # the refusal interval having elapsed, earns exactly one new refusal.
+        calls_before = len(self.fake.calls)
         self.core.handle(_message(seq=203))
+        self.assertEqual(calls_before + 1, len(self.fake.calls), "refilled token is honoured")
+        self.core.handle(_message(seq=204))
+        self.core.handle(_message(seq=205))
+        self.assertEqual(calls_before + 1, len(self.fake.calls))
         self.assertEqual(2, len(self._refusals()))
 
     def test_bucket_refills_at_the_configured_rate(self):

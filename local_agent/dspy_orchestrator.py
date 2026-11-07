@@ -1733,7 +1733,7 @@ def generate_minimax_clip(
     import comfy_api
     from dispatcher import DEFAULT_COMFY_URL as orch_url
     from dispatcher import PipelineOrchestrator
-    from live_vram_test import JOB_TIMEOUT_S, VIDEO_TIMEOUT_S, wait_for_video
+    from live_vram_test import wait_for_video
     # WAN_TIMEOUT_S is module-level in this file; used for fused FLUX+MiniMax track timeout
     import vram_controller
 

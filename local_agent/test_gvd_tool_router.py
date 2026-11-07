@@ -29,7 +29,7 @@ from gvd_tool_router.gpu_lease import LeaseContention, acquire
 from gvd_tool_router.inventory import persist_inventory
 from gvd_tool_router.paths import GvdLayout
 from gvd_tool_router.registry import Registry, RegistryError
-from gvd_tool_router.router import preferred_tool, required_capabilities, route
+from gvd_tool_router.router import required_capabilities, route
 from gvd_tool_router.scheduler import ScheduledStage, group_ready
 from gvd_tool_router.schema import (
     CAPABILITY_CONTINUATION,
@@ -46,10 +46,9 @@ from gvd_tool_router.schema import (
     RouteDecision,
     ShotManifest,
     can_activate,
-    sha256_bytes,
     to_plain,
 )
-from gvd_tool_router.service import _wait_for_stage_completion, execute_tool, route_shot
+from gvd_tool_router.service import _wait_for_stage_completion, execute_tool
 from gvd_tool_router.store import (
     add_attempt, add_shot, connect, find_open_attempt, freeze_job,
     set_attempt_status,
@@ -60,12 +59,11 @@ from gvd_tool_router.family_profiles import scan_families
 from gvd_tool_router.planner import plan_shot
 from gvd_tool_router.promotion import validate_candidate_graph
 from gvd_tool_router.secure_fetch import FetchError, _check_url
-from gvd_tool_router.store import connect, mark_discovery
+from gvd_tool_router.store import mark_discovery
 from gvd_tool_router.switch import SwitchBlocked, switch_to
 from gvd_tool_router.tools import (
     discover_workflows_tool,
     execute_fast_action,
-    gvd_inventory,
 )
 
 SHA = "a" * 64

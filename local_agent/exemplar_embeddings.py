@@ -7,7 +7,6 @@ No staged item reaches this module.  The sole model is local Ollama
 from __future__ import annotations
 
 import json
-import os
 import threading
 from pathlib import Path
 

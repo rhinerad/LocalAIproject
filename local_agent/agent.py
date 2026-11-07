@@ -3463,7 +3463,7 @@ def answer(history: list[dict],
                         if render_switch_used:
                             raise oll.OllamaUnavailable(
                                 f"a render claimed the GPU again mid-reply ({exc}); "
-                                "not retrying this hop again")
+                                "not retrying this hop again") from exc
                         render_switch_used = True
                         evict = getattr(router, "evict_gpu_residents", None)
                         if callable(evict):
@@ -3483,7 +3483,7 @@ def answer(history: list[dict],
                         if not route.model:
                             raise oll.OllamaUnavailable(
                                 f"a render claimed the GPU mid-reply ({exc}) and "
-                                f"no CPU model is available: {route.reason}")
+                                f"no CPU model is available: {route.reason}") from exc
                         hop_profile = apply_hop_profile(route)
                         maybe_cpu_action_nudge(hop_profile)
                         _rad = route.options().get("num_ctx", 8192)

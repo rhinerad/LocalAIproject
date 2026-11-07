@@ -213,7 +213,8 @@ def _read_gpu_memory(device_index: int | None = None) -> MemorySample:
                 timeout=5,
             )
             if result.returncode != 0:
-                raise HandoffError((result.stderr or "nvidia-smi memory query failed").strip())
+                raise HandoffError(
+                    (result.stderr or "nvidia-smi memory query failed").strip()) from None
             total_mib, used_mib, free_mib = [
                 int(part.strip()) for part in result.stdout.strip().splitlines()[0].split(",")
             ]
@@ -650,10 +651,10 @@ def evaluate_candidate(
         image_path = render_fn(prompt, negative, example)
     except HandoffError:
         raise
-    except TimeoutError:
+    except TimeoutError as exc:
         if live:
             _GPU_HANDOFF_LATCH.failed = True
-            raise HandoffError("ComfyUI render timed out during live GPU evaluation")
+            raise HandoffError("ComfyUI render timed out during live GPU evaluation") from exc
         return {
             "gepa": 0.0,
             "mipro": 0.0,
@@ -1031,10 +1032,10 @@ def evaluate_video_candidate(
         video_path = render_fn(injected, example)
     except HandoffError:
         raise
-    except TimeoutError:
+    except TimeoutError as exc:
         if live:
             _GPU_HANDOFF_LATCH.failed = True
-            raise HandoffError("ComfyUI Phase 2/3 timed out during live GPU evaluation")
+            raise HandoffError("ComfyUI Phase 2/3 timed out during live GPU evaluation") from exc
         return {
             "gepa": 0.0,
             "mipro": 0.0,

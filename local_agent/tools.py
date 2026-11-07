@@ -567,7 +567,7 @@ def _start_batch_render_locked(args: dict, folder: Path, remote_identity: str) -
         if duration is not None and not 1.0 <= duration <= 60.0:
             raise ValueError
     except (TypeError, ValueError):
-        raise ToolError("limit must be positive; megapixels must be 0.4–2.0; duration must be 1–60 seconds")
+        raise ToolError("limit must be positive; megapixels must be 0.4–2.0; duration must be 1–60 seconds") from None
 
     runner = ROOT / "work" / "batch_render_folder.py"
     if not runner.is_file():
@@ -617,7 +617,7 @@ def prepare_chat_render(args: dict) -> str:
     try:
         prepared = chat_render_jobs.prepare_from_chat(_chat_render_conversation(args))
     except chat_render_jobs.ChatRenderError as exc:
-        raise ToolError(str(exc))
+        raise ToolError(str(exc)) from exc
     return json.dumps({"prepared": True, **prepared}, indent=2)
 
 
@@ -627,7 +627,7 @@ def start_current_chat_render(args: dict) -> str:
     try:
         prepared = chat_render_jobs.prepare_from_chat(_chat_render_conversation(args))
     except chat_render_jobs.ChatRenderError as exc:
-        raise ToolError(str(exc))
+        raise ToolError(str(exc)) from exc
     launch_args = {key: value for key, value in args.items()
                    if key in {"limit", "megapixels", "duration"}}
     if args.get("__remote_render_identity"):
@@ -1439,7 +1439,11 @@ def comfy_assets(args: dict) -> str:
 def comfy_models(args: dict) -> str:
     """Wrap download_model and list_local_models (including remove)."""
     name, payload = _pop_mcp_tool(args, _COMFY_MODEL_TOOLS)
-    action = str(payload.get("action") or "")
+    # Normalise before the risk checks so "Remove"/" remove " cannot slip past
+    # the approval and still be honoured by a case-insensitive MCP server.
+    action = str(payload.get("action") or "").strip().lower()
+    if "action" in payload:
+        payload["action"] = action
     if name == "list_local_models" and action == "remove":
         target = str(payload.get("path") or payload.get("filename") or "?")
         _comfy_approval("ComfyUI model delete", key=f"comfy_models:remove:{target}",
@@ -1757,7 +1761,7 @@ def read_file(args: dict) -> str:
     try:
         data = p.read_bytes()
     except Exception as e:
-        raise ToolError(f"cannot read {p}: {e}")
+        raise ToolError(f"cannot read {p}: {e}") from e
     if b"\x00" in data[:1024]:
         raise ToolError(f"{p.name} appears to be binary; only text files are supported")
     text = data.decode("utf-8-sig", errors="replace")

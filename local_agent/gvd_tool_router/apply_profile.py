@@ -14,7 +14,6 @@ sys.path.insert(0, str(HERE.parent))
 from gvd_tool_router.catalog_seed import seed_implementations
 from gvd_tool_router.paths import GvdLayout
 from gvd_tool_router.promotion import PromotionError, try_promote, write_policy_receipt
-from gvd_tool_router.registry import Registry
 from gvd_tool_router.schema import (
     CAPABILITY_CONTINUATION,
     CAPABILITY_FAST,
@@ -34,7 +33,6 @@ from gvd_tool_router.schema import (
     ResourceProfile,
     WorkflowStage,
     WorkflowTemplate,
-    sha256_bytes,
     sha256_json,
     to_plain,
 )

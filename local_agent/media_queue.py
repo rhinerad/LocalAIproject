@@ -147,6 +147,15 @@ def find_for_path(path: object) -> list[dict]:
     return rows
 
 
+_SEQ_LAST = 0
+
+
+def _next_seq() -> int:
+    global _SEQ_LAST
+    _SEQ_LAST = max(time.time_ns(), _SEQ_LAST + 1)
+    return _SEQ_LAST
+
+
 def enqueue(kind: str, args: dict, *, priority: str = "batch",
             source: str | None = None) -> dict:
     """Create a new pending job, coalescing an identical queued request.
@@ -180,6 +189,10 @@ def enqueue(kind: str, args: dict, *, priority: str = "batch",
         "args": args,
         "priority": priority,
         "queued_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        # FIFO key. File mtimes come from the kernel's coarse clock, so two
+        # jobs enqueued in the same tick tied and were ordered by their random
+        # id; time_ns plus a per-process counter is strictly increasing here.
+        "queued_seq": _next_seq(),
     }
     stat = source_stat(source) if source else None
     if stat:
@@ -302,12 +315,15 @@ def claim_next(kind: str | None = None) -> dict | None:
     for fp in (QUEUE_ROOT / "pending").glob("*.json"):
         try:
             job = json.loads(fp.read_text(encoding="utf-8"))
+            mtime = fp.stat().st_mtime
+            seq = job.get("queued_seq")
+            order = int(seq) if isinstance(seq, int) else int(mtime * 1e9)
             candidates.append((0 if job.get("priority", "batch") == "interactive" else 1,
-                               fp.stat().st_mtime, fp, job))
+                               order, fp, job))
         except Exception:
             continue
     candidates.sort(key=lambda value: (value[0], value[1]))
-    for _priority, _mtime, fp, job in candidates:
+    for _priority, _order, fp, job in candidates:
         try:
             if kind is not None and job.get("kind") != kind:
                 continue

@@ -23,12 +23,14 @@ changes; the dated originals it was built from stay in `docs/backrooms/` and
   img2img init scheme measured 9.44 vs 2.47 median on a 2-segment run and is
   the lead candidate; it was not promoted because the 3-segment run has not
   been done.
-- **2026-11 remediation is IN PROGRESS.** Hygiene and docs are done; the code
-  fixes from `AUDIT_2026-11-02.md` are partly applied (pipeline complete,
-  tools/server/farm mostly, router half, client/retrieval not started) and
-  committed as WIP with three known test regressions. The next agent starts
-  from `docs/HANDOFF_PROMPT_2026-11-06_finish_audit_remediation.md`.
-  Evidence: `CHANGELOG/2026-11-06a_audit_remediation_part1.md`.
+- **2026-11 audit remediation is COMPLETE in code** on
+  `claude/epic-hypatia-6mrayy`. Every finding in `AUDIT_2026-11-02.md` now
+  has a status (the "Remediation status" section at the top of that file);
+  what remains is operator-only work (listed at the end of this file) and
+  the monolith refactors, which were never in scope. `ruff check .` is clean.
+  Evidence: `CHANGELOG/2026-11-06a_audit_remediation_part1.md` and
+  `CHANGELOG/2026-11-06b_audit_remediation_part2.md`. Unit tests only; no
+  render was run, so per CLAUDE.md §3 nothing here is render-verified.
   **Before the first pull on the workstation, read the "Pulling this branch"
   section below.**
 
@@ -47,8 +49,12 @@ therefore delete those files from the working tree. Do this instead:
    fresh identity (the old one is public), re-pair the phone, and rotate the
    Mac worker's Redis password (`Add-Phase1SecondaryWorkerCredential.ps1`).
 5. Copy `work/thermal_guard.py`, `work/image_render.py`, `work/scene_reasoner.py`
-   and the other `work/*.py` modules into the clone if missing; they are now
-   tracked (`.gitignore` keeps only `work/runtime/` out).
+   and the other `work/*.py` modules into the clone, then commit them.
+   `.gitignore` now allows them (only `work/runtime/` is ignored), but as of
+   2026-11-06b **no `work/*.py` file is actually in git** (`git ls-files work`
+   is empty), so a fresh clone still has no thermal guard. The code fails
+   closed without it (GPU work is refused, never started blindly), and 27+
+   tests skip or fail until the files are committed.
 
 ## Do next, in order (motion transfer, carried from 26l)
 
@@ -91,10 +97,28 @@ Do not touch the MiniMax/`dspy_orchestrator.py` chaining path; do not change
 - **E. Judge/quality loose ends** — brief-free object pass, labeled-set
   regressions.
 
-## Open items from the audit not yet done
+## Open items from the audit (operator-only)
 
-- History rewrite on GitHub to purge the committed identity, chats and uploads
-  (operator decision; see `AUDIT_2026-11-02.md` §6 step 1).
-- Moving the private `distill` Celery queue off the tunnelled Redis instance.
-- The eight genuine test failures listed in `AUDIT_2026-11-02.md` §3 that are
-  Windows-environment specific need a run on the workstation.
+No agent should do these unasked; each needs the operator's credentials,
+hardware or an irreversible decision.
+
+1. **History rewrite on GitHub** to purge the committed Reticulum identity,
+   chats and uploads. They are untracked going forward, but still in old
+   commits (and `local_agent/chats/` plus `uploads/` are still in the index on
+   this branch until step 2 runs). `AUDIT_2026-11-02.md` §6 step 1.
+2. **On the workstation**, the "Pulling this branch" steps above: back up the
+   private dirs, pull with `scripts/sync_down.ps1`, run
+   `scripts/untrack_private_data.ps1`, delete
+   `local_agent/rns_wifi/storage/transport_identity` so RNS mints a new one,
+   re-pair the phone, rotate the Mac worker's Redis password.
+3. **Commit `work/*.py`** from the workstation (see step 5 above).
+4. **Move the private `distill` Celery queue** off the tunnelled Redis
+   instance (db 0 is still shared; the secondary ACL keeps `~*` because
+   Celery key names are unpredictable).
+5. **Untrack `.claude/settings.local.json` and `.claude/launch.json`** if they
+   should stay local (`untrack_private_data.ps1` covers them).
+
+Test-environment notes for the workstation: `EQUAL_SHARES_PRIMARY_REASONING_MODEL`
+is set in this machine's environment and changes `router.PRIMARY_REASONING_MODEL`
+at import, which fails 11 `test_router_switching` tests that assume the default
+Huihui primary; run the suite with that variable unset to compare with CI.

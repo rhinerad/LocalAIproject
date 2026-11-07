@@ -458,9 +458,9 @@ def start_phone_server(ledger: EdgeLedger, tls: TlsMaterial, host: str, port: in
     bound = httpd.socket.getsockname()[0]
     try:
         ipaddress.ip_address(bound)
-    except ValueError:
+    except ValueError as exc:
         httpd.server_close()
-        raise BindPolicyError("phone socket address is invalid")
+        raise BindPolicyError("phone socket address is invalid") from exc
     if bound != PHONE_BIND_HOST:
         httpd.server_close()
         raise BindPolicyError("phone socket is not the overlay unicast")

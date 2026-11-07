@@ -104,7 +104,8 @@ def _read_gpu_memory(device_index: int | None = None) -> MemorySample:
                 timeout=5,
             )
             if result.returncode != 0:
-                raise HandoffError((result.stderr or "nvidia-smi memory query failed").strip())
+                raise HandoffError(
+                    (result.stderr or "nvidia-smi memory query failed").strip()) from None
             total_mib, used_mib, free_mib = [
                 int(part.strip()) for part in result.stdout.strip().splitlines()[0].split(",")
             ]
