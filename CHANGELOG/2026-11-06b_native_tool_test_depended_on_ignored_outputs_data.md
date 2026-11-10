@@ -46,3 +46,21 @@ asserts only on event shape and already passed with the `ERROR:` content.
 - Not yet run on the workstation. Expected in the gateway worktree:
   `Ran 118 ... OK` (was `FAILED (failures=1)` there on 2026-11-06, see
   `2026-11-06a` section 5).
+
+## 5. Workstation commit landed (2026-11-06, checked from the cloud session 2026-11-10)
+
+The patch was applied and pushed from the workstation as `15774eb`
+(2026-11-06 16:37 -0500), a fast-forward on top of `28cecec` touching only
+`local_agent/test_native_tool_calling.py` (`7 +++++--`). Fetched here and
+compared hunk for hunk with the patch in section 2: identical. At `15774eb`
+on this Linux box: `test_native_tool_calling` `Ran 118 tests ... OK`,
+`test_capability_routing` `Ran 44 ... OK`, `test_router_comfy_timeshare`
+`Ran 51 ... OK`.
+
+The handoff made the commit conditional on the suite passing in the gateway
+worktree, so the push implies `Ran 118 ... OK` there; the workstation's own
+summary line was not relayed to this session and is recorded as implied,
+not observed.
+
+With this, every suite from `2026-11-05c` and `2026-11-06a` is green in the
+gateway worktree on both machines. Section 4 is closed.
