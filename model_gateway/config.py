@@ -13,12 +13,21 @@ free apart from an optional, non-overriding read of ``model_gateway/.env``.
     ANTHROPIC_API_KEY / ANTHROPIC_AUTH_TOKEN   standard SDK credential
     MODEL_GATEWAY_PLAN_MODEL            default claude-opus-5-5
     MODEL_GATEWAY_PLAN_EFFORT           default high
-    MODEL_GATEWAY_PLAN_MAX_TOKENS       default 1500 (a plan, not an answer)
+    MODEL_GATEWAY_PLAN_MAX_TOKENS       default 3000 (a structured plan, not an answer)
     MODEL_GATEWAY_BASE_URL / ANTHROPIC_BASE_URL   optional local Anthropic-compatible server
+    MODEL_GATEWAY_PLAN_BACKEND          api (default) | claude_cli | auto
+                                        api        = Anthropic API with the key above
+                                        claude_cli = headless Claude Code (`claude -p`)
+                                                     signed in with the Claude subscription
+                                        auto       = claude_cli first, API as fallback
+    MODEL_GATEWAY_CLAUDE_CLI            path to claude(.exe); default: ~/.local/bin, then PATH
+    MODEL_GATEWAY_CLAUDE_CLI_MODEL      default opus (a Claude Code model alias or full name)
+    MODEL_GATEWAY_CLAUDE_CLI_TIMEOUT_S  default 300
 """
 from __future__ import annotations
 
 import os
+import shutil
 from dataclasses import dataclass, field
 from pathlib import Path
 from urllib.parse import urlparse
@@ -29,8 +38,12 @@ REPO_ROOT = PACKAGE_DIR.parent
 ANTHROPIC_DEFAULT_NETLOC = "api.anthropic.com"
 DEFAULT_PLAN_MODEL = "claude-opus-5-5"
 DEFAULT_PLAN_EFFORT = "high"
-DEFAULT_PLAN_MAX_TOKENS = 1500
+DEFAULT_PLAN_MAX_TOKENS = 3000
 VALID_EFFORT = ("low", "medium", "high", "xhigh", "max")
+PLAN_BACKENDS = ("api", "claude_cli", "auto")
+DEFAULT_PLAN_BACKEND = "api"
+DEFAULT_CLAUDE_CLI_MODEL = "opus"
+DEFAULT_CLAUDE_CLI_TIMEOUT_S = 300.0
 
 
 def _truthy(value: str | None, default: bool = False) -> bool:
@@ -98,14 +111,26 @@ class GatewayConfig:
     send_effort: bool                 # off when targeting a non-Anthropic base URL
     prompt_cache: bool
     env_file_keys: tuple[str, ...] = field(default_factory=tuple)
+    plan_backend: str = DEFAULT_PLAN_BACKEND   # "api" | "claude_cli" | "auto"
+    claude_cli: str = ""                       # resolved executable; "" = not found / not needed
+    claude_cli_model: str = DEFAULT_CLAUDE_CLI_MODEL
+    claude_cli_timeout_s: float = DEFAULT_CLAUDE_CLI_TIMEOUT_S
 
     @property
     def is_official_endpoint(self) -> bool:
         return self.netloc == ANTHROPIC_DEFAULT_NETLOC
 
     @property
+    def api_available(self) -> bool:
+        return self.plan_backend in ("api", "auto") and self.credential_present
+
+    @property
+    def cli_available(self) -> bool:
+        return self.plan_backend in ("claude_cli", "auto") and bool(self.claude_cli)
+
+    @property
     def planning_available(self) -> bool:
-        return self.cloud_enabled and self.credential_present
+        return self.cloud_enabled and (self.api_available or self.cli_available)
 
     def public_dict(self) -> dict:
         """Status/UI snapshot. Never includes the credential value."""
@@ -123,12 +148,43 @@ class GatewayConfig:
             "send_effort": self.send_effort,
             "prompt_cache": self.prompt_cache,
             "env_file_keys": list(self.env_file_keys),
+            "plan_backend": self.plan_backend,
+            "claude_cli_found": bool(self.claude_cli),
+            "claude_cli_model": self.claude_cli_model,
+            "claude_cli_timeout_s": self.claude_cli_timeout_s,
         }
 
 
 def _effort(value: str | None, default: str) -> str:
     value = (value or "").strip().lower()
     return value if value in VALID_EFFORT else default
+
+
+def _plan_backend(value: str | None) -> str:
+    value = (value or "").strip().lower().replace("-", "_")
+    if value in ("cli", "claude", "claude_code"):
+        value = "claude_cli"
+    return value if value in PLAN_BACKENDS else DEFAULT_PLAN_BACKEND
+
+
+def resolve_claude_cli(env: dict) -> str:
+    """Find the Claude Code executable without running it.
+
+    Order: ``MODEL_GATEWAY_CLAUDE_CLI``; the native installer location
+    (``~/.local/bin/claude.exe`` / ``claude``); ``claude.exe`` then ``claude``
+    on PATH. The native ``.exe`` is preferred over the npm ``claude.cmd`` shim
+    because a ``.cmd`` goes through cmd.exe, which mangles an empty argument
+    (``--tools ""``). Returns ``""`` when nothing is found.
+    """
+    explicit = (env.get("MODEL_GATEWAY_CLAUDE_CLI") or "").strip().strip('"')
+    if explicit:
+        return explicit if Path(explicit).is_file() else (shutil.which(explicit) or "")
+    home = env.get("USERPROFILE") or env.get("HOME") or str(Path.home())
+    for name in ("claude.exe", "claude"):
+        candidate = Path(home) / ".local" / "bin" / name
+        if candidate.is_file():
+            return str(candidate)
+    return shutil.which("claude.exe") or shutil.which("claude") or ""
 
 
 def load_config(environ: dict | None = None, *, read_env_file: bool = True) -> GatewayConfig:
@@ -164,6 +220,11 @@ def load_config(environ: dict | None = None, *, read_env_file: bool = True) -> G
         except (TypeError, ValueError):
             return default
 
+    plan_backend = _plan_backend(env.get("MODEL_GATEWAY_PLAN_BACKEND"))
+    # Only look for the CLI when it may be used: the default api path stays
+    # exactly as before (no filesystem/PATH probing).
+    claude_cli = resolve_claude_cli(env) if plan_backend != "api" else ""
+
     # MODEL_GATEWAY_HEAVY_* are accepted as aliases from the first prototype.
     plan = PlanTier(
         (env.get("MODEL_GATEWAY_PLAN_MODEL") or env.get("MODEL_GATEWAY_HEAVY_MODEL")
@@ -187,4 +248,8 @@ def load_config(environ: dict | None = None, *, read_env_file: bool = True) -> G
         send_effort=_truthy(env.get("MODEL_GATEWAY_SEND_EFFORT"), official),
         prompt_cache=_truthy(env.get("MODEL_GATEWAY_PROMPT_CACHE"), official),
         env_file_keys=tuple(added),
+        plan_backend=plan_backend,
+        claude_cli=claude_cli,
+        claude_cli_model=(env.get("MODEL_GATEWAY_CLAUDE_CLI_MODEL") or DEFAULT_CLAUDE_CLI_MODEL).strip(),
+        claude_cli_timeout_s=_float("MODEL_GATEWAY_CLAUDE_CLI_TIMEOUT_S", DEFAULT_CLAUDE_CLI_TIMEOUT_S),
     )

@@ -236,6 +236,26 @@ class AgentHookTests(_Base):
         self.assertEqual("none", route.detail["plan_source"])
         self.assertIn(("note", "cloud plan unavailable; continuing locally"), events)
 
+    def test_structured_plan_records_format_and_backend(self):
+        plan = gw.PlanText("Goal: refactor\nSteps (in order):\n1. Read router.py",
+                           raw='{"steps": []}', structured={"steps": []},
+                           plan_format="structured", backend="claude_cli")
+        msgs, route, events, _ = self._run(plan)
+        self.assertIn("structured checklist", msgs[1]["content"])
+        self.assertIn("1. Read router.py", msgs[1]["content"])
+        self.assertNotIn('{"steps"', msgs[1]["content"])      # rendered, not raw JSON
+        self.assertEqual("cloud", route.detail["plan_source"])
+        self.assertEqual("structured", route.detail["plan_format"])
+        self.assertEqual("claude_cli", route.detail["plan_backend"])
+        self.assertEqual("claude_cli", json.loads(json.dumps(route.as_dict()))["detail"]["plan_backend"])
+
+    def test_plain_text_plan_and_no_plan_formats(self):
+        _, route, _, _ = self._run("1. Read router.py")
+        self.assertEqual("text", route.detail["plan_format"])
+        _, route, _, _ = self._run(None)
+        self.assertEqual("none", route.detail["plan_format"])
+        self.assertEqual("none", route.detail["plan_backend"])
+
     def test_request_plan_exception_never_escapes(self):
         events = []
         msgs = [{"role": "system", "content": "s"}, {"role": "user", "content": LOGIC_PROMPT}]

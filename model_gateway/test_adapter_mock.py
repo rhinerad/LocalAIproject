@@ -290,7 +290,7 @@ class AdapterMockTests(unittest.TestCase):
         self.assertEqual("1. read router.py\n2. edit", plan)
         body = self.requests[0]["body"]
         self.assertEqual("claude-opus-5-5", body["model"])
-        self.assertEqual(1500, body["max_tokens"])
+        self.assertEqual(3000, body["max_tokens"])   # default raised for the JSON plan (2026-11-14a)
         self.assertEqual({"effort": "high"}, body["output_config"])
         self.assertNotIn("tools", body)
         self.assertNotIn("tool_choice", body)

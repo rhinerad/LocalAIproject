@@ -23,7 +23,9 @@ class ConfigTests(unittest.TestCase):
         self.assertTrue(c.cloud_enabled and c.credential_present and c.planning_available)
         self.assertEqual("claude-opus-5-5", c.plan.model)
         self.assertEqual("high", c.plan.effort)
-        self.assertEqual(1500, c.plan.max_tokens)
+        self.assertEqual(3000, c.plan.max_tokens)
+        self.assertEqual("api", c.plan_backend)       # default backend unchanged
+        self.assertEqual("", c.claude_cli)            # api never probes for the CLI
         self.assertTrue(c.send_effort and c.prompt_cache)
         self.assertEqual("plan-only", c.public_dict()["mode"])
 

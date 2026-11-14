@@ -17,7 +17,8 @@ log = logging.getLogger("local_agent.model_gateway")
 
 _LOCK = threading.Lock()
 _LAST: dict = {
-    "last_plan": None,       # {"model", "chars", "tool_calls", "stop_reason", "at", "telemetry"}
+    "last_plan": None,       # {"model", "chars", "tool_calls", "stop_reason", "at", "telemetry",
+                             #  "backend", "plan_format"}
     "last_fallback": None,   # {"kind", "detail", "at", "from_model"}
     "plans": 0,
     "fallbacks": 0,
@@ -25,15 +26,17 @@ _LAST: dict = {
 
 
 def note_plan(*, model: str, chars: int, tool_calls: int, stop_reason: str | None,
-              telemetry: dict | None = None) -> dict:
+              telemetry: dict | None = None, backend: str = "api",
+              plan_format: str = "text") -> dict:
     entry = {"model": model, "chars": int(chars), "tool_calls": int(tool_calls),
              "stop_reason": stop_reason, "at": time.time(),
-             "telemetry": dict((telemetry or {}).get("gateway") or {})}
+             "telemetry": dict((telemetry or {}).get("gateway") or {}),
+             "backend": backend, "plan_format": plan_format}
     with _LOCK:
         _LAST["plans"] += 1
         _LAST["last_plan"] = entry
-    log.info("model_gateway plan: %s chars=%d tool_calls=%d in=%s out=%s",
-             model, chars, tool_calls,
+    log.info("model_gateway plan: %s via %s (%s) chars=%d tool_calls=%d in=%s out=%s",
+             model, backend, plan_format, chars, tool_calls,
              entry["telemetry"].get("input_tokens"), entry["telemetry"].get("output_tokens"))
     return entry
 

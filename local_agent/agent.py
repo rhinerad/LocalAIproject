@@ -2613,14 +2613,18 @@ def _cloud_plan_context(msgs: list[dict], *, turns: int = 4, limit: int = 2000) 
 
 def _request_cloud_plan(latest_user: str, msgs: list[dict], tool_schemas: list[dict],
                         route, emit) -> None:
-    """Plan-only gateway hook: fetch a text plan and put it in the local model's context.
+    """Plan-only gateway hook: fetch a plan and put it in the local model's context.
 
     The cloud model never answers the turn and is given no tools. On any
-    failure the turn simply continues locally. ``route.detail["plan_source"]``
-    records the outcome for the route event.
+    failure the turn simply continues locally. ``route.detail`` records the
+    outcome for the route event: ``plan_source`` ("cloud"/"none"),
+    ``plan_format`` ("structured"/"text"/"none") and ``plan_backend``
+    ("api"/"claude_cli"/"none").
     """
     detail = route.detail if isinstance(getattr(route, "detail", None), dict) else {}
     detail["plan_source"] = "none"
+    detail["plan_format"] = "none"
+    detail["plan_backend"] = "none"
     gw = router._gateway()
     if gw is None:
         emit("note", "cloud plan unavailable; continuing locally")
@@ -2634,11 +2638,20 @@ def _request_cloud_plan(latest_user: str, msgs: list[dict], tool_schemas: list[d
     except Exception:  # request_plan never raises by contract; never let it reach the turn
         plan = None
     if plan:
+        plan_format = getattr(plan, "plan_format", "text")
+        if plan_format == "structured":
+            header = ("# Plan from planning model (structured checklist: work through the "
+                      "steps in order, run each Verify check, honour the Stop conditions; "
+                      "adapt if a step fails)\n")
+        else:
+            header = "# Plan from planning model (follow, adapt if a step fails)\n"
         msgs.insert(1, {"role": "system", "content":
-            "# Plan from planning model (follow, adapt if a step fails)\n" + plan +
+            header + str(plan) +
             "\nThe plan is advice, not evidence: every file, state, and action still "
             "needs a live tool result before it is reported as done."})
         detail["plan_source"] = "cloud"
+        detail["plan_format"] = plan_format
+        detail["plan_backend"] = getattr(plan, "backend", "unknown")
         emit("note", "cloud plan received")
     else:
         emit("note", "cloud plan unavailable; continuing locally")

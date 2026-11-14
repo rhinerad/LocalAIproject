@@ -8,7 +8,9 @@ called there.
 
 Eligible: an interactive turn (a prompt is present) classified as heavy logic
 (``capability == "logic"``, i.e. ``difficulty.needs_escalation``), while the
-cloud switch is on and a credential is present, and the operator has not
+cloud switch is on and a plan backend is usable (an API credential for
+``MODEL_GATEWAY_PLAN_BACKEND=api``, the Claude Code CLI for ``claude_cli``,
+either for ``auto``), and the operator has not
 forced the offline tier (``prefer == "cpu"``). Callers that pass
 ``allow_cloud=False`` (the local planner, background helpers) are never
 eligible.
@@ -37,7 +39,12 @@ def wants_cloud_plan(
         return False, "caller excluded cloud planning"
     if not config.cloud_enabled:
         return False, "cloud planning disabled (MODEL_GATEWAY_CLOUD is not 1)"
-    if not config.credential_present:
+    if not config.planning_available:
+        backend = getattr(config, "plan_backend", "api")
+        if backend == "claude_cli":
+            return False, "claude CLI not found (set MODEL_GATEWAY_CLAUDE_CLI)"
+        if backend == "auto":
+            return False, "neither the claude CLI nor an ANTHROPIC_API_KEY is available"
         return False, "no ANTHROPIC_API_KEY (or ANTHROPIC_AUTH_TOKEN) is set"
     if prefer == "cpu":
         return False, "operator forced the offline tier"
