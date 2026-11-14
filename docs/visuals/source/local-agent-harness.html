@@ -1,0 +1,213 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Local Agent Harness</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #f3f4f1; --panel: #ffffff; --ink: #1d2327; --muted: #5b646b; --line: #b9c1bd;
+  --accent: #5b3fa0; --accent-bg: #f1ecfb; --short: #a35a00; --short-bg: #fbf0e1; --exit: #116a63; --exit-bg: #e3f4f1;
+  --f-sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #141a1e; --panel: #1c2429; --ink: #e6ebee; --muted: #9aa6ad; --line: #42525c;
+  --accent: #b9a4f2; --accent-bg: #262040; --short: #f0b25e; --short-bg: #33261a; --exit: #6fd1c5; --exit-bg: #15302c; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #141a1e; --panel: #1c2429; --ink: #e6ebee; --muted: #9aa6ad; --line: #42525c;
+  --accent: #b9a4f2; --accent-bg: #262040; --short: #f0b25e; --short-bg: #33261a; --exit: #6fd1c5; --exit-bg: #15302c; color-scheme: dark }
+
+body { background: var(--bg); color: var(--ink); font-family: var(--f-sans); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { font-weight: 800; font-size: clamp(28px, 5vw, 40px); letter-spacing: -0.02em; margin: 0 0 6px; }
+.lede { margin: 0 0 22px; color: var(--muted); max-width: 70ch; }
+figure { margin: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 14px; }
+.scroll { overflow-x: auto; }
+svg { display: block; width: 100%; min-width: 760px; height: auto; color: var(--ink); font-family: var(--f-sans); }
+figcaption { margin-top: 10px; font-size: 13.5px; color: var(--muted); }
+h2 { font-size: 20px; font-weight: 700; margin: 34px 0 10px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 600; }
+tr:last-child td { border-bottom: 0; }
+td code, p code, li code { font-family: var(--f-mono); font-size: 12.5px; }
+td:first-child code { color: var(--accent); font-weight: 500; }
+.tablewrap { overflow-x: auto; }
+ul { padding-left: 20px; margin: 0; display: grid; gap: 6px; }
+footer { margin-top: 34px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+footer code { font-family: var(--f-mono); font-size: 12px; }
+</style>
+
+<div class="wrap">
+<h1>Local Agent Harness</h1>
+<p class="lede">The harness is everything wrapped around the model: what it's shown, which model gets the turn, what happens to its tool calls, and what is checked before its reply reaches you. Current as of October 21, 2026.</p>
+
+<figure>
+<div class="scroll">
+<svg viewBox="0 0 1000 790" role="img" aria-label="A message passes turn start and the shortcut layer. If no shortcut matches, it enters a hop loop: route, fit the context, model turn, tool seam, and back. Final text goes through reply guards to the chat. Shortcut matches and finished background jobs go straight to the chat.">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+    <marker id="ahA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--accent)"/></marker>
+  </defs>
+
+  <!-- top row -->
+  <rect x="20" y="30" width="180" height="64" rx="6" style="fill:var(--panel);stroke:var(--line)"/>
+  <text x="32" y="54" font-size="13.5" font-weight="700" fill="currentColor">Your message</text>
+  <text x="32" y="72" font-size="11.5" style="fill:var(--muted)">desktop app · GUI · phone</text>
+  <text x="32" y="87" font-size="11" font-family="IBM Plex Mono, monospace" style="fill:var(--muted)">server.py</text>
+
+  <rect x="240" y="30" width="220" height="64" rx="6" style="fill:var(--panel);stroke:var(--line)"/>
+  <text x="252" y="54" font-size="13.5" font-weight="700" fill="currentColor">Turn start</text>
+  <text x="252" y="72" font-size="11.5" style="fill:var(--muted)">open task checkpoint reloaded</text>
+  <text x="252" y="87" font-size="11.5" style="fill:var(--muted)">character refs + style notes added</text>
+
+  <rect x="520" y="30" width="220" height="64" rx="6" style="fill:var(--short-bg);stroke:var(--short)"/>
+  <text x="532" y="54" font-size="13.5" font-weight="700" fill="currentColor">Shortcut layer</text>
+  <text x="532" y="72" font-size="11.5" style="fill:var(--muted)">action_resolver + fixed routes</text>
+  <text x="532" y="87" font-size="11.5" style="fill:var(--muted)">skipped when you name a tool</text>
+
+  <line x1="200" y1="62" x2="238" y2="62" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="460" y1="62" x2="518" y2="62" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <!-- shortcut match: straight to the chat -->
+  <polyline points="740,62 985,62 985,625 962,625" fill="none" style="stroke:var(--short)" stroke-width="1.5" marker-end="url(#ah)"/>
+  <text x="756" y="54" font-size="11.5" style="fill:var(--short)">match: runs without the model</text>
+
+  <!-- no match: into the loop -->
+  <polyline points="580,94 580,124 350,124 350,158" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah)"/>
+  <text x="590" y="116" font-size="11.5" style="fill:var(--muted)">no match</text>
+
+  <!-- hop loop frame -->
+  <rect x="225" y="140" width="530" height="390" rx="10" fill="none" style="stroke:var(--accent)" stroke-width="1.2" stroke-dasharray="5 5"/>
+  <text x="490" y="318" text-anchor="middle" font-size="14" font-weight="800" style="fill:var(--accent)">HOP LOOP</text>
+  <text x="490" y="337" text-anchor="middle" font-size="11.5" style="fill:var(--muted)">up to 6 model turns</text>
+  <text x="490" y="353" text-anchor="middle" font-size="11.5" style="fill:var(--muted)">30 on the code profile</text>
+  <text x="745" y="521" text-anchor="end" font-size="11" style="fill:var(--muted)">every step is traced: turn › route › hop › compact › tool</text>
+
+  <!-- 1 route -->
+  <rect x="240" y="160" width="220" height="100" rx="6" style="fill:var(--accent-bg);stroke:var(--accent)"/>
+  <text x="252" y="183" font-size="13.5" font-weight="700" fill="currentColor">1 · Route</text>
+  <text x="252" y="203" font-size="11.5" style="fill:var(--muted)">GPU free → qwen3 14B</text>
+  <text x="252" y="220" font-size="11.5" style="fill:var(--muted)">code question → 27B coder</text>
+  <text x="252" y="237" font-size="11.5" style="fill:var(--muted)">GPU busy → CPU 8B or Mac farm</text>
+  <text x="252" y="252" font-size="11" font-family="IBM Plex Mono, monospace" style="fill:var(--muted)">router.decide · profile_for</text>
+
+  <!-- 2 fit context -->
+  <rect x="520" y="160" width="220" height="100" rx="6" style="fill:var(--accent-bg);stroke:var(--accent)"/>
+  <text x="532" y="183" font-size="13.5" font-weight="700" fill="currentColor">2 · Fit the context</text>
+  <text x="532" y="203" font-size="11.5" style="fill:var(--muted)">project docs + past chats retrieved</text>
+  <text x="532" y="220" font-size="11.5" style="fill:var(--muted)">over num_ctx → compact old turns</text>
+  <text x="532" y="237" font-size="11.5" style="fill:var(--muted)">uses a farm summary if ready</text>
+  <text x="532" y="252" font-size="11" font-family="IBM Plex Mono, monospace" style="fill:var(--muted)">_trim_context</text>
+
+  <!-- 3 model turn -->
+  <rect x="520" y="400" width="220" height="100" rx="6" style="fill:var(--accent-bg);stroke:var(--accent)"/>
+  <text x="532" y="423" font-size="13.5" font-weight="700" fill="currentColor">3 · Model turn</text>
+  <text x="532" y="443" font-size="11.5" style="fill:var(--muted)">sees only its tool profile</text>
+  <text x="532" y="460" font-size="11.5" style="fill:var(--muted)">answers with native tool calls,</text>
+  <text x="532" y="477" font-size="11.5" style="fill:var(--muted)">or with a final reply</text>
+
+  <!-- 4 tool seam -->
+  <rect x="240" y="400" width="220" height="100" rx="6" style="fill:var(--accent-bg);stroke:var(--accent)"/>
+  <text x="252" y="423" font-size="13.5" font-weight="700" fill="currentColor">4 · Tool seam</text>
+  <text x="252" y="443" font-size="11.5" style="fill:var(--muted)">fills refs, manifests, copy_to</text>
+  <text x="252" y="460" font-size="11.5" style="fill:var(--muted)">permission + scope gates</text>
+  <text x="252" y="477" font-size="11.5" style="fill:var(--muted)">read-only calls run in parallel</text>
+  <text x="252" y="492" font-size="11" font-family="IBM Plex Mono, monospace" style="fill:var(--muted)">tools.call</text>
+
+  <!-- loop arrows -->
+  <line x1="460" y1="210" x2="518" y2="210" style="stroke:var(--accent)" stroke-width="1.6" marker-end="url(#ahA)"/>
+  <text x="489" y="202" text-anchor="middle" font-size="11.5" style="fill:var(--muted)">profile</text>
+  <line x1="630" y1="260" x2="630" y2="398" style="stroke:var(--accent)" stroke-width="1.6" marker-end="url(#ahA)"/>
+  <text x="640" y="334" font-size="11.5" style="fill:var(--muted)">prompt that fits</text>
+  <line x1="520" y1="450" x2="462" y2="450" style="stroke:var(--accent)" stroke-width="1.6" marker-end="url(#ahA)"/>
+  <text x="491" y="442" text-anchor="middle" font-size="11.5" style="fill:var(--muted)">tool calls</text>
+  <line x1="350" y1="400" x2="350" y2="262" style="stroke:var(--accent)" stroke-width="1.6" marker-end="url(#ahA)"/>
+  <text x="340" y="328" text-anchor="end" font-size="11.5" style="fill:var(--muted)">results,</text>
+  <text x="340" y="343" text-anchor="end" font-size="11.5" style="fill:var(--muted)">large ones trimmed</text>
+
+  <!-- engines -->
+  <rect x="240" y="560" width="220" height="80" rx="6" style="fill:var(--panel);stroke:var(--line)"/>
+  <text x="252" y="583" font-size="13.5" font-weight="700" fill="currentColor">Tools and engines</text>
+  <text x="252" y="602" font-size="11.5" style="fill:var(--muted)">ComfyUI · GVD chains · shot pipeline</text>
+  <text x="252" y="619" font-size="11.5" style="fill:var(--muted)">character builder · code tools</text>
+  <line x1="320" y1="500" x2="320" y2="558" stroke="currentColor" stroke-width="1.4" marker-end="url(#ah)"/>
+  <text x="312" y="548" text-anchor="end" font-size="11.5" style="fill:var(--muted)">runs</text>
+  <line x1="380" y1="558" x2="380" y2="502" stroke="currentColor" stroke-width="1.4" marker-end="url(#ah)"/>
+  <text x="388" y="548" font-size="11.5" style="fill:var(--muted)">result</text>
+
+  <!-- exit -->
+  <line x1="740" y1="450" x2="798" y2="450" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah)"/>
+  <text x="769" y="442" text-anchor="middle" font-size="11.5" style="fill:var(--muted)">final text</text>
+
+  <rect x="800" y="380" width="160" height="180" rx="6" style="fill:var(--exit-bg);stroke:var(--exit)"/>
+  <text x="812" y="403" font-size="13.5" font-weight="700" fill="currentColor">Reply guards</text>
+  <text x="812" y="424" font-size="11.5" style="fill:var(--muted)">plan only → ask you,</text>
+  <text x="812" y="440" font-size="11.5" style="fill:var(--muted)">or auto-render it</text>
+  <text x="812" y="460" font-size="11.5" style="fill:var(--muted)">claims files, no job →</text>
+  <text x="812" y="476" font-size="11.5" style="fill:var(--muted)">truthful reply instead</text>
+  <text x="812" y="496" font-size="11.5" style="fill:var(--muted)">every call errored</text>
+  <text x="812" y="514" font-size="11.5" style="fill:var(--muted)">same failure twice</text>
+  <text x="812" y="532" font-size="11.5" style="fill:var(--muted)">off-topic answer</text>
+
+  <line x1="880" y1="560" x2="880" y2="588" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah)"/>
+  <rect x="800" y="590" width="160" height="70" rx="6" style="fill:var(--panel);stroke:var(--ink)" stroke-width="1.4"/>
+  <text x="812" y="613" font-size="13.5" font-weight="700" fill="currentColor">Reply in chat</text>
+  <text x="812" y="632" font-size="11.5" style="fill:var(--muted)">checkpoint saved</text>
+  <text x="812" y="648" font-size="11.5" style="fill:var(--muted)">chat marked unread</text>
+
+  <!-- background job -->
+  <line x1="460" y1="605" x2="798" y2="605" stroke="currentColor" stroke-width="1.3" stroke-dasharray="4 4" marker-end="url(#ah)"/>
+  <text x="629" y="597" text-anchor="middle" font-size="11.5" style="fill:var(--muted)">job_watch posts the files when a job ends</text>
+
+  <!-- saved state band -->
+  <text x="20" y="690" font-size="11" font-weight="600" letter-spacing="1" style="fill:var(--muted)">SAVED STATE AND HELPERS THE HARNESS READS AND WRITES</text>
+  <rect x="20" y="700" width="225" height="70" rx="6" style="fill:var(--panel);stroke:var(--line)"/>
+  <text x="32" y="723" font-size="13" font-weight="700" fill="currentColor">Task checkpoints</text>
+  <text x="32" y="742" font-size="11.5" style="fill:var(--muted)">multi-step plans resume</text>
+  <text x="32" y="758" font-size="11" font-family="IBM Plex Mono, monospace" style="fill:var(--muted)">agentic_tasks/</text>
+  <rect x="265" y="700" width="225" height="70" rx="6" style="fill:var(--panel);stroke:var(--line)"/>
+  <text x="277" y="723" font-size="13" font-weight="700" fill="currentColor">Chats and chat pictures</text>
+  <text x="277" y="742" font-size="11.5" style="fill:var(--muted)">who is who, what was made</text>
+  <text x="277" y="758" font-size="11" font-family="IBM Plex Mono, monospace" style="fill:var(--muted)">chats/ · asset_memory/</text>
+  <rect x="510" y="700" width="225" height="70" rx="6" style="fill:var(--panel);stroke:var(--line)"/>
+  <text x="522" y="723" font-size="13" font-weight="700" fill="currentColor">Retrieval index</text>
+  <text x="522" y="742" font-size="11.5" style="fill:var(--muted)">project docs, past chats,</text>
+  <text x="522" y="758" font-size="11.5" style="fill:var(--muted)">capability notes</text>
+  <rect x="755" y="700" width="225" height="70" rx="6" style="fill:var(--panel);stroke:var(--line)"/>
+  <text x="767" y="723" font-size="13" font-weight="700" fill="currentColor">Mac worker farm</text>
+  <text x="767" y="742" font-size="11.5" style="fill:var(--muted)">summary prefetch, embeddings</text>
+  <text x="767" y="758" font-size="11.5" style="fill:var(--muted)">local fallback when it's down</text>
+</svg>
+</div>
+<figcaption>Most turns end one of three ways: a shortcut answers without the model; the hop loop ends with final text that passes the reply guards; or a long render ends later and the job watcher posts it into the chat.</figcaption>
+</figure>
+
+<h2>Tool profiles: what the model is allowed to see</h2>
+<p class="lede" style="margin-bottom:12px">Step 1 picks a profile on every hop. The model can only call tools in that profile, which keeps small models from getting lost in the full catalog.</p>
+<div class="tablewrap">
+<table>
+  <tr><th>Profile</th><th>When</th><th>What the model sees</th><th>Turns</th></tr>
+  <tr><td><code>gpu</code></td><td>The default, with the 14B on the GPU</td><td>The full tool catalog, with project tools scoped to project turns</td><td>6</td></tr>
+  <tr><td><code>gpu_image</code></td><td>Picture requests</td><td>Plan, render and status tools for stills, even on the CPU fallback</td><td>6</td></tr>
+  <tr><td><code>gpu_shots</code></td><td>Long story-scene requests (since 10-21)</td><td>The 17 shot-pipeline tools; stays on the 14B, and gets up to 3 "next call" nudges</td><td>6</td></tr>
+  <tr><td><code>gpu_core</code></td><td>GPU fallback when the farm is down</td><td>A short core allowlist</td><td>6</td></tr>
+  <tr><td><code>cpu</code></td><td>GPU busy, or the Mac farm answering</td><td>3 meta-tools (<code>list_tools</code>, <code>describe_tool</code>, <code>call_tool</code>) and a short prompt</td><td>6</td></tr>
+  <tr><td><code>code</code></td><td>Code questions on the 27B coder (opt-in, since 10-17)</td><td>7 primitives: grep, glob, numbered line reads, anchored edits, git reads and more</td><td>30</td></tr>
+</table>
+</div>
+
+<h2>What changed in the harness on Oct 20–21</h2>
+<ul>
+  <li><b>Turn start:</b> a character named in an image or video request gets their face and files attached (<code>asset_library</code>).</li>
+  <li><b>Shortcut layer:</b> long tasks no longer trip the list-folder route. Naming a tool skips every shortcut. Blender runs only when you ask for it. Story scenes go to the shot pipeline.</li>
+  <li><b>Tool seam:</b> missing or wrong pictures are filled by character name, and the pictures each tool returns are remembered for the chat.</li>
+  <li><b>Reply guards:</b> auto-render is on, so a plan goes live without asking. A reply that claims files with no job behind it is replaced.</li>
+  <li><b>After the turn:</b> <code>job_watch</code> posts finished jobs into their chat and marks it unread.</li>
+</ul>
+
+<footer>Built from <code>agent.py</code>, <code>tools.py</code>, <code>router.py</code>, <code>HARNESS_OPTIMIZATION.md</code>, the harness-profile design and the changelogs through <code>2026-10-21p</code>. Several sessions changed the agent today, so check the newest changelog if something looks off.</footer>
+</div>
+
+</body></html>

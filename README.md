@@ -1,3 +1,69 @@
+# LocalAIproject: a fully local AI assistant on one gaming PC
+
+I built and run a ChatGPT-style desktop assistant that runs on my own Windows PC
+(RTX 5080, 16 GB VRAM). It chats, calls tools, edits files, and drives ComfyUI image
+and video pipelines, and it shares one GPU with those renders without
+crashing them. No cloud account is needed for normal use.
+
+This repository is the full working tree. The core security pieces (tool allowlist,
+approval gates, sandbox, quarantine, audit log) are also published as small,
+tested, standalone modules in
+[local-agent-core](https://github.com/rhinerad/local-agent-core).
+
+## How it works
+
+![How the local agent works](docs/visuals/local-agent-architecture.png)
+
+A message comes in from the desktop GUI or a paired phone, goes through safety
+gates, and enters a bounded agent loop. On every hop, `router.py` checks whether
+the GPU is free, busy rendering, or reserved, then picks a model: a 14B model on
+the GPU when it is idle, or an 8B model on the CPU when a render owns the card.
+The model can only call named, allowlisted tools, never a raw shell command.
+
+## The harness around the model
+
+![Local agent harness](docs/visuals/local-agent-harness.png)
+
+The harness is everything wrapped around the model: what it is shown, which
+model gets the turn, what happens to its tool calls, and what is checked before
+a reply goes out (for example, it may not claim it made a file unless a tool
+actually made one).
+
+## Routing between local and cloud models
+
+![Model gateway routing](docs/visuals/model-gateway-routing.png)
+
+`model_gateway/` adds an optional cloud tier behind the same router seam, so the
+VRAM and thermal guards stay exactly where they are.
+
+## The home lab it runs in
+
+![Home lab map](docs/visuals/home-lab-map.gif)
+
+The PC does the GPU work. A Mac worker node takes background jobs over
+WireGuard, and an old Dell laptop runs the home SOC (Wazuh) that watches all of
+it.
+
+## Highlights
+
+| Area | What is here |
+|---|---|
+| Agent loop | `local_agent/agent.py`, `router.py`, `tools.py`: hop-capped tool loop, stuck-loop guard, per-hop GPU/CPU routing |
+| GPU safety | GPU permission gate, busy detection (render queue, VRAM, ComfyUI port), thermal cap |
+| Sandboxing | `run_code` runs in a per-run folder with audit hooks and no network unless allowed |
+| Remote access | Phone bridge over Sideband/Reticulum with paired identities; most actions are default-deny |
+| Worker farm | `local_agent/worker_farm/`: Mac node via Redis + Celery over WireGuard, with locked-down secrets |
+| Model gateway | `model_gateway/`: optional hybrid local + Claude routing with policy tests |
+| Prompt tuning | DSPy optimizers and evaluation harnesses for the video pipeline prompts |
+| Tests | 180+ `test_*.py` files across the agent, router, gateway and pipelines |
+
+Open the interactive versions of these diagrams from
+[`docs/visuals/source/`](docs/visuals/source/) (download and open in a browser).
+
+---
+
+## Project notes (for me and my coding agents)
+
 # Automated ComfyUI story generator — Equal Shares reference project
 
 This folder has two linked purposes:

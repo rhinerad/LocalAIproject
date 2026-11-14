@@ -1,0 +1,1044 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Rhine's Home Lab Map</title>
+
+<script>
+/* =====================================================================
+   EDIT ME  (1 of 4)  -  THE MACHINES
+   ---------------------------------------------------------------------
+   One entry per machine. To remove a machine, delete its whole { ... }
+   block (for example STORMCRAFT, if it is the same box as durangamingpc).
+   The map, the flows and the tour all adjust on their own.
+
+   id     short internal name, no spaces. The tour refers to it.
+   name   what shows on the floating label.
+   short  one or two words under the name.
+   role   what it does in the flows. One of the words below, or a list
+          when one machine does two jobs, like ["soc", "orchestrator"]:
+            "router"        the middle of the network (need exactly one)
+            "orchestrator"  hands out render tickets
+            "gpu"           takes render tickets, one at a time
+            "soc"           receives security logs and raises alerts
+            "storage"       receives finished renders
+            "remote"        the away-from-home device on the VPN tunnel
+   kind   which little model to draw: "tower", "mini", "laptop",
+          "storage", "router" or "remote".
+   pos    where it sits on the floor: [left/right, back/front].
+          The router is the centre at [0, 0]. One step is one grid square.
+   what   one plain sentence for the side panel.
+   runs   list of things it runs.
+   never  list of things it never does.
+
+   KEEP IT PUBLIC-SAFE: no IP addresses, passwords, keys or account names.
+   ===================================================================== */
+const MACHINES = [
+  {
+    id: "router", name: "ASUS router", short: "network edge",
+    role: "router", kind: "router", pos: [0, 0],
+    what: "The edge of the home network. Every machine talks through it, and it is the only way in from outside.",
+    runs: ["The home network every machine plugs into", "The VPN endpoint for remote access"],
+    never: ["Runs jobs", "Stores project data"]
+  },
+  {
+    id: "durangamingpc", name: "durangamingpc", short: "GPU worker",
+    role: "gpu", kind: "tower", pos: [-4, -7.5],
+    what: "Windows gaming PC with an RTX 5080 (16 GB). It does the heavy GPU work.",
+    runs: ["ComfyUI image and video renders", "The local agent's main model"],
+    never: ["More than one GPU job at a time", "Takes a new ticket while its GPU is busy"]
+  },
+  {
+    /* Rhine: if STORMCRAFT is the same machine as durangamingpc, delete this block. */
+    id: "stormcraft", name: "STORMCRAFT", short: "GPU worker",
+    role: "gpu", kind: "tower", pos: [4, -7.5],
+    what: "Compute PC with an RTX 5080. A second GPU worker that follows the same one-job rule.",
+    runs: ["ComfyUI image and video renders", "Model inference for the local agent"],
+    never: ["More than one GPU job at a time", "Takes a new ticket while its GPU is busy"]
+  },
+  {
+    id: "dell", name: "Dell laptop \u00b7 rhineserver", short: "SOC + job queue",
+    role: ["soc", "orchestrator"], kind: "laptop", pos: [9, -1.5],
+    what: "Ubuntu laptop with two jobs. It is the security desk every machine sends its logs to, and it hands out render jobs as tickets.",
+    runs: ["Wazuh SOC server: collects logs, raises alerts", "The job queue that hands out render tickets (planned)", "A sandbox VM for testing changes safely", "CPU-only checks"],
+    never: ["GPU work or render jobs", "Sends a ticket to a machine whose queue is full"]
+  },
+  {
+    id: "intelmac", name: "2019 Intel Mac", short: "backups + storage",
+    role: "storage", kind: "storage", pos: [-9, -1.5],
+    what: "Older Mac that keeps the backups and the finished renders, and lends spare CPU.",
+    runs: ["Backups", "Storage for finished renders", "Spare CPU tasks"],
+    never: ["Model work", "GPU jobs"]
+  },
+  {
+    id: "remote", name: "Phone / MacBook", short: "away, via VPN",
+    role: "remote", kind: "remote", pos: [7.5, 11],
+    what: "Rhine's phone or MacBook when he is away from home. It reaches the lab through an encrypted VPN tunnel to the router.",
+    runs: ["Remote check-ins over the VPN tunnel"],
+    never: ["Runs lab jobs itself"]
+  }
+];
+
+/* =====================================================================
+   EDIT ME  (2 of 4)  -  THE FLOWS
+   ---------------------------------------------------------------------
+   label  the name on the on/off switch.
+   hint   small text under it.
+   color  the colour of that flow everywhere on the page.
+   on     whether it starts switched on.
+   ===================================================================== */
+const FLOWS = {
+  tickets: { label: "Render tickets",   hint: "job queue to GPU",     color: "#ffb547", on: true },
+  renders: { label: "Finished renders", hint: "GPU to storage",       color: "#ff7ab8", on: true },
+  logs:    { label: "Security logs",    hint: "everything to SOC",    color: "#7fe3a0", on: true },
+  alerts:  { label: "Alerts",           hint: "SOC flashes",          color: "#ff5d52", on: true },
+  remote:  { label: "Remote access",    hint: "VPN tunnel",           color: "#b9a2ff", on: true }
+};
+
+/* Alert cards. ALL INVENTED SAMPLES. Never paste a real alert in here. */
+const ALERT_SAMPLES = [
+  "Practice drill detected — low severity",
+  "Several failed sign-ins on a test account — medium severity",
+  "New program installed on a lab machine — informational",
+  "A watched file changed inside the sandbox — low severity",
+  "Log agent reconnected after a restart — informational"
+];
+
+/* =====================================================================
+   EDIT ME  (3 of 4)  -  THE TOUR
+   ---------------------------------------------------------------------
+   One stop per line, in order. "at" is a machine id from the list above,
+   or "overview" for the whole lab. Stops for machines you deleted are
+   skipped. Keep each caption to one sentence you could say out loud.
+   Optional: add  view: { angle: 0.4, distance: 14 }  to a stop to change
+   where the camera stands (angle is left/right, in radians).
+   ===================================================================== */
+const TOUR = [
+  { at: "overview",      caption: "This is my home lab from above. Every machine has one job, and they all talk through the router in the middle." },
+  { at: "router",        caption: "The router is the edge of the network. Nothing reaches another machine without passing through it." },
+  { at: "dell",          caption: "The Dell laptop is the control desk. It hands out render jobs as tickets, and every machine sends its security logs here for Wazuh to watch." },
+  { at: "durangamingpc", caption: "This PC does the heavy renders. One job per GPU at a time, so extra tickets wait in line beside it." },
+  { at: "stormcraft",    caption: "STORMCRAFT is a second GPU worker with the same rule: one job on the GPU, the rest wait their turn." },
+  { at: "intelmac",      caption: "Finished renders land on the 2019 Intel Mac, which only does backups and storage." },
+  { at: "remote",        caption: "When I am away, my phone or MacBook reaches home through an encrypted VPN tunnel to the router." },
+  { at: "overview",      caption: "So work flows out from the Dell to the GPUs, results flow to storage, and security logs flow back to one place I can watch." }
+];
+
+/* =====================================================================
+   EDIT ME  (4 of 4)  -  TIMING  (all in seconds, at 1x speed)
+   ===================================================================== */
+const TUNING = {
+  jobSeconds:   [6, 10],   // how long one render keeps a GPU busy (shortest, longest)
+  burstEvery:   [15, 21],  // gap between batches of new tickets
+  burstSize:    [4, 6],    // tickets per batch
+  ticketGap:    0.8,       // gap between tickets inside a batch
+  queueSlots:   4,         // how many tickets can wait beside one GPU machine
+  logEvery:     1.3,       // each machine sends one log dot about this often
+  alertEvery:   [16, 26],  // gap between sample alerts
+  remoteEvery:  [7, 11],   // gap between remote check-ins
+  tourSeconds:  8          // how long the tour stays on each stop in auto mode
+};
+</script>
+
+<style>
+/* Layout: one full-screen blueprint floor; controls float over it in the corners. */
+:root {
+  color-scheme: dark;
+  --bg: #0a1727;
+  --floor-ink: #6fa8dc;
+  --panel: rgba(12, 28, 47, 0.9);
+  --ink: #dbe9f7;
+  --muted: #93aec9;
+  --rule: rgba(140, 182, 224, 0.26);
+  --rule-strong: rgba(140, 182, 224, 0.55);
+  --focus: #ffffff;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --t-xs: 11px; --t-sm: 12.5px; --t-md: 14px; --t-lg: 18px;
+}
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: var(--t-md); line-height: 1.45; overflow: hidden; }
+* { box-sizing: border-box; }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+#app { position: relative; height: 100%; overflow: hidden; background: var(--bg); }
+#scene { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+#scene:active { cursor: grabbing; }
+
+/* floating labels drawn over the 3D scene */
+#labels { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.lbl { position: absolute; left: 0; top: 0; pointer-events: auto; cursor: pointer; white-space: nowrap; text-align: center;
+  background: var(--panel); border: 1px solid var(--rule); border-radius: 2px; padding: 3px 8px 4px; display: grid; gap: 1px; justify-items: center; will-change: transform; }
+.lbl b { font-family: var(--mono); font-size: var(--t-sm); font-weight: 600; letter-spacing: 0.01em; }
+.lbl .st { font-size: var(--t-xs); color: var(--muted); }
+.lbl .bar { display: block; width: 100%; min-width: 86px; height: 3px; background: rgba(140, 182, 224, 0.2); margin-top: 2px; }
+.lbl .bar i { display: block; height: 100%; width: 0; background: var(--flow-tickets); }
+.lbl.busy .st { color: var(--flow-tickets); }
+.lbl.sel { border-color: var(--ink); }
+.lbl:hover { border-color: var(--rule-strong); }
+.zone { position: absolute; left: 0; top: 0; font-family: var(--mono); font-size: var(--t-xs); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); white-space: nowrap; will-change: transform; }
+.zone.tun { color: var(--flow-remote); letter-spacing: 0.08em; }
+
+/* everything that floats over the scene */
+#ui { position: absolute; inset: 0; z-index: 1; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; gap: 10px;
+  padding-block: 12px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+#ui > * { pointer-events: auto; }
+.card { background: var(--panel); border: 1px solid var(--rule); border-radius: 2px; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+
+#title { align-self: flex-start; max-width: min(430px, 100%); pointer-events: none; }
+#title h1 { margin: 0; font-family: var(--mono); font-size: var(--t-lg); font-weight: 600; letter-spacing: 0.02em; text-wrap: balance; }
+#title p { margin: 2px 0 0; color: var(--muted); font-size: var(--t-sm); }
+#title .hint { margin-top: 6px; font-family: var(--mono); font-size: var(--t-xs); letter-spacing: 0.04em; transition: opacity 0.6s; }
+#title .hint.gone { opacity: 0; }
+
+#bottom { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; min-width: 0; }
+#dock { padding: 10px 12px; display: grid; gap: 10px; max-width: min(560px, 100%); min-width: 0; }
+#flows { border: 0; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+#flows legend { padding: 0; margin-bottom: 6px; font-family: var(--mono); font-size: var(--t-xs); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.chip { position: relative; display: flex; align-items: center; gap: 7px; padding: 5px 9px 5px 7px; border: 1px solid var(--rule); border-radius: 2px; cursor: pointer; user-select: none; -webkit-user-select: none; flex: none; }
+.chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.chip svg { width: 16px; height: 16px; flex: none; color: var(--c); }
+.chip .tx { display: grid; line-height: 1.2; }
+.chip .tx b { font-size: var(--t-sm); font-weight: 600; }
+.chip .tx small { font-size: var(--t-xs); color: var(--muted); }
+.chip:has(input:checked) { border-color: var(--c); }
+.chip:has(input:not(:checked)) { opacity: 0.5; }
+.chip:has(input:not(:checked)) b { text-decoration: line-through; }
+.chip:has(input:focus-visible) { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+#controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.btn { background: transparent; border: 1px solid var(--rule-strong); border-radius: 2px; padding: 6px 12px; cursor: pointer; font-family: var(--mono); font-size: var(--t-sm); letter-spacing: 0.03em; min-height: 34px; }
+.btn:hover { background: rgba(140, 182, 224, 0.12); }
+.btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); font-weight: 600; }
+.btn.primary:hover { background: #ffffff; }
+.btn[aria-pressed="true"] { background: rgba(140, 182, 224, 0.22); }
+.speed { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: var(--t-sm); color: var(--muted); }
+.speed input { width: 110px; accent-color: var(--ink); }
+.speed output { min-width: 3.2em; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* tour caption bar */
+#tourbar { padding: 10px 12px; display: grid; gap: 8px; width: min(560px, 100%); }
+#tour-cap { margin: 0; font-size: 15px; line-height: 1.4; text-wrap: pretty; }
+#tour-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+#tour-count { font-family: var(--mono); font-size: var(--t-sm); color: var(--muted); font-variant-numeric: tabular-nums; margin-right: auto; }
+#tour-prog { height: 2px; background: rgba(140, 182, 224, 0.2); }
+#tour-prog i { display: block; height: 100%; width: 0; background: var(--ink); }
+
+/* machine side panel */
+#panel { position: absolute; top: 12px; bottom: 12px; right: max(16px, env(safe-area-inset-right, 0px)); width: min(330px, calc(100% - 32px)); padding: 16px 16px 18px; overflow-y: auto; z-index: 4; }
+#panel h2 { margin: 2px 34px 8px 0; font-family: var(--mono); font-size: var(--t-lg); font-weight: 600; overflow-wrap: anywhere; }
+#panel h3 { margin: 16px 0 6px; font-family: var(--mono); font-size: var(--t-xs); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+#panel p { margin: 0; }
+#panel ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+#panel li { padding-left: 18px; position: relative; }
+#panel li::before { content: ""; position: absolute; left: 2px; top: 0.55em; width: 8px; height: 2px; background: var(--muted); }
+#p-never li::before { width: 9px; height: 9px; top: 0.34em; left: 1px; background: none; border: 1.5px solid var(--flow-alerts); border-radius: 50%; }
+#p-never li::after { content: ""; position: absolute; left: 1px; top: calc(0.34em + 4px); width: 9px; height: 1.5px; background: var(--flow-alerts); transform: rotate(-45deg); }
+#p-role { font-family: var(--mono); font-size: var(--t-xs); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+#p-live { margin-top: 10px; padding: 7px 9px; border: 1px solid var(--rule); font-family: var(--mono); font-size: var(--t-sm); color: var(--flow-tickets); }
+#p-close { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; min-height: 0; padding: 0; font-size: 18px; line-height: 1; }
+
+/* alert cards */
+#alerts { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: min(340px, calc(100% - 32px)); display: grid; gap: 8px; pointer-events: none; z-index: 3; }
+.alert { background: var(--panel); border: 1px solid var(--flow-alerts); border-radius: 2px; padding: 9px 12px 10px; display: grid; gap: 3px; animation: drop 0.35s ease-out; }
+.alert .tag { font-family: var(--mono); font-size: var(--t-xs); letter-spacing: 0.14em; text-transform: uppercase; color: var(--flow-alerts); font-weight: 600; }
+.alert p { margin: 0; font-size: var(--t-md); }
+.alert .src { font-size: var(--t-xs); color: var(--muted); }
+@keyframes drop { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+
+#fallback { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; z-index: 9; background: var(--bg); }
+#fallback p { max-width: 44ch; margin: 0; }
+
+@media (max-width: 700px) {
+  #title h1 { font-size: 16px; }
+  #title p:not(.hint) { max-width: 34ch; }
+  #dock, #tourbar { width: 100%; max-width: 100%; }
+  #bottom { align-items: stretch; }
+  #flows { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+  #flows legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .chip .tx small { display: none; }
+  .touring #flows { display: none; }
+  #panel { top: auto; left: max(16px, env(safe-area-inset-left, 0px)); width: auto; max-height: 58%; bottom: 12px; }
+  .lbl { padding: 2px 6px 3px; }
+  .lbl b { font-size: 11px; }
+  .lbl .st { font-size: 10px; }
+  .lbl .bar { min-width: 60px; }
+  .speed input { width: 84px; }
+}
+@media (prefers-reduced-motion: reduce) { .alert { animation: none; } }
+</style>
+<!--BODY-->
+<div id="app">
+  <canvas id="scene" aria-label="3D map of the home lab. Use the machine labels to open details."></canvas>
+  <div id="labels"></div>
+
+  <div id="ui">
+    <header id="title">
+      <h1>Rhine's Home Lab</h1>
+      <p>How work and security data move between the machines. Sample data, not a live monitor.</p>
+      <p class="hint" id="hint">Drag to turn &middot; pinch or scroll to zoom &middot; tap a machine</p>
+    </header>
+
+    <div id="bottom">
+      <div id="tourbar" class="card" hidden>
+        <p id="tour-cap" aria-live="polite"></p>
+        <div id="tour-prog"><i></i></div>
+        <div id="tour-row">
+          <span id="tour-count" aria-label="Tour stop"></span>
+          <button class="btn" id="tour-auto" aria-pressed="true">Auto</button>
+          <button class="btn" id="tour-back">Back</button>
+          <button class="btn primary" id="tour-next">Next</button>
+          <button class="btn" id="tour-end">End</button>
+        </div>
+      </div>
+
+      <div id="dock" class="card">
+        <fieldset id="flows"><legend>Flows</legend></fieldset>
+        <div id="controls">
+          <button class="btn primary" id="btn-tour">Start tour</button>
+          <button class="btn" id="btn-pause" aria-pressed="false">Pause</button>
+          <label class="speed" for="speed">Speed
+            <input type="range" id="speed" min="0.25" max="3" step="0.25" value="1">
+            <output id="speed-out" for="speed">1&times;</output>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div id="alerts" aria-live="polite"></div>
+
+    <aside id="panel" class="card" hidden aria-labelledby="p-name">
+      <button class="btn" id="p-close" aria-label="Close panel">&times;</button>
+      <p id="p-role"></p>
+      <h2 id="p-name"></h2>
+      <p id="p-what"></p>
+      <p id="p-live" hidden></p>
+      <h3>What it runs</h3>
+      <ul id="p-runs"></ul>
+      <h3>What it never does</h3>
+      <ul id="p-never"></ul>
+    </aside>
+  </div>
+
+  <div id="fallback" hidden><p id="fallback-msg"></p></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* =====================================================================
+   THE ENGINE. You should not need to edit below this line.
+   It reads MACHINES, FLOWS, ALERT_SAMPLES, TOUR and TUNING from the top.
+   It makes no network calls: everything on screen is a simulation.
+   ===================================================================== */
+(function () {
+  "use strict";
+  var $ = function (s) { return document.querySelector(s); };
+  var app = $("#app"), canvas = $("#scene"), labelsEl = $("#labels");
+
+  function fail(msg) { $("#fallback-msg").textContent = msg; $("#fallback").hidden = false; }
+  if (!window.THREE) { fail("The 3D library did not load. Check the internet connection and reload the page."); return; }
+
+  var renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true }); }
+  catch (e) { fail("This page needs WebGL (3D graphics in the browser), and this browser has it switched off."); return; }
+
+  var V3 = THREE.Vector3;
+  var css = getComputedStyle(document.documentElement);
+  var BG = new THREE.Color(css.getPropertyValue("--bg").trim() || "#0a1727");
+  var INK = new THREE.Color(css.getPropertyValue("--floor-ink").trim() || "#6fa8dc");
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var FLOW_KEYS = ["tickets", "renders", "logs", "alerts", "remote"];
+  var FCOL = {};
+  FLOW_KEYS.forEach(function (k) {
+    FCOL[k] = new THREE.Color(FLOWS[k].color);
+    document.documentElement.style.setProperty("--flow-" + k, FLOWS[k].color);
+  });
+
+  function rand(a, b) { return a + Math.random() * (b - a); }
+  function randR(r) { return rand(r[0], r[1]); }
+  function randInt(r) { return Math.floor(rand(r[0], r[1] + 1)); }
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+  /* ---------- machines ---------- */
+  var machines = MACHINES.map(function (cfg) {
+    var roles = [].concat(cfg.role);
+    return { cfg: cfg, id: cfg.id, role: roles[0], roles: roles, pos: new V3(cfg.pos[0], 0, cfg.pos[1]),
+             queue: [], job: null, incoming: 0, blink: 0, flash: 0, nextLog: rand(0, TUNING.logEvery) };
+  });
+  var byId = {};
+  machines.forEach(function (m) { byId[m.id] = m; });
+  function ofRole(r) { return machines.filter(function (m) { return m.roles.indexOf(r) >= 0; }); }
+  var router = ofRole("router")[0];
+  if (!router) { fail('The machine list needs one entry with role "router".'); return; }
+  var orch = ofRole("orchestrator")[0] || null;
+  var gpus = ofRole("gpu");
+  var soc = ofRole("soc")[0] || null;
+  var storage = ofRole("storage")[0] || null;
+  var remote = ofRole("remote")[0] || null;
+  var home = machines.filter(function (m) { return m.role !== "remote"; });
+
+  function dirToRouter(m) {
+    var d = router.pos.clone().sub(m.pos); d.y = 0;
+    return d.lengthSq() < 1e-6 ? new V3(0, 0, 1) : d.normalize();
+  }
+  function edge(m, h) {
+    if (m === router) return new V3(router.pos.x, h, router.pos.z);
+    var p = m.pos.clone().addScaledVector(dirToRouter(m), 1.35); p.y = h; return p;
+  }
+
+  /* ---------- scene ---------- */
+  var scene = new THREE.Scene();
+  scene.background = BG;
+  scene.fog = new THREE.Fog(BG.getHex(), 40, 120);
+  var camera = new THREE.PerspectiveCamera(40, 1, 0.1, 400);
+  scene.add(new THREE.HemisphereLight(0xdcebff, 0x0a1727, 0.95));
+  var sun = new THREE.DirectionalLight(0xffffff, 0.75); sun.position.set(7, 14, 9); scene.add(sun);
+
+  // blueprint floor: a fine grid and a heavier grid every 5 squares
+  var floor = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshBasicMaterial({ color: BG }));
+  floor.rotation.x = -Math.PI / 2; floor.position.y = -0.02; scene.add(floor);
+  function grid(div, opacity) {
+    var g = new THREE.GridHelper(200, div, INK, INK);
+    g.material.transparent = true; g.material.opacity = opacity; g.material.depthWrite = false; scene.add(g);
+  }
+  grid(200, 0.1); grid(40, 0.22);
+
+  var flowGroup = {};
+  FLOW_KEYS.forEach(function (k) { flowGroup[k] = new THREE.Group(); flowGroup[k].visible = FLOWS[k].on; scene.add(flowGroup[k]); });
+
+  var M_BODY = new THREE.MeshStandardMaterial({ color: 0xc9d9ea, roughness: 0.85, metalness: 0, flatShading: true });
+  var M_DARK = new THREE.MeshStandardMaterial({ color: 0x1b2f48, roughness: 0.9, metalness: 0, flatShading: true });
+  var M_PAD = new THREE.MeshStandardMaterial({ color: 0x12283f, roughness: 1, metalness: 0 });
+  var IDLE = new THREE.Color(0x2a4766);
+
+  function box(w, h, d, mat, x, y, z) {
+    var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat); m.position.set(x || 0, y || 0, z || 0); return m;
+  }
+  function laptop(screenMat, s) {
+    var g = new THREE.Group();
+    g.add(box(1.6, 0.08, 1.1, M_BODY, 0, 0.04, 0));
+    g.add(box(1.3, 0.012, 0.55, M_DARK, 0, 0.086, -0.08));
+    var lid = new THREE.Group(); lid.position.set(0, 0.08, -0.53); lid.rotation.x = -0.3;
+    lid.add(box(1.6, 1.05, 0.06, M_BODY, 0, 0.525, 0));
+    lid.add(box(1.44, 0.9, 0.02, screenMat, 0, 0.535, 0.035));
+    g.add(lid); g.scale.setScalar(s || 1); return g;
+  }
+  var TOPS = { tower: 2.75, mini: 1.05, laptop: 1.75, storage: 1.6, router: 1.75, remote: 1.75 };
+
+  function buildModel(m) {
+    var g = new THREE.Group();
+    var ind = new THREE.MeshBasicMaterial({ color: IDLE.clone() });   // the part that lights up
+    m.ind = ind;
+    var k = m.cfg.kind;
+    if (k === "tower") {
+      g.add(box(0.95, 2.0, 1.9, M_BODY, 0, 1.0, 0));
+      g.add(box(0.8, 1.8, 0.04, M_DARK, 0, 1.0, 0.955));
+      g.add(box(0.6, 0.2, 0.05, ind, 0, 0.95, 0.985));     // GPU light, front
+      g.add(box(0.5, 0.03, 1.3, ind, 0, 2.012, 0));        // GPU light, top
+      g.add(box(0.12, 0.05, 0.05, new THREE.MeshBasicMaterial({ color: INK }), 0.25, 1.75, 0.985));
+    } else if (k === "mini") {
+      g.add(box(1.5, 0.38, 1.5, M_BODY, 0, 0.19, 0));
+      g.add(box(1.1, 0.02, 1.1, M_DARK, 0, 0.385, 0));
+      g.add(box(0.5, 0.06, 0.04, ind, 0, 0.16, 0.76));
+      g.add(box(0.4, 0.025, 0.4, ind, 0, 0.4, 0));
+    } else if (k === "laptop") {
+      g.add(laptop(ind, 1));
+    } else if (k === "storage") {
+      var lt = laptop(new THREE.MeshBasicMaterial({ color: IDLE }), 0.8); lt.position.x = -0.42; g.add(lt);
+      g.add(box(0.55, 0.24, 0.9, M_BODY, 0.95, 0.12, 0));
+      g.add(box(0.55, 0.24, 0.9, M_BODY, 0.95, 0.4, 0));
+      g.add(box(0.36, 0.05, 0.03, ind, 0.95, 0.12, 0.46));
+      g.add(box(0.36, 0.05, 0.03, ind, 0.95, 0.4, 0.46));
+    } else if (k === "router") {
+      g.add(box(1.5, 0.24, 0.95, M_BODY, 0, 0.12, 0));
+      ind.color.copy(INK);
+      for (var i = 0; i < 4; i++) g.add(box(0.12, 0.04, 0.03, ind, -0.45 + i * 0.3, 0.13, 0.485));
+      [-0.6, -0.2, 0.2, 0.6].forEach(function (x) {
+        var a = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 1.0, 6), M_DARK);
+        a.position.set(x, 0.7, -0.4); a.rotation.z = -x * 0.35; a.rotation.x = -0.12; g.add(a);
+      });
+    } else { // remote: a small laptop and a phone
+      ind.color.copy(FCOL.remote).multiplyScalar(0.55);
+      var rl = laptop(ind, 0.72); rl.position.x = -0.45; g.add(rl);
+      var ph = new THREE.Group(); ph.position.set(0.85, 0, 0.1); ph.rotation.x = -0.28;
+      ph.add(box(0.44, 0.9, 0.06, M_BODY, 0, 0.5, 0));
+      ph.add(box(0.36, 0.76, 0.02, ind, 0, 0.5, 0.035));
+      g.add(ph);
+    }
+    g.position.y = 0.1;
+    return g;
+  }
+
+  var hits = [];
+  var ribbonMat = new THREE.MeshBasicMaterial({ color: INK, transparent: true, opacity: 0.85 });
+  var glowMat = new THREE.MeshBasicMaterial({ color: INK, transparent: true, opacity: 0.13, depthWrite: false });
+  var M_HIT = new THREE.MeshBasicMaterial({ visible: false });
+
+  machines.forEach(function (m) {
+    var g = new THREE.Group(); g.position.copy(m.pos); scene.add(g); m.group = g;
+    var pad = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 0.1, 48), M_PAD); pad.position.y = 0.05; g.add(pad);
+    m.rimMat = new THREE.MeshBasicMaterial({ color: INK, side: THREE.DoubleSide });
+    var rim = new THREE.Mesh(new THREE.RingGeometry(1.5, 1.6, 64), m.rimMat); rim.rotation.x = -Math.PI / 2; rim.position.y = 0.105; g.add(rim);
+    m.rim = rim;
+    g.add(buildModel(m));
+    var top = TOPS[m.cfg.kind] || 1.7;
+    m.anchor = m.pos.clone().setY(top + 0.25);
+    var hit = new THREE.Mesh(new THREE.BoxGeometry(3.2, top + 0.2, 3.2), M_HIT);
+    hit.position.set(m.pos.x, (top + 0.2) / 2, m.pos.z); hit.userData.id = m.id; scene.add(hit); hits.push(hit);
+
+    // network line on the floor from this machine to the router (the remote device uses the tunnel instead)
+    if (m !== router && m.role !== "remote") {
+      var dx = router.pos.x - m.pos.x, dz = router.pos.z - m.pos.z, len = Math.sqrt(dx * dx + dz * dz);
+      [[0.09, ribbonMat, 0.035], [0.5, glowMat, 0.03]].forEach(function (r) {
+        var geo = new THREE.PlaneGeometry(len, r[0]); geo.rotateX(-Math.PI / 2);
+        var rb = new THREE.Mesh(geo, r[1]);
+        rb.position.set(m.pos.x + dx / 2, r[2], m.pos.z + dz / 2); rb.rotation.y = -Math.atan2(dz, dx); scene.add(rb);
+      });
+    }
+  });
+
+  /* ---------- GPU extras: busy ring and waiting lane ---------- */
+  function slotPos(g, i) {
+    var side = g.pos.x >= router.pos.x ? 1 : -1;
+    return new V3(g.pos.x + side * (2.2 + i * 0.62), 0.42, g.pos.z + 0.7);
+  }
+  var busyMat = new THREE.MeshBasicMaterial({ color: FCOL.tickets });
+  gpus.forEach(function (g) {
+    g.ring = new THREE.Mesh(new THREE.TorusGeometry(1.28, 0.055, 6, 48, Math.PI * 1.45), busyMat);
+    g.ring.rotation.x = -Math.PI / 2; g.ring.position.set(g.pos.x, 0.32, g.pos.z); g.ring.visible = false;
+    flowGroup.tickets.add(g.ring);
+    var a = slotPos(g, 0), b = slotPos(g, TUNING.queueSlots - 1);
+    var x0 = Math.min(a.x, b.x) - 0.4, x1 = Math.max(a.x, b.x) + 0.4, z0 = a.z - 0.32, z1 = a.z + 0.32;
+    var lane = new THREE.Mesh(new THREE.PlaneGeometry(x1 - x0, z1 - z0),
+      new THREE.MeshBasicMaterial({ color: FCOL.tickets, transparent: true, opacity: 0.1, depthWrite: false }));
+    lane.rotation.x = -Math.PI / 2; lane.position.set((x0 + x1) / 2, 0.02, (z0 + z1) / 2); flowGroup.tickets.add(lane);
+    var og = new THREE.BufferGeometry().setFromPoints([new V3(x0, 0.03, z0), new V3(x1, 0.03, z0), new V3(x1, 0.03, z1), new V3(x0, 0.03, z1)]);
+    var outline = new THREE.LineLoop(og, new THREE.LineDashedMaterial({ color: FCOL.tickets, dashSize: 0.22, gapSize: 0.16, transparent: true, opacity: 0.8 }));
+    outline.computeLineDistances(); flowGroup.tickets.add(outline);
+  });
+
+  /* ---------- SOC extras: alert ring and beacon ---------- */
+  var alertRing = null, beacon = null;
+  if (soc) {
+    alertRing = new THREE.Mesh(new THREE.RingGeometry(1.62, 1.8, 64),
+      new THREE.MeshBasicMaterial({ color: FCOL.alerts, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false }));
+    alertRing.rotation.x = -Math.PI / 2; alertRing.position.set(soc.pos.x, 0.06, soc.pos.z); flowGroup.alerts.add(alertRing);
+    beacon = new THREE.Mesh(new THREE.OctahedronGeometry(0.28, 0), new THREE.MeshBasicMaterial({ color: FCOL.alerts }));
+    beacon.position.set(soc.pos.x, 2.1, soc.pos.z - 0.3); beacon.visible = false; flowGroup.alerts.add(beacon);
+  }
+
+  /* ---------- home boundary and VPN tunnel ---------- */
+  var bx0 = Infinity, bx1 = -Infinity, bz0 = Infinity, bz1 = -Infinity;
+  home.forEach(function (m) { bx0 = Math.min(bx0, m.pos.x); bx1 = Math.max(bx1, m.pos.x); bz0 = Math.min(bz0, m.pos.z); bz1 = Math.max(bz1, m.pos.z); });
+  gpus.forEach(function (g) { var s = slotPos(g, TUNING.queueSlots - 1); bx0 = Math.min(bx0, s.x + 2); bx1 = Math.max(bx1, s.x - 2); });
+  bx0 -= 3; bx1 += 3; bz0 -= 3; bz1 += 2.6;
+  var wall = new THREE.LineLoop(
+    new THREE.BufferGeometry().setFromPoints([new V3(bx0, 0.02, bz0), new V3(bx1, 0.02, bz0), new V3(bx1, 0.02, bz1), new V3(bx0, 0.02, bz1)]),
+    new THREE.LineDashedMaterial({ color: INK, dashSize: 0.6, gapSize: 0.35, transparent: true, opacity: 0.7 }));
+  wall.computeLineDistances(); scene.add(wall);
+
+  var tunnel = null;
+  if (remote) {
+    var p0 = remote.pos.clone().setY(0.95), p2 = router.pos.clone().setY(0.6);
+    var p1 = p0.clone().add(p2).multiplyScalar(0.5).setY(4.2);
+    tunnel = new THREE.QuadraticBezierCurve3(p0, p1, p2);
+    flowGroup.remote.add(new THREE.Mesh(new THREE.TubeGeometry(tunnel, 48, 0.4, 12, false),
+      new THREE.MeshBasicMaterial({ color: FCOL.remote, transparent: true, opacity: 0.14, side: THREE.DoubleSide, depthWrite: false })));
+    var hoopMat = new THREE.MeshBasicMaterial({ color: FCOL.remote, transparent: true, opacity: 0.75 });
+    for (var t = 0.06; t < 0.97; t += 0.089) {
+      var hoop = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.022, 5, 24), hoopMat);
+      var pt = tunnel.getPoint(t); hoop.position.copy(pt); hoop.lookAt(pt.clone().add(tunnel.getTangent(t))); flowGroup.remote.add(hoop);
+    }
+  }
+
+  /* ---------- labels ---------- */
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  machines.forEach(function (m) {
+    var b = el("button", "lbl"); b.type = "button"; b.dataset.id = m.id;
+    b.appendChild(el("b", null, m.cfg.name));
+    m.stEl = el("span", "st", m.cfg.short || ""); b.appendChild(m.stEl);
+    if (m.role === "gpu") { var bar = el("i", "bar"); m.barEl = el("i"); bar.appendChild(m.barEl); b.appendChild(bar); }
+    b.addEventListener("click", function () { selectMachine(m.id); });
+    labelsEl.appendChild(b); m.lbl = b; m.stText = "";
+  });
+  var zones = [];
+  function addZone(text, pos, cls) { var z = el("div", "zone" + (cls ? " " + cls : ""), text); labelsEl.appendChild(z); var o = { el: z, pos: pos }; zones.push(o); return o; }
+  addZone("Home network", new V3(bx0 + 3.2, 0, bz0 - 0.8));
+  if (remote) addZone("Outside the home", new V3(remote.pos.x - 1.5, 0, remote.pos.z + 2.3));
+  var tunZone = tunnel ? addZone("VPN tunnel", tunnel.getPoint(0.42).add(new V3(0, 0.75, 0)), "tun") : null;
+
+  /* ---------- moving things ---------- */
+  var GEO = {
+    tickets: new THREE.BoxGeometry(0.5, 0.32, 0.06),
+    renders: new THREE.BoxGeometry(0.32, 0.32, 0.32),
+    logs: new THREE.IcosahedronGeometry(0.09, 0),
+    remote: new THREE.OctahedronGeometry(0.2, 0)
+  };
+  var PMAT = {}; ["tickets", "renders", "logs", "remote"].forEach(function (k) { PMAT[k] = new THREE.MeshBasicMaterial({ color: FCOL[k] }); });
+  var SPEED = { tickets: 4.5, renders: 4, logs: 3.2, remote: 6.5 };
+  var HEIGHT = { tickets: 0.55, renders: 0.95, logs: 0.28, remote: 0.6 };
+
+  function makePath(pts) {
+    var cum = [0];
+    for (var i = 1; i < pts.length; i++) cum.push(cum[i - 1] + pts[i].distanceTo(pts[i - 1]));
+    return { pts: pts, cum: cum, total: cum[cum.length - 1] };
+  }
+  function pointAt(path, d, out) {
+    var c = path.cum, i = 1;
+    while (i < c.length - 1 && c[i] < d) i++;
+    var seg = c[i] - c[i - 1] || 1;
+    return out.copy(path.pts[i - 1]).lerp(path.pts[i], clamp((d - c[i - 1]) / seg, 0, 1));
+  }
+  function groundPath(a, b, h) {
+    var pts = [edge(a, h)];
+    if (a !== router && b !== router) pts.push(new V3(router.pos.x, h, router.pos.z));
+    pts.push(edge(b, h));
+    return makePath(pts);
+  }
+
+  var packets = [], walkers = [], later = [];
+  var sim = { t: 0, speed: 1, paused: false, warm: false, burstLeft: 0, nextBurst: 1, nextTicket: 0, nextAlert: 0, nextRemote: 2, rr: 0 };
+
+  function spawn(flow, path, onArrive) {
+    var mesh = new THREE.Mesh(GEO[flow], PMAT[flow]);
+    pointAt(path, 0, mesh.position); flowGroup[flow].add(mesh);
+    var p = { mesh: mesh, flow: flow, path: path, d: 0, onArrive: onArrive };
+    packets.push(p); return p;
+  }
+
+  // The rule: a GPU machine only starts a ticket when its GPU is free.
+  function startJob(g, tk) {
+    g.job = { t: 0, dur: randR(TUNING.jobSeconds) };
+    tk.entering = true; tk.target = g.pos.clone().setY(1.0);
+  }
+  function ticketArrived(g, mesh) {
+    g.incoming--;
+    var tk = { mesh: mesh, target: mesh.position.clone(), entering: false };
+    walkers.push(tk);
+    if (!g.job && g.queue.length === 0) startJob(g, tk); else g.queue.push(tk);
+  }
+  function finishJob(g) {
+    g.job = null;
+    if (storage) spawn("renders", groundPath(g, storage, HEIGHT.renders), function () { storage.blink = 1; });
+    if (g.queue.length) startJob(g, g.queue.shift());
+  }
+  function load(g) { return (g.job ? 1 : 0) + g.queue.length + g.incoming; }
+  function dispatch() {
+    var best = null, bl = Infinity;
+    gpus.forEach(function (g, i) {
+      var l = load(g) + ((i + sim.rr) % gpus.length) * 0.01;
+      if (l < bl) { bl = l; best = g; }
+    });
+    if (!best || load(best) >= 1 + TUNING.queueSlots) return false;   // everything is full: hold the ticket
+    sim.rr++; best.incoming++; orch.blink = 1;
+    var p = spawn("tickets", groundPath(orch, best, HEIGHT.tickets), null);
+    p.onArrive = function () { p.keep = true; ticketArrived(best, p.mesh); };
+    return true;
+  }
+
+  function fireAlert() {
+    soc.flash = 1;
+    var box = $("#alerts");
+    while (box.children.length >= 2) box.removeChild(box.firstChild);
+    var card = el("div", "alert");
+    card.appendChild(el("span", "tag", "Sample alert"));
+    card.appendChild(el("p", null, ALERT_SAMPLES[Math.floor(Math.random() * ALERT_SAMPLES.length)]));
+    card.appendChild(el("span", "src", "From the SOC server · invented example"));
+    box.appendChild(card);
+    setTimeout(function () { if (card.parentNode) card.parentNode.removeChild(card); }, 6500);
+  }
+
+  function remoteSession() {
+    var targets = machines.filter(function (m) { return m.role === "orchestrator" || m.role === "gpu" || m.role === "soc"; });
+    if (!targets.length) return;
+    var tgt = targets[Math.floor(Math.random() * targets.length)];
+    var pts = tunnel.getPoints(32); pts.push(edge(tgt, HEIGHT.remote));
+    var out = makePath(pts), back = makePath(pts.slice().reverse());
+    for (var i = 0; i < 3; i++) {
+      later.push({ t: sim.t + i * 0.28, fn: function () { spawn("remote", out, function () { spawn("remote", back, null); }); } });
+    }
+  }
+
+  var tmp = new V3();
+  function step(dt) {
+    sim.t += dt;
+    var i;
+
+    // new render tickets arrive in batches
+    if (orch && gpus.length) {
+      if (sim.burstLeft <= 0 && sim.t >= sim.nextBurst) {
+        sim.burstLeft = randInt(TUNING.burstSize); sim.nextBurst = sim.t + randR(TUNING.burstEvery); sim.nextTicket = sim.t;
+      }
+      if (sim.burstLeft > 0 && sim.t >= sim.nextTicket) {
+        if (dispatch()) sim.burstLeft--;
+        sim.nextTicket = sim.t + TUNING.ticketGap;
+      }
+    }
+    gpus.forEach(function (g) {
+      if (g.job) { g.job.t += dt; if (g.job.t >= g.job.dur) finishJob(g); }
+      g.queue.forEach(function (tk, n) { tk.target = slotPos(g, n); });
+    });
+
+    // security logs: a steady trickle from every machine at home to the SOC
+    if (soc) home.forEach(function (m) {
+      if (m === soc) return;
+      m.nextLog -= dt;
+      if (m.nextLog <= 0) { m.nextLog = TUNING.logEvery * rand(0.8, 1.2); spawn("logs", groundPath(m, soc, HEIGHT.logs), null); }
+    });
+
+    if (soc && sim.t >= sim.nextAlert) {
+      sim.nextAlert = sim.t + randR(TUNING.alertEvery);
+      if (FLOWS.alerts.on && !sim.warm) fireAlert();
+    }
+    if (remote && tunnel && sim.t >= sim.nextRemote) { sim.nextRemote = sim.t + randR(TUNING.remoteEvery); remoteSession(); }
+
+    for (i = later.length - 1; i >= 0; i--) if (sim.t >= later[i].t) { var f = later[i].fn; later.splice(i, 1); f(); }
+
+    for (i = packets.length - 1; i >= 0; i--) {
+      var p = packets[i];
+      p.d += SPEED[p.flow] * dt;
+      pointAt(p.path, p.d, p.mesh.position);
+      if (p.flow === "renders" || p.flow === "remote") { p.mesh.rotation.y += dt * 3; p.mesh.rotation.x += dt * 1.7; }
+      if (p.d >= p.path.total) {
+        packets.splice(i, 1);
+        if (p.onArrive) p.onArrive();
+        if (!p.keep) p.mesh.parent.remove(p.mesh);
+      }
+    }
+    for (i = walkers.length - 1; i >= 0; i--) {
+      var w = walkers[i];
+      tmp.copy(w.target).sub(w.mesh.position);
+      var L = tmp.length(), s = 5 * dt;
+      if (L <= s) {
+        w.mesh.position.copy(w.target);
+        if (w.entering) { w.mesh.parent.remove(w.mesh); walkers.splice(i, 1); }
+      } else {
+        w.mesh.position.addScaledVector(tmp, s / L);
+        if (w.entering) w.mesh.scale.setScalar(clamp(L / 1.4, 0.08, 1));
+      }
+    }
+    machines.forEach(function (m) { m.blink = Math.max(0, m.blink - dt * 1.6); m.flash = Math.max(0, m.flash - dt * 0.45); });
+  }
+
+  var cA = new THREE.Color(), SOC_BASE = FCOL.logs.clone().multiplyScalar(0.5);
+  function paint(realT) {
+    gpus.forEach(function (g) {
+      var busy = !!g.job;
+      g.ring.visible = busy;
+      if (busy) g.ring.rotation.z = -sim.t * 2.2;
+      g.ind.color.copy(IDLE); if (busy) g.ind.color.lerp(FCOL.tickets, 0.75 + 0.25 * Math.sin(sim.t * 6));
+      var q = g.queue.length;
+      var txt = busy ? ("GPU busy" + (q ? " · " + q + " waiting" : "")) : "GPU free";
+      if (txt !== g.stText) { g.stText = txt; g.stEl.textContent = txt; g.lbl.classList.toggle("busy", busy); g.hw = g.lbl.offsetWidth / 2; g.hh = g.lbl.offsetHeight; }
+      g.barEl.style.width = busy ? (clamp(g.job.t / g.job.dur, 0, 1) * 100).toFixed(1) + "%" : "0";
+    });
+    if (orch && orch !== soc) orch.ind.color.copy(INK).lerp(FCOL.tickets, orch.blink);
+    if (storage) storage.ind.color.copy(IDLE).lerp(FCOL.renders, storage.blink);
+    if (soc) {
+      var f = soc.flash, on = FLOWS.alerts.on;
+      var pulse = f > 0 && on ? 0.5 + 0.5 * Math.sin(realT * 14) : 0;
+      soc.ind.color.copy(SOC_BASE).lerp(FCOL.alerts, on ? Math.min(1, f * 1.4) * (0.55 + 0.45 * pulse) : 0);
+      if (orch === soc) soc.ind.color.lerp(FCOL.tickets, soc.blink * 0.8);   // screen blinks when it hands out a ticket
+      var age = 1 - f;                         // 0 at the moment of the alert
+      var sc = 1 + clamp(age * 3.2, 0, 1.6);
+      alertRing.scale.set(sc, sc, 1);
+      alertRing.material.opacity = f > 0 ? clamp(1 - age * 2, 0, 1) * 0.9 : 0;
+      beacon.visible = f > 0.25; beacon.rotation.y = realT * 4;
+    }
+    machines.forEach(function (m) {
+      var sel = m.id === selected || m.id === spot;
+      m.rimMat.color.copy(sel ? cA.set(0xffffff) : INK);
+      var s = sel ? 1.05 + 0.03 * Math.sin(realT * 5) : 1; m.rim.scale.set(s, s, 1);
+    });
+  }
+
+  /* ---------- camera ---------- */
+  var cam = { target: new V3(), theta: 0, phi: 1, radius: 30 };
+  var camAnim = null, userMoved = false;
+  function narrow() { return app.clientWidth < 700; }
+  function placeCamera(c, pose) {
+    var sp = Math.sin(pose.phi);
+    c.position.set(pose.target.x + pose.radius * sp * Math.sin(pose.theta), pose.target.y + pose.radius * Math.cos(pose.phi), pose.target.z + pose.radius * sp * Math.cos(pose.theta));
+    c.lookAt(pose.target);
+  }
+  var probe = new THREE.PerspectiveCamera(40, 1, 0.1, 400);
+  function overviewPose() {
+    var pts = [], ax0 = Infinity, ax1 = -Infinity, az0 = Infinity, az1 = -Infinity;
+    machines.forEach(function (m) {
+      ax0 = Math.min(ax0, m.pos.x); ax1 = Math.max(ax1, m.pos.x); az0 = Math.min(az0, m.pos.z); az1 = Math.max(az1, m.pos.z);
+      [-2, 2].forEach(function (dx) { pts.push(new V3(m.pos.x + dx, 0, m.pos.z + 2)); pts.push(new V3(m.pos.x + dx, 3.4, m.pos.z - 1)); });
+    });
+    gpus.forEach(function (g) { pts.push(slotPos(g, TUNING.queueSlots - 1)); });
+    pts.push(new V3(bx0, 0, bz0), new V3(bx1, 0, bz0));
+    if (tunnel) pts.push(tunnel.getPoint(0.5));
+    var n = narrow();
+    var pose = { target: new V3((ax0 + ax1) / 2, 0.6, (az0 + az1) / 2), theta: n ? 0.0 : 0.3, phi: n ? 0.58 : 0.88, radius: 14 };
+    var lim = n ? { x: 0.82, top: 0.6, bot: -0.42 } : { x: 0.86, top: 0.72, bot: -0.84 };
+    probe.aspect = camera.aspect; probe.updateProjectionMatrix();
+    for (var k = 0; k < 90; k++) {
+      placeCamera(probe, pose); probe.updateMatrixWorld();
+      var ok = pts.every(function (p) { var v = p.clone().project(probe); return Math.abs(v.x) <= lim.x && v.y <= lim.top && v.y >= lim.bot; });
+      if (ok) break;
+      pose.radius *= 1.04;
+    }
+    return pose;
+  }
+  function machinePose(m, view) {
+    view = view || {};
+    var n = narrow();
+    var theta = view.angle != null ? view.angle : clamp(m.pos.x * 0.06, -0.6, 0.6);
+    var radius = view.distance != null ? view.distance : (n ? 25 : 19);
+    var lift = radius * (n ? 0.2 : 0.07);
+    var target = m.pos.clone().setY(0.9);
+    target.x += Math.sin(theta) * lift; target.z += Math.cos(theta) * lift;
+    if (m.role === "gpu") target.x += (m.pos.x >= router.pos.x ? 1 : -1) * 1.7;
+    return { target: target, theta: theta, phi: view.tilt != null ? view.tilt : 0.95, radius: radius };
+  }
+  function setPose(p) { cam.target.copy(p.target); cam.theta = p.theta; cam.phi = p.phi; cam.radius = p.radius; }
+  function flyTo(pose, dur) {
+    if (reduceMotion || dur === 0) { setPose(pose); camAnim = null; return; }
+    var dth = pose.theta - cam.theta; dth = Math.atan2(Math.sin(dth), Math.cos(dth));
+    camAnim = { t: 0, dur: dur || 1.5, from: { target: cam.target.clone(), theta: cam.theta, phi: cam.phi, radius: cam.radius }, to: pose, dth: dth };
+  }
+  function updateCamera(real) {
+    if (camAnim) {
+      camAnim.t += real;
+      var u = clamp(camAnim.t / camAnim.dur, 0, 1), e = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+      var a = camAnim.from, b = camAnim.to;
+      cam.target.copy(a.target).lerp(b.target, e);
+      cam.theta = a.theta + camAnim.dth * e; cam.phi = a.phi + (b.phi - a.phi) * e; cam.radius = a.radius + (b.radius - a.radius) * e;
+      if (u >= 1) camAnim = null;
+    }
+    placeCamera(camera, cam);
+    scene.fog.near = cam.radius * 1.1; scene.fog.far = cam.radius * 2.3 + 12;
+  }
+
+  /* ---------- orbit, zoom, tap ---------- */
+  var ptrs = new Map(), down = null, pinch = null;
+  var raycaster = new THREE.Raycaster(), ndc = new THREE.Vector2();
+  function touched() { userMoved = true; camAnim = null; $("#hint").classList.add("gone"); }
+  canvas.addEventListener("pointerdown", function (e) {
+    try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+    ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (ptrs.size === 1) down = { x: e.clientX, y: e.clientY, t: performance.now(), moved: false };
+    else { down = null; pinch = null; }
+  });
+  canvas.addEventListener("pointermove", function (e) {
+    var p = ptrs.get(e.pointerId); if (!p) return;
+    var dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY;
+    if (ptrs.size === 1) {
+      if (down && Math.abs(e.clientX - down.x) + Math.abs(e.clientY - down.y) > 7) down.moved = true;
+      if (!down || down.moved) {
+        touched();
+        cam.theta -= dx * 0.006; cam.phi = clamp(cam.phi - dy * 0.005, 0.12, 1.45);
+      }
+    } else if (ptrs.size === 2) {
+      var a = Array.from(ptrs.values()), dist = Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y), mx = (a[0].x + a[1].x) / 2, my = (a[0].y + a[1].y) / 2;
+      if (pinch) {
+        touched();
+        cam.radius = clamp(cam.radius * pinch.dist / Math.max(dist, 1), 6, 110);
+        var k = cam.radius * 0.0016, ddx = mx - pinch.mx, ddy = my - pinch.my, ct = Math.cos(cam.theta), st = Math.sin(cam.theta);
+        cam.target.x = clamp(cam.target.x - (ddx * ct + ddy * st) * k, -20, 20);
+        cam.target.z = clamp(cam.target.z - (-ddx * st + ddy * ct) * k, -20, 20);
+      }
+      pinch = { dist: dist, mx: mx, my: my };
+    }
+  });
+  function pointerEnd(e) {
+    var wasTap = down && !down.moved && ptrs.size === 1 && performance.now() - down.t < 600;
+    ptrs.delete(e.pointerId); pinch = null;
+    if (wasTap && e.type === "pointerup") {
+      var r = canvas.getBoundingClientRect();
+      ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+      raycaster.setFromCamera(ndc, camera);
+      var h = raycaster.intersectObjects(hits, false);
+      if (h.length) selectMachine(h[0].object.userData.id); else closePanel();
+    }
+    if (ptrs.size === 0) down = null;
+  }
+  canvas.addEventListener("pointerup", pointerEnd);
+  canvas.addEventListener("pointercancel", pointerEnd);
+  canvas.addEventListener("wheel", function (e) {
+    e.preventDefault(); touched();
+    cam.radius = clamp(cam.radius * Math.exp(e.deltaY * 0.0012), 6, 110);
+  }, { passive: false });
+
+  /* ---------- side panel ---------- */
+  var selected = null, spot = null;
+  var ROLE_NAME = { router: "Network edge", orchestrator: "Job queue", gpu: "GPU worker", soc: "Security (SOC)", storage: "Backups and storage", remote: "Remote access" };
+  function fillList(ul, items) { ul.textContent = ""; (items || []).forEach(function (t) { ul.appendChild(el("li", null, t)); }); }
+  function selectMachine(id) {
+    var m = byId[id]; if (!m) return;
+    selected = id; $("#hint").classList.add("gone");
+    machines.forEach(function (x) { x.lbl.classList.toggle("sel", x.id === id); });
+    $("#p-role").textContent = m.roles.map(function (r) { return ROLE_NAME[r] || r; }).join(" + ");
+    $("#p-name").textContent = m.cfg.name;
+    $("#p-what").textContent = m.cfg.what || "";
+    fillList($("#p-runs"), m.cfg.runs); fillList($("#p-never"), m.cfg.never);
+    $("#p-live").hidden = m.role !== "gpu"; liveText = "";
+    $("#panel").hidden = false;
+  }
+  function closePanel() {
+    selected = null; $("#panel").hidden = true;
+    machines.forEach(function (x) { x.lbl.classList.toggle("sel", x.id === spot); });
+  }
+  $("#p-close").addEventListener("click", closePanel);
+  var liveText = "";
+  function updatePanelLive() {
+    var m = selected && byId[selected]; if (!m || m.role !== "gpu") return;
+    var q = m.queue.length;
+    var t = m.job ? "Right now: GPU busy, " + (q === 0 ? "nothing waiting." : q + (q === 1 ? " ticket waiting." : " tickets waiting.")) : "Right now: GPU free, ready for a ticket.";
+    if (t !== liveText) { liveText = t; $("#p-live").textContent = t; }
+  }
+
+  /* ---------- flow switches ---------- */
+  var SHAPES = {
+    tickets: '<rect x="1.5" y="4" width="13" height="8" rx="1" fill="currentColor"/>',
+    renders: '<path d="M8 1.5 14 5v6l-6 3.5L2 11V5z" fill="currentColor"/><path d="M2 5l6 3.5L14 5M8 8.5v6" stroke="#0a1727" stroke-width="1" fill="none"/>',
+    logs: '<circle cx="3" cy="8" r="1.7" fill="currentColor"/><circle cx="8" cy="8" r="1.7" fill="currentColor"/><circle cx="13" cy="8" r="1.7" fill="currentColor"/>',
+    alerts: '<circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="8" r="1.8" fill="currentColor"/>',
+    remote: '<path d="M8 1.5 13.5 8 8 14.5 2.5 8z" fill="currentColor"/>'
+  };
+  FLOW_KEYS.forEach(function (k) {
+    var lab = el("label", "chip"); lab.style.setProperty("--c", FLOWS[k].color);
+    var inp = el("input"); inp.type = "checkbox"; inp.id = "flow-" + k; inp.checked = !!FLOWS[k].on;
+    var ico = el("span"); ico.style.display = "contents";
+    ico.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true">' + SHAPES[k] + "</svg>";   // fixed icons, not config text
+    var tx = el("span", "tx"); tx.appendChild(el("b", null, FLOWS[k].label)); tx.appendChild(el("small", null, FLOWS[k].hint));
+    lab.appendChild(inp); lab.appendChild(ico); lab.appendChild(tx);
+    inp.addEventListener("change", function () {
+      FLOWS[k].on = inp.checked; flowGroup[k].visible = inp.checked;
+      if (k === "alerts" && !inp.checked) $("#alerts").textContent = "";
+    });
+    $("#flows").appendChild(lab);
+  });
+
+  /* ---------- speed and pause ---------- */
+  var speedEl = $("#speed"), pauseBtn = $("#btn-pause");
+  function setSpeed() { sim.speed = parseFloat(speedEl.value) || 1; $("#speed-out").textContent = sim.speed.toFixed(2).replace(/\.?0+$/, "") + "×"; }
+  speedEl.addEventListener("input", setSpeed);
+  function setPaused(p) { sim.paused = p; pauseBtn.textContent = p ? "Play" : "Pause"; pauseBtn.setAttribute("aria-pressed", p ? "true" : "false"); }
+  pauseBtn.addEventListener("click", function () { setPaused(!sim.paused); });
+  window.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { if (selected) closePanel(); else if (tour.active) endTour(); }
+  });
+
+  /* ---------- tour ---------- */
+  var tour = { active: false, i: 0, auto: true, timer: 0, stops: [] };
+  function showStop(i) {
+    tour.i = i; tour.timer = 0;
+    var s = tour.stops[i], last = i === tour.stops.length - 1;
+    $("#tour-cap").textContent = s.caption;
+    $("#tour-count").textContent = (i + 1) + " / " + tour.stops.length;
+    $("#tour-back").disabled = i === 0;
+    $("#tour-next").textContent = last ? "Finish" : "Next";
+    spot = s.at === "overview" ? null : s.at;
+    machines.forEach(function (x) { x.lbl.classList.toggle("sel", x.id === spot); });
+    flyTo(s.at === "overview" ? overviewPose() : machinePose(byId[s.at], s.view), 1.6);
+  }
+  function setAuto(a) { tour.auto = a; $("#tour-auto").setAttribute("aria-pressed", a ? "true" : "false"); if (!a) $("#tour-prog").firstElementChild.style.width = "0"; }
+  function startTour() {
+    tour.stops = TOUR.filter(function (s) { return s.at === "overview" || byId[s.at]; });
+    if (!tour.stops.length) return;
+    closePanel(); tour.active = true; setAuto(true);
+    $("#tourbar").hidden = false; app.classList.add("touring"); $("#btn-tour").textContent = "Restart tour";
+    $("#hint").classList.add("gone");
+    showStop(0);
+  }
+  function endTour() {
+    tour.active = false; spot = null; $("#tourbar").hidden = true; app.classList.remove("touring"); $("#btn-tour").textContent = "Start tour";
+    machines.forEach(function (x) { x.lbl.classList.toggle("sel", x.id === selected); });
+    flyTo(overviewPose(), 1.4); userMoved = false;
+  }
+  function nextStop() { if (tour.i >= tour.stops.length - 1) endTour(); else showStop(tour.i + 1); }
+  $("#btn-tour").addEventListener("click", startTour);
+  $("#tour-next").addEventListener("click", function () { setAuto(false); nextStop(); });
+  $("#tour-back").addEventListener("click", function () { setAuto(false); if (tour.i > 0) showStop(tour.i - 1); });
+  $("#tour-end").addEventListener("click", endTour);
+  $("#tour-auto").addEventListener("click", function () { setAuto(!tour.auto); tour.timer = 0; });
+  function updateTour(real) {
+    if (!tour.active || !tour.auto) return;
+    tour.timer += real;
+    var last = tour.i === tour.stops.length - 1;
+    $("#tour-prog").firstElementChild.style.width = (clamp(tour.timer / TUNING.tourSeconds, 0, 1) * 100).toFixed(1) + "%";
+    if (tour.timer >= TUNING.tourSeconds) { if (last) setAuto(false); else showStop(tour.i + 1); }
+  }
+
+  /* ---------- labels follow the 3D scene ---------- */
+  var W = 1, H = 1, pv = new V3();
+  function placeZone(node, pos) {
+    pv.copy(pos).project(camera);
+    if (pv.z > 1 || pv.z < -1) { node.style.visibility = "hidden"; return; }
+    node.style.visibility = "";
+    node.style.transform = "translate(-50%,-50%) translate(" + ((pv.x * 0.5 + 0.5) * W).toFixed(1) + "px," + ((-pv.y * 0.5 + 0.5) * H).toFixed(1) + "px)";
+  }
+  var titleBox = { right: 0, bottom: 0 };
+  function updateLabels() {
+    var items = [];
+    machines.forEach(function (m) {
+      pv.copy(m.anchor).project(camera);
+      var x = (pv.x * 0.5 + 0.5) * W, y = (-pv.y * 0.5 + 0.5) * H;
+      if (pv.z > 1 || pv.z < -1 || x < -10 || x > W + 10 || y < 0 || y > H + 30) { m.lbl.style.visibility = "hidden"; return; }
+      var hw = m.hw || 50;
+      if (hw * 2 + 12 < W) x = clamp(x, hw + 6, W - hw - 6);
+      items.push({ m: m, x: x, y: y, hw: hw, hh: m.hh || 34 });
+    });
+    items.sort(function (a, b) { return b.y - a.y; });       // lowest on screen first
+    var placed = [];
+    items.forEach(function (it) {
+      for (var pass = 0; pass < 6; pass++) {
+        var moved = false;
+        for (var j = 0; j < placed.length; j++) {
+          var q = placed[j];
+          if (Math.abs(it.x - q.x) < it.hw + q.hw + 3 && it.y > q.y - q.hh - 3 && it.y - it.hh < q.y + 3) { it.y = q.y - q.hh - 4; moved = true; }
+        }
+        if (!moved) break;
+      }
+      placed.push(it);
+      var underTitle = it.y - it.hh < titleBox.bottom + 4 && it.x - it.hw < titleBox.right + 4;
+      it.m.lbl.style.visibility = underTitle || it.y - it.hh < 0 ? "hidden" : "";
+      it.m.lbl.style.transform = "translate(-50%,-100%) translate(" + it.x.toFixed(1) + "px," + it.y.toFixed(1) + "px)";
+      it.m.lbl.style.zIndex = String(Math.round(it.y));
+    });
+    zones.forEach(function (z) { placeZone(z.el, z.pos); });
+    if (tunZone) tunZone.el.style.display = FLOWS.remote.on ? "" : "none";
+  }
+
+  /* ---------- size ---------- */
+  function resize() {
+    W = app.clientWidth || 1; H = app.clientHeight || 1;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(W, H, false);
+    camera.aspect = W / H; camera.updateProjectionMatrix();
+    machines.forEach(function (m) { m.hw = m.lbl.offsetWidth / 2; m.hh = m.lbl.offsetHeight; });
+    var ar = app.getBoundingClientRect(), tr = $("#title").getBoundingClientRect();
+    titleBox.right = tr.right - ar.left; titleBox.bottom = tr.bottom - ar.top;
+    $("#alerts").style.top = narrow() ? Math.round(titleBox.bottom + 10) + "px" : "";
+    if (!userMoved && !tour.active) { setPose(overviewPose()); camAnim = null; }
+  }
+  if (window.ResizeObserver) new ResizeObserver(resize).observe(app); else window.addEventListener("resize", resize);
+  resize();
+
+  /* ---------- start: run the lab forward a little so the first view is already busy ---------- */
+  sim.warm = true;
+  for (var w = 0; w < 380; w++) step(0.066);
+  sim.warm = false; sim.nextAlert = sim.t + 7;
+  setSpeed();
+
+  var lastT = performance.now();
+  function frame(now) {
+    requestAnimationFrame(frame);
+    var real = Math.min(0.05, Math.max(0, (now - lastT) / 1000)); lastT = now;
+    if (!sim.paused) step(real * sim.speed);
+    updateCamera(real); updateTour(real); paint(now / 1000);
+    renderer.render(scene, camera);
+    updateLabels(); updatePanelLive();
+  }
+  requestAnimationFrame(frame);
+
+  window.homeLab = { sim: sim, machines: machines, tour: tour, cam: cam, counts: function () { return { packets: packets.length, walkers: walkers.length }; } };
+})();
+</script>
+
+</body></html>

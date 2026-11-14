@@ -1,0 +1,305 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Model Gateway Audit</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column (68ch) with full-bleed diagram bands; tokens: local=green, cloud=copper, busy=red */
+:root{
+  --bg:#f6f5f1; --surface:#ffffff; --fg:#1d2126; --muted:#5b6470; --line:#d9d6ce;
+  --accent:#b5602a; --local:#2f7d4f; --local-bg:#e6f2ea; --cloud:#b5602a; --cloud-bg:#f8e9dd;
+  --busy:#b3362d; --busy-bg:#f6e1df; --note-bg:#eef0f3; --code-bg:#edebe5;
+  --display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",Consolas,"Courier New",monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#16191d; --surface:#1f2429; --fg:#e8e6e0; --muted:#a4abb4; --line:#353c44;
+  --accent:#e08a4f; --local:#6cc48f; --local-bg:#1d3327; --cloud:#e08a4f; --cloud-bg:#3a2a1d;
+  --busy:#ef7b72; --busy-bg:#3d2422; --note-bg:#252b31; --code-bg:#262c33; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#16191d; --surface:#1f2429; --fg:#e8e6e0; --muted:#a4abb4; --line:#353c44;
+  --accent:#e08a4f; --local:#6cc48f; --local-bg:#1d3327; --cloud:#e08a4f; --cloud-bg:#3a2a1d;
+  --busy:#ef7b72; --busy-bg:#3d2422; --note-bg:#252b31; --code-bg:#262c33; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.55;
+  padding-block:2.5rem 4rem;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main{max-width:72ch;margin:0 auto}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:2.4rem;font-weight:700}
+h2{font-size:1.55rem;font-weight:700;margin-top:3rem;padding-top:1rem;border-top:2px solid var(--line)}
+h3{font-size:1.15rem;font-weight:700;margin-top:1.6rem}
+p{margin:.8rem 0}
+.eyebrow{font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:1.15rem;color:var(--muted);margin-top:.6rem}
+.verdict{background:var(--surface);border-left:5px solid var(--accent);padding:1rem 1.2rem;margin:1.6rem 0;border-radius:0 8px 8px 0}
+.verdict strong{font-family:var(--display)}
+.note{background:var(--note-bg);padding:.9rem 1.1rem;border-radius:8px;margin:1rem 0}
+.warn{background:var(--busy-bg);border-left:4px solid var(--busy);padding:.9rem 1.1rem;border-radius:0 8px 8px 0;margin:1rem 0}
+code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);padding:.08em .35em;border-radius:4px}
+pre{font-family:var(--mono);font-size:.82rem;background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;line-height:1.5}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:.95rem;margin:1rem 0}
+.tablewrap{overflow-x:auto;min-width:0}
+th,td{text-align:left;vertical-align:top;padding:.5rem .6rem;border-bottom:1px solid var(--line)}
+th{font-family:var(--display);font-size:.85rem;letter-spacing:.02em;color:var(--muted)}
+td code{white-space:nowrap}
+ul,ol{padding-left:1.3rem}li{margin:.35rem 0}
+.pill{display:inline-block;font-family:var(--mono);font-size:.72rem;padding:.1em .5em;border-radius:999px;border:1px solid}
+.pill.local{color:var(--local);background:var(--local-bg);border-color:var(--local)}
+.pill.cloud{color:var(--cloud);background:var(--cloud-bg);border-color:var(--cloud)}
+.pill.busy{color:var(--busy);background:var(--busy-bg);border-color:var(--busy)}
+figure{margin:1.4rem 0}
+figcaption{font-size:.9rem;color:var(--muted);margin-top:.4rem}
+.diagram{overflow-x:auto;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.6rem}
+svg{display:block;max-width:100%;height:auto;font-family:var(--body)}
+svg text{fill:var(--fg)}
+svg .lbl{font-family:var(--mono);font-size:11px;fill:var(--muted)}
+svg .ttl{font-family:var(--display);font-weight:700;font-size:13px}
+svg .box{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+svg .box.local{fill:var(--local-bg);stroke:var(--local)}
+svg .box.cloud{fill:var(--cloud-bg);stroke:var(--cloud)}
+svg .box.busy{fill:var(--busy-bg);stroke:var(--busy)}
+svg .box.hub{fill:var(--note-bg);stroke:var(--fg)}
+svg .edge{stroke:var(--muted);stroke-width:1.6;fill:none}
+svg .edge.local{stroke:var(--local)}svg .edge.cloud{stroke:var(--cloud)}svg .edge.busy{stroke:var(--busy);stroke-dasharray:5 4}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin:1rem 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;min-width:0}
+.card h3{margin-top:0}
+.card.pick{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+.score{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.ask{counter-reset:q}
+.ask li{margin:.7rem 0}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<main>
+<p class="eyebrow">LocalAIproject · Phase 1 audit + Phase 2 proposal · 2026-11-02</p>
+<h1>Model Gateway Audit</h1>
+<p class="lede">How the agent's LLM calls are wired today, what a hybrid Ollama + Anthropic router has to preserve, and which of the two designs fits this codebase.</p>
+
+<div class="verdict">
+<strong>Recommendation: Option B, native middleware inside the existing router seam.</strong>
+The codebase already has a backend abstraction (<code>Decision.backend</code> is <code>"ollama" | "powerinfer" | "farm"</code>) and a complexity classifier (<code>classify_capability</code> → <code>CAP_LOGIC</code>). Adding <code>"anthropic"</code> as a fourth backend reuses both, keeps the VRAM and thermal guards exactly where they are, needs no extra port or process, and is testable with the same <code>patch.object(router, …)</code> pattern as the 118 existing router tests. A LiteLLM proxy would force a rewrite of the Ollama client onto the OpenAI wire format, which is where the project's VRAM knobs (<code>num_gpu</code>, <code>num_ctx</code>, <code>keep_alive</code>, <code>think</code>) live.
+For goal 2 (CLI tooling against local models) no gateway is needed at all: Ollama v0.14+ serves the Anthropic Messages endpoint natively.
+</div>
+
+<div class="warn">
+<strong>Two things you need to decide before Phase 3.</strong>
+(1) The code is not on the designated branch. <code>claude/jolly-dirac-9impbq</code> and <code>main</code> contain only a README; the whole agent lives on <code>claude/zealous-johnson-g4xoz1</code> (8 commits, 2,461 tracked files). I audited that branch read-only in a scratch worktree.
+(2) <code>local_agent/README.md</code> line 142 states a standing rule: <em>"No cloud AI accounts or cloud model calls."</em> This task reverses that rule for one tier. The README and the Claude Code deny list (which blocks reading <code>.env</code>) should be amended in the same change so future agents are not working against contradictory instructions.
+</div>
+
+<h2>1. The analogy: a taxi dispatcher with two garages</h2>
+<p>Think of <code>router.py</code> as a dispatcher sitting in front of a single parking spot (the RTX 5080's 16 GB of VRAM). Before every ride it radios three questions: is a render truck parked there (<code>render_queue_owner.json</code>), is ComfyUI's engine running (port 8188 listening), is anything else on the card (<code>nvidia-smi</code>)? If any answer is yes, it sends the ride to the slow CPU cab on port 11435 and, crucially, tells its own GPU cab to leave the spot (<code>keep_alive: 0</code>). If no, the big 14B cab on port 11434 takes the ride.</p>
+<p>What you are asking for is a third garage: a long-distance partner carrier (Anthropic) that never needs the parking spot at all. Option A hires a separate dispatch company (LiteLLM) and puts it between you and every garage, on its own radio protocol. Option B gives the existing dispatcher one more phone number. The audit below is about which of those keeps the parking-spot rules intact.</p>
+
+<h2>2. Current wiring</h2>
+<figure>
+<div class="diagram">
+<svg viewBox="0 0 860 470" role="img" aria-label="Current LLM call wiring">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="context-stroke"/></marker></defs>
+<!-- callers -->
+<rect class="box" x="20" y="30" width="190" height="64" rx="8"/>
+<text class="ttl" x="115" y="55" text-anchor="middle">agent.py</text>
+<text class="lbl" x="115" y="74" text-anchor="middle">interactive turns + tool loop</text>
+<rect class="box" x="20" y="120" width="190" height="52" rx="8"/>
+<text class="ttl" x="115" y="142" text-anchor="middle">planner.py</text>
+<text class="lbl" x="115" y="160" text-anchor="middle">JSON plan, format=schema</text>
+<rect class="box" x="20" y="200" width="190" height="52" rx="8"/>
+<text class="ttl" x="115" y="222" text-anchor="middle">context_compactor.py</text>
+<text class="lbl" x="115" y="240" text-anchor="middle">llama3.1:8b, 12 s budget</text>
+<rect class="box" x="20" y="280" width="190" height="52" rx="8"/>
+<text class="ttl" x="115" y="302" text-anchor="middle">memory_extractor.py</text>
+<text class="lbl" x="115" y="320" text-anchor="middle">background thread</text>
+<!-- hub -->
+<rect class="box hub" x="300" y="30" width="200" height="90" rx="8"/>
+<text class="ttl" x="400" y="56" text-anchor="middle">router.decide()</text>
+<text class="lbl" x="400" y="76" text-anchor="middle">gpu_busy() · classify_capability()</text>
+<text class="lbl" x="400" y="94" text-anchor="middle">→ Decision(tier, host, model, backend)</text>
+<rect class="box hub" x="300" y="200" width="200" height="70" rx="8"/>
+<text class="ttl" x="400" y="226" text-anchor="middle">ollama_client.chat / chat_stream</text>
+<text class="lbl" x="400" y="246" text-anchor="middle">urllib → /api/chat NDJSON</text>
+<text class="lbl" x="400" y="262" text-anchor="middle">options · tools · format · keep_alive · think</text>
+<!-- backends -->
+<rect class="box local" x="600" y="30" width="240" height="60" rx="8"/>
+<text class="ttl" x="720" y="54" text-anchor="middle">GPU Ollama · 127.0.0.1:11434</text>
+<text class="lbl" x="720" y="74" text-anchor="middle">huihui qwen3 14b / 8b · num_gpu 99</text>
+<rect class="box local" x="600" y="110" width="240" height="60" rx="8"/>
+<text class="ttl" x="720" y="134" text-anchor="middle">CPU Ollama · 127.0.0.1:11435</text>
+<text class="lbl" x="720" y="154" text-anchor="middle">CUDA hidden · num_gpu 0 · 4 threads</text>
+<rect class="box" x="600" y="190" width="240" height="50" rx="8"/>
+<text class="ttl" x="720" y="211" text-anchor="middle">PowerInfer proxy · :8091</text>
+<text class="lbl" x="720" y="229" text-anchor="middle">OpenAI-shape shim, opt-in only</text>
+<rect class="box" x="600" y="260" width="240" height="50" rx="8"/>
+<text class="ttl" x="720" y="281" text-anchor="middle">Farm · Mac Qwythos via Celery</text>
+<text class="lbl" x="720" y="299" text-anchor="middle">backend="farm", CAP_TOOL turns</text>
+<rect class="box busy" x="600" y="360" width="240" height="60" rx="8"/>
+<text class="ttl" x="720" y="384" text-anchor="middle">ComfyUI · 127.0.0.1:8188</text>
+<text class="lbl" x="720" y="404" text-anchor="middle">port listening = GPU busy signal</text>
+<!-- edges -->
+<path class="edge" d="M210 62 H300" marker-end="url(#ar)"/>
+<path class="edge" d="M210 146 C250 146 260 75 300 75" marker-end="url(#ar)"/>
+<path class="edge local" d="M210 226 H300" marker-end="url(#ar)"/>
+<path class="edge local" d="M210 306 C250 306 260 240 300 240" marker-end="url(#ar)"/>
+<path class="edge" d="M400 120 V200" marker-end="url(#ar)"/>
+<path class="edge local" d="M500 220 C550 220 550 60 600 60" marker-end="url(#ar)"/>
+<path class="edge local" d="M500 235 C550 235 550 140 600 140" marker-end="url(#ar)"/>
+<path class="edge" d="M500 245 C550 245 550 215 600 215" marker-end="url(#ar)"/>
+<path class="edge" d="M500 255 C550 255 550 285 600 285" marker-end="url(#ar)"/>
+<path class="edge busy" d="M600 390 C520 390 520 110 480 110" marker-end="url(#ar)"/>
+<text class="lbl" x="560" y="412">busy probe</text>
+<!-- legend -->
+<rect class="box local" x="20" y="400" width="14" height="14" rx="3"/><text class="lbl" x="40" y="411">local, VRAM-aware</text>
+<rect class="box busy" x="20" y="425" width="14" height="14" rx="3"/><text class="lbl" x="40" y="436">GPU-busy signal (read-only probe)</text>
+<rect class="box hub" x="220" y="400" width="14" height="14" rx="3"/><text class="lbl" x="240" y="411">existing seams a new backend plugs into</text>
+</svg>
+</div>
+<figcaption>Every LLM call already funnels through two seams: <code>router.decide()</code> picks the backend, <code>ollama_client</code> speaks the wire. The compactor and memory extractor bypass <code>decide()</code> and pin the CPU host directly.</figcaption>
+</figure>
+
+<h3>Findings</h3>
+<div class="tablewrap"><table>
+<tr><th>#</th><th>Finding</th><th>Where</th><th>Why it matters for the gateway</th></tr>
+<tr><td>F1</td><td>Two Ollama servers, not one. GPU on 11434, CPU-only on 11435 (CUDA hidden, Vulkan off, <code>num_gpu: 0</code>, 4-thread cap).</td><td><code>router.py:74-75</code>, <code>ollama_client.py:42</code></td><td>A "unified local endpoint" must preserve the split. The CPU server is the thermal and VRAM safety valve, not a fallback detail.</td></tr>
+<tr><td>F2</td><td>The low-complexity jobs you listed are <em>already</em> local-CPU and VRAM-free: compaction, memory extraction, and plan JSON all send <code>keep_alive: "0"</code>, <code>num_gpu: 0</code>, <code>num_ctx: 4096</code>, <code>temperature: 0</code> to 11435.</td><td><code>context_compactor.py:109-114</code>, <code>memory_extractor.py:54-57</code></td><td>Goal 1's "keep these local" is a no-op to implement and a guardrail to keep: the gateway must never make these cloud-eligible.</td></tr>
+<tr><td>F3</td><td>A complexity classifier exists. <code>difficulty.needs_escalation()</code> (≥700 chars or ≥2 of architect/refactor/debug/multi-step/…) feeds <code>classify_capability()</code> → <code>CAP_LOGIC</code>; code signals → <code>CAP_CODE</code>.</td><td><code>difficulty.py:5-10</code>, <code>router.py:1363-1395</code></td><td>This is the natural cloud hook. Today <code>CAP_LOGIC</code> routes to DeepSeek-R1 14B on GPU; the cloud tier slots in ahead of that.</td></tr>
+<tr><td>F4</td><td>A backend seam exists. <code>Decision.backend</code> is <code>"ollama" | "powerinfer" | "farm"</code>; <code>ollama_client.chat()</code> already branches on host to a different client.</td><td><code>router.py:479-507</code>, <code>ollama_client.py:375-392</code></td><td>Option B is additive: a fourth backend value and one more branch.</td></tr>
+<tr><td>F5</td><td>Core agent is stdlib-only (<code>urllib</code>, <code>json</code>); the only third-party import in <code>local_agent/</code> is <code>chromadb</code>. Standing rule: state download size and ask before adding any dependency.</td><td><code>ollama_client.py:1-20</code>, <code>README.md:139-144</code></td><td>LiteLLM pulls 100+ packages. The official <code>anthropic</code> SDK is a handful (httpx, pydantic, anyio). Either needs your approval.</td></tr>
+<tr><td>F6</td><td>Tool schemas are OpenAI-shaped (<code>{"type":"function","function":{name,description,parameters}}</code>), 85 registered tools, JSON Schema uses only <code>enum</code> (22) and <code>minItems</code> (2). No <code>$ref</code>, <code>oneOf</code>, <code>default</code>, or <code>format</code>.</td><td><code>tools.py:4837-4880</code></td><td>Clean one-line mapping to Anthropic's <code>{name, description, input_schema}</code>. <code>strict: true</code> would need <code>additionalProperties: false</code> added.</td></tr>
+<tr><td>F7</td><td>Ollama tool calls carry no <code>id</code>; the agent appends tool results as separate <code>{"role":"tool","name":…}</code> messages.</td><td><code>agent.py:3722-3726, 3844-3853</code></td><td>Anthropic requires <code>tool_use.id</code> ↔ <code>tool_result.tool_use_id</code>, and all results for one assistant turn in <em>one</em> user message. The adapter must mint ids and coalesce. This is the only non-trivial translation.</td></tr>
+<tr><td>F8</td><td>Qwen thinking is suppressed with <code>think: False</code> on tool hops; sampling is pinned (<code>temperature 0.3, top_p 0.9, repeat_penalty 1.05</code>).</td><td><code>agent.py:3190-3196</code>, <code>router.py:471-475</code></td><td>On the current API version <code>temperature</code>/<code>top_p</code> return 400 and thinking cannot be disabled on Opus 5.5. The adapter strips <code>options</code> and maps "no thinking" to <code>output_config.effort</code>.</td></tr>
+<tr><td>F9</td><td>GPU probes are read-only. <code>gpu_busy()</code> only reads files, a TCP port, <code>nvidia-smi</code>, and <code>/api/ps</code>. The only VRAM-changing calls are <code>unload()</code>, <code>prepare_gpu_model()</code>, <code>evict_gpu_residents()</code>, all of which send <code>keep_alive: 0</code> (eviction, never a load). A model loads only when <code>/api/chat</code> is sent to 11434.</td><td><code>router.py:1171-1257, 1317-1336, 1420-1522</code></td><td>A cloud Decision returned <em>before</em> <code>_finish_gpu_ollama()</code> and never passed to <code>ollama_client</code> cannot touch VRAM. Verified by reading, not by running.</td></tr>
+<tr><td>F10</td><td><code>planner.propose()</code> calls <code>router.decide()</code> then <code>oll.chat(keep_alive=0)</code>; a GPU decision there <em>does</em> load the 14B for a 500-token plan.</td><td><code>planner.py:85-105</code></td><td>Worth routing explicitly (CPU or cloud-cheap) rather than inheriting the interactive tier. Flagged, not changed.</td></tr>
+<tr><td>F11</td><td>Port 4000 is free of project reservations (<code>FORBIDDEN_PORTS</code> = 6379, 8188, 11434, 11435, 8765; GUI on 8760; PowerInfer 8080/8091; edge 8743/8744).</td><td><code>edge_gateway/constants.py:36</code></td><td>Either option can use 4000 without collision. Option B does not need it.</td></tr>
+<tr><td>F12</td><td>Router has 118 unit tests using <code>patch.object(router, "_tags", …)</code> style stubs; no HTTP server is spun up in tests.</td><td><code>test_router_*.py</code></td><td>Option B tests the same way. Option A needs a live proxy or an HTTP mock layer to test routing.</td></tr>
+</table></div>
+
+<h2>3. Compatibility: Ollama wire → Anthropic Messages</h2>
+<p>This is the translation table the adapter has to implement. Rows marked <span class="pill local">drop</span> are Ollama-only knobs that must not reach the cloud; rows marked <span class="pill cloud">map</span> need code.</p>
+<div class="tablewrap"><table>
+<tr><th>Ollama <code>/api/chat</code> field</th><th>Anthropic <code>/v1/messages</code></th><th></th><th>Note</th></tr>
+<tr><td><code>messages[role=system]</code></td><td>top-level <code>system</code></td><td><span class="pill cloud">map</span></td><td>Agent builds one system message; lift it out. Stable prefix → cacheable.</td></tr>
+<tr><td><code>tools[].function.{name,description,parameters}</code></td><td><code>tools[].{name,description,input_schema}</code></td><td><span class="pill cloud">map</span></td><td>Direct rename. Project schemas are already clean (F6).</td></tr>
+<tr><td><code>message.tool_calls[].function</code> (no id)</td><td><code>content[type=tool_use]{id,name,input}</code></td><td><span class="pill cloud">map</span></td><td>Keep the server's <code>id</code>; the adapter returns Ollama-shaped calls to <code>agent.py</code> and remembers ids per turn.</td></tr>
+<tr><td>N × <code>{"role":"tool","name","content"}</code></td><td>one <code>user</code> message of N <code>tool_result{tool_use_id}</code> blocks</td><td><span class="pill cloud">map</span></td><td>F7. Coalescing is required or Claude stops parallel-calling.</td></tr>
+<tr><td><code>format: &lt;json schema&gt;</code></td><td><code>output_config.format</code> (structured outputs)</td><td><span class="pill cloud">map</span></td><td>Only the planner would ever use this on cloud; compactor stays local.</td></tr>
+<tr><td><code>stream: true</code> NDJSON chunks</td><td>SSE <code>content_block_delta</code> events</td><td><span class="pill cloud">map</span></td><td>SDK <code>messages.stream()</code> yields text deltas; adapter re-yields <code>str</code> / <code>ToolCall</code> / <code>StreamEnd</code> exactly as <code>chat_stream</code> does today, so <code>agent.py</code> is untouched.</td></tr>
+<tr><td><code>think: false</code></td><td>omit <code>thinking</code>; <code>output_config.effort: "low"|"medium"</code></td><td><span class="pill cloud">map</span></td><td>Thinking cannot be disabled on Opus 5.5 / Sonnet 5.5; effort is the lever.</td></tr>
+<tr><td><code>options.{num_gpu,num_thread,num_ctx,repeat_penalty}</code></td><td>none</td><td><span class="pill local">drop</span></td><td>VRAM/thermal knobs. Meaningless off-box.</td></tr>
+<tr><td><code>options.{temperature,top_p}</code></td><td>none</td><td><span class="pill local">drop</span></td><td>Return 400 on the current API version.</td></tr>
+<tr><td><code>keep_alive</code></td><td>none</td><td><span class="pill local">drop</span></td><td>Residency is an Ollama concept.</td></tr>
+<tr><td><code>eval_count / prompt_eval_count / *_duration</code></td><td><code>usage.{input_tokens,output_tokens,cache_read_input_tokens}</code></td><td><span class="pill cloud">map</span></td><td>Fill <code>StreamEnd.telemetry</code> so tracing spans keep working.</td></tr>
+<tr><td>images in <code>messages[].images</code></td><td><code>content[type=image]</code> base64 blocks</td><td><span class="pill cloud">map</span></td><td>Only if vision turns ever go to cloud; propose <em>not</em> in the prototype.</td></tr>
+</table></div>
+
+<h2>4. VRAM safety: why cloud calls cannot collide with ComfyUI</h2>
+<p>Back to the parking spot. The question is whether a cloud-bound request could ever cause Ollama to pull a model <em>into</em> VRAM while ComfyUI is rendering. Reading the call graph: VRAM only changes in two ways.</p>
+<ul>
+<li><strong>Loads</strong> happen exclusively when a request body hits <code>http://127.0.0.1:11434/api/chat</code> (or <code>/api/generate</code> without <code>keep_alive: 0</code>). Nothing else in the tree loads a model.</li>
+<li><strong>Evictions</strong> happen via <code>keep_alive: 0</code> in <code>unload()</code>, <code>prepare_gpu_model()</code>, <code>evict_gpu_residents()</code>, and <code>_finish_gpu_ollama(ensure_gpu_evicted=True)</code>. These free VRAM; they never claim it.</li>
+</ul>
+<p>So the invariant for the gateway is simple to state and simple to test: <strong>a Decision with <code>backend="anthropic"</code> is returned from <code>decide()</code> before any <code>_finish_gpu_ollama</code> / <code>prepare_gpu_model</code> call, and <code>ollama_client</code> dispatches it to the Anthropic client without constructing a <code>/api/chat</code> request.</strong> The existing busy probes still run first (they are read-only and cheap), which is useful: when ComfyUI is rendering, the cloud tier becomes the <em>preferred</em> path for heavy turns instead of the CPU 8B, which is a real quality win during renders.</p>
+<div class="note">One subtlety worth keeping: <code>decide()</code> skips the GPU inventory probe entirely when the GPU is busy and the CPU 8B exists (<code>skip_gpu_inventory</code>, <code>router.py:1655-1660</code>). The cloud branch should sit after that check so a render never accumulates failed loopback requests.</div>
+
+<h2>5. Option A vs Option B</h2>
+<div class="cols">
+<div class="card">
+<h3>Option A · LiteLLM proxy on :4000</h3>
+<p class="score">separate process · OpenAI wire · YAML aliases</p>
+<figure><div class="diagram"><svg viewBox="0 0 400 190" role="img" aria-label="Option A topology">
+<rect class="box" x="10" y="70" width="110" height="50" rx="8"/><text class="ttl" x="65" y="92" text-anchor="middle">agent.py</text><text class="lbl" x="65" y="109" text-anchor="middle">rewritten client</text>
+<rect class="box hub" x="150" y="60" width="110" height="70" rx="8"/><text class="ttl" x="205" y="86" text-anchor="middle">LiteLLM :4000</text><text class="lbl" x="205" y="104" text-anchor="middle">/v1/chat/completions</text><text class="lbl" x="205" y="120" text-anchor="middle">litellm_config.yaml</text>
+<rect class="box local" x="290" y="15" width="100" height="40" rx="8"/><text class="lbl" x="340" y="39" text-anchor="middle">ollama :11434</text>
+<rect class="box local" x="290" y="75" width="100" height="40" rx="8"/><text class="lbl" x="340" y="99" text-anchor="middle">ollama :11435</text>
+<rect class="box cloud" x="290" y="135" width="100" height="40" rx="8"/><text class="lbl" x="340" y="159" text-anchor="middle">api.anthropic.com</text>
+<path class="edge" d="M120 95 H150" marker-end="url(#ar)"/>
+<path class="edge local" d="M260 80 C275 80 275 35 290 35" marker-end="url(#ar)"/>
+<path class="edge local" d="M260 95 H290" marker-end="url(#ar)"/>
+<path class="edge cloud" d="M260 110 C275 110 275 155 290 155" marker-end="url(#ar)"/>
+</svg></div></figure>
+<ul>
+<li><strong>Pro:</strong> declarative aliases (<code>tier-local-fast</code>, <code>tier-cloud-heavy</code>), built-in <code>fallbacks</code>, spend logging, one endpoint any OpenAI-speaking tool can hit.</li>
+<li><strong>Con:</strong> LiteLLM speaks OpenAI chat-completions, not Ollama's native <code>/api/chat</code>. <code>ollama_client.py</code> would have to be rewritten, and <code>num_gpu</code>, <code>num_ctx</code>, <code>keep_alive</code>, <code>think</code> become per-model YAML settings rather than per-turn router decisions. The adaptive 14B↔8B context switch and the <code>keep_alive:0</code> yield-on-render both depend on per-turn control.</li>
+<li><strong>Con:</strong> second long-running process to start, health-check, and keep off the GPU; 100+ pip packages against a stdlib-only project.</li>
+<li><strong>Con:</strong> routing by prompt complexity is not a LiteLLM primitive; the agent would still have to pick the alias per turn, so the classifier logic lives in <code>router.py</code> anyway.</li>
+</ul>
+</div>
+<div class="card pick">
+<h3>Option B · native backend in <code>router.py</code></h3>
+<p class="score">no new port · official <code>anthropic</code> SDK · same test harness</p>
+<figure><div class="diagram"><svg viewBox="0 0 400 190" role="img" aria-label="Option B topology">
+<rect class="box" x="10" y="70" width="110" height="50" rx="8"/><text class="ttl" x="65" y="92" text-anchor="middle">agent.py</text><text class="lbl" x="65" y="109" text-anchor="middle">unchanged</text>
+<rect class="box hub" x="150" y="40" width="110" height="110" rx="8"/><text class="ttl" x="205" y="66" text-anchor="middle">router.decide()</text><text class="lbl" x="205" y="84" text-anchor="middle">backend=</text><text class="lbl" x="205" y="100" text-anchor="middle">ollama | powerinfer</text><text class="lbl" x="205" y="116" text-anchor="middle">farm | anthropic</text><text class="lbl" x="205" y="138" text-anchor="middle">ollama_client dispatch</text>
+<rect class="box local" x="290" y="15" width="100" height="40" rx="8"/><text class="lbl" x="340" y="39" text-anchor="middle">ollama :11434</text>
+<rect class="box local" x="290" y="75" width="100" height="40" rx="8"/><text class="lbl" x="340" y="99" text-anchor="middle">ollama :11435</text>
+<rect class="box cloud" x="290" y="135" width="100" height="40" rx="8"/><text class="lbl" x="340" y="159" text-anchor="middle">anthropic SDK</text>
+<path class="edge" d="M120 95 H150" marker-end="url(#ar)"/>
+<path class="edge local" d="M260 80 C275 80 275 35 290 35" marker-end="url(#ar)"/>
+<path class="edge local" d="M260 95 H290" marker-end="url(#ar)"/>
+<path class="edge cloud" d="M260 110 C275 110 275 155 290 155" marker-end="url(#ar)"/>
+</svg></div></figure>
+<ul>
+<li><strong>Pro:</strong> reuses the existing seams (F3, F4). The change is one new <code>Decision</code> branch plus one adapter module; <code>agent.py</code>'s streaming loop sees the same <code>str</code> / <code>ToolCall</code> / <code>StreamEnd</code> objects.</li>
+<li><strong>Pro:</strong> VRAM rules stay in one file and keep their 118 tests. The cloud invariant (section 4) is a three-line unit test.</li>
+<li><strong>Pro:</strong> offline fallback is explicit: catch <code>APIConnectionError</code> / <code>RateLimitError</code> → re-decide with <code>skip_cloud=True</code>, same shape as <code>fallback_after_primary_failure()</code>.</li>
+<li><strong>Pro:</strong> the official SDK gives typed errors, retries, prompt caching, structured outputs, and streaming without a shim.</li>
+<li><strong>Con:</strong> no out-of-process endpoint for other tools. If a second consumer appears later, a thin FastAPI front can be bolted onto the same adapter. Not needed now (see goal 2).</li>
+<li><strong>Con:</strong> adds <code>anthropic</code> + <code>httpx</code> + <code>pydantic</code> + <code>anyio</code> to a stdlib-only tree (roughly 15 MB of wheels). Needs your download approval.</li>
+</ul>
+</div>
+</div>
+
+<h3>Proposed tier map</h3>
+<div class="tablewrap"><table>
+<tr><th>Alias</th><th>Target</th><th>Who sends here</th><th>Guard</th></tr>
+<tr><td><code>tier-local-cpu</code> <span class="pill local">local</span></td><td>11435 · llama3.1:8b / huihui 8b</td><td>compactor, memory extractor, planner (proposed), busy-GPU chat</td><td>unchanged; never cloud-eligible</td></tr>
+<tr><td><code>tier-local-gpu</code> <span class="pill local">local</span></td><td>11434 · huihui qwen3 14b/8b, coder, DeepSeek</td><td>default interactive turns, <code>CAP_TOOL</code>, <code>CAP_CODE</code> when GPU idle</td><td>existing <code>gpu_busy()</code> / thermal / gate</td></tr>
+<tr><td><code>tier-cloud-heavy</code> <span class="pill cloud">cloud</span></td><td><code>claude-opus-5-5</code> (effort <code>high</code>)</td><td>unpinned <code>CAP_LOGIC</code> turns; any turn with ≥2 escalation signals; operator pin "cloud"</td><td><code>ANTHROPIC_API_KEY</code> set, <code>MODEL_GATEWAY_CLOUD=1</code>, not in sandbox-net-off mode</td></tr>
+<tr><td><code>tier-cloud-fast</code> <span class="pill cloud">cloud</span></td><td><code>claude-sonnet-5-5</code> (effort <code>medium</code>)</td><td>GPU busy + prompt too long for CPU 8B; <code>CAP_CODE</code> while rendering</td><td>same, plus per-session token ceiling</td></tr>
+</table></div>
+<p>Model IDs are the current generation from the Claude API reference; the exact strings are complete as-is (no date suffix). Opus 5.5 defaults to <code>medium</code> effort, so <code>high</code> is set explicitly for the heavy tier. Both models return <code>stop_reason: "refusal"</code> rather than raising when a safety classifier declines, so the adapter checks <code>stop_reason</code> before reading content and enables server-side fallback by default.</p>
+
+<h2>6. Goal 2: CLI tooling against local models</h2>
+<p>This needs no gateway. Ollama v0.14 and later serve the Anthropic Messages endpoint (<code>/v1/messages</code>) natively, with streaming, system prompts, and tool calling; the workstation runs 0.32.15. Claude Code is pointed at it with two variables (the token is accepted but not validated):</p>
+<pre><code># PowerShell, offline coding session against the GPU server
+$env:ANTHROPIC_BASE_URL  = "http://127.0.0.1:11434"
+$env:ANTHROPIC_AUTH_TOKEN = "ollama"
+$env:ANTHROPIC_MODEL      = "josiefied-qwen2.5-coder-14b:q4_k_m"
+claude
+
+# Or the CPU server, so a render is never disturbed
+$env:ANTHROPIC_BASE_URL  = "http://127.0.0.1:11435"</code></pre>
+<p>Two cautions from the docs: <code>tool_choice</code> and <code>count_tokens</code> are not supported on Ollama's endpoint, and pointing Claude Code at 11434 <em>does</em> load that model into VRAM, so the same "is 8188 listening" check applies before an offline coding session starts. The Phase 3 start script can print that check.</p>
+
+<h2>7. What Phase 3 would build (on approval)</h2>
+<pre><code>model_gateway/
+  gateway_config.py        tier map + env resolution (ANTHROPIC_API_KEY, MODEL_GATEWAY_CLOUD,
+                           EQUAL_SHARES_GPU_HOST / CPU_HOST reused, cloud model ids, effort)
+  anthropic_backend.py     adapter: Ollama-shaped messages/tools in → Messages API out;
+                           yields str / ToolCall / StreamEnd; id minting + tool_result coalescing;
+                           strips options/keep_alive/think; fills telemetry; typed-error fallback
+  routing_policy.py        pure function: (capability, gpu_busy, prompt_tokens, env) → tier alias
+                           (no router.py edits until you approve wiring it in)
+  start_gateway.ps1 / .sh  preflight: both Ollama tiers up, 8188 state, key present,
+                           SDK importable, one dry-run count; prints CLI env block for goal 2
+  test_gateway.py          (a) short prompt → 11435 local, asserts /api/ps on 11434 unchanged
+                           (b) architecture prompt → claude-opus-5-5, asserts no /api/chat sent
+                           (c) same tool schema, both targets, validates arguments against schema
+  README.md                how the tier map works, the VRAM invariant, the README rule change</code></pre>
+<p>Nothing in <code>local_agent/</code> is edited in Phase 3. The one-line hook into <code>router.decide()</code> and the dispatch branch in <code>ollama_client</code> are a separate, later change with its own tests.</p>
+
+<div class="note"><strong>Phase 3 status (2026-11-02):</strong> all six decisions below were approved and the prototype is built on <code>claude/jolly-dirac-9impbq</code> (based on the zealous-johnson code). <code>model_gateway/</code> plus minimal hooks in the router, Ollama client, planner and agent; 61 offline tests pass; the cloud path was driven end to end through the real SDK against a local fake Messages server (6/6). A live Anthropic round trip is still owed from the workstation: <code>.\model_gateway\start_gateway.ps1 -CloudCheck</code>, then <code>python model_gateway\test_gateway.py</code>. See <code>CHANGELOG/2026-11-02a_model_gateway_hybrid_router.md</code>.</div>
+
+<h2>8. Decisions (approved)</h2>
+<ol class="ask">
+<li><strong>Branch.</strong> Build <code>model_gateway/</code> on top of <code>claude/zealous-johnson-g4xoz1</code> (where the code is), pushed to the designated <code>claude/jolly-dirac-9impbq</code>? That means resetting jolly-dirac to zealous-johnson's head first. Or keep it standalone on jolly-dirac as it is today, importing nothing from <code>local_agent/</code>?</li>
+<li><strong>Dependency.</strong> Approve installing the official <code>anthropic</code> Python SDK (about 15 MB with httpx/pydantic/anyio)? The alternative is a stdlib <code>urllib</code> client against <code>/v1/messages</code>, which works but loses typed errors, retries, and streaming helpers.</li>
+<li><strong>Models.</strong> <code>claude-opus-5-5</code> for the heavy tier and <code>claude-sonnet-5-5</code> for the busy-GPU tier, as above? Or Opus only?</li>
+<li><strong>Eligibility.</strong> Cloud only for unpinned <code>CAP_LOGIC</code> turns plus an explicit operator pin, with compactor / memory / planner hard-excluded? Or also <code>CAP_CODE</code> turns while ComfyUI renders?</li>
+<li><strong>Rule change.</strong> Amend <code>local_agent/README.md</code> line 142 to read "cloud model calls only through the gateway's cloud tier, off by default (<code>MODEL_GATEWAY_CLOUD=0</code>)" in the same change?</li>
+<li><strong>Offline behaviour.</strong> On connection failure, fall back silently to the local tier the router would have chosen, with a status-badge note? Or surface it and let you decide per turn?</li>
+</ol>
+<p class="eyebrow">Sources: Ollama Anthropic compatibility docs (docs.ollama.com/api/anthropic-compatibility), Ollama blog "Claude Code with Anthropic API compatibility", LiteLLM Ollama provider docs (docs.litellm.ai/docs/providers/ollama), Claude API reference bundled with this session.</p>
+</main>
+
+</body></html>
