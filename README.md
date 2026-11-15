@@ -5,10 +5,13 @@ I built and run a ChatGPT-style desktop assistant that runs on my own Windows PC
 and video pipelines, and it shares one GPU with those renders without
 crashing them. No cloud account is needed for normal use.
 
-This repository is the full working tree. The core security pieces (tool allowlist,
-approval gates, sandbox, quarantine, audit log) are also published as small,
-tested, standalone modules in
-[local-agent-core](https://github.com/rhinerad/local-agent-core).
+This repository is my full working tree: the agent plus the ComfyUI video
+pipelines, prompt packs and project history it grew up with.
+
+**Looking for the agent itself?** The clean copy is in
+[local-agent-core](https://github.com/rhinerad/local-agent-core): the full
+agent in `agent/`, and the security pieces (tool allowlist, approval gates,
+sandbox, quarantine, audit log) as small, tested, standalone modules in `src/`.
 
 ## How it works
 

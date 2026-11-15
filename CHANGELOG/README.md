@@ -4,8 +4,9 @@ Filenames are `YYYY-MM-DD` + sequential letter + `_slug.md`. Run
 `python scripts/next_changelog_id.py` for the next free id and
 `python scripts/build_changelog_index.py` to regenerate this index.
 
-## Entries (774)
+## Entries (775)
 
+- `2026-11-14d` — [2026-11-14d — README points to local-agent-core](2026-11-14d_readme_points_to_local_agent_core.md)
 - `2026-11-14c` — [2026-11-14c — Clean the public repo: private data out, SOC items out](2026-11-14c_public_cleanup.md)
 - `2026-11-14b` — [2026-11-14b — Merge the 2026-11 audit remediation (PR #1) into main](2026-11-14b_merge_audit_remediation_pr1.md)
 - `2026-11-14a` — [2026-11-14a — structured plan ("schematic") and a Claude Code subscription plan backend](2026-11-14a_structured_plan_and_claude_cli_plan_backend.md)
