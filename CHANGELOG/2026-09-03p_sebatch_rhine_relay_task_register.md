@@ -16,11 +16,11 @@ Granted **Log on as a batch job** to `DURANGAMINGPC\rhine`.
 - `SeDenyBatchLogonRight` was not present
 - `gpupdate` not run
 
-Elevated as `DURANGAMINGPC\tiffa` (`is_admin=True`). UAC approved.
+Elevated as `DURANGAMINGPC\second-admin` (`is_admin=True`). UAC approved.
 
 ## Hung elevated PowerShell
 
-Identified then killed leftover register/UAC shells (tiffa, window title Administrator: Windows PowerShell):
+Identified then killed leftover register/UAC shells (second-admin, window title Administrator: Windows PowerShell):
 
 - PID 34708 (started 13:37:22) — `-File .../local_agent/worker_farm/runtime/reg-scratch/register.ps1`; PPID 42704 already gone
 - PID 25712 (started 13:44:36) — `-File C:\Users\Public\local-agent-tunnel-relay-reg\register.ps1`; PPID 42040 already gone
@@ -38,9 +38,9 @@ Identified then killed leftover register/UAC shells (tiffa, window title Adminis
 
 Control probes (immediately unregistered):
 
-- tiffa S4U BootTrigger: **SUCCESS**
-- tiffa S4U LogonTrigger: **SUCCESS**
-- rhine S4U LogonTrigger or BootTrigger from tiffa: **Access is denied**
+- second-admin S4U BootTrigger: **SUCCESS**
+- second-admin S4U LogonTrigger: **SUCCESS**
+- rhine S4U LogonTrigger or BootTrigger from second-admin: **Access is denied**
 - rhine self-register Interactive LogonTrigger: **SUCCESS** (then unregistered; not used for the relay)
 - rhine self-register S4U (logon or boot) or Interactive BootTrigger: **Access is denied**
 
@@ -66,4 +66,4 @@ Not run (`schtasks /Run` / reboot). Task does not exist.
 
 ## Verdict
 
-**PARTIAL.** Rights grant + query-back succeeded. Task register failed (S4U Access denied as rhine from tiffa and from SYSTEM). Manual listener is still the live path.
+**PARTIAL.** Rights grant + query-back succeeded. Task register failed (S4U Access denied as rhine from second-admin and from SYSTEM). Manual listener is still the live path.

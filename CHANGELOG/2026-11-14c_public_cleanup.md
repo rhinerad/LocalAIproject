@@ -23,7 +23,7 @@ home-SOC material that now lives in its own repo
   regex is now `(?:MBP|Mac|Worker)` and still matches the live
   `celery@Louises-MBP` name through `MBP`.
 - Left as is: `local_agent/worker_farm/Lock-Phase1SecretFile.ps1` matches the
-  `tiffa` account by name when checking ACLs. Changing it would change what the
+  second admin account by name when checking ACLs. Changing it would change what the
   script checks on the workstation.
 
 ## Evidence

@@ -8,9 +8,9 @@ Date: 2026-09-03. Host: DuranGamingPC (Windows 11 Home). All times America/New_Y
 
 `Add-LocalGroupMember -Group Administrators -Member DURANGAMINGPC\rhine` (equivalent: `net localgroup Administrators DURANGAMINGPC\rhine /add`).
 
-- Caller: elevated `DURANGAMINGPC\tiffa` (`ADMIN=True`). `rhine` was not admin yet, so tiffa UAC was required for this one step.
-- Before: Administrators = `Administrator`, `tiffa`.
-- After (`net localgroup Administrators`): `Administrator`, `rhine`, `tiffa`.
+- Caller: elevated `DURANGAMINGPC\second-admin` (`ADMIN=True`). `rhine` was not admin yet, so second-admin UAC was required for this one step.
+- Before: Administrators = `Administrator`, `second-admin`.
+- After (`net localgroup Administrators`): `Administrator`, `rhine`, `second-admin`.
 - SID: `S-1-5-21-3342793278-1091766691-3607590999-1004`.
 - Standing: this membership is not scoped to one task and is not reverted in this entry.
 
@@ -18,11 +18,11 @@ Id from `python scripts/next_changelog_id.py` (2026-09-03y). Letters through `x`
 
 ## Why
 
-S4U + BootTrigger scheduled tasks cannot be registered with principal `rhine` while `rhine` is a standard user (`0x80070005` from elevated tiffa, from SYSTEM, from XML, and from COM). Admin-as-self S4U already worked (tiffa). Granting local Administrators to `rhine` was the approved remaining lever that does not store a password and does not fall back to a Logon trigger.
+S4U + BootTrigger scheduled tasks cannot be registered with principal `rhine` while `rhine` is a standard user (`0x80070005` from elevated second-admin, from SYSTEM, from XML, and from COM). Admin-as-self S4U already worked (second-admin). Granting local Administrators to `rhine` was the approved remaining lever that does not store a password and does not fall back to a Logon trigger.
 
 ## Follow-on that this grant unblocked (not the headline)
 
-After membership landed, `rhine` self-elevated (`USER=DURANGAMINGPC\rhine ADMIN=True`, not tiffa) and registered `\local-agent-wsl-docker-boot`:
+After membership landed, `rhine` self-elevated (`USER=DURANGAMINGPC\rhine ADMIN=True`, not second-admin) and registered `\local-agent-wsl-docker-boot`:
 
 - Ready, RunAs `rhine`, LogonType **S4U**, trigger **MSFT_TaskBootTrigger** / At system start up, delay PT30S
 - Action: `C:\Program Files\WSL\wsl.exe -d Ubuntu-24.04 --exec /bin/bash /mnt/a/Users/rhine/AppData/Local/local-agent/wsl-boot-probe/keep-alive.sh boot`

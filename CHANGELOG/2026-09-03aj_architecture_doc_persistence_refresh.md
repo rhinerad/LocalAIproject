@@ -24,7 +24,7 @@ Mac SSH `user@10.90.90.2`:
 
 Workstation:
 
-- Administrators: `Administrator`, `rhine`, `tiffa`.
+- Administrators: `Administrator`, `rhine`, `second-admin`.
 - `\local-agent-tunnel-relay`: Running, RunAs `rhine`, LogonType **Interactive**, trigger **MSFT_TaskLogonTrigger**. Listen `10.90.90.1:6379` OwningProcess **43152** (task-spawned `tunnel_relay.py`, SessionId 1). Last Run 15:30:21. Not a manual listener.
 - `\local-agent-wsl-docker-boot`: Ready, RunAs `rhine`, LogonType **S4U**, trigger **MSFT_TaskBootTrigger** delay PT30S. **Not proven at boot** (Last Run `11/30/1999`, Last Result 267011).
 - Redis `local-agent-phase1-redis` Up, `127.0.0.1:6379`.

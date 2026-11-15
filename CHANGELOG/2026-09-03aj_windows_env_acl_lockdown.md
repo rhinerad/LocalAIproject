@@ -28,8 +28,8 @@ Did **not** change `.env.example`. Did **not** touch `wireguard/hub-private.key`
 All three live files inherited the parent `worker_farm/` DACL. `icacls` showed `(I)` ACEs including:
 
 - `DURANGAMINGPC\rhine:(I)(F)`
-- `DuranGamingPC\tiffa:(I)(F)` — second interactive local admin
-- `BUILTIN\Administrators:(I)(F)` — would keep `tiffa` in even after dropping her explicit ACE (`tiffa` is in Administrators; see 2026-09-03y)
+- `DuranGamingPC\second-admin:(I)(F)` — second interactive local admin
+- `BUILTIN\Administrators:(I)(F)` — would keep `second-admin` in even after dropping its explicit ACE (`second-admin` is in Administrators; see 2026-09-03y)
 - `DuranGamingPC\CodexSandboxUsers:(I)(M)`
 - ten unresolvable `S-1-5-21-…` SIDs with `(I)(M)` or `(I)(M,DC)` (stale sandbox identities)
 - `NT AUTHORITY\SYSTEM:(I)(F)`
@@ -46,14 +46,14 @@ icacls <file> /grant:r "NT AUTHORITY\SYSTEM:(R,W)"
 icacls <file> /grant:r "DURANGAMINGPC\rhine:(R,W)"
 ```
 
-`/inheritance:r` removes inherited ACEs (does not copy them). Administrators was **not** re-granted, because that group still contains `tiffa`. SYSTEM is the Windows root analogue so Task Scheduler / SYSTEM can still read.
+`/inheritance:r` removes inherited ACEs (does not copy them). Administrators was **not** re-granted, because that group still contains `second-admin`. SYSTEM is the Windows root analogue so Task Scheduler / SYSTEM can still read.
 
 Post-check (`Get-Acl` + `icacls`):
 
 - Owner: `DURANGAMINGPC\rhine`
 - `AreAccessRulesProtected = True` (inheritance off)
 - ACEs only: `DURANGAMINGPC\rhine:(R,W)` and `NT AUTHORITY\SYSTEM:(R,W)`
-- `tiffa`, `Administrators`, `CodexSandboxUsers`, and the unresolvable SIDs are gone
+- `second-admin`, `Administrators`, `CodexSandboxUsers`, and the unresolvable SIDs are gone
 - Owner can still read the same key names
 
 `.env.example` still has the inherited wide DACL (placeholders only).

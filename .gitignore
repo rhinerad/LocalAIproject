@@ -263,3 +263,8 @@ work/*
 
 # Explicit-content eval set (2026-11 audit P0 #2): local only
 powerinfer_project/approved_tasks.jsonl
+
+# Operator-local: the agent's memory and the eval set (2026-11-14)
+/approved_tasks.jsonl
+local_agent/memory.json
+local_agent/OPERATING_MEMORY.md

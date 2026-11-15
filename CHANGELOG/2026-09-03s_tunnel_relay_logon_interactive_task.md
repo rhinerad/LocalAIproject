@@ -10,7 +10,7 @@ Prior plan was S4U At-startup for `\local-agent-tunnel-relay`; that path stayed 
 
 ## Registration
 
-Registered as rhine (no UAC / no tiffa). Task did not previously exist.
+Registered as rhine (no UAC / no second-admin). Task did not previously exist.
 
 | Field | Value |
 | --- | --- |

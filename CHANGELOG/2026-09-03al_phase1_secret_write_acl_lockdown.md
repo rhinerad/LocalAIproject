@@ -16,7 +16,7 @@ icacls <file> /grant:r "NT AUTHORITY\SYSTEM:(R,W)"
 icacls <file> /grant:r "DURANGAMINGPC\rhine:(R,W)"
 ```
 
-Administrators is still not granted (`tiffa` is in that group).
+Administrators is still not granted (`second-admin` is in that group).
 
 Called after every secret write:
 
@@ -26,7 +26,7 @@ Called after every secret write:
 
 ## Directory ACL: not locked
 
-`worker_farm/` is the source tree (Python, tests, dashboard, logs), owner `DuranGamingPC\CodexSandboxOffline`, inherited DACL still includes `CodexSandboxUsers`, `tiffa`, Administrators, and stale sandbox SIDs. Tightening the directory default ACL would break agent edits and anything else that creates files there. Secret writers lock each secret file instead.
+`worker_farm/` is the source tree (Python, tests, dashboard, logs), owner `DuranGamingPC\CodexSandboxOffline`, inherited DACL still includes `CodexSandboxUsers`, `second-admin`, Administrators, and stale sandbox SIDs. Tightening the directory default ACL would break agent edits and anything else that creates files there. Secret writers lock each secret file instead.
 
 ## Verification
 
