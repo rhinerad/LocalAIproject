@@ -1653,7 +1653,7 @@
           "rank": 4,
           "id": "CHANGELOG/2026-09-03r_mac_persistence_reboot.md:0",
           "source": "CHANGELOG/2026-09-03r_mac_persistence_reboot.md",
-          "heading": "# 2026-09-03r \u2014 Louises-MBP persistence reboot (WG-off, tunnel-auto, ollama-auto)",
+          "heading": "# 2026-09-03r \u2014 Mac-Worker persistence reboot (WG-off, tunnel-auto, ollama-auto)",
           "gold": false,
           "match_by": null,
           "score": 11.1929,
@@ -1665,7 +1665,7 @@
             "stay",
             "to"
           ],
-          "snippet": "# 2026-09-03r \u2014 Louises-MBP persistence reboot (WG-off, tunnel-auto, ollama-auto) Live reboot verification of Louises-MBP on the afternoon of 2026-09-03 ET. Did **not** sudo. Did **not** `launchctl kickstart` ollama, celery, or WireGuard. Did **not** launch WireGuard.app. Did **not** run `wg-quick` by hand. Letter `q` was already taken (`2026-09-03q_ethernet_profile_private_dashboard.md`). `scripts/next_changelog_id\u2026"
+          "snippet": "# 2026-09-03r \u2014 Mac-Worker persistence reboot (WG-off, tunnel-auto, ollama-auto) Live reboot verification of Mac-Worker on the afternoon of 2026-09-03 ET. Did **not** sudo. Did **not** `launchctl kickstart` ollama, celery, or WireGuard. Did **not** launch WireGuard.app. Did **not** run `wg-quick` by hand. Letter `q` was already taken (`2026-09-03q_ethernet_profile_private_dashboard.md`). `scripts/next_changelog_id\u2026"
         },
         {
           "rank": 5,
@@ -2811,7 +2811,7 @@
             "send",
             "workstation"
           ],
-          "snippet": "()`. Never submits jobs. Live CLI is a diagnostic \u2014 the hot path does not import this module. Live 2026-09-02 worker name: `celery@Louises-MBP`. **`local_agent/worker_farm/farm_status_daemon.py`.** Interval writer (default 30s) of `worker_farm/farm_status.json` via `check_farm_health`. That snapshot **is** the hot-path reachability signal (`farm_offload.farm_reachable`). Related files (not the hot path): `celery_app\u2026"
+          "snippet": "()`. Never submits jobs. Live CLI is a diagnostic \u2014 the hot path does not import this module. Live 2026-09-02 worker name: `celery@Mac-Worker`. **`local_agent/worker_farm/farm_status_daemon.py`.** Interval writer (default 30s) of `worker_farm/farm_status.json` via `check_farm_health`. That snapshot **is** the hot-path reachability signal (`farm_offload.farm_reachable`). Related files (not the hot path): `celery_app\u2026"
         },
         {
           "rank": 3,
@@ -2882,7 +2882,7 @@
             "send",
             "workstation"
           ],
-          "snippet": "()`. Never submits jobs. Live CLI is a diagnostic \u2014 the hot path does not import this module. Live 2026-09-02 worker name: `celery@Louises-MBP`. **`local_agent/worker_farm/farm_status_daemon.py`.** Interval writer (default 30s) of `worker_farm/farm_status.json` via `check_farm_health`. That snapshot **is** the hot-path reachability signal (`farm_offload.farm_reachable`). Related files (not the hot path): `celery_app\u2026"
+          "snippet": "()`. Never submits jobs. Live CLI is a diagnostic \u2014 the hot path does not import this module. Live 2026-09-02 worker name: `celery@Mac-Worker`. **`local_agent/worker_farm/farm_status_daemon.py`.** Interval writer (default 30s) of `worker_farm/farm_status.json` via `check_farm_health`. That snapshot **is** the hot-path reachability signal (`farm_offload.farm_reachable`). Related files (not the hot path): `celery_app\u2026"
         },
         {
           "rank": 2,

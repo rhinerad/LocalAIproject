@@ -48,7 +48,7 @@ It **reads** `farm_status.json`, tails daemon/relay logs, runs
 `10.90.90.1:6379` listen / docker ps.
 
 `/api/dashboard` includes: overall health, snapshot
-(`broker_reachable`, worker names e.g. `celery@Louises-MBP`, latency,
+(`broker_reachable`, worker names e.g. `celery@Mac-Worker`, latency,
 redacted `snapshot_error`), WireGuard hub service state, spoke
 inference, tunnel-relay process + last log line, Redis docker
 name/status, registered **task names** (not job bodies), last 20

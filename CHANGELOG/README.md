@@ -4,8 +4,9 @@ Filenames are `YYYY-MM-DD` + sequential letter + `_slug.md`. Run
 `python scripts/next_changelog_id.py` for the next free id and
 `python scripts/build_changelog_index.py` to regenerate this index.
 
-## Entries (773)
+## Entries (774)
 
+- `2026-11-14c` — [2026-11-14c — Clean the public repo: private data out, SOC items out](2026-11-14c_public_cleanup.md)
 - `2026-11-14b` — [2026-11-14b — Merge the 2026-11 audit remediation (PR #1) into main](2026-11-14b_merge_audit_remediation_pr1.md)
 - `2026-11-14a` — [2026-11-14a — structured plan ("schematic") and a Claude Code subscription plan backend](2026-11-14a_structured_plan_and_claude_cli_plan_backend.md)
 - `2026-11-06b` — [2026-11-06b — Audit remediation, part 2: the last code fixes, verification, lint](2026-11-06b_audit_remediation_part2.md)
@@ -474,7 +475,7 @@ Filenames are `YYYY-MM-DD` + sequential letter + `_slug.md`. Run
 - `2026-09-03u` — [2026-09-03u — CLAUDE.md session-handoff line + HANDOFF_STATUS caveats](2026-09-03u_claude_handoff_status_line.md)
 - `2026-09-03t` — [2026-09-03t - TurboSparse template-mismatch probes; V1 grammar-forced only; registry FAIL](2026-09-03t_turbosparse_template_mismatch_probes.md)
 - `2026-09-03s` — [Intent](2026-09-03s_tunnel_relay_logon_interactive_task.md)
-- `2026-09-03r` — [2026-09-03r — Louises-MBP persistence reboot (WG-off, tunnel-auto, ollama-auto)](2026-09-03r_mac_persistence_reboot.md)
+- `2026-09-03r` — [2026-09-03r — Mac-Worker persistence reboot (WG-off, tunnel-auto, ollama-auto)](2026-09-03r_mac_persistence_reboot.md)
 - `2026-09-03q` — [What](2026-09-03q_ethernet_profile_private_dashboard.md)
 - `2026-09-03p` — [2026-09-03p — SeBatchLogonRight for rhine; tunnel-relay task still not registered](2026-09-03p_sebatch_rhine_relay_task_register.md)
 - `2026-09-03o` — [2026-09-03o — live verification: Redis secondary ACL restart hook](2026-09-03o_restart_hook_live_verification.md)

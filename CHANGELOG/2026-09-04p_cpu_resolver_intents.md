@@ -1,6 +1,6 @@
 # 2026-09-04p — Harness profiles Layer B: CPU-only action_resolver intents
 
-Date: 2026-09-04. Host: DuranGamingPC. Mac: Louises-MBP.
+Date: 2026-09-04. Host: DuranGamingPC. Mac: Mac-Worker.
 Id from `python scripts/next_changelog_id.py --date 2026-09-04`: **2026-09-04p**.
 Parent: `docs/HARNESS_PROFILES_DESIGN_2026-09-04.md` §6.2; v1 live compact
 turn `CHANGELOG/2026-09-04o_harness_profiles_v1.md`.

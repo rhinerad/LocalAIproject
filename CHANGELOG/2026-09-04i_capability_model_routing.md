@@ -13,7 +13,7 @@ second HTTP transport to the Mac.
 
 | Role | Tag | Digest prefix | Host |
 |---|---|---|---|
-| Lightweight tool / eval | `richardyoung/qwythos-9b-abliterated:latest` | `82663f041302` | Louises-MBP |
+| Lightweight tool / eval | `richardyoung/qwythos-9b-abliterated:latest` | `82663f041302` | Mac-Worker |
 | Deep logic | `huihui_ai/deepseek-r1-abliterated:14b-qwen-distill-q4_K_M` | `6b2209ffd758` | DuranGamingPC :11434 |
 | Coding | `josiefied-qwen2.5-coder-14b:q4_k_m` | `4a4b6c1f443c` | DuranGamingPC :11434 |
 
@@ -77,5 +77,5 @@ Both 14Bs already smoke-tested idle in 2026-09-04h.
 `try_qwythos_on_farm(...)` returned `None` in <1s (fail-closed). The Mac
 worker has not been restarted onto this tree, so `qwythos_evaluate` is
 not registered there yet. Agent falls back locally. Deploy/restart of
-`~/worker_farm` on Louises-MBP is required before a live Qwythos Celery
+`~/worker_farm` on Mac-Worker is required before a live Qwythos Celery
 turn will succeed.

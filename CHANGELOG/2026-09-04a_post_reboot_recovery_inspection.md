@@ -42,10 +42,10 @@ The **logon/Interactive** fallback from `2026-09-03s` (self-start proven `2026-0
 ## `farm_health --json` (workstation, after Redis + relay up)
 
 ```json
-{"status":"ok","broker_reachable":true,"workers_responding":true,"workers":["celery@Louises-MBP"],"missing_expected_tasks":[],"latency_ms":2399.9}
+{"status":"ok","broker_reachable":true,"workers_responding":true,"workers":["celery@Mac-Worker"],"missing_expected_tasks":[],"latency_ms":2399.9}
 ```
 
-Registered on `celery@Louises-MBP`: `connectivity_probe`, `judge_transcript`, `summarize_conversation`, `embed_chunks` (plus `distill_export`). `farm_status.json` `status=ok` `workers_responding=true`.
+Registered on `celery@Mac-Worker`: `connectivity_probe`, `judge_transcript`, `summarize_conversation`, `embed_chunks` (plus `distill_export`). `farm_status.json` `status=ok` `workers_responding=true`.
 
 ## vs HANDOFF_STATUS.md §3/§4
 

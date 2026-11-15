@@ -24,9 +24,9 @@ Pixel **out of this Celery track**).
 |---|---|
 | Hub URL allow-list (`FARM_TUNNEL_HUB_HOST=10.90.90.1`) + `connectivity_probe` | 2026-09-01e |
 | WireGuard hub scripts + hub standup (`10.90.90.1:51820`) | 2026-09-01h / 2026-09-01i |
-| First peer: Louise’s Mac `10.90.90.2` | 2026-09-01i; ping this session 0% loss |
+| First peer: the Mac worker `10.90.90.2` | 2026-09-01i; ping this session 0% loss |
 | `mac_worker` ACL + `.env.mac_worker.generated` | 2026-09-01i; still the **only** generated secondary env |
-| `connectivity_probe` E2E (`celery@Louises-MacBook-Pro.local` / later `celery@Louises-MBP`) | 2026-09-02a (relay semaphore 8→64) |
+| `connectivity_probe` E2E (`celery@mac-worker.local` / later `celery@Mac-Worker`) | 2026-09-02a (relay semaphore 8→64) |
 | `judge` / `summarize` / `embed` live on that same Mac | 2026-09-02c/d; README inventory |
 | Tunnel-relay logon autostart | 2026-09-03am (TODO’s “relay autostart” line from 2026-09-01 is stale) |
 | `qwythos_evaluate` registered on that worker | live this session |
@@ -44,11 +44,11 @@ on **one** verified node.
 
 ## Live node count tonight (2026-09-05 ~18:07 local)
 
-**Celery workers: 1.** Identity: **`celery@Louises-MBP`**.
+**Celery workers: 1.** Identity: **`celery@Mac-Worker`**.
 
 `farm_health --json` (broker reachable, `status=ok`):
 
-- `workers`: `["celery@Louises-MBP"]` only
+- `workers`: `["celery@Mac-Worker"]` only
 - Registered on that worker:
   `connectivity_probe`, `distill_export`, `embed_chunks`,
   `judge_transcript`, **`qwythos_evaluate`**, `summarize_conversation`
@@ -114,7 +114,7 @@ Assign **`10.90.90.3`**. Hands-on on that box + workstation:
    Redis.
 3. Workstation: `Add-Phase1SecondaryWorkerCredential.ps1 -Username <id>
    -Queues probe` (new username, not `mac_worker`; do **not** re-run
-   the Mac script — it mints a new password and would break Louise’s
+   the Mac script — it mints a new password and would break the Mac worker's
    stored credential). Copy the new `.env.<id>.generated` by hand.
 4. On the new box: isolated `.venv` from `requirements.txt`, env as
    `.env`, `worker.py --queues probe`.

@@ -436,7 +436,7 @@ def _ok_snapshot(**overrides) -> dict:
         "error": None,
         "latency_ms": 12.3,
         "status": "ok",
-        "workers": ["celery@Louises-MBP"],
+        "workers": ["celery@Mac-Worker"],
         "workers_responding": True,
     }
     body.update(overrides)

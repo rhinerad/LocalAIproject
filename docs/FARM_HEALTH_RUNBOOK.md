@@ -75,7 +75,7 @@ Skipped all 3 at 6:42 PM (`no_workers`); after datapath fix: 3/3 OK in 43.8s.
 
 Addresses: Mac `10.90.90.2` `utun5`, hub `10.90.90.1`, Windows service `WireGuardTunnel$hub` UDP 51820, Mac conf `/Users/rhineduran/wireguard/wg0.conf` Endpoint `192.168.50.208:51820` AllowedIPs `10.90.90.1/32`. Tunnel-only; no public ports.
 
-Tonight: Windows hub UP, Mac VPN UI Connected on `utun5`, ICMP/SSH `10.90.90.2` from PC **dead**, Mac ping `10.90.90.1` **dead**, LAN SSH `192.168.50.8` / `louises-macbook-pro.local` **worked**.
+Tonight: Windows hub UP, Mac VPN UI Connected on `utun5`, ICMP/SSH `10.90.90.2` from PC **dead**, Mac ping `10.90.90.1` **dead**, LAN SSH `192.168.50.8` / `mac-worker.local` **worked**.
 
 Windows:
 
@@ -88,8 +88,8 @@ Get-Service *wire*
 Mac (tunnel first, then LAN; key `A:\Users\rhine\.ssh\workstation_to_mac`, user `rhineduran`):
 
 ```
-ssh -i A:\Users\rhine\.ssh\workstation_to_mac -o IdentitiesOnly=yes rhineduran@10.90.90.2
-ssh -i A:\Users\rhine\.ssh\workstation_to_mac -o IdentitiesOnly=yes rhineduran@louises-macbook-pro.local
+ssh -i A:\Users\rhine\.ssh\workstation_to_mac -o IdentitiesOnly=yes user@10.90.90.2
+ssh -i A:\Users\rhine\.ssh\workstation_to_mac -o IdentitiesOnly=yes user@mac-worker.local
 ifconfig utun5
 wg show
 ping 10.90.90.1
@@ -128,7 +128,7 @@ Did **not** bounce the Windows hub.
 1. Disable login-item helper; `scutil --nc stop workstation_gateway`; quit WireGuard.app/NE (`utun5` gone).
 2. `wg-quick` wrapper so launchd finds bash 5 (copy `/Users/rhineduran/wireguard/wg-quick-wrapper.sh`). Fragile if `brew upgrade wireguard-tools` restores the Homebrew symlink.
 3. `launchctl kickstart system/com.local-agent.wireguard-wg0` (no sudo). Log: `wireguard-go` utun, Interface for `wg0` is `utun5`, route `10.90.90.1/32` via `utun5`.
-4. Celery reconnected 1:20:33 AM ET `celery@Louises-MBP` ready.
+4. Celery reconnected 1:20:33 AM ET `celery@Mac-Worker` ready.
 5. First live embed failed `OllamaUnavailable` `127.0.0.1:11434`; started `ollama serve`; LaunchAgent recycled the worker.
 
 After: one owner = LaunchDaemon/`wireguard-go` as root; login item disabled; `workstation_gateway` Disconnected; no ifscoped default on `utun5`; default via `en0`; `10.90.90.1/32` via `utun5` only.

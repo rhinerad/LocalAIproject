@@ -7,7 +7,7 @@ Continuation of the multi-node worker-farm setup started in
 
 ## Root cause identified and fixed
 
-Mac worker (`celery@Louises-MacBook-Pro.local`, PID 29584/29587) was connected
+Mac worker (`celery@mac-worker.local`, PID 29584/29587) was connected
 and showing "ready" but never returned task results.
 
 **Cause:** `relay/tunnel_relay.py` had `MAX_CONCURRENT_CONNECTIONS = 8`.
@@ -34,7 +34,7 @@ logged `max 64 concurrent`.
 
 ```
 {
-  "hostname": "Louises-MacBook-Pro.local",
+  "hostname": "mac-worker.local",
   "platform": "macOS-13.7.8-x86_64-i386-64bit",
   "worker_pid": 29587,
   "received_at": 1788328248.21

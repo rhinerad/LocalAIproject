@@ -1,5 +1,5 @@
 #!/bin/bash
-# Run on Louises-MBP. Prints live OLLAMA_KEEP_ALIVE, then (if argv1=apply)
+# Run on Mac-Worker. Prints live OLLAMA_KEEP_ALIVE, then (if argv1=apply)
 # copies the 30m plist into /Library/LaunchDaemons and reloads the daemon.
 set -euo pipefail
 echo "=== launchctl environment ==="

@@ -12,7 +12,7 @@ progressed past the Mac. Confirmed via both `hub.conf`'s single `[Peer]`
 block (unchanged since 2026-09-01 23:03) and the live hub's routing table
 (only `10.90.90.2/32` exists; `.3`-`.6` return "no route," not a
 timeout). Only one Celery worker has ever registered:
-`celery@Louises-MBP`. The 2026-09-01 plan itself only ever used
+`celery@Mac-Worker`. The 2026-09-01 plan itself only ever used
 placeholder names (`workshop_pc`, `media_server`, `old_laptop`,
 `linux_box`) — a real machine list and OS inventory was left as an open
 question and was never subsequently filled in.
@@ -29,7 +29,7 @@ Don't actively chase the remaining 3+ LAN machines right now — that's
 operator-hands-on work (per-box keypair, `Add-WireGuardPeer`, per-machine
 Redis ACL, venv, `worker.py`) that was deprioritized, not blocked by
 anything technical. Worth doing only if more CPU capacity is actually
-wanted beyond what Louise's 2019 16GB Intel Mac provides — that's a
+wanted beyond what the 2019 16GB Intel Mac worker provides — that's a
 capacity decision, separate from the already-deferred 10-node/60-core
 cluster architecture track, which this hub was never meant to be.
 

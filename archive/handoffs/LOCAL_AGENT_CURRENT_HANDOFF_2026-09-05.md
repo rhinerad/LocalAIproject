@@ -74,8 +74,8 @@ the operator’s SHA-256 check, then unplug D:.
 
 **Done**
 
-- Still **one spoke**: Louise’s Mac `10.90.90.2` /
-  `celery@Louises-MBP`. Re-audited `bi` then `dc` with live
+- Still **one spoke**: the Mac worker `10.90.90.2` /
+  `celery@Mac-Worker`. Re-audited `bi` then `dc` with live
   `farm_health`, overlay, and credential files. `hub.conf` one
   `[Peer]`; only `.env.mac_worker.generated`. Not a failed join of
   the other 3+ LAN boxes — **never started**. Pixel is a different

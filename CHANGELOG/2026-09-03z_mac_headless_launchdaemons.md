@@ -1,6 +1,6 @@
 # 2026-09-03z - Mac headless LaunchDaemons (ollama + celery survive GUI login)
 
-Date: 2026-09-03. Host: Louises-MBP. All times America/New_York (UTC-4).
+Date: 2026-09-03. Host: Mac-Worker. All times America/New_York (UTC-4).
 
 Converted `com.local-agent.celery-worker` and `com.local-agent.ollama` (live label; not `ollama-serve`) from user LaunchAgents to `/Library/LaunchDaemons` with `UserName=rhineduran` `GroupName=staff` (uid 503).
 
@@ -14,7 +14,7 @@ Did **not** open Ollama.app. Did **not** start gui LaunchAgents. Did **not** reb
 - Both system LaunchDaemons started **15:53:49** (~32s after boot), uid 503, `runs=1`, state running, last exit never.
   - ollama pid **336** -> `127.0.0.1:11434` HTTP **200**
   - celery wrapper/python pid **339**; children 582/585 ~15:54:07-09
-  - celery ready line: `[2026-09-03 15:54:18,506: INFO/MainProcess] celery@Louises-MBP ready.` (Redis connected)
+  - celery ready line: `[2026-09-03 15:54:18,506: INFO/MainProcess] celery@Mac-Worker ready.` (Redis connected)
 - Pre-login snapshot at login window matched these pids/starts.
 
 ## Post GUI login (PASS - pids held)
@@ -41,5 +41,5 @@ Rhine GUI-logged in ~**15:58** (`stat -f %Su /dev/console` -> `rhineduran`; `who
 
 ## Observe commands (no kickstart / no gui domain load)
 
-SSH from DuranGamingPC: `ssh -i A:\Users\rhine\.ssh\workstation_to_mac ... rhineduran@10.90.90.2`.
+SSH from DuranGamingPC: `ssh -i A:\Users\rhine\.ssh\workstation_to_mac ... user@10.90.90.2`.
 Checks: `sysctl kern.boottime`, `stat -f %Su /dev/console`, `who`/`last -2`, `ps -p 336,339,582,585`, `launchctl print system/com.local-agent.*`, curl tags, gui/503 disabled grep, celery stderr ready line.

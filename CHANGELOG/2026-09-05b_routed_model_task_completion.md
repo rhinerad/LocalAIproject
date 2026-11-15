@@ -13,8 +13,8 @@ Receipts: `artifacts/benchmarks/2026-09-05_task_completion/*.json`
 |---|---|
 | `farm_reachable()` | **False** |
 | `farm_status.json` | `status=no_workers`, broker reachable, ping 1.9–2.6 s, Mac `10.90.90.2` TCP to Redis present |
-| SSH `rhineduran@10.90.90.2` | connect timeout |
-| SSH `louises-macbook-pro.local` | hostname not known |
+| SSH `user@10.90.90.2` | connect timeout |
+| SSH `mac-worker.local` | hostname not known |
 | GPU | idle 65 MiB, `gpu_gate.mode=allow` |
 | ComfyUI :8188 | **down** at start; Rockernow started via `start_comfy_rockernow.bat` (ready after ~3 min; pid 12016) |
 

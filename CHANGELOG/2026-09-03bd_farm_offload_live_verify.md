@@ -6,14 +6,14 @@ Id from `python scripts/next_changelog_id.py --date 2026-09-03` immediately
 before write: **2026-09-03bd**.
 
 Live-verify of `farm_offload.should_route` / prefetch / embed / stale
-fallback against `celery@Louises-MBP`, not the 90 unit tests. Four
+fallback against `celery@Mac-Worker`, not the 90 unit tests. Four
 scenarios, reported separately.
 
 ## Results
 
 | scenario | result | evidence |
 |---|---|---|
-| D healthy consistency | **PASS** | `farm_reachable()=True` and dashboard `is_farm_degraded()=False` on the live `farm_status.json` (`status=ok`, `celery@Louises-MBP`) |
+| D healthy consistency | **PASS** | `farm_reachable()=True` and dashboard `is_farm_degraded()=False` on the live `farm_status.json` (`status=ok`, `celery@Mac-Worker`) |
 | B embed blocking | **PASS** | `EmbeddingScorer.vectors_for` submitted `embed_chunks`; local `_embed` not called; **0.953s** wall clock; `nomic-embed-text:latest`; 768-dim. Farm-task ~0.58s plus helper subprocess |
 | A prefetch consume-win | **PASS** (after timeout fix) | Hop loop fired at **0.817×num_ctx** (2042/2500). Background `summarize_conversation` completed in **117.3s**, model `krith/mistral-nemo-instruct-2407-abliterated:IQ4_XS`. `_trim_context` emit: `farm CPU summary (model: …)`. Local summarizer **0** calls |
 | C failure injection | **PASS** | Stopped `\local-agent-farm-status-daemon`, wrote `checked_at` 91s old. Prefetch did not start. Helper **0** calls. Overflow used local CPU summary in **0.0s**. Embed used local `_embed` in **0.0s**. No exception. Prefetch slot `thread is None` |

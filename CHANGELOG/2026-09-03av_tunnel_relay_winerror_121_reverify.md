@@ -10,7 +10,7 @@ checks recurrence after that write.
 
 ## Verdict
 
-The 18:56 WinError 121 is **Louises-MBP software-initiated shutdown/reboot**,
+The 18:56 WinError 121 is **Mac-Worker software-initiated shutdown/reboot**,
 not a DuranGamingPC Wi-Fi/NIC/sleep event, not a router log, and not a
 `\local-agent-tunnel-relay` crash or logon-trigger misfire.
 
@@ -36,7 +36,7 @@ reopened `10.90.90.1:6379` from **18:56:53**.
 | 18:56:07 | pmset | ShutdownCause **5** (software) |
 | 18:56:36 | pmset | new boot stamp (0 sleep/wakes this cycle) |
 | 18:56:53–58 | `tunnel_relay.log` | Mac reconnect (`49170`, then `49187+`) |
-| 18:56:57 | `~/worker_farm/worker.stdout.log` | celery@Louises-MBP banner |
+| 18:56:57 | `~/worker_farm/worker.stdout.log` | celery@Mac-Worker banner |
 | 18:57:26 | farm_status `22:57:26Z` | workers **yes** again |
 
 `farm_status_daemon.log` timestamps are UTC. Relay `logging` timestamps are local ET.

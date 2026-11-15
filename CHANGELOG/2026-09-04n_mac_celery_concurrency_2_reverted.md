@@ -1,6 +1,6 @@
 # 2026-09-04n — Mac worker `--concurrency=2` experiment: negative result, reverted
 
-Date: 2026-09-04. Host: DuranGamingPC. Mac: Louises-MBP (`10.90.90.2`).
+Date: 2026-09-04. Host: DuranGamingPC. Mac: Mac-Worker (`10.90.90.2`).
 Id from `python scripts/next_changelog_id.py`: **2026-09-04n**.
 Ticket: `TODO.md` Farm efficiency ticket 1.
 Design note: `docs/FARM_EFFICIENCY_EVALUATION_2026-09-04.md` Finding 4.
@@ -86,7 +86,7 @@ launchctl kickstart -k system/com.local-agent.celery-worker
 ```
 
 Live after revert: `--concurrency 1 --pool prefork` (pids 25840 / 25843).
-`farm_health`: broker yes, `celery@Louises-MBP` responding, expected
+`farm_health`: broker yes, `celery@Mac-Worker` responding, expected
 tasks including `embed_chunks` / `summarize_conversation` /
 `qwythos_evaluate` registered, latency_ms 2278.6.
 

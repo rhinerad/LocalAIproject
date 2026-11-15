@@ -18,7 +18,7 @@ no PowerInfer execute. Did not edit `local_agent/` code. Read-only
 - `local_agent/server.py`: `APP_REVISION = "2026-09-01-action-resolver-r76"` (unchanged).
 - Live agent: unelevated `server.py` PID 32316 on `127.0.0.1:8760`;
   `GET /api/status` 200; GPU idle (~57 MiB); `gpu_server_up` true.
-- Farm: `farm_health --json` broker yes, workers yes (`celery@Louises-MBP`),
+- Farm: `farm_health --json` broker yes, workers yes (`celery@Mac-Worker`),
   `latency_ms` ~1384, `status=ok` at ~6:10 PM ET.
 - Newest CHANGELOG before this note: `2026-09-02x_architecture_md.md`
   (~5:47 PM ET). No collide with an in-flight write.

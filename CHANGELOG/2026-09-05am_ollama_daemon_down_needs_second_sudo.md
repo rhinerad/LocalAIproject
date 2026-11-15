@@ -29,7 +29,7 @@ cannot run until this is fixed.
 
 A second interactive sudo, already staged and waiting:
 `sudo /tmp/mac_sudo_bootstrap_ollama.sh` in a new Terminal window on
-Louises-MBP (ttys003). This reloads the already-correct 30m plist via
+Mac-Worker (ttys003). This reloads the already-correct 30m plist via
 `bootstrap` + `kickstart`. Needs the operator's console password, same
 as before.
 

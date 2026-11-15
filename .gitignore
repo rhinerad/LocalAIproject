@@ -260,3 +260,6 @@ work/*
 !work/*.py
 !work/*.md
 !work/README*
+
+# Explicit-content eval set (2026-11 audit P0 #2): local only
+powerinfer_project/approved_tasks.jsonl

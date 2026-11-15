@@ -56,7 +56,7 @@ Measured; not inferred from older docs.
 | BitLocker | `manage-bde -status` denied without admin. **Unknown** whether C: or A: is encrypted. Do not assume disk encryption. |
 | GPU now | RTX 5080 **52 °C, 0 % util, 59 MiB / 16303 MiB, ~69 W**. Port **8188 not listening**. |
 | Render owners | Equal Shares owner file names PID **16900** dated 2026-08-10 — **process not running** (stale). Batch and image-render owners `pid: 0` / released. Equal Shares remains **paused** per AGENTS.md. |
-| Farm | `farm_status.json` **ok**, worker **`celery@Louises-MBP` only**, broker reachable. Hub peer is still just the Mac (`10.90.90.2`). |
+| Farm | `farm_status.json` **ok**, worker **`celery@Mac-Worker` only**, broker reachable. Hub peer is still just the Mac (`10.90.90.2`). |
 
 Order of magnitude for a first media/evidence pass (see §3): **about 6–7 GB**
 if you take the handoff `outputs/` tree plus selected Shared output
@@ -113,7 +113,7 @@ Technically easy: 11 TB free on RAD Disk.
 ### D. NAS / another LAN computer (none mounted)
 
 No share is mapped today. The only other live machine on the farm overlay
-is **Louise’s MacBook Pro** (`10.90.90.2`), 2019, 16 GB RAM, already the
+is **the Mac worker** (`10.90.90.2`), 2019, 16 GB RAM, already the
 Celery worker.
 
 | | |

@@ -6,7 +6,7 @@ Python source change in `local_agent/worker_farm/tasks.py`. Celery prefork MainP
 
 Cause of the live `judge_transcript` 60s timeout: not the 120s summarize/Ollama wait. `embed_chunks` raised `OllamaUnavailable` (Ollama down). MainProcess then hit `ModuleNotFoundError: No module named 'ollama_client'` while handling that exception (the class was only imported inside `_embed_chunks` in the fork). Consumer died; Redis `Timeout connecting to server` followed. Live `judge_transcript` itself completed in ~0.035s when the worker was healthy.
 
-Ollama on Louises-MBP is the LaunchDaemon `system/com.local-agent.ollama` at `127.0.0.1:11434`. This changelog does not change that.
+Ollama on Mac-Worker is the LaunchDaemon `system/com.local-agent.ollama` at `127.0.0.1:11434`. This changelog does not change that.
 
 ## Fix
 
@@ -33,4 +33,4 @@ local_agent\worker_farm\.venv\Scripts\python.exe -m unittest local_agent.worker_
 
 ## Scope
 
-No `outputs/equal_shares/`. No farm/GUI/GPU start on DuranGamingPC. Mac live copy of `tasks.py` and Celery LaunchAgent restart are follow-up on Louises-MBP (same import; do not touch the Ollama daemon).
+No `outputs/equal_shares/`. No farm/GUI/GPU start on DuranGamingPC. Mac live copy of `tasks.py` and Celery LaunchAgent restart are follow-up on Mac-Worker (same import; do not touch the Ollama daemon).

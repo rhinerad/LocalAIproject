@@ -70,7 +70,7 @@ class PersistenceSeed:
 ORPHANS: tuple[OrphanSeed, ...] = (
     OrphanSeed(
         name="Crash-looping leftover Mac LaunchAgent `com.local-agent.celery-worker`",
-        machine="Louises-MBP / 10.90.90.2",
+        machine="Mac-Worker / 10.90.90.2",
         source=(
             "CHANGELOG/2026-09-03e_farm_health_runbook.md; "
             "docs/FARM_HEALTH_RUNBOOK.md"
@@ -83,7 +83,7 @@ ORPHANS: tuple[OrphanSeed, ...] = (
     ),
     OrphanSeed(
         name="Pre-existing Mac LaunchDaemon `com.local-agent.wireguard-wg0`",
-        machine="Louises-MBP / 10.90.90.2",
+        machine="Mac-Worker / 10.90.90.2",
         source=(
             "CHANGELOG/2026-09-03e_farm_health_runbook.md; "
             "docs/FARM_HEALTH_RUNBOOK.md"
@@ -103,7 +103,7 @@ ORPHANS: tuple[OrphanSeed, ...] = (
             "`gui/503/com.wireguard.macos.login-item-helper` / "
             "Network Extension `workstation_gateway` owning `utun5`"
         ),
-        machine="Louises-MBP / 10.90.90.2",
+        machine="Mac-Worker / 10.90.90.2",
         source=(
             "CHANGELOG/2026-09-03e_farm_health_runbook.md; "
             "docs/FARM_HEALTH_RUNBOOK.md"
@@ -184,7 +184,7 @@ PERSISTENCE: tuple[PersistenceSeed, ...] = (
     ),
     PersistenceSeed(
         service="WireGuard",
-        machine="Louises-MBP / 10.90.90.2 (`utun5` / LaunchDaemon)",
+        machine="Mac-Worker / 10.90.90.2 (`utun5` / LaunchDaemon)",
         source=(
             "CHANGELOG/2026-09-03i_session_handoff.md; "
             "docs/FARM_HEALTH_RUNBOOK.md; "
@@ -206,7 +206,7 @@ PERSISTENCE: tuple[PersistenceSeed, ...] = (
     ),
     PersistenceSeed(
         service="Celery worker",
-        machine="Louises-MBP / 10.90.90.2 (`celery@Louises-MBP`)",
+        machine="Mac-Worker / 10.90.90.2 (`celery@Mac-Worker`)",
         source=(
             "CHANGELOG/2026-09-04a_post_reboot_recovery_inspection.md "
             "(03e restore: docs/FARM_HEALTH_RUNBOOK.md / "
@@ -215,7 +215,7 @@ PERSISTENCE: tuple[PersistenceSeed, ...] = (
         status=(
             "After delayed logon 00:18:03, workstation `farm_health --json` "
             "`status=ok`, `workers_responding=true`, worker "
-            "`celery@Louises-MBP`, expected tasks registered "
+            "`celery@Mac-Worker`, expected tasks registered "
             "(`2026-09-04a`)."
         ),
     ),
@@ -237,7 +237,7 @@ PERSISTENCE: tuple[PersistenceSeed, ...] = (
     ),
     PersistenceSeed(
         service="tunnel_relay",
-        machine="Louises-MBP / 10.90.90.2",
+        machine="Mac-Worker / 10.90.90.2",
         source="",
         status=NOT_DOCUMENTED,
     ),
@@ -276,7 +276,7 @@ PERSISTENCE: tuple[PersistenceSeed, ...] = (
     ),
     PersistenceSeed(
         service="Redis/Docker",
-        machine="Louises-MBP / 10.90.90.2",
+        machine="Mac-Worker / 10.90.90.2",
         source="",
         status=NOT_DOCUMENTED,
     ),

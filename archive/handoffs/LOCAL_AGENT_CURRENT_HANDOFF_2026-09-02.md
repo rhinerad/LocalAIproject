@@ -436,7 +436,7 @@ downloaded, no engine installed, no model registered.
   them specifically is documented in `CHANGELOG/2026-09-02r_...`, not repeated
   here; check that entry before assuming `mac_worker`'s exact granted queue
   list without re-reading it.
-- Mac worker running at `~/worker_farm/` on `celery@Louises-MBP`, Python 3.11
+- Mac worker running at `~/worker_farm/` on `celery@Mac-Worker`, Python 3.11
   venv; SSH access via workstation key `~/.ssh/workstation_to_mac` (ed25519,
   added to Mac's `authorized_keys`)
 - Tunnel relay: `10.90.90.1:6379 → 127.0.0.1:6379`, `MAX_CONCURRENT_CONNECTIONS=64`

@@ -1078,7 +1078,7 @@ separate explicit approval; this is a bookmark, not an intake.
   decision. Recorded so it isn't mistaken for an inferred default later.
 - [x] Grant the `judge` queue to `mac_worker` and run `submit_judge_batch.py`
   against the live broker — verified 2026-09-02. Three real `judge_transcript`
-  tasks completed end to end on `celery@Louises-MBP` (54ms/16ms/68ms). ACL DENY
+  tasks completed end to end on `celery@Mac-Worker` (54ms/16ms/68ms). ACL DENY
   probe also run: mac_worker can read distill queue envelopes via `~*` key
   pattern but cannot run admin commands (ACL SETUSER, CONFIG — NOPERM); actual
   sensitive content is in encrypted on-disk artifacts, not Redis. Accepted
@@ -1279,7 +1279,7 @@ separate explicit approval; this is a bookmark, not an intake.
   `local_agent/worker_farm/wireguard/` (see
   `CHANGELOG/2026-09-01h_wireguard_hub_scripts.md` and
   `CHANGELOG/2026-09-01i_wireguard_hub_standup.md`).
-  **2026-09-02:** Mac worker (`celery@Louises-MacBook-Pro.local`) ran
+  **2026-09-02:** Mac worker (`celery@mac-worker.local`) ran
   `worker.py --queues probe`; workstation submitted `connectivity_probe`;
   result returned Mac hostname, platform (macOS 13.7.8 x86_64), and PID —
   end-to-end verified. Root cause of earlier failure: `relay/tunnel_relay.py`
@@ -1667,7 +1667,7 @@ separate explicit approval; this is a bookmark, not an intake.
 - [x] **Farm efficiency, ticket 1 (do first) — Mac worker `--concurrency=2`
   experiment.** Done 2026-09-04: **negative result, reverted to 1.**
   Evidence: `CHANGELOG/2026-09-04n_mac_celery_concurrency_2_reverted.md`.
-  Eight 8-chunk `embed_chunks` jobs, live `celery@Louises-MBP`,
+  Eight 8-chunk `embed_chunks` jobs, live `celery@Mac-Worker`,
   `nomic-embed-text:latest`. Wall clock **90.973 s at conc=1** vs
   **89.769 s at conc=2** (+1.3% throughput, noise). Worker-side time
   **11.3 s â†’ 20.8 s mean**; client min **9.1 s â†’ 20.7 s**. Both
@@ -1727,7 +1727,7 @@ separate explicit approval; this is a bookmark, not an intake.
   copy staged at `local_agent/worker_farm/macos/com.local-agent.ollama.plist`.
   Live fix without sudo: farm task `keep_alive=_QWYTHOS_KEEP_ALIVE`
   (`"30m"`), same convention as CPU-tier `Start-Server` `$CpuOnly`.
-  Mac `ollama_client` already forwards the field. Timed on Louises-MBP
+  Mac `ollama_client` already forwards the field. Timed on Mac-Worker
   `:11434` (the process `qwythos_evaluate` uses): first **45.300 s**
   (`load_duration` 40.882 s, cold), immediate second **3.188 s**
   (`load_duration` 0.058 s, warm); `ollama ps` **UNTIL 29 minutes**.

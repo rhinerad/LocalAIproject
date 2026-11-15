@@ -20,7 +20,7 @@ local_agent\worker_farm\.venv\Scripts\python.exe -m unittest local_agent.worker_
 
 ### 2. Ollama + models installed on mac_worker
 
-SSH'd to `rhineduran@Louises-MacBook-Pro.local` (correct username — an earlier
+SSH'd to `user@mac-worker.local` (correct username — an earlier
 attempt with `rhine@...` was denied with "Permission denied"; the right name was
 found in `CHANGELOG/2026-09-02d_judge_evaluation_end_to_end_verified.md`'s
 `/Users/rhineduran/Documents/worker_farm` reference).
@@ -56,7 +56,7 @@ script if Redis restarts before a persistent-ACL approach is added).
 
 ### 4. Deployed updated files to mac_worker
 
-Deployed via scp to `rhineduran@Louises-MacBook-Pro.local:~/worker_farm/local_agent/`:
+Deployed via scp to `user@mac-worker.local:~/worker_farm/local_agent/`:
 - `local_agent/context_compactor.py` — new transitive dependency for the
   summarize task; includes `model=`/`host=`/`timeout=` overrides from `2026-09-02q`
 - `local_agent/ollama_client.py`
@@ -108,7 +108,7 @@ cd ~/worker_farm && nohup local_agent/worker_farm/.venv/bin/python worker.py \
  'model': 'nomic-embed-text:latest'}
 ```
 
-Both completed on `celery@Louises-MacBook-Pro.local`. First-call latency ~55s
+Both completed on `celery@mac-worker.local`. First-call latency ~55s
 (model cold load + inference on a 2019 Intel Core i9 Mac CPU, no GPU).
 Mistral-nemo-abliterated inference alone: ~18.5s once loaded. nomic-embed-text
 embed: ~0.58s once loaded. Subsequent calls will be faster until `keep_alive`

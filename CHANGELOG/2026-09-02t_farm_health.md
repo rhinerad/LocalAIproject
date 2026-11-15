@@ -24,7 +24,7 @@ local_agent\worker_farm\.venv\Scripts\python.exe -m local_agent.worker_farm.farm
 Prints one status line, e.g.
 
 ```
-broker reachable: yes  workers responding: yes  latency_ms: 18.4  workers: celery@Louises-MacBook-Pro.local
+broker reachable: yes  workers responding: yes  latency_ms: 18.4  workers: celery@mac-worker.local
 ```
 
 `--json` dumps the dict. Exit 0 only when `status=ok`.
@@ -44,4 +44,4 @@ Covers reachable+responsive, unreachable (refused/timeout), and broker-up/worker
 - `local_agent/worker_farm/README.md` (unittest line + health CLI)
 - `TODO.md` (checked item under Phase 1 worker-farm bootstrap)
 
-Celery `inspect.ping()` waits its full timeout even after a reply, so the health check caps inspect wait at 1.0s while TCP still uses `timeout_s` (default 5). A live 2026-09-02 run reported `broker reachable: yes`, `workers responding: yes`, worker `celery@Louises-MBP`.
+Celery `inspect.ping()` waits its full timeout even after a reply, so the health check caps inspect wait at 1.0s while TCP still uses `timeout_s` (default 5). A live 2026-09-02 run reported `broker reachable: yes`, `workers responding: yes`, worker `celery@Mac-Worker`.

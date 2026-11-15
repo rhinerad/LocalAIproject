@@ -1,6 +1,6 @@
 # 2026-09-05o — Mac Qwythos `OLLAMA_KEEP_ALIVE` / request keep_alive 30m
 
-Date: 2026-09-05. Hosts: DuranGamingPC (workstation) and Louises-MBP
+Date: 2026-09-05. Hosts: DuranGamingPC (workstation) and Mac-Worker
 (Mac farm worker, `10.90.90.2`). Id from
 `python scripts/next_changelog_id.py`: **2026-09-05o**.
 
@@ -11,7 +11,7 @@ ps` empty immediately after the turn.
 
 ## Live daemon setting (before)
 
-SSH `rhineduran@10.90.90.2` at 08:07 and 10:16 EDT. LaunchDaemon
+SSH `user@10.90.90.2` at 08:07 and 10:16 EDT. LaunchDaemon
 `system/com.local-agent.ollama` (`/Library/LaunchDaemons/com.local-agent.ollama.plist`):
 
 | Source | `OLLAMA_KEEP_ALIVE` |
@@ -24,7 +24,7 @@ Unset means Ollama's own default (**5m**), not the GPU-tier CPU server's
 `OLLAMA_KEEP_ALIVE=30m` (`START_LOCAL_AGENT_GUI.ps1` `$CpuOnly`).
 `/api/ps` before the timed calls: empty.
 
-`sudo -n` is unavailable on Louises-MBP (uid 503 is in `admin` but has
+`sudo -n` is unavailable on Mac-Worker (uid 503 is in `admin` but has
 no passwordless sudo), so the system plist was **not** rewritten in
 place. A 30m copy is staged at
 `local_agent/worker_farm/macos/com.local-agent.ollama.plist` (and
@@ -71,7 +71,7 @@ Raw: `artifacts/benchmarks/2026-09-05o_qwythos_keepalive_measure.txt`,
 inspect: `artifacts/benchmarks/2026-09-05o_qwythos_keepalive_inspect.txt`.
 
 Workstation `try_qwythos_on_farm` two-call was **not** a farm receipt:
-`farm_status.json` flapped `ok` (14:17:56Z, `celery@Louises-MBP`) to
+`farm_status.json` flapped `ok` (14:17:56Z, `celery@Mac-Worker`) to
 `no_workers` (14:18:27Z) inside the 90s snapshot window, so
 `farm_offload` skipped Celery in 0.0 s. The Mac Ollama pair above is
 the keep-alive proof; Celery is the same `127.0.0.1:11434` plus queue

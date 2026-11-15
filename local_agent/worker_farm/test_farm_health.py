@@ -41,7 +41,7 @@ from local_agent.worker_farm import farm_health
 
 
 _FAKE_BROKER = "redis://:unit-test-pass@127.0.0.1:6379/0"
-_WORKER = "celery@Louises-MacBook-Pro.local"
+_WORKER = "celery@mac-worker.local"
 _ALL_EXPECTED = list(farm_health.EXPECTED_REGISTERED_TASKS)
 _REGISTERED = {
     _WORKER: list(_ALL_EXPECTED) + ["celery.backend_cleanup"],

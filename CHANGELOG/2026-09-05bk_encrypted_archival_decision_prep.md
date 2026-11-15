@@ -19,7 +19,7 @@ Measured this session (no Restic, no password, no copy):
 - OneDrive running (~0.75 GB, Personal Vault.lnk); DriveFS absent.
 - No local 1Password/Bitwarden/KeePass path.
 - GPU idle: 52 °C, 0 %, 59 MiB; 8188 down; Equal Shares owner PID 16900
-  dead; farm `celery@Louises-MBP` ok.
+  dead; farm `celery@Mac-Worker` ok.
 - Candidate sizes: `outputs/equal_shares` 3.36 GB;
   `ComfyUI-Shared\output` 2.93 GB (`good audio` 0.01 GB / 16 files);
   Desktop Equal Shares packs 0.16 GB.

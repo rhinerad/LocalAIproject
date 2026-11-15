@@ -1,6 +1,6 @@
-# 2026-09-03r — Louises-MBP persistence reboot (WG-off, tunnel-auto, ollama-auto)
+# 2026-09-03r — Mac-Worker persistence reboot (WG-off, tunnel-auto, ollama-auto)
 
-Live reboot verification of Louises-MBP on the afternoon of 2026-09-03 ET.
+Live reboot verification of Mac-Worker on the afternoon of 2026-09-03 ET.
 Did **not** sudo. Did **not** `launchctl kickstart` ollama, celery, or WireGuard.
 Did **not** launch WireGuard.app. Did **not** run `wg-quick` by hand.
 
@@ -17,7 +17,7 @@ Tunnel `10.90.90.2` and LAN `192.168.50.8` both replied for the whole watch
 window (no drop observed after watch start). This is still the new boot —
 wall clock and boot time match this afternoon, not a leftover session.
 
-SSH after return: `rhineduran@10.90.90.2`, key `A:\Users\rhine\.ssh\workstation_to_mac`,
+SSH after return: `user@10.90.90.2`, key `A:\Users\rhine\.ssh\workstation_to_mac`,
 `IdentitiesOnly` / `BatchMode` / `StrictHostKeyChecking=yes` / `ConnectTimeout=10`.
 uid=503.
 
@@ -93,9 +93,9 @@ No `launchctl kickstart`.
 
 LaunchAgent `com.local-agent.celery-worker` already running: PID **2868**,
 `LastExitStatus=0`, KeepAlive+RunAtLoad, queues
-`probe,judge,summarize,embed`. Hostname `Louises-MBP`.
+`probe,judge,summarize,embed`. Hostname `Mac-Worker`.
 `worker.stdout.log` this boot: banner **2026-09-03 14:45:56**,
-`Connected` / `celery@Louises-MBP ready.` at **14:46:18 ET**.
+`Connected` / `celery@Mac-Worker ready.` at **14:46:18 ET**.
 Broker `redis://mac_worker@10.90.90.1:6379/0`. Registered tasks include
 `summarize_conversation` and `embed_chunks`.
 
@@ -108,7 +108,7 @@ from repo root:
   Coincided with a DuranGamingPC Cursor-agent disconnect; **not** treated as
   a kickstart-worthy Mac failure. Celery log already said ready at 14:46:18.
 - Retry **15:03:22 ET**: **ok**, `workers_responding=true`, latency ~5.5s,
-  worker `celery@Louises-MBP`, `missing_expected_tasks=[]`,
+  worker `celery@Mac-Worker`, `missing_expected_tasks=[]`,
   `summarize_conversation` and `embed_chunks` registered.
 
 No celery kickstart.

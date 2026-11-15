@@ -11,7 +11,7 @@ before write: **2026-09-03as**.
 After `\local-agent-tunnel-relay` logon self-start was proven
 (`2026-09-03am`), two `OSError: [WinError 121] The semaphore timeout period
 has expired` lines fired at **18:56:03**, then the Mac reconnected on its
-own. Check DuranGamingPC + Louises-MBP around that moment: Wi-Fi blip,
+own. Check DuranGamingPC + Mac-Worker around that moment: Wi-Fi blip,
 sleep/wake, router hiccup, or the relay/task. Do not call it noise without
 checking recurrence.
 
@@ -39,7 +39,7 @@ Not a DuranGamingPC Wi-Fi/NIC/sleep event, not a router log, not a
 | 18:56:03.149 / .630 | `tunnel_relay.log` | two WinError 121 in `_pump` / `reader.read` |
 | 18:56:36 | pmset (prior boot stamp) | `Sleep/Wakes since boot at 18:56:36` |
 | 18:56:53–58 | `tunnel_relay.log` | Mac reconnect burst (`49170`, then `49187+`) |
-| 18:56:57 | Mac `worker.stdout.log` | celery@Louises-MBP banner this boot |
+| 18:56:57 | Mac `worker.stdout.log` | celery@Mac-Worker banner this boot |
 | 18:57:26 | farm_status (22:57:26Z) | workers **yes** again (`RECOVERED` after 3) |
 
 `farm_status_daemon.log` timestamps are UTC (`+00:00`). Relay /

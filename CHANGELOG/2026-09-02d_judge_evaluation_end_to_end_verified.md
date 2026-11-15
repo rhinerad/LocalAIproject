@@ -131,7 +131,7 @@ queued=3 skipped(unchanged)=0 errors=0 total_chats=35
 ## Step 5 — Task completion verified on the Mac
 
 All 3 tasks returned SUCCESS. Mac worker log (`~/worker_farm/worker.log`)
-confirms `ForkPoolWorker-1` on `celery@Louises-MBP` executed them:
+confirms `ForkPoolWorker-1` on `celery@Mac-Worker` executed them:
 
 ```
 [2026-09-02 13:23:55] Task judge_transcript[a9058def] received

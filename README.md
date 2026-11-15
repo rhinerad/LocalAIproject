@@ -36,14 +36,6 @@ actually made one).
 `model_gateway/` adds an optional cloud tier behind the same router seam, so the
 VRAM and thermal guards stay exactly where they are.
 
-## The home lab it runs in
-
-![Home lab map](docs/visuals/home-lab-map.gif)
-
-The PC does the GPU work. A Mac worker node takes background jobs over
-WireGuard, and an old Dell laptop runs the home SOC (Wazuh) that watches all of
-it. See [Home-SOC-](https://github.com/rhinerad/Home-SOC-) for how that works.
-
 ## Highlights
 
 | Area | What is here |
@@ -52,7 +44,7 @@ it. See [Home-SOC-](https://github.com/rhinerad/Home-SOC-) for how that works.
 | GPU safety | GPU permission gate, busy detection (render queue, VRAM, ComfyUI port), thermal cap |
 | Sandboxing | `run_code` runs in a per-run folder with audit hooks and no network unless allowed |
 | Remote access | Phone bridge over Sideband/Reticulum with paired identities; most actions are default-deny |
-| Worker farm | `local_agent/worker_farm/`: Mac node via Redis + Celery over WireGuard, with locked-down secrets |
+| Worker farm | `local_agent/worker_farm/`: a second machine takes background jobs via Redis + Celery, and its results are treated as untrusted |
 | Model gateway | `model_gateway/`: optional hybrid local + Claude routing with policy tests |
 | Prompt tuning | DSPy optimizers and evaluation harnesses for the video pipeline prompts |
 | Tests | 180+ `test_*.py` files across the agent, router, gateway and pipelines |

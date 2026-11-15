@@ -36,7 +36,7 @@ local_agent\worker_farm\.venv\Scripts\python.exe -m local_agent.worker_farm.farm
   "error": null,
   "latency_ms": 12.3,
   "status": "ok",
-  "workers": ["celery@Louises-MBP"],
+  "workers": ["celery@Mac-Worker"],
   "workers_responding": true
 }
 ```

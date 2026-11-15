@@ -1,6 +1,6 @@
 # 2026-09-03aj — Architecture docs: persistence owners as they actually stand
 
-Date: 2026-09-03. Hosts: DuranGamingPC + Louises-MBP. All times America/New_York (UTC-4). Docs only; no Python / plist / task change.
+Date: 2026-09-03. Hosts: DuranGamingPC + Mac-Worker. All times America/New_York (UTC-4). Docs only; no Python / plist / task change.
 
 Id from `python scripts/next_changelog_id.py` immediately before write: **2026-09-03aj**.
 
@@ -14,7 +14,7 @@ Id from `python scripts/next_changelog_id.py` immediately before write: **2026-0
 
 ## Live reconfirm (this session, before the edit)
 
-Mac SSH `rhineduran@10.90.90.2`:
+Mac SSH `user@10.90.90.2`:
 
 - `kern.boottime` Thu Sep 3 **15:53:17**.
 - `system/com.local-agent.ollama`: LaunchDaemon, `UserName=rhineduran` / uid **503**, pid **336**, `lstart` 15:53:49, `runs=1`, curl tags HTTP 200. Plist `/Library/LaunchDaemons/com.local-agent.ollama.plist`.

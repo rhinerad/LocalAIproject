@@ -123,7 +123,7 @@ flowchart TD
 
 **`local_agent/worker_farm/tasks.py`.** Allow-listed Celery tasks: `distill_export`, `judge_transcript`, `summarize_conversation`, `embed_chunks`, `connectivity_probe`. Summarize uses `context_compactor`; embed uses `ollama_client.embed` + `router.CPU_HOST` and does not write `knowledge/retrieval_embeddings.json`. `OSError` retries 3x except `connectivity_probe`. Workstation caller for summarize/embed is `farm_offload`.
 
-**`local_agent/worker_farm/farm_health.py`.** Standalone CLI / `check_farm_health()`: load `.env`, TCP `FARM_BROKER_URL`, Celery `inspect.ping()`. Never submits jobs. Live CLI is a diagnostic — the hot path does not import this module. Live 2026-09-02 worker name: `celery@Louises-MBP`.
+**`local_agent/worker_farm/farm_health.py`.** Standalone CLI / `check_farm_health()`: load `.env`, TCP `FARM_BROKER_URL`, Celery `inspect.ping()`. Never submits jobs. Live CLI is a diagnostic — the hot path does not import this module. Live 2026-09-02 worker name: `celery@Mac-Worker`.
 
 **`local_agent/worker_farm/farm_status_daemon.py`.** Interval writer (default 30s) of `worker_farm/farm_status.json` via `check_farm_health`. That snapshot **is** the hot-path reachability signal (`farm_offload.farm_reachable`).
 
@@ -135,7 +135,7 @@ Declared in `celery_app.py` (must be in both `task_queues` and `task_routes`): `
 
 - **probe** — `connectivity_probe`. Prove tunnel + ACL. Returns hostname / platform / pid / received_at. Producer: manual `send_task`. No `agent.py` producer.
 - **judge** — `judge_transcript`. Deterministic rubric on `chat_id` + messages. Producer: `submit_judge_batch.py` over `local_agent/chats/*.json`. Consumer: mac_worker. Advisory only.
-- **summarize** — `summarize_conversation`. Compaction offload. Producer: `compaction_prefetch` via `farm_offload` (prefetch only). Overflow uses local CPU. Caller 135s; worker Ollama 120s. Live 2026-09-03 consume-win: 117s on `celery@Louises-MBP` (concurrency 1). A 25s caller ceiling timed out the first prefetch of the session.
+- **summarize** — `summarize_conversation`. Compaction offload. Producer: `compaction_prefetch` via `farm_offload` (prefetch only). Overflow uses local CPU. Caller 135s; worker Ollama 120s. Live 2026-09-03 consume-win: 117s on `celery@Mac-Worker` (concurrency 1). A 25s caller ceiling timed out the first prefetch of the session.
 - **embed** — `embed_chunks`. `{id, text}` → `{id: vector}`, `nomic-embed-text:latest`, 768-dim. Producer: `EmbeddingScorer.vectors_for`. Caller 30s. Warm ~0.58s. Query embedding stays local.
 
 `distill` is declared and consumed only by the workstation Phase-1 worker, not the Mac. It is not part of the live Mac farm path.
@@ -144,7 +144,7 @@ Declared in `celery_app.py` (must be in both `task_queues` and `task_routes`): `
 
 Star WireGuard: workstation hub `10.90.90.1/28` UDP 51820, interface `hub`, Windows service `WireGuardTunnel$hub`. Hub LAN IP `192.168.50.208`. Next free peer `10.90.90.3`.
 
-Mac spoke `10.90.90.2/32`, names `Louises-MacBook-Pro.local` / Celery `celery@Louises-MBP`. SSH user `rhineduran` (uid **503**). Deployed copy `~/worker_farm/` on the Mac (not this tree).
+Mac spoke `10.90.90.2/32`, names `mac-worker.local` / Celery `celery@Mac-Worker`. SSH user `rhineduran` (uid **503**). Deployed copy `~/worker_farm/` on the Mac (not this tree).
 
 Redis Docker `local-agent-phase1-redis` bound `127.0.0.1:6379` only; compose `restart: unless-stopped`. Relay `tunnel_relay.py --bind-ip 10.90.90.1` publishes `10.90.90.1:6379` → `127.0.0.1:6379`, max 64 conns.
 
@@ -164,9 +164,9 @@ flowchart LR
     relay["Task Scheduler local-agent-tunnel-relay LogonTrigger Interactive rhine"]
     agent["agent.py / farm_offload"]
   end
-  subgraph mac [Mac spoke Louises-MBP]
+  subgraph mac [Mac spoke Mac-Worker]
     wg["LaunchDaemon com.local-agent.wireguard-wg0"]
-    peer["10.90.90.2/32 celery@Louises-MBP"]
+    peer["10.90.90.2/32 celery@Mac-Worker"]
     ollama["LaunchDaemon com.local-agent.ollama UserName=rhineduran uid 503"]
     celery["LaunchDaemon com.local-agent.celery-worker UserName=rhineduran uid 503"]
   end

@@ -49,7 +49,7 @@ farm regression.
 2. Bypass the tunnel. LAN SSH to the Mac still works when `10.90.90.0/28`
    is dead:
    ```
-   ssh -i A:\Users\rhine\.ssh\workstation_to_mac -o IdentitiesOnly=yes rhineduran@louises-macbook-pro.local
+   ssh -i A:\Users\rhine\.ssh\workstation_to_mac -o IdentitiesOnly=yes user@mac-worker.local
    ```
    (LAN IP tonight: `192.168.50.8`.)
 3. From that Mac shell, ping/TCP the hub yourself (`10.90.90.1:6379`).
@@ -130,7 +130,7 @@ Get-Service *wire*
 Then SSH over the tunnel, and if that fails, LAN (§0):
 
 ```
-ssh -i A:\Users\rhine\.ssh\workstation_to_mac -o IdentitiesOnly=yes rhineduran@10.90.90.2
+ssh -i A:\Users\rhine\.ssh\workstation_to_mac -o IdentitiesOnly=yes user@10.90.90.2
 ```
 
 On the Mac:

@@ -1,6 +1,6 @@
 # 2026-09-04o — Model-aware harness profiles v1 (compact CPU/farm meta-tools)
 
-Date: 2026-09-04. Host: DuranGamingPC. Mac: Louises-MBP.
+Date: 2026-09-04. Host: DuranGamingPC. Mac: Mac-Worker.
 Id from `python scripts/next_changelog_id.py --date 2026-09-04`: **2026-09-04o**
 (`2026-09-04l` was scoping; `m`/`n` were other farm tickets).
 Design: `docs/HARNESS_PROFILES_DESIGN_2026-09-04.md` (approved, three

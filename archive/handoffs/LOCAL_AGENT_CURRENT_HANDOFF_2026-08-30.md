@@ -28,7 +28,7 @@ pairs and passes the strict two-turn JSON tool-call gate plus human review.
 
 ## Multi-node worker farm — first peer verified 2026-09-02
 
-Mac (`celery@Louises-MacBook-Pro.local`, `10.90.90.2`) is the first verified
+Mac (`celery@mac-worker.local`, `10.90.90.2`) is the first verified
 secondary worker node. End-to-end state as of 2026-09-02:
 
 - WireGuard hub running on workstation `10.90.90.1:51820`; Mac peer
@@ -39,7 +39,7 @@ secondary worker node. End-to-end state as of 2026-09-02:
 - `mac_worker` Redis ACL user: `on`, `+@all` minus destructive ops, `~*`
   keys, scoped to `probe` queue credential only. In-memory — re-run
   `Add-Phase1SecondaryWorkerCredential.ps1` after any Redis container restart.
-- `connectivity_probe` task returned `hostname: Louises-MacBook-Pro.local`
+- `connectivity_probe` task returned `hostname: mac-worker.local`
   from task ID `720fc45b`. CHANGELOG: `2026-09-02a_mac_worker_probe_verified.md`.
 
 **Known issue:** relay is not autostarted. After a reboot, run

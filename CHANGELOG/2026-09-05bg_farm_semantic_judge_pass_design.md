@@ -8,7 +8,7 @@ Date: 2026-09-05. Host: DuranGamingPC. Id from
 TODO “Decide on an LLM-based judge pass… whether secondary machines get
 their own local Ollama install or call back to the workstation's”:
 **secondary machines use their own local Ollama.** Already true on
-Louises-MBP: LaunchDaemon `system/com.local-agent.ollama` on
+Mac-Worker: LaunchDaemon `system/com.local-agent.ollama` on
 `127.0.0.1:11434`; `qwythos_evaluate` / summarize / embed call
 `FARM_OLLAMA_HOST`; Qwythos keep_alive verified `2026-09-05o`/`aq`.
 Workstation `:11434`/`:11435` callback is out of scope for this pass.

@@ -45,7 +45,7 @@ _OK = {
     "broker_reachable": True,
     "workers_responding": True,
     "latency_ms": 12.3,
-    "workers": ["celery@Louises-MBP"],
+    "workers": ["celery@Mac-Worker"],
     "status": "ok",
     "error": None,
 }
@@ -91,7 +91,7 @@ class FarmStatusDaemonTests(unittest.TestCase):
             self.assertEqual(loaded["broker_reachable"], True)
             self.assertEqual(loaded["workers_responding"], True)
             self.assertEqual(loaded["latency_ms"], 12.3)
-            self.assertEqual(loaded["workers"], ["celery@Louises-MBP"])
+            self.assertEqual(loaded["workers"], ["celery@Mac-Worker"])
             self.assertEqual(loaded["status"], "ok")
             self.assertIsNone(loaded["error"])
             self.assertIsInstance(loaded["checked_at"], str)

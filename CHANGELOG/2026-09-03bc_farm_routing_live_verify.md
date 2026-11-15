@@ -7,7 +7,7 @@ Id from `python scripts/next_changelog_id.py` immediately before write:
 
 Live-drive of `should_route`, `_maybe_start_farm_summary_prefetch`,
 `try_summarize_on_farm`, and `EmbeddingScorer.vectors_for` →
-`try_embed_on_farm` against `celery@Louises-MBP`. Unit tests were already
+`try_embed_on_farm` against `celery@Mac-Worker`. Unit tests were already
 green; this is the first pass that actually submitted to the Mac worker
 from this session. Evidence:
 `local_agent/runtime/live_farm_routing_verify.json`.

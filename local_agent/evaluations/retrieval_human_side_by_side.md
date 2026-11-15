@@ -576,8 +576,8 @@ not only whether the gold chunk id is in top-5.
 
 4. `CHANGELOG/2026-09-03r_mac_persistence_reboot.md:0`  
    match_by=lexical score=11.1929  
-   # 2026-09-03r — Louises-MBP persistence reboot (WG-off, tunnel-auto, ollama-auto)  
-   # 2026-09-03r — Louises-MBP persistence reboot (WG-off, tunnel-auto, ollama-auto) Live reboot verification of Louises-MBP on the afternoon of 2026-09-03 ET. Did **not** sudo. Did **not** `launchctl kickstart` ollama, celery, or WireGuard. Did **not** launch WireGuard.app. Did **not** run `wg-quick` by hand. Letter `q` was already taken (`2026-09-03q_ethernet_profile_private_dashboard.md`). `scripts/next_changelog_id…
+   # 2026-09-03r — Mac-Worker persistence reboot (WG-off, tunnel-auto, ollama-auto)  
+   # 2026-09-03r — Mac-Worker persistence reboot (WG-off, tunnel-auto, ollama-auto) Live reboot verification of Mac-Worker on the afternoon of 2026-09-03 ET. Did **not** sudo. Did **not** `launchctl kickstart` ollama, celery, or WireGuard. Did **not** launch WireGuard.app. Did **not** run `wg-quick` by hand. Letter `q` was already taken (`2026-09-03q_ethernet_profile_private_dashboard.md`). `scripts/next_changelog_id…
 
 5. `CHANGELOG/2026-09-02y_first_bot_watch_status_sync.md:0`  
    match_by=lexical score=10.8549  
@@ -963,7 +963,7 @@ not only whether the gold chunk id is in top-5.
 2. `docs/ARCHITECTURE.md:4`  
    match_by=lexical score=23.5291  
    ## 3. Modules  
-   ()`. Never submits jobs. Live CLI is a diagnostic — the hot path does not import this module. Live 2026-09-02 worker name: `celery@Louises-MBP`. **`local_agent/worker_farm/farm_status_daemon.py`.** Interval writer (default 30s) of `worker_farm/farm_status.json` via `check_farm_health`. That snapshot **is** the hot-path reachability signal (`farm_offload.farm_reachable`). Related files (not the hot path): `celery_app…
+   ()`. Never submits jobs. Live CLI is a diagnostic — the hot path does not import this module. Live 2026-09-02 worker name: `celery@Mac-Worker`. **`local_agent/worker_farm/farm_status_daemon.py`.** Interval writer (default 30s) of `worker_farm/farm_status.json` via `check_farm_health`. That snapshot **is** the hot-path reachability signal (`farm_offload.farm_reachable`). Related files (not the hot path): `celery_app…
 
 3. `docs/RUNBOOK.md:1`  
    match_by=lexical score=19.0123  
@@ -985,7 +985,7 @@ not only whether the gold chunk id is in top-5.
 1. `docs/ARCHITECTURE.md:4`  
    match_by=both score=0.032  
    ## 3. Modules  
-   ()`. Never submits jobs. Live CLI is a diagnostic — the hot path does not import this module. Live 2026-09-02 worker name: `celery@Louises-MBP`. **`local_agent/worker_farm/farm_status_daemon.py`.** Interval writer (default 30s) of `worker_farm/farm_status.json` via `check_farm_health`. That snapshot **is** the hot-path reachability signal (`farm_offload.farm_reachable`). Related files (not the hot path): `celery_app…
+   ()`. Never submits jobs. Live CLI is a diagnostic — the hot path does not import this module. Live 2026-09-02 worker name: `celery@Mac-Worker`. **`local_agent/worker_farm/farm_status_daemon.py`.** Interval writer (default 30s) of `worker_farm/farm_status.json` via `check_farm_health`. That snapshot **is** the hot-path reachability signal (`farm_offload.farm_reachable`). Related files (not the hot path): `celery_app…
 
 2. `CHANGELOG/2026-09-02s_farm_offload_routing.md:0` **GOLD**  
    match_by=both score=0.0311  

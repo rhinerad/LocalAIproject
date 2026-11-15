@@ -1,6 +1,6 @@
 # 2026-09-05al — Ollama 30m plist copied; LaunchDaemon bootstrap failed
 
-Date: 2026-09-05 ~15:04–15:07 EDT. Host: Louises-MBP. Id from
+Date: 2026-09-05 ~15:04–15:07 EDT. Host: Mac-Worker. Id from
 `python scripts/next_changelog_id.py --date 2026-09-05`: **2026-09-05al**.
 
 Follow-up to `2026-09-05o` (staged 30m plist) and `2026-09-05aa`

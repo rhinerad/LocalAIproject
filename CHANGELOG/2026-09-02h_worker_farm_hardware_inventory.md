@@ -16,7 +16,7 @@ Added two sections to `local_agent/worker_farm/README.md`:
   jobs (e.g. the LLM-based judge follow-up noted in `TODO.md`) must not
   assume a uniform model is available fleet-wide.
 - **"Known worker machines"** table: first entry is `mac_worker`
-  (`Louises-MacBook-Pro.local`), 2019 MacBook Pro, 16 GB RAM, macOS 13.7.8
+  (`mac-worker.local`), 2019 MacBook Pro, 16 GB RAM, macOS 13.7.8
   x86_64 — the first secondary node connected, per the operator's own
   framing, to prove connectivity before the rest of the fleet joins. Noted
   its actual current state (WireGuard-connected, `probe`+`judge` queues

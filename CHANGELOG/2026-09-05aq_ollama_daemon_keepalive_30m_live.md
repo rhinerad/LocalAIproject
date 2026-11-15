@@ -1,6 +1,6 @@
 # 2026-09-05aq — Live Ollama LaunchDaemon `OLLAMA_KEEP_ALIVE=30m` verified
 
-Date: 2026-09-05 15:12–15:19 EDT. Host: Louises-MBP (`10.90.90.2`).
+Date: 2026-09-05 15:12–15:19 EDT. Host: Mac-Worker (`10.90.90.2`).
 Id from `python scripts/next_changelog_id.py --date 2026-09-05`:
 **2026-09-05aq**. Follow-up to `2026-09-05o` (request keep_alive) and
 `2026-09-05al` (plist copied, bootstrap failed, Ollama down).
@@ -61,6 +61,6 @@ call here; it did not.
 
 Raw: `artifacts/benchmarks/2026-09-05aq_qwythos_daemon_keepalive_measure.txt`.
 Celery was not kickstarted. `farm_health --json` after the measure:
-`ok`, `qwythos_evaluate` still registered on `celery@Louises-MBP`.
+`ok`, `qwythos_evaluate` still registered on `celery@Mac-Worker`.
 
 No workstation code change.

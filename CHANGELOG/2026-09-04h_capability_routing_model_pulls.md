@@ -1,6 +1,6 @@
 # 2026-09-04h — Capability-routing models: download and smoke-test only
 
-Date: 2026-09-04. Hosts: Louises-MBP (Mac worker, 16 GB unified RAM) and
+Date: 2026-09-04. Hosts: Mac-Worker (Mac worker, 16 GB unified RAM) and
 DuranGamingPC (RTX 5080 16303 MiB). Id from
 `python scripts/next_changelog_id.py --date 2026-09-04`: **2026-09-04h**.
 Operator decision in `TODO.md` 2026-09-04. **No routing code.** `router.py`
@@ -9,7 +9,7 @@ model was loaded alone, then unloaded (`keep_alive: 0`) after its smoke.
 
 ## 1. Mac worker — `richardyoung/qwythos-9b-abliterated`
 
-Pulled on Louises-MBP via `/usr/local/bin/ollama pull richardyoung/qwythos-9b-abliterated`
+Pulled on Mac-Worker via `/usr/local/bin/ollama pull richardyoung/qwythos-9b-abliterated`
 (latest = publisher-recommended **Q4_K_M**, 5.6 GB).
 
 | Field | Value |

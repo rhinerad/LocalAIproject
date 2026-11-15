@@ -430,7 +430,7 @@ This is a coordination file, not an instruction to Codex. Do not treat it as a p
 
 ## Previous (2026-09-03 ~9:59 PM ET)
 
-Live farm_offload routing verify against `celery@Louises-MBP` (this worker). Per-scenario: D healthy PASS; B embed PASS 0.953s farm `nomic-embed-text` 768-dim (local `_embed` not called); A prefetch consume-win PASS after timeout fix (fired 0.817Ãƒâ€”ctx, 117s, farm CPU summary); C stale fallback PASS 0.0s local, no hang, slot idle; D stale `farm_reachable`/`is_farm_degraded` agree. Gap: 25s prefetch ceiling timed out the first live summarize; `PREFETCH_SUMMARIZE_TIMEOUT_S=135`. Tests: `test_farm_offload_live` 4/4. Evidence: `CHANGELOG/2026-09-03bd_farm_offload_live_verify.md`.
+Live farm_offload routing verify against `celery@Mac-Worker` (this worker). Per-scenario: D healthy PASS; B embed PASS 0.953s farm `nomic-embed-text` 768-dim (local `_embed` not called); A prefetch consume-win PASS after timeout fix (fired 0.817Ãƒâ€”ctx, 117s, farm CPU summary); C stale fallback PASS 0.0s local, no hang, slot idle; D stale `farm_reachable`/`is_farm_degraded` agree. Gap: 25s prefetch ceiling timed out the first live summarize; `PREFETCH_SUMMARIZE_TIMEOUT_S=135`. Tests: `test_farm_offload_live` 4/4. Evidence: `CHANGELOG/2026-09-03bd_farm_offload_live_verify.md`.
 
 No GPU work, GUI not started, APP_REVISION unchanged.
 
@@ -480,7 +480,7 @@ This is a coordination file, not an instruction to Codex. Do not treat it as a p
 
 ## Previous (2026-09-03 ~4:31 PM ET)
 
-Celery MainProcess `ollama_client` import fix (this worker). `tasks.py` now imports `ollama_client` at module load so a fork-raised `OllamaUnavailable` unpickles instead of `ModuleNotFoundError` wedging the consumer (the live `judge_transcript` 60s timeout cause). Regression: `test_tasks_mainprocess_exceptions` 3 tests OK. Evidence: `CHANGELOG/2026-09-03ac_celery_mainprocess_ollama_import.md`. Mac live `tasks.py` patched the same import. Celery is LaunchDaemon `system/com.local-agent.celery-worker` (user agent disabled/gone); kickstart 4:33 PM ET, pid 5933, `celery@Louises-MBP ready`. Ollama daemon pid 336 untouched.
+Celery MainProcess `ollama_client` import fix (this worker). `tasks.py` now imports `ollama_client` at module load so a fork-raised `OllamaUnavailable` unpickles instead of `ModuleNotFoundError` wedging the consumer (the live `judge_transcript` 60s timeout cause). Regression: `test_tasks_mainprocess_exceptions` 3 tests OK. Evidence: `CHANGELOG/2026-09-03ac_celery_mainprocess_ollama_import.md`. Mac live `tasks.py` patched the same import. Celery is LaunchDaemon `system/com.local-agent.celery-worker` (user agent disabled/gone); kickstart 4:33 PM ET, pid 5933, `celery@Mac-Worker ready`. Ollama daemon pid 336 untouched.
 
 No GPU work, GUI not started, APP_REVISION unchanged.
 
@@ -490,7 +490,7 @@ This is a coordination file, not an instruction to Codex. Do not treat it as a p
 
 ## Previous (2026-09-03 ~3:05 PM ET)
 
-Louises-MBP afternoon reboot persistence verified (this worker, observe-only; no sudo, no kickstart, no WireGuard.app). Boot `kern.boottime` Thu Sep 3 **14:41:30 ET**. WG GUI/LoginItemHelper stayed off (BTM uncheck held; `loginctl`/`launchctl disable` is the wrong layer). Daemon tunnel `com.local-agent.wireguard-wg0` brought **utun0 10.90.90.2** up by itself. Ollama LaunchAgent already PID 2869, curl `Ollama is running`. Celery LaunchAgent already PID 2868; `farm_health --json` retry 15:03 ET `workers_responding=true` with summarize/embed on `celery@Louises-MBP`. Evidence: `CHANGELOG/2026-09-03r_mac_persistence_reboot.md`.
+Mac-Worker afternoon reboot persistence verified (this worker, observe-only; no sudo, no kickstart, no WireGuard.app). Boot `kern.boottime` Thu Sep 3 **14:41:30 ET**. WG GUI/LoginItemHelper stayed off (BTM uncheck held; `loginctl`/`launchctl disable` is the wrong layer). Daemon tunnel `com.local-agent.wireguard-wg0` brought **utun0 10.90.90.2** up by itself. Ollama LaunchAgent already PID 2869, curl `Ollama is running`. Celery LaunchAgent already PID 2868; `farm_health --json` retry 15:03 ET `workers_responding=true` with summarize/embed on `celery@Mac-Worker`. Evidence: `CHANGELOG/2026-09-03r_mac_persistence_reboot.md`.
 
 No GPU work, GUI not started, APP_REVISION unchanged.
 
@@ -516,7 +516,7 @@ Live Redis secondary-ACL restart-hook verification on DuranGamingPC (this worker
 `docker restart local-agent-phase1-redis` at 1:39:09 PM ET: default PING PONG,
 `ACL USERS` includes `mac_worker`, `ACL GETUSER mac_worker` present (password
 redacted). Wrapper restored `mac_worker` at 1:39:10 PM ET. Mac
-`celery@Louises-MBP` reconnected on its own (~1:39:12 PM ET; same LaunchAgent
+`celery@Mac-Worker` reconnected on its own (~1:39:12 PM ET; same LaunchAgent
 pid 3895, no kickstart). Session-0 / Docker Desktop unattended start **not
 tested** (no reboot). Evidence:
 `CHANGELOG/2026-09-03o_restart_hook_live_verification.md`.
@@ -627,7 +627,7 @@ This is a coordination file, not an instruction to Codex. Do not treat it as a p
 Inspect-only Keep-projects-moving status sync. Live `APP_REVISION` remains
 `2026-09-01-action-resolver-r76` (`server.py` + live `/api/status` 200 on
 unelevated PID 32316 / port 8760; GPU idle ~57 MiB). Farm health ok:
-broker reachable, `celery@Louises-MBP` responding, ~1.4s ping.
+broker reachable, `celery@Mac-Worker` responding, ~1.4s ping.
 
 Afternoon after the morning `CHANGELOG/2026-09-02d_first_bot_watch_status_sync.md`
 through `2026-09-02x_architecture_md.md` (~5:47 PM ET) landed: Mac `judge`

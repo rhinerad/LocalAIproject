@@ -23,7 +23,7 @@ practice**. Do not re-open it.
 
 | Fact | Evidence |
 |---|---|
-| Louises-MBP runs `ollama serve` as LaunchDaemon `system/com.local-agent.ollama` on **this Mac's** `127.0.0.1:11434` | `local_agent/worker_farm/macos/com.local-agent.ollama.plist`; live verify `CHANGELOG/2026-09-05aq` |
+| Mac-Worker runs `ollama serve` as LaunchDaemon `system/com.local-agent.ollama` on **this Mac's** `127.0.0.1:11434` | `local_agent/worker_farm/macos/com.local-agent.ollama.plist`; live verify `CHANGELOG/2026-09-05aq` |
 | Farm LLM tasks call **that** host, not DuranGamingPC `:11434` / `:11435` | `tasks.py` `_QWYTHOS_HOST = FARM_OLLAMA_HOST` default `127.0.0.1:11434`; `_qwythos_evaluate` / `_summarize_messages` / `_embed_chunks` |
 | Qwythos-9B is CPU-resident on the Mac | `router.QWYTHOS_MODEL` = `richardyoung/qwythos-9b-abliterated:latest`; `keep_alive` 30m (`2026-09-05o` request, `2026-09-05aq` daemon) |
 | Mac worker is concurrency=1 across `probe,judge,summarize,embed` | LaunchDaemon `start_celery_worker.sh`; 16 GB machine; Qwythos + mistral-nemo + nomic measured **14.1 GB and swapped** (`CHANGELOG/2026-09-04h`, `_qwythos_evaluate` docstring) |

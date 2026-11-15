@@ -125,19 +125,19 @@ Seeded from tonight's documented CHANGELOG/runbook text only. **Not** live-probe
 
 ### Crash-looping leftover Mac LaunchAgent `com.local-agent.celery-worker`
 
-- **Machine:** Louises-MBP / 10.90.90.2
+- **Machine:** Mac-Worker / 10.90.90.2
 - **Source:** `CHANGELOG/2026-09-03e_farm_health_runbook.md; docs/FARM_HEALTH_RUNBOOK.md`
 - **Documented status:** Leftover (not the WG root cause): crash-looping LaunchAgent `com.local-agent.celery-worker`. Replaced in place with farm `.env` wrapper, queues `probe,judge,summarize,embed`, `ThrottleInterval` 10.
 
 ### Pre-existing Mac LaunchDaemon `com.local-agent.wireguard-wg0`
 
-- **Machine:** Louises-MBP / 10.90.90.2
+- **Machine:** Mac-Worker / 10.90.90.2
 - **Source:** `CHANGELOG/2026-09-03e_farm_health_runbook.md; docs/FARM_HEALTH_RUNBOOK.md`
 - **Documented status:** Loaded, had not been running (last exit 1); `/usr/local/bin/wg-quick` shebang `env bash` hit launchd PATH bash 3.2 vs Homebrew bash 4+. Later kickstarted; restored ~1:19 AM ET to LaunchDaemon/`wireguard-go`. Reboot persistence is not confirmed. Do **not** install a second daemon `com.local-agent.wg-quick`. One label: `com.local-agent.wireguard-wg0`.
 
 ### WireGuard.app login item `gui/503/com.wireguard.macos.login-item-helper` / Network Extension `workstation_gateway` owning `utun5`
 
-- **Machine:** Louises-MBP / 10.90.90.2
+- **Machine:** Mac-Worker / 10.90.90.2
 - **Source:** `CHANGELOG/2026-09-03e_farm_health_runbook.md; docs/FARM_HEALTH_RUNBOOK.md`
 - **Documented status:** Login item was on; app + Network Extension owned `utun5` (`workstation_gateway`); handshake never completed. Disabled during datapath restore ~1:19 AM ET (`scutil --nc stop workstation_gateway`; quit WireGuard.app/NE).
 
@@ -170,7 +170,7 @@ Most recent documented CHANGELOG/runbook sentence for each service on each machi
 - **Source:** `CHANGELOG/2026-09-04a_post_reboot_recovery_inspection.md (hub UP also in CHANGELOG/2026-09-03h_farm_status_idle_stop_and_tunnel_relay_task.md / CHANGELOG/2026-09-03e_farm_health_runbook.md / docs/FARM_HEALTH_RUNBOOK.md)`
 - **Documented status:** `2026-09-04a` post-logon of the 23:35:43.500 boot: adapter `hub` Status Up; `10.90.90.1/28` Preferred; service `WireGuardTunnel$hub` Running / Automatic.
 
-### WireGuard — Louises-MBP / 10.90.90.2 (`utun5` / LaunchDaemon)
+### WireGuard — Mac-Worker / 10.90.90.2 (`utun5` / LaunchDaemon)
 
 - **Source:** `CHANGELOG/2026-09-03i_session_handoff.md; docs/FARM_HEALTH_RUNBOOK.md; CHANGELOG/2026-09-03e_farm_health_runbook.md`
 - **Documented status:** Restored ~1:19 AM ET to LaunchDaemon/`wireguard-go` as root; login item disabled. **Reboot persistence is not confirmed.** Do not reboot unless Rhine explicitly says to. Loaded launchd job may still be stale vs the patched plist until `bootout`+`bootstrap` or a planned reboot.
@@ -180,17 +180,17 @@ Most recent documented CHANGELOG/runbook sentence for each service on each machi
 - **Source:** (none in recent CHANGELOG/runbook)
 - **Documented status:** not documented in recent CHANGELOG/runbook
 
-### Celery worker — Louises-MBP / 10.90.90.2 (`celery@Louises-MBP`)
+### Celery worker — Mac-Worker / 10.90.90.2 (`celery@Mac-Worker`)
 
 - **Source:** `CHANGELOG/2026-09-04a_post_reboot_recovery_inspection.md (03e restore: docs/FARM_HEALTH_RUNBOOK.md / CHANGELOG/2026-09-03e_farm_health_runbook.md)`
-- **Documented status:** After delayed logon 00:18:03, workstation `farm_health --json` `status=ok`, `workers_responding=true`, worker `celery@Louises-MBP`, expected tasks registered (`2026-09-04a`).
+- **Documented status:** After delayed logon 00:18:03, workstation `farm_health --json` `status=ok`, `workers_responding=true`, worker `celery@Mac-Worker`, expected tasks registered (`2026-09-04a`).
 
 ### tunnel_relay — DuranGamingPC / Windows hub
 
 - **Source:** `CHANGELOG/2026-09-04a_post_reboot_recovery_inspection.md; CHANGELOG/2026-09-03s_tunnel_relay_logon_interactive_task.md; CHANGELOG/2026-09-03am_tunnel_relay_logon_self_start_verified.md`
 - **Documented status:** LogonTrigger / InteractiveToken task `\local-agent-tunnel-relay` started 2026-09-04 00:18:03 on delayed interactive logon; Listen `10.90.90.1:6379` python 15260; Mac `10.90.90.2` Established. Boot/S4U registration still failed (03h); relay is dark until rhine logs on.
 
-### tunnel_relay — Louises-MBP / 10.90.90.2
+### tunnel_relay — Mac-Worker / 10.90.90.2
 
 - **Source:** (none in recent CHANGELOG/runbook)
 - **Documented status:** not documented in recent CHANGELOG/runbook
@@ -205,7 +205,7 @@ Most recent documented CHANGELOG/runbook sentence for each service on each machi
 - **Source:** `CHANGELOG/2026-09-04a_post_reboot_recovery_inspection.md; CHANGELOG/2026-09-03bh_wsl_redis_cutover_reboot_pass.md; CHANGELOG/2026-09-03bg_wsl_redis_phase_c_cutover.md`
 - **Documented status:** Phase C persisted the 23:35:43.500 boot (`2026-09-03bh` PASS; post-logon reconfirm `2026-09-04a`): Ubuntu-24.04 Docker CE `local-agent-phase1-redis` (`6ea76294c9cf`) StartedAt 23:36:52 healthy; Windows `127.0.0.1:6379` is wslrelay (not `com.docker.backend`). PING PONG; ACL `default` `mac_worker`. Desktop AutoStart off, HKCU Run Docker Desktop absent, `docker-desktop` distro Stopped.
 
-### Redis/Docker — Louises-MBP / 10.90.90.2
+### Redis/Docker — Mac-Worker / 10.90.90.2
 
 - **Source:** (none in recent CHANGELOG/runbook)
 - **Documented status:** not documented in recent CHANGELOG/runbook

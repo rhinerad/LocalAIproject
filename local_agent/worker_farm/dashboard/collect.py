@@ -55,7 +55,7 @@ _PASSWORD_RE = re.compile(r"(?i)\b([a-z][a-z0-9+.-]*://)([^\s/@:]*):?[^\s/@]*@")
 # Worker-name pattern that identifies the Mac spoke. Override per deployment
 # with FARM_DASHBOARD_MAC_WORKER_RE (the default is this workstation's).
 MAC_WORKER_RE_ENV = "FARM_DASHBOARD_MAC_WORKER_RE"
-DEFAULT_MAC_WORKER_RE = r"celery@.*(?:MBP|Mac|Louise)"
+DEFAULT_MAC_WORKER_RE = r"celery@.*(?:MBP|Mac|Worker)"
 
 
 def _compile_mac_worker_re(raw: str | None = None) -> re.Pattern[str]:

@@ -1,6 +1,6 @@
 # 2026-09-05dh — End-of-day health sweep (post-WSL/restic/Pixel/Comfy day)
 
-Date: 2026-09-05 ~18:20 ET. Host: DuranGamingPC + Louises-MBP. Id from
+Date: 2026-09-05 ~18:20 ET. Host: DuranGamingPC + Mac-Worker. Id from
 `python scripts/next_changelog_id.py --date 2026-09-05`: **2026-09-05dh**.
 
 Read-only, same pattern as Task #65 / `2026-09-05bw`. Nothing stopped,
@@ -13,7 +13,7 @@ killed, or repaired.
 | GPU | RTX 5080 **73 MiB / 16303**, util **0%**, **31 °C**. Compute apps: two Brave PIDs `[N/A]` memory only. No Python/Ollama/Comfy on the card. |
 | ComfyUI | **:8188 not listening.** No Comfy `main.py` process. Catalog-drowning starts were torn down. |
 | Workstation Ollama | Tray pair `ollama app.exe` 5996 → `ollama.exe serve` 22416 on `127.0.0.1:11434`. `/api/ps` empty. **:11435 down.** |
-| Farm | `farm_health` **ok**, `celery@Louises-MBP`, `qwythos_evaluate` registered. Redis `local-agent-phase1-redis` **Up 41 hours (healthy)**. Hub `10.90.90.1/28`, UDP 51820, tunnel-relay parent/child re-exec (same as bw). |
+| Farm | `farm_health` **ok**, `celery@Mac-Worker`, `qwythos_evaluate` registered. Redis `local-agent-phase1-redis` **Up 41 hours (healthy)**. Hub `10.90.90.1/28`, UDP 51820, tunnel-relay parent/child re-exec (same as bw). |
 | Mac keep_alive | LaunchDaemon running pid 51090, env **`OLLAMA_KEEP_ALIVE => 30m`**. `/usr/local/bin/ollama ps`: Qwythos 6.2 GB CPU, **UNTIL 20 minutes from now** — setting holding **and** model still resident (unlike bw’s empty `ps` after timer expiry). Celery daemon pid 36469 running. |
 | restic job | **No `restic` process.** Repo `D:\restic-local-agent-evidence` present (`data/snapshots/index/locks/keys/config`). Backup not in flight. |
 | comfyui-mcp / comfy-pilot | **No** `npx`/`node` process for those packages. Node PIDs seen are Codex `cua_node` helpers, not MCP. |

@@ -43,7 +43,7 @@ delayed-login reboot proof, so farm Redis is no longer on Docker Desktop.
 
 ## Thread 1 — Mac persistence: LaunchAgent → LaunchDaemon, WireGuard login-item bug fixed
 
-**Problem:** Ollama and Celery ran as per-user LaunchAgents on Louises-MBP.
+**Problem:** Ollama and Celery ran as per-user LaunchAgents on Mac-Worker.
 LaunchAgents only start at GUI login, so neither survives an unattended/
 headless boot — an explicit open blocker carried in both of the prior
 session-handoff notes (`CHANGELOG/2026-09-03h_session_handoff.md`,

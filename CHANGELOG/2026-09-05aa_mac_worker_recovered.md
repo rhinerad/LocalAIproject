@@ -1,6 +1,6 @@
 # 2026-09-05aa — Mac worker back: hung Celery recovered; Qwythos registered
 
-Date: 2026-09-05 ~11:37 EDT. Hosts: DuranGamingPC and Louises-MBP
+Date: 2026-09-05 ~11:37 EDT. Hosts: DuranGamingPC and Mac-Worker
 (`10.90.90.2` / LAN `192.168.50.8`). Id from
 `python scripts/next_changelog_id.py --date 2026-09-05`: **2026-09-05aa**.
 
@@ -19,7 +19,7 @@ user `rhineduran` since Sep 3 20:21.
 pid 35596 (`python -m local_agent.worker_farm.worker`), `runs=8`.
 
 `ps` showed **four leftover Celery MainProcess workers** sharing
-nodename `celery@Louises-MBP`, plus the live wrapper:
+nodename `celery@Mac-Worker`, plus the live wrapper:
 
 | pid | started | Redis ESTABLISHED to `10.90.90.1:6379` |
 |---|---|---|
@@ -29,7 +29,7 @@ nodename `celery@Louises-MBP`, plus the live wrapper:
 | 35606 (child of 35596) | 10:17 AM | 9 |
 | 35622 (prefork of 35606) | 10:17 AM | — |
 
-stderr: `celery@Louises-MBP ready` at 10:17:48 after the morning
+stderr: `celery@Mac-Worker ready` at 10:17:48 after the morning
 kickstart, then **11:18:15 broker lost / Broken pipe** and **no
 reconnect** (`Connected to redis` never logged again). Mac `nc` to
 `10.90.90.1:6379` succeeded at the re-check. Same hung-socket
@@ -69,14 +69,14 @@ launchctl kickstart -k system/com.local-agent.celery-worker
 ```
 
 After (11:37:45 EDT): single tree pid 36469 → 36474 → 36477;
-10 Redis sockets from 36474 only; log `celery@Louises-MBP ready.`
+10 Redis sockets from 36474 only; log `celery@Mac-Worker ready.`
 
 `farm_health --json` **after** (exit 0):
 
 ```
 status: ok
 workers_responding: true
-workers: ["celery@Louises-MBP"]
+workers: ["celery@Mac-Worker"]
 missing_expected_tasks: []
 registered_tasks includes local_agent.worker_farm.tasks.qwythos_evaluate
 ```
@@ -88,7 +88,7 @@ Full registered set: `connectivity_probe`, `distill_export`,
 ## Keep-alive plist sudo (in progress, not done)
 
 `sudo -n` is still unavailable. A GUI Terminal window was opened on
-Louises-MBP at 11:40 EDT:
+Mac-Worker at 11:40 EDT:
 
 ```
 sudo /tmp/mac_sudo_swap_apply.sh

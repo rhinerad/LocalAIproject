@@ -1,6 +1,6 @@
 # 2026-09-04k — Live verification of Qwythos farm + DeepSeek→Coder swap
 
-Date: 2026-09-04. Host: DuranGamingPC. Mac: Louises-MBP.
+Date: 2026-09-04. Host: DuranGamingPC. Mac: Mac-Worker.
 Id from `python scripts/next_changelog_id.py --date 2026-09-04`: **2026-09-04k**
 (`2026-09-04j` was already claimed). Routing/tests remain
 `CHANGELOG/2026-09-04i_capability_model_routing.md` — this entry only

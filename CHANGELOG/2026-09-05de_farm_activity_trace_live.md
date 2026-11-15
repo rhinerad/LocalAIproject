@@ -14,7 +14,7 @@ Receipts: `artifacts/benchmarks/2026-09-05_farm_activity_live/`
 
 ## Decide (live)
 
-Farm `celery@Louises-MBP` snapshot `status=ok`, not stale.
+Farm `celery@Mac-Worker` snapshot `status=ok`, not stale.
 `8188` closed at hop 0; GPU idle **73 MiB**.
 
 | Call | backend | tier | model |

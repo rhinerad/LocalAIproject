@@ -1,6 +1,6 @@
 # 2026-09-05dm — Mac Celery worker now registers judge_transcript_semantic
 
-Date: 2026-09-05 ~18:38 ET. Hosts: DuranGamingPC and Louises-MBP
+Date: 2026-09-05 ~18:38 ET. Hosts: DuranGamingPC and Mac-Worker
 (`10.90.90.2`). Id from `python scripts/next_changelog_id.py --date
 2026-09-05`: **2026-09-05dm**.
 
@@ -12,7 +12,7 @@ code that actually contained the task.
 ## Why kickstart alone was not enough
 
 `farm_health --json` at **2026-09-05T22:37:05Z**, worker
-`celery@Louises-MBP`, launchd pid **36469** / `runs=9`:
+`celery@Mac-Worker`, launchd pid **36469** / `runs=9`:
 
 **Before (registered_tasks):**
 
@@ -62,13 +62,13 @@ succeeded (job `username = rhineduran`).
 
 - launchd pid **36469** → **54698**, `runs` 9 → **10**, `state=running`
 - stderr: `Connected to redis://mac_worker:**@10.90.90.1:6379/0` then
-  `celery@Louises-MBP ready.` at 18:37:46 ET
+  `celery@Mac-Worker ready.` at 18:37:46 ET
 - stdout `[tasks]` banner includes `judge_transcript_semantic`
 
 ## After — farm_health at 2026-09-05T22:38:05Z
 
 `status: ok`, `workers_responding: true`, `workers:
-["celery@Louises-MBP"]`, `missing_expected_tasks: []`.
+["celery@Mac-Worker"]`, `missing_expected_tasks: []`.
 
 **After (registered_tasks):**
 

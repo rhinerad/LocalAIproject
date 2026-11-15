@@ -8,7 +8,7 @@ confirms the network-level signature of that, not a surprise failure.
 
 ## Finding
 
-Root cause: the Mac worker (`Louises-MBP`) stopped responding around
+Root cause: the Mac worker (`Mac-Worker`) stopped responding around
 23:47 EDT on 2026-09-04. Workstation-side farm plumbing (Redis, WireGuard
 hub, tunnel relay) is fully healthy — this is not a repeat of the
 2026-09-04i registration gap.

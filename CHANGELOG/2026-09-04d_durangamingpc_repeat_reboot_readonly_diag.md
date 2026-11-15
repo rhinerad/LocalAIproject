@@ -96,14 +96,14 @@ Live (cwd repo root, 12:16:04, exit 0):
   "latency_ms": 5325.4,
   "missing_expected_tasks": [],
   "status": "ok",
-  "workers": ["celery@Louises-MBP"],
+  "workers": ["celery@Mac-Worker"],
   "workers_responding": true
 }
 ```
 
-`registered_check.status=ok`. Registered on `celery@Louises-MBP`: `connectivity_probe`, `judge_transcript`, `summarize_conversation`, `embed_chunks`, plus `distill_export`. `farm_status.json` at 12:17:17: `status=ok`, `workers_responding=true`, `latency_ms=2128.5`, age ~seconds (daemon writing). Daemon python 2752 since 01:59:15.
+`registered_check.status=ok`. Registered on `celery@Mac-Worker`: `connectivity_probe`, `judge_transcript`, `summarize_conversation`, `embed_chunks`, plus `distill_export`. `farm_status.json` at 12:17:17: `status=ok`, `workers_responding=true`, `latency_ms=2128.5`, age ~seconds (daemon writing). Daemon python 2752 since 01:59:15.
 
-`farm_status_daemon.log` current lines: broker yes, workers yes, `celery@Louises-MBP`. Last `FARM_STATUS_RECOVERED` in the file is historical (including a 127.0.0.1:6379 WinError 10053 blip then recover). No live outage at snapshot.
+`farm_status_daemon.log` current lines: broker yes, workers yes, `celery@Mac-Worker`. Last `FARM_STATUS_RECOVERED` in the file is historical (including a 127.0.0.1:6379 WinError 10053 blip then recover). No live outage at snapshot.
 
 `.env` `FARM_BROKER_URL` host is `127.0.0.1:6379` (password not copied here). User-env `FARM_REDIS_ENGINE=wsl`. Mac path remains hub `10.90.90.1:6379` via relay.
 
@@ -126,7 +126,7 @@ If the operator is looking at the LAN page, it will fail to load / look disconne
 - Ubuntu redis is healthy,
 - 127.0.0.1:6379 is wslrelay,
 - relay is listening and has live `10.90.90.2` sessions (capture 02:01:56 relaying; netstat Established still present at 12:14),
-- `farm_health` / `farm_status.json` are `ok` with `celery@Louises-MBP`.
+- `farm_health` / `farm_status.json` are `ok` with `celery@Mac-Worker`.
 
 ## Not done
 

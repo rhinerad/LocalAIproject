@@ -58,11 +58,11 @@ container bounce from an already-logged-in session.
   `mac_worker`. `ACL GETUSER mac_worker` (password **redacted**): flags `on`;
   commands `+@all -flushall -flushdb -config -shutdown -acl -debug -cluster
   -replicaof`; keys `~*`; channels `&*`
-- 13:38:48–13:38:54 ET: `farm_health` **ok**. `celery@Louises-MBP` responding,
+- 13:38:48–13:38:54 ET: `farm_health` **ok**. `celery@Mac-Worker` responding,
   latency ~2.3–3.3s, expected tasks registered
 - 13:38:31 ET Mac LaunchAgent observe-only: `com.local-agent.celery-worker`
   pid **3895**, state=running, runs=11, last exit code=1, KeepAlive + RunAtLoad.
-  SSH `rhineduran@10.90.90.2` (key `workstation_to_mac`, IdentitiesOnly,
+  SSH `user@10.90.90.2` (key `workstation_to_mac`, IdentitiesOnly,
   BatchMode)
 
 Gitignored credential files present (names/sizes only): `.env` 454,
@@ -128,7 +128,7 @@ Mac timestamps sit ~6s behind Windows, so Mac 13:39:03.932 ≈ Windows T0
 - **T_worker (Mac Connected log)** ≈ **13:39:12 ET Windows** / 13:39:06.174 Mac.
   Delta T0→T_worker ≈ **3s**; T_broker→T_worker ≈ **1s**
 - **T_worker (this session's first `farm_health` inspect.ping)**:
-  **13:43:10.189 ET** — `workers responding: yes`, `celery@Louises-MBP`,
+  **13:43:10.189 ET** — `workers responding: yes`, `celery@Mac-Worker`,
   registered-task status ok, latency 2445.8 ms. The poll started late because
   the host tool connection dropped from ~13:39:11 to ~13:41:17 and again
   briefly after; the worker was already connected per Mac logs
