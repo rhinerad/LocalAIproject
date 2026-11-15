@@ -9,7 +9,7 @@ Regenerate from the repository root:
 python scripts/write_handoff_status.py
 ```
 
-Generated at: 2026-09-26 14:03:54 Eastern Daylight Time (UTC-04:00) (local)
+Generated at: 2026-11-07 15:40:34 Eastern Standard Time (UTC-05:00) (local)
 
 `TODO.md` is the execution queue. Lettered `CHANGELOG/` entries are evidence. Farm *procedures* live in `docs/FARM_HEALTH_RUNBOOK.md` and `docs/RUNBOOK.md` — this file points to those runbooks and does **not** duplicate their checklists.
 
@@ -21,6 +21,8 @@ Generated at: 2026-09-26 14:03:54 Eastern Daylight Time (UTC-04:00) (local)
 
 Newest first, so a new agent sees tonight first. Lettered files matching `YYYY-MM-DDx_...` only; same letter-order as `scripts/next_changelog_id.py` (`a` < `b` < … < `z` < `aa`). Same-day duplicate letters both appear, disambiguated by filename. Title is the first markdown `#` heading, else the filename slug.
 
+- 2026-11-06 · `2026-11-06b` · `2026-11-06b_audit_remediation_part2.md` — 2026-11-06b — Audit remediation, part 2: the last code fixes, verification, lint
+- 2026-11-06 · `2026-11-06a` · `2026-11-06a_audit_remediation_part1.md` — 2026-11-06a — Audit remediation, part 1: hygiene, docs, and the first pass of code fixes
 - 2026-09-26 · `2026-09-26l` · `2026-09-26l_motion_transfer_segment_chaining_seam_investigation.md` — 2026-09-26l — `render_video_from_reference`: segment chaining built (opt-in), the held-frame seam measured as a visible cut, and the 26k "RAM scales with frames" model found wrong (RAM is weight-bound, ~13–15 GB per prompt whatever the length)
 - 2026-09-26 · `2026-09-26k` · `2026-09-26k_render_video_from_reference_measured_180_frames.md` — 2026-09-26k — `render_video_from_reference`: measured a 180-frame (15-window) run; cap raised 64 → 180 with a free-RAM refusal (system RAM, not VRAM, bounds length); fixed the identity check overflowing the Windows command line on long clips
 - 2026-09-26 · `2026-09-26j` · `2026-09-26j_render_video_from_reference_tool.md` — 2026-09-26j — `render_video_from_reference` + `video_reference_job_status` built: background motion-transfer jobs with the measured AnimateDiff/FaceID configuration, automatic face crop and target-person selection, render_story_image's GPU discipline, file-evidence manifests; validated end to end on two real runs
@@ -34,8 +36,6 @@ Newest first, so a new agent sees tonight first. Lettered files matching `YYYY-M
 - 2026-09-26 · `2026-09-26a` · `2026-09-26a_motion_transfer_video_face_detail_pass.md` — 2026-09-26a — Motion transfer: an Impact Pack video face-detail pass on the AnimateDiff clip; no added flicker (measured), late frames move toward the reference at denoise 0.5; faces stay soft because they are ~60 px at 768×448
 - 2026-09-25 · `2026-09-25v` · `2026-09-25v_motion_transfer_identity_face_crop_and_mask.md` — 2026-09-25v — Motion transfer identity, no download: a tight face crop of the character still fixes the 24-frame identity drift; an IP-Adapter attention mask confines colour bleed; adapter strength makes no difference; late-clip softening remains
 - 2026-09-25 · `2026-09-25u` · `2026-09-25u_advanced_controlnet_installed_multiwindow_clips_render.md` — 2026-09-25u — ComfyUI-Advanced-ControlNet installed (operator approval); 24-frame, two-window AnimateDiff-SDXL motion-transfer clips now render upright and follow the reference motion; identity drift is the remaining blocker
-- 2026-09-25 · `2026-09-25t` · `2026-09-25t_motion_transfer_inversion_root_cause_face_hand_keypoints.md` — 2026-09-25t — Motion transfer: the upside-down AnimateDiff-SDXL output is root-caused (DWPose face + hand keypoints drawn together, which xinsir's union model never saw); with face keypoints off, one 16-frame window renders upright and follows the reference motion
-- 2026-09-25 · `2026-09-25s` · `2026-09-25s_motion_transfer_stage1_depth_and_animatediff_single_window_proof.md` — 2026-09-25s — Motion transfer follow-up: depth maps + node schemas proven; real AnimateDiff-SDXL single-window generations ran and came out upside down; seven ablations pin the inversion on the union-promax ControlNet path (unresolved); the AnimateDiff path is one node pack short for multi-window clips
 
 ---
 
@@ -56,20 +56,20 @@ Newest first, so a new agent sees tonight first. Lettered files matching `YYYY-M
 - [ ] With the current judge every clip's minimum axis is ≤ 0.40 or ≥ 0.80,
 - [ ] Operator visually reviews and explicitly accepts or rejects that exact
 - [ ] Operator reviews worksheet keep/replace notes (notes are NOT approval) and explicitly approves or replaces pairs.
-- [ ] TurboSparse remains parked â€” do not dump/train/convert/bench/register from this draft.
+- [ ] TurboSparse remains parked — do not dump/train/convert/bench/register from this draft.
 - [ ] Semantic QA is not run. Implement/execute review through the installed exact
 - [ ] Regenerate current-prompt candidates through receipts, then obtain explicit
 - [ ] Verify a real approved-input video and its embedded graph/hashes only after
 - [ ] Optional operator step: bounded verify_prompt_pack_startup.py only if
 - [ ] After Rhine restarts: paste/continue Backrooms pack on a fresh chat and confirm outputs under local_agent/runtime/managed_tasks/<cid>/
-- [ ] Full 18-clip Flux sheet after operator paste + review gate (VRAM: t5xxl_fp16 + ~12GB UNet on 16GB â€” expect slow / sequential only)
+- [ ] Full 18-clip Flux sheet after operator paste + review gate (VRAM: t5xxl_fp16 + ~12GB UNet on 16GB — expect slow / sequential only)
 - [ ] After Rhine restarts: regenerate or continue on chat d98731129ac743ac and confirm render/plan no longer stale-blocked
 - [ ] After Rhine restarts: hard-refresh GUI and verify Stop returns Send mid-turn
-- [ ] **Task 1 â€” Evaluate PowerInfer architecture (resume, don't restart).
-- [ ] **Task 2 â€” Evaluate TinyEngine architecture â€” researched 2026-09-02,
-1. [ ] **KV cache quantization** â€” BLOCKED by Phase 1. Update the chosen
-3. [ ] **RAG-first memory retrieval** â€” BLOCKED by Phase 1. Enforce Chroma DB
-4. [~] **Agentic RAG upgrade for local-docs retrieval** â€” Stages 1-2
+- [ ] **Task 1 — Evaluate PowerInfer architecture (resume, don't restart).
+- [ ] **Task 2 — Evaluate TinyEngine architecture — researched 2026-09-02,
+1. [ ] **KV cache quantization** — BLOCKED by Phase 1. Update the chosen
+3. [ ] **RAG-first memory retrieval** — BLOCKED by Phase 1. Enforce Chroma DB
+4. [~] **Agentic RAG upgrade for local-docs retrieval** — Stages 1-2
 - [ ] **Operator goal:** experiment with
 - [ ] **2026-09-05, follow-up: KTransformers / PowerInfer MoE feasibility
 - [ ] **2026-09-01, operator feedback:** "Claude, Claude Code, GPT are all very
@@ -84,19 +84,19 @@ Newest first, so a new agent sees tonight first. Lettered files matching `YYYY-M
 - [ ] After an accepted model exists, deliberately wire the registered endpoint
 - [ ] Run a single benign, battery/thermal-observed Pixel test with
 - [ ] Later, separately: abliterate `PowerInfer/SmallThinker-4BA0.6B-Instruct`
-- [ ] **10-node asynchronous Worker Farm** â€” planned control-plane/worker-plane
-  - [ ] Establish the 1-GbE capacity baseline: inventory every node, measure
-  - [ ] Prototype a private RabbitMQ ingress with publisher confirms, manual
-  - [ ] Add Celery for durable fetch/extract/encrypt workflows and Ray actors
-  - [ ] Build four operator-reviewed workflows: encrypted Judge evaluation;
-  - [ ] Encrypt raw artifacts and backups with authenticated AES-256-GCM;
-  - [ ] Gate all production work on private-network isolation, source/license
-  - [ ] See `docs/WORKER_FARM_ARCHITECTURE_PLAN_2026-08-29.md` for the
-- [ ] **Farm efficiency, ticket 4 â€” Ratchet Loop (autoresearch-style
+- [ ] **10-node asynchronous Worker Farm** — planned control-plane/worker-plane
+- [ ] Establish the 1-GbE capacity baseline: inventory every node, measure
+- [ ] Prototype a private RabbitMQ ingress with publisher confirms, manual
+- [ ] Add Celery for durable fetch/extract/encrypt workflows and Ray actors
+- [ ] Build four operator-reviewed workflows: encrypted Judge evaluation;
+- [ ] Encrypt raw artifacts and backups with authenticated AES-256-GCM;
+- [ ] Gate all production work on private-network isolation, source/license
+- [ ] See `docs/WORKER_FARM_ARCHITECTURE_PLAN_2026-08-29.md` for the
+- [ ] **Farm efficiency, ticket 4 — Ratchet Loop (autoresearch-style
 - [ ] **Farm efficiency tickets 1/4** (full entries: Phase 2 section
-- [ ] **Operator-approved phone-call assistant** â€” let the local agent complete
-- [ ] **Trusted Android companion: approved phone files and app delivery** â€” evolve
-- [ ] **Local 3D generation through ComfyUI** â€” accept a text prompt and optional
+- [ ] **Operator-approved phone-call assistant** — let the local agent complete
+- [ ] **Trusted Android companion: approved phone files and app delivery** — evolve
+- [ ] **Local 3D generation through ComfyUI** — accept a text prompt and optional
 - [ ] Add optional exact-Qwen2.5-VL semantic review only when the GPU is explicitly idle; never substitute another VLM.
 - [ ] Re-run production with the gate enabled after the current r98 worker naturally finishes or is resumed.
 - [ ] Integrate the exact Qwen2.5-VL Caption V4 output into a prompt-grounded
@@ -104,7 +104,7 @@ Newest first, so a new agent sees tonight first. Lettered files matching `YYYY-M
 - [ ] On threshold, capture the prompt, negative prompt, model/profile, seed,
 - [ ] Have the local agent diagnose the failure pattern and propose a bounded
 - [ ] Apply an adjustment only after deterministic validation and preserve the
-- [ ] Add regression tests proving the escalation occurs at 3â€“4 failures and
+- [ ] Add regression tests proving the escalation occurs at 3–4 failures and
 - [ ] Add a durable task controller that converts a user request into explicit
 - [ ] Require each stage to report physical evidence (file path, checksum,
 - [ ] Add prompt-pack-specific state: source revision, clip/shot IDs, approved
@@ -119,7 +119,7 @@ Newest first, so a new agent sees tonight first. Lettered files matching `YYYY-M
 
 ---
 
-## 3. Known orphaned / leftover infrastructure
+## 3. Known orphaned / leftover infrastructure (seeded 2026-09-04 checklist, not a live probe)
 
 Seeded from tonight's documented CHANGELOG/runbook text only. **Not** live-probed. Do not treat this list as current OS state.
 

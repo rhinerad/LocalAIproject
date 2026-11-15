@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import ast
 import importlib.util
-import json
 import sys
 import tempfile
 from pathlib import Path

@@ -32,6 +32,14 @@ class RouterSwitchingTests(unittest.TestCase):
             p = patch.object(router, name, path)
             p.start()
             self.addCleanup(p.stop)
+        # Routing tests assume a cool card.  Without this they read live
+        # thermal telemetry: on a clone without work/thermal_guard.py (CI,
+        # Linux) the guard fails closed and every 14B pick becomes CPU, which
+        # is correct behaviour but not what these tests examine.  Tests that
+        # pin thermal behaviour patch thermal_blocks_gpu themselves.
+        p = patch.object(router, "thermal_blocks_gpu", return_value=None)
+        p.start()
+        self.addCleanup(p.stop)
 
     @staticmethod
     def _tier_tags(host):

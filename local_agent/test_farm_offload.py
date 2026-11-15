@@ -17,7 +17,6 @@ import os
 import subprocess
 import sys
 import tempfile
-import threading
 import unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -50,8 +49,13 @@ def _summarize_success_json(summary=None, model="krith/mistral-nemo:IQ4_XS") -> 
     return json.dumps({"summarized": True, "summary": summary, "model": model})
 
 
+# nomic-embed-text vectors are 768-d; farm_offload rejects any other shape.
+_VEC0 = [0.1, 0.2] + [0.0] * (farm_offload.EMBED_DIM - 2)
+_VEC1 = [0.3, 0.4] + [0.0] * (farm_offload.EMBED_DIM - 2)
+
+
 def _embed_success_json() -> str:
-    return json.dumps({"vectors": {"doc:0": [0.1, 0.2], "doc:1": [0.3, 0.4]},
+    return json.dumps({"vectors": {"doc:0": _VEC0, "doc:1": _VEC1},
                        "model": "nomic-embed-text:latest"})
 
 
@@ -178,7 +182,7 @@ class TestTryEmbedOnFarm(unittest.TestCase):
             result = farm_offload.try_embed_on_farm(chunks)
         self.assertIsNotNone(result)
         self.assertIn("doc:0", result)
-        self.assertEqual(result["doc:0"], [0.1, 0.2])
+        self.assertEqual(result["doc:0"], _VEC0)
 
     def test_returns_none_on_subprocess_failure(self):
         proc = _make_proc(returncode=1, stderr="bad")

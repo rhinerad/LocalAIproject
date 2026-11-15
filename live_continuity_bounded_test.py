@@ -12,7 +12,6 @@ Env: COMFY_URL, COMFY_INPUT_DIR, COMFY_OUTPUT_DIR
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import os
 import sys

@@ -15,12 +15,10 @@ import argparse
 import json
 import os
 import subprocess
-import sys
 import threading
 import time
 import urllib.error
 import urllib.request
-from copy import deepcopy
 from pathlib import Path
 
 COMFY = os.environ.get("COMFY_URL", "http://127.0.0.1:8188").rstrip("/")

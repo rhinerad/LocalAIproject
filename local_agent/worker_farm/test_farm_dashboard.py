@@ -15,7 +15,6 @@ import unittest
 import urllib.request
 from datetime import datetime, timedelta, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from pathlib import Path
 
 _FARM_UNITTEST = (
     r"local_agent\worker_farm\.venv\Scripts\python.exe -m unittest "

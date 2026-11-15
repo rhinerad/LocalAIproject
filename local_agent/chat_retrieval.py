@@ -6,7 +6,6 @@ chat archive outside this workstation.
 """
 from __future__ import annotations
 import math, re
-from pathlib import Path
 import store
 
 _TOK = re.compile(r"[a-z0-9]{3,}", re.I)

@@ -16,8 +16,9 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
-COMFY_ROOT = Path(r"A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI")
+ROOT = Path(os.environ.get("GVD_ROOT") or Path(__file__).resolve().parent).resolve()
+COMFY_ROOT = Path(os.environ.get("COMFY_ROOT") or r"A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI")
+LIVE_TEST_TIMEOUT_S = float(os.environ.get("GVD_LIVE_TEST_TIMEOUT_S", "7200"))
 COMFY_PYTHON = COMFY_ROOT / ".venv" / "Scripts" / "python.exe"
 COMFY_MAIN = COMFY_ROOT / "main.py"
 EXTRA_PATHS = ROOT / "work" / "runtime" / "image_render_model_paths.yaml"
@@ -118,10 +119,15 @@ def wait_ready(proc: subprocess.Popen) -> dict:
 def run_live_test() -> int:
     test = ROOT / "live_vram_test.py"
     print(f"executing {test}")
-    return subprocess.call(
-        [sys.executable, str(test)],
-        cwd=str(ROOT),
-    )
+    try:
+        return subprocess.call(
+            [sys.executable, str(test)],
+            cwd=str(ROOT),
+            timeout=LIVE_TEST_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired:
+        print(f"live_vram_test.py exceeded {LIVE_TEST_TIMEOUT_S:.0f}s; killed", flush=True)
+        return 124
 
 
 def latest_vram_report() -> dict | None:

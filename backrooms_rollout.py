@@ -1,5 +1,4 @@
 """One-shot authorized C016 gate followed immediately by full resumable batch."""
-import json
 import subprocess
 import sys
 import time

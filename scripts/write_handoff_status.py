@@ -25,7 +25,8 @@ TODO_PATH = REPO_ROOT / "TODO.md"
 DEFAULT_OUTPUT = REPO_ROOT / "HANDOFF_STATUS.md"
 
 # Same filename pattern as scripts/next_changelog_id.py.
-_NAME_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})([a-z]+)_")
+# Lettered ids (2026-09-02w_) and the 220 older unlettered entries (2026-08-17_).
+_NAME_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})([a-z]*)_")
 _OPEN_ITEM_RE = re.compile(r"^\s*(?:[-*]|\d+\.)\s*\[(?: |~)\]")
 RECENT_LIMIT = 15
 NOT_DOCUMENTED = "not documented in recent CHANGELOG/runbook"
@@ -63,7 +64,8 @@ class PersistenceSeed:
     status: str
 
 
-# Seeded from tonight's documented CHANGELOG/runbook text only.
+# SEEDED 2026-09-03/04 from the documented CHANGELOG/runbook text of that night.
+# This is a frozen checklist, not a live probe; the generated file labels it so.
 # Do not live-probe. Do not invent extra orphans.
 ORPHANS: tuple[OrphanSeed, ...] = (
     OrphanSeed(
@@ -458,7 +460,7 @@ def build_markdown(changelog_dir: Path, todo_path: Path) -> str:
         "",
         "---",
         "",
-        "## 3. Known orphaned / leftover infrastructure",
+        "## 3. Known orphaned / leftover infrastructure (seeded 2026-09-04 checklist, not a live probe)",
         "",
         "Seeded from tonight's documented CHANGELOG/runbook text only. "
         "**Not** live-probed. Do not treat this list as current OS state.",

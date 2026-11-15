@@ -28,6 +28,7 @@ and do not run two models side by side.
 """
 from __future__ import annotations
 
+import http.client
 import json
 import os
 import re
@@ -323,6 +324,12 @@ def _post(path: str, payload: dict, timeout: int = 600,
         if exc.code >= 500 or exc.code in (408, 429):
             raise OllamaModelFailure(f"Ollama HTTP {exc.code} at {host}: {detail}") from exc
         raise OllamaUnavailable(f"Ollama HTTP {exc.code} at {host}: {detail}") from exc
+    except http.client.HTTPException as exc:
+        # IncompleteRead / RemoteDisconnected / BadStatusLine: the server went
+        # away mid-response, typically a runner OOM.  Retryable (audit #14).
+        raise OllamaModelFailure(
+            f"Ollama connection dropped mid-response at {host}: "
+            f"{type(exc).__name__}: {exc}") from exc
     except (urllib.error.URLError, socket.timeout, TimeoutError, ConnectionError) as exc:
         raise OllamaUnavailable(
             f"cannot reach Ollama at {host}: {exc}. Start it with "
@@ -422,19 +429,26 @@ def chat(messages: list[dict], model: str | None = None,
     )
 
 
+# CPU-only embedding model residency between calls (was "0", which reloaded
+# nomic-embed-text for every retrieval batch).
+EMBED_KEEP_ALIVE = "5m"
+
+
 def embed(inputs: list[str] | str, *, model: str = "nomic-embed-text:latest",
           host: str | None = None, timeout: int = 120) -> list[list[float]]:
     """Create local embeddings on the CPU-only Ollama endpoint.
 
     Embeddings are intentionally a separate capability from chat: they always
-    retain the four-thread/no-GPU cap and immediately unload after the request.
+    retain the four-thread/no-GPU cap.  The model stays loaded for
+    ``EMBED_KEEP_ALIVE`` (5 min) so a multi-batch index build does not reload
+    it per batch (audit P2); it is CPU-only, so it never holds VRAM.
     They must never claim the GPU merely to search a small local exemplar store.
     """
     values = [str(inputs)] if isinstance(inputs, str) else [str(value) for value in inputs]
     if not values:
         return []
     payload = {"model": model, "input": values, "options": dict(DEFAULT_OPTIONS),
-               "keep_alive": "0"}
+               "keep_alive": EMBED_KEEP_ALIVE}
     data = _post("/api/embed", payload, timeout=timeout, host=host or HOST)
     vectors = data.get("embeddings") or []
     if len(vectors) != len(values) or any(not isinstance(vector, list) for vector in vectors):
@@ -595,6 +609,12 @@ def chat_stream(messages: list[dict], model: str | None = None,
         if exc.code >= 500 or exc.code in (408, 429):
             raise OllamaModelFailure(f"Ollama HTTP {exc.code} at {host}: {detail}") from exc
         raise OllamaUnavailable(f"Ollama HTTP {exc.code} at {host}: {detail}") from exc
+    except http.client.HTTPException as exc:
+        # A stream cut mid-body (IncompleteRead, RemoteDisconnected) is how a
+        # GPU OOM in the runner looks from here; it must reach the 14B->8B
+        # fallback as a model failure, not a generic error (audit #14).
+        raise OllamaModelFailure(
+            f"Ollama stream dropped at {host}: {type(exc).__name__}: {exc}") from exc
     except (urllib.error.URLError, socket.timeout, TimeoutError, ConnectionError) as exc:
         raise OllamaUnavailable(f"cannot reach Ollama at {host}: {exc}") from exc
 

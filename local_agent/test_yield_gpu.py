@@ -8,9 +8,8 @@ These tests use unittest.mock to avoid needing a live Ollama server.
 from __future__ import annotations
 
 import sys
-import unittest
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))

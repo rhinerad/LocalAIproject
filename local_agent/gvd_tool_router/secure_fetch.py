@@ -7,7 +7,6 @@ import ssl
 import urllib.error
 import urllib.parse
 import urllib.request
-from typing import Any
 
 from .discovery import FetchedAsset
 

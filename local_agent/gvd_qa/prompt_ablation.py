@@ -1,10 +1,8 @@
 """PromptTester-compatible phrase ablation. max_attempts is always 1 per variant."""
 from __future__ import annotations
 
-import hashlib
-import json
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any
 
 from .evidence import insert_experiment
 
@@ -37,7 +35,6 @@ def record_ablation_from_plan(conn, plan: dict[str, Any], seeds: list[int],
                               *, held_out_outcome: str | None = None) -> list[dict[str, Any]]:
     import importlib.util
     import sys
-    from pathlib import Path
     root = Path(__file__).resolve().parents[2]
     spec = importlib.util.spec_from_file_location("_gvd_qa_runner_ablate", root / "gvd_qa.py")
     runner = importlib.util.module_from_spec(spec)

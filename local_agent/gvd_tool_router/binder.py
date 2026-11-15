@@ -5,7 +5,7 @@ import copy
 import json
 from typing import Any
 
-from .schema import ToolImplementation, WorkflowTemplate, require_sha256, sha256_bytes
+from .schema import WorkflowTemplate, require_sha256, sha256_bytes
 
 APPROVED_TRANSFORMS = {"identity"}
 UI_HINT_KEYS = {"last_node_id", "last_link_id", "nodes", "links", "groups", "config", "extra"}

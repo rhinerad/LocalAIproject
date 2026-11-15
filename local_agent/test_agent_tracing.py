@@ -248,10 +248,18 @@ class AgentTracingTests(unittest.TestCase):
 
         context = remote_security.ToolContext(
             source="desktop", conversation_id=cid)
+        # gpu_busy is patched to "busy" so the agent takes the CPU route; the
+        # comfy GPU preflight (audit finding 4) reads the same router call and
+        # would correctly refuse.  The refusal paths are covered in
+        # test_comfy_tools.ComfyGpuGateTests; here the gate is granted so the
+        # trace/audit join can be checked.
+        preflight_calls = []
         with patch.object(tools, "_COMFY_AUDIT_PATH", audit), \
              patch("mcp_client.call", side_effect=fake_mcp), \
              patch.object(agent.router, "decide", return_value=_Route()), \
              patch.object(agent.oll, "chat_stream", fake_stream), \
+             patch.object(tools, "_comfy_gpu_preflight",
+                          side_effect=lambda *a, **kw: preflight_calls.append(a)), \
              patch.object(agent.router, "gpu_busy",
                           return_value=(True, "busy", {})):
             reply = agent.answer(
@@ -259,6 +267,7 @@ class AgentTracingTests(unittest.TestCase):
                   "please generate a ComfyUI image of a red mug now"}],
                 tool_context=context)
         self.assertIn("Queued the mug generate", reply)
+        self.assertEqual(1, len(preflight_calls), "comfy_generate must run the GPU preflight")
 
         conn = sqlite3.connect(str(self.db))
         try:

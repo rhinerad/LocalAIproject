@@ -8,7 +8,6 @@ Do not run this file by path. PATH Python is not the farm environment.
 """
 from __future__ import annotations
 
-import base64
 import json
 import os
 import subprocess

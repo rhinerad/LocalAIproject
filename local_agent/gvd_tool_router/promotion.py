@@ -3,13 +3,12 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Any
 
-from .binder import inspect_graph, is_api_workflow, is_ui_workflow
+from .binder import inspect_graph, is_ui_workflow
 from .paths import GvdLayout
-from .registry import Registry, RegistryError
-from .schema import ToolImplementation, can_activate, require_sha256, sha256_json, to_plain
+from .registry import Registry
+from .schema import ToolImplementation, can_activate, sha256_json
 
 CORE_CLASSES = frozenset({
     "CheckpointLoaderSimple", "CLIPTextEncode", "EmptyLatentImage", "KSampler",

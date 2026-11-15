@@ -16,7 +16,6 @@ from PIL import Image
 
 import capabilities as caps
 import llama_cpp_client
-import ollama_client as oll
 import router
 
 if not hasattr(router, "gpu_free_mb"):

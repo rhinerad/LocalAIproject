@@ -1,12 +1,17 @@
 #!/bin/sh
 # Reapplies gitignored secondary Redis ACL users after every container start.
 # Started as the image entrypoint; then runs the original docker-entrypoint.sh
-# with the same redis-server / --requirepass flags Compose already passes.
+# with the redis-server flags Compose passes, plus a private config file that
+# carries `requirepass` so the password is never on the redis-server command
+# line (`ps` inside the container, `docker inspect`, compose logs).
+# redis-cli authenticates through REDISCLI_AUTH (never `-a`), and ACL SETUSER
+# lines are fed on stdin so secondary passwords are not on argv either.
 # Does not touch the default user and does not use --aclfile.
 set -eu
 
 ORIGINAL_ENTRYPOINT="/usr/local/bin/docker-entrypoint.sh"
 ACL_DIR="${ACL_RESTORE_DIR:-/acl-restore}"
+REQUIREPASS_CONF="${REDIS_REQUIREPASS_CONF:-/tmp/redis-requirepass.conf}"
 REDIS_PID=""
 
 log() {
@@ -27,8 +32,27 @@ if [ -z "${REDIS_PASSWORD:-}" ]; then
 	exit 1
 fi
 
+# redis-cli reads its password from the environment, so no `-a` anywhere.
+REDISCLI_AUTH="$REDIS_PASSWORD"
+export REDISCLI_AUTH
+
+# requirepass lives in a 0600 config file handed to redis-server as its first
+# argument; later flags still override. umask keeps the file private from the
+# moment it is created, then it is chowned to the redis user the image drops
+# to (docker-entrypoint.sh uses gosu when started as root).
+_saved_umask=$(umask)
+umask 077
+printf 'requirepass %s\n' "$REDIS_PASSWORD" > "$REQUIREPASS_CONF"
+chmod 600 "$REQUIREPASS_CONF"
+chown redis:redis "$REQUIREPASS_CONF" 2>/dev/null || true
+umask "$_saved_umask"
+
 if [ "$#" -eq 0 ]; then
-	set -- redis-server --appendonly yes --appendfsync everysec --requirepass "$REDIS_PASSWORD" --maxmemory-policy noeviction
+	set -- redis-server --appendonly yes --appendfsync everysec --maxmemory-policy noeviction
+fi
+if [ "$1" = "redis-server" ]; then
+	shift
+	set -- redis-server "$REQUIREPASS_CONF" "$@"
 fi
 
 "$ORIGINAL_ENTRYPOINT" "$@" &
@@ -37,7 +61,7 @@ REDIS_PID=$!
 i=0
 ready=0
 while [ "$i" -lt 200 ]; do
-	if redis-cli -a "$REDIS_PASSWORD" --no-auth-warning ping 2>/dev/null | grep -q PONG; then
+	if redis-cli --no-auth-warning ping 2>/dev/null | grep -q PONG; then
 		ready=1
 		break
 	fi
@@ -78,7 +102,14 @@ restore_one() {
 		log "missing password for '$_user'; skipping"
 		return 0
 	fi
-	if redis-cli -a "$REDIS_PASSWORD" --no-auth-warning ACL SETUSER "$_user" on ">$_pass" '~*' '&*' nocommands '+@all' -flushall -flushdb -config -shutdown -acl -debug -cluster -replicaof | grep -q OK; then
+	# Same grant set as Add-/Restore-Phase1SecondaryWorkerCredential*.ps1:
+	# explicit categories instead of +@all; @dangerous, replication, module,
+	# KEYS and SELECT denied (the user stays on the db 0 named in its URL).
+	# The line is piped on stdin so the password never reaches argv.
+	_acl="ACL SETUSER $_user on >$_pass ~* &* nocommands"
+	_acl="$_acl +@read +@write +@list +@hash +@string +@set +@sortedset +@stream +@pubsub +@scripting +@transaction +@connection"
+	_acl="$_acl -@dangerous -slaveof -replicaof -module -keys -select -flushall -flushdb -config -shutdown -acl -debug -cluster"
+	if printf '%s\n' "$_acl" | redis-cli --no-auth-warning | grep -q OK; then
 		log "restored ACL user '$_user'"
 		restore_count=$((restore_count + 1))
 	else

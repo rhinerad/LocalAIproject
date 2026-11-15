@@ -506,7 +506,11 @@ class TestDspyTemporalEvalHelpers(unittest.TestCase):
         self.assertEqual(kinds.count("locked"), 2)
 
 
+_BAKED_ARTIFACT = Path(__file__).resolve().parent.parent / "models" / "dspy_compiled" / "temporal_physics_v1.json"
+
+
 class TestCompiledRuntimeInjection(unittest.TestCase):
+    @unittest.skipUnless(_BAKED_ARTIFACT.is_file(), "compiled DSPy artifact lives in the gitignored models/ folder")
     def test_load_compiled_deserializes_baked_artifact(self) -> None:
         state = load_compiled_temporal_physics(
             "models/dspy_compiled/temporal_physics_v1.json"

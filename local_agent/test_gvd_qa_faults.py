@@ -9,7 +9,6 @@ import tempfile
 import unittest
 from io import BytesIO
 from pathlib import Path
-from types import SimpleNamespace
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent

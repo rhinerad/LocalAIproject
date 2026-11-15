@@ -1,0 +1,26 @@
+# Heavy / feature-specific extras. Install only what you use.
+# DSPy video director + optimizer (local_agent/dspy_orchestrator.py, generalized_video_director.py)
+dspy>=2.5
+# Vector store for exemplar retrieval (see local_agent/requirements-exemplar-retrieval.txt)
+chromadb==1.5.9
+# GVD QA scorers, captioning, motion transfer, PowerInfer tooling
+torch>=2.7
+transformers>=4.41,<5
+safetensors>=0.4
+onnxruntime
+opencv-python
+insightface
+huggingface_hub
+faster-whisper
+openai-whisper
+ImageReward
+pydantic
+outlines
+# Worker farm (see local_agent/worker_farm/requirements.txt)
+celery[redis]>=5.5,<6
+# Reticulum / LXMF phone bridge (see local_agent/requirements-lxmf.txt)
+rns==1.5.0
+lxmf==1.1.1
+pyserial==3.5
+# GPU telemetry
+pynvml

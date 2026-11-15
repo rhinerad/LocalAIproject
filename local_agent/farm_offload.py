@@ -31,6 +31,7 @@ from __future__ import annotations
 
 import json
 import logging
+import math
 import os
 import platform
 import subprocess
@@ -39,7 +40,7 @@ from pathlib import Path
 from typing import Any
 
 from worker_farm.dashboard.collect import (
-    STALE_AFTER_S as STATUS_STALE_AFTER_S,
+    STALE_AFTER_S as STATUS_STALE_AFTER_S,  # noqa: F401 (re-exported; test_farm_offload)
     is_stale as snapshot_is_stale,
 )
 
@@ -85,6 +86,62 @@ QWYTHOS_TIMEOUT_S: float = 90.0
 # stay local. Submitting the whole retrieval corpus occupied mac_worker
 # for minutes after the 30s caller timeout (live 2026-09-03).
 FARM_EMBED_MAX_CHUNKS: int = 8
+# nomic-embed-text output width. Farm output is untrusted (CLAUDE.md §7): a
+# vector of any other width, with a non-finite or non-numeric entry, or keyed
+# by an id that was not requested, discards the whole farm result.
+EMBED_DIM: int = 768
+
+
+def validate_embed_vectors(raw: Any, requested_ids: list[str]) -> dict[str, list[float]] | None:
+    """Return ``{id: [768 finite floats]}`` or None if anything is off."""
+    if not isinstance(raw, dict) or not raw:
+        return None
+    wanted = set(requested_ids)
+    clean: dict[str, list[float]] = {}
+    for key, vec in raw.items():
+        if key not in wanted:
+            _log.warning("farm_offload: embed result has unrequested id %r; discarded", key)
+            return None
+        if not isinstance(vec, list) or len(vec) != EMBED_DIM:
+            _log.warning("farm_offload: embed vector for %r has wrong shape; discarded", key)
+            return None
+        out: list[float] = []
+        for x in vec:
+            if isinstance(x, bool) or not isinstance(x, (int, float)) or not math.isfinite(x):
+                _log.warning("farm_offload: embed vector for %r has a bad value; discarded", key)
+                return None
+            out.append(float(x))
+        clean[key] = out
+    return clean
+
+
+def validate_summary_result(result: Any) -> dict | None:
+    """Shape-check a farm summarize result; None means "run locally".
+
+    Accepts ``{"summarized": False, ...}`` (model not installed) unchanged
+    apart from dropping a stray summary, and ``{"summarized": True,
+    "summary": {...}}`` only when the summary matches the compactor schema
+    (re-validated and length-clipped by ``context_compactor._valid``).
+    """
+    if not isinstance(result, dict):
+        return None
+    summarized = result.get("summarized")
+    if summarized is False:
+        out = {k: v for k, v in result.items() if k != "summary"}
+        return out
+    if summarized is not True:
+        return None
+    try:
+        import context_compactor
+        summary = context_compactor._valid(result.get("summary"))
+    except Exception:
+        summary = None
+    if summary is None:
+        _log.warning("farm_offload: farm summary failed schema validation; discarded")
+        return None
+    model = result.get("model")
+    return {"summarized": True, "summary": summary,
+            "model": str(model)[:120] if isinstance(model, str) else None}
 
 
 def status_path() -> Path:
@@ -185,6 +242,9 @@ def _run_helper(request: dict[str, Any], timeout_s: float) -> dict | None:
     except json.JSONDecodeError:
         _log.debug("farm_offload: stdout not JSON: %r", proc.stdout[:200])
         return None
+    if not isinstance(result, dict):
+        _log.debug("farm_offload: helper result is not an object: %r", type(result))
+        return None
     if "error" in result:
         _log.debug("farm_offload: helper error: %s", result["error"])
         return None
@@ -218,7 +278,7 @@ def try_summarize_on_farm(
         timeout_s = (
             SUMMARIZE_TIMEOUT_S if blocking else PREFETCH_SUMMARIZE_TIMEOUT_S
         )
-    return _run_helper(
+    result = _run_helper(
         {
             "task": "local_agent.worker_farm.tasks.summarize_conversation",
             "queue": "summarize",
@@ -227,6 +287,9 @@ def try_summarize_on_farm(
         },
         timeout_s,
     )
+    if result is None:
+        return None
+    return validate_summary_result(result)
 
 
 def try_embed_on_farm(
@@ -255,10 +318,8 @@ def try_embed_on_farm(
     )
     if result is None:
         return None
-    vectors = result.get("vectors")
-    if not isinstance(vectors, dict):
-        return None
-    return vectors or None
+    return validate_embed_vectors(result.get("vectors"),
+                                  [str(c.get("id")) for c in chunks if isinstance(c, dict)])
 
 
 def try_qwythos_on_farm(

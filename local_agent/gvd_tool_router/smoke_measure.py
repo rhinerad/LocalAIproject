@@ -11,8 +11,6 @@ import socket
 import subprocess
 import sys
 import time
-import urllib.error
-import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -22,7 +20,7 @@ sys.path.insert(0, str(HERE.parent))
 from gvd_tool_router.executor import default_http, prompt_payload
 from gvd_tool_router.gpu_lease import acquire
 from gvd_tool_router.paths import GvdLayout
-from gvd_tool_router.schema import sha256_bytes, sha256_json
+from gvd_tool_router.schema import sha256_bytes
 
 COMFY = "http://127.0.0.1:8188"
 

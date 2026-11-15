@@ -64,9 +64,7 @@ def _cache_fresh_ids(chunks: list[dict]) -> tuple[set[str], list[dict]]:
     fresh: set[str] = set()
     stale: list[dict] = []
     for ch in chunks:
-        entry = cache.get("vectors", {}).get(ch["id"])
-        h = retrieval._chunk_hash(ch.get("text", ""))
-        if entry and entry.get("hash") == h and entry.get("vector"):
+        if retrieval.cached_vector(cache, ch):
             fresh.add(ch["id"])
         else:
             stale.append(ch)
@@ -83,10 +81,7 @@ def _write_vectors(new_vectors: dict[str, list[float]], chunks_by_id: dict) -> i
             ch = chunks_by_id.get(cid)
             if ch is None:
                 continue
-            cache["vectors"][cid] = {
-                "hash": retrieval._chunk_hash(ch.get("text", "")),
-                "vector": vector,
-            }
+            retrieval.store_vector(cache, ch, vector)
             written += 1
         cache["model"] = retrieval.EMBED_MODEL
         retrieval._save_embedding_cache(cache)

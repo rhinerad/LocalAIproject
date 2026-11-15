@@ -71,7 +71,6 @@ class RenderStoryImageTests(unittest.TestCase):
     def _patched(self, **overrides):
         """Context manager stack patching everything render_story_image touches."""
         import router
-        import gpu_gate
         patches = {
             "router.gpu_busy": (False, "idle", {}),
         }

@@ -38,7 +38,6 @@ os.environ.setdefault("HF_HOME", str(_CACHE_ROOT))
 os.environ.setdefault("HF_MODULES_CACHE", str(_CACHE_ROOT / "modules"))
 
 import torch
-from safetensors.torch import load_file, save_file
 from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from transformers import dynamic_module_utils
 

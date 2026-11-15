@@ -29,11 +29,26 @@ import os
 import re
 import subprocess
 import sys
+import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
-ROOT = Path(__file__).resolve().parent
+# GVD_ROOT: repo root override (defaults to this file's directory, i.e. the checkout).
+ROOT = Path(os.environ.get("GVD_ROOT") or Path(__file__).resolve().parent).resolve()
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+# COMFY_SHARED_INPUT: ComfyUI-Shared input folder (voice refs are copied here).
+COMFY_SHARED_INPUT = Path(os.environ.get("COMFY_SHARED_INPUT") or r"A:\Users\rhine\ComfyUI-Shared\input")
+COMFY_URL = os.environ.get("GVD_COMFY_URL", "http://127.0.0.1:8188")
+
+from local_agent.atomic_io import atomic_write_json  # noqa: E402
+from gpu_lock import GpuLock, GpuLockHeld  # noqa: E402
+import gpu_lock as _gpu_lock  # noqa: E402
+
+LOCK_PATH = _gpu_lock.DEFAULT_LOCK_PATH
+OWNER_PATH = _gpu_lock.DEFAULT_OWNER_PATH
 STYLE_PROFILES_DIR = ROOT / "style_profiles"
 DEFAULT_STYLE_PROFILE = "generic"
 PRODUCTION_DB_NAME = "production_attempts.sqlite3"
@@ -128,13 +143,19 @@ def read_json(path: Path) -> dict[str, Any]:
     return value
 
 
-def atomic_write_json(path: Path, data: dict[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(path.suffix + ".tmp")
-    with tmp.open("w", encoding="utf-8", newline="\n") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
-        f.write("\n")
-    os.replace(tmp, path)
+def comfy_interrupt(url: str = COMFY_URL, timeout: float = 5.0) -> bool:
+    """POST ComfyUI /interrupt so a timed-out child's job stops occupying the GPU."""
+    req = urllib.request.Request(
+        url.rstrip("/") + "/interrupt", data=b"{}",
+        headers={"Content-Type": "application/json"}, method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            resp.read()
+        return True
+    except Exception as exc:
+        print(f"[comfy] /interrupt failed: {exc}", flush=True)
+        return False
 
 
 def load_style_profile(
@@ -689,8 +710,25 @@ def mark_clip(
 ) -> None:
     attempts = []
     existing = clip.get("master_batch")
+    previous_selected = None
     if isinstance(existing, dict):
         attempts = list(existing.get("attempts") or [])
+        # Evidence preservation: a SELECTED outcome is never dropped by a later
+        # failed/rendered attempt; it is carried as previous_selected.
+        prior_ps = existing.get("previous_selected")
+        if isinstance(prior_ps, dict):
+            previous_selected = prior_ps
+        prev_status = str(existing.get("status") or "").lower()
+        prev_state = str(existing.get("pipeline_state") or "").upper()
+        if (prev_state == "SELECTED" or prev_status in SELECTED_STATUSES) and existing.get("video_path"):
+            previous_selected = {
+                "status": existing.get("status"),
+                "pipeline_state": existing.get("pipeline_state"),
+                "video_path": existing.get("video_path"),
+                "attempt_id": existing.get("attempt_id"),
+                "finished_at": existing.get("finished_at"),
+                "verified": existing.get("verified"),
+            }
     attempts.append(
         {
             "started_at": started_at,
@@ -727,8 +765,12 @@ def mark_clip(
         "last_reference_note": last_note,
         "previous_clip_video": str(previous_video) if previous_video else None,
         "video_path": str(video_path) if video_path else None,
-        "attempts": attempts[-5:],
+        "attempts": attempts,  # uncapped: every attempt is evidence
     }
+    if previous_selected and not (
+        (pipeline_state or "").upper() == "SELECTED" or status in SELECTED_STATUSES
+    ):
+        clip["master_batch"]["previous_selected"] = previous_selected
     atomic_write_json(path, clip)
 
 
@@ -897,7 +939,7 @@ def register_bootstrap_voices(
     from voice_extract import ExtractionPlan, extract_speaker_wav
     import shutil
 
-    comfy_input = Path(r"A:\Users\rhine\ComfyUI-Shared\input")
+    comfy_input = COMFY_SHARED_INPUT
     for item in lines:
         if not isinstance(item, dict):
             continue
@@ -955,6 +997,59 @@ def register_bootstrap_voices(
             f"[voice] canonical {character_id} from {clip_id} -> {extracted.output_wav}",
             flush=True,
         )
+
+
+TIMEOUT_RETURNCODE = 124
+
+
+def run_generator(
+    command: list[str],
+    *,
+    args: argparse.Namespace,
+    clip_id: str,
+    db: Any = None,
+    attempt_id: str | None = None,
+) -> tuple[Any, Path | None]:
+    """Run generate_video.py (with the QA re-roll budget) and return (proc, video_path).
+
+    A child that hangs past --timeout no longer crashes the runner: the
+    attempt is recorded FAILED_RENDER, ComfyUI /interrupt is POSTed so the
+    stuck job stops holding the GPU, and a synthetic returncode-124 result is
+    returned so the normal failed-clip bookkeeping runs and the batch continues.
+    """
+    qa_budget = max(1, int(getattr(args, "qa_attempts", 3) or 3)) if getattr(args, "qa_loop", False) else 1
+    proc = None
+    video_path = None
+    for qa_attempt in range(qa_budget):
+        try:
+            proc = subprocess.run(
+                command,
+                cwd=str(ROOT),
+                text=True,
+                capture_output=True,
+                timeout=args.timeout,
+            )
+        except subprocess.TimeoutExpired as exc:
+            out = exc.stdout if isinstance(exc.stdout, str) else (exc.stdout or b"").decode("utf-8", "replace")
+            err = exc.stderr if isinstance(exc.stderr, str) else (exc.stderr or b"").decode("utf-8", "replace")
+            err = f"{err}\nTimeoutExpired: child exceeded {args.timeout}s; ComfyUI /interrupt sent"
+            print(f"[timeout] {clip_id}: child exceeded {args.timeout}s", flush=True)
+            if db is not None and _HAS_STORE and attempt_id and set_attempt_state:
+                try:
+                    set_attempt_state(db, attempt_id, "FAILED_RENDER")
+                except Exception as state_exc:
+                    print(f"[store] FAILED_RENDER state warning: {state_exc}", flush=True)
+            comfy_interrupt()
+            proc = SimpleNamespace(returncode=TIMEOUT_RETURNCODE, stdout=out, stderr=err)
+            video_path = None
+            break
+        video_path = parse_video_path(proc.stdout, proc.stderr)
+        if proc.returncode == 0:
+            break
+        if proc.returncode != 3 or qa_attempt + 1 >= qa_budget:
+            break
+        print(f"[qa-reroll] {clip_id} attempt {qa_attempt + 2}/{qa_budget}", flush=True)
+    return proc, video_path
 
 
 def run_clip(
@@ -1257,23 +1352,7 @@ def run_clip(
 
     print(f"[run] {clip_id}", flush=True)
     started_at = utc_now()
-    qa_budget = max(1, int(getattr(args, "qa_attempts", 3) or 3)) if getattr(args, "qa_loop", False) else 1
-    proc = None
-    video_path = None
-    for qa_attempt in range(qa_budget):
-        proc = subprocess.run(
-            command,
-            cwd=str(ROOT),
-            text=True,
-            capture_output=True,
-            timeout=args.timeout,
-        )
-        video_path = parse_video_path(proc.stdout, proc.stderr)
-        if proc.returncode == 0:
-            break
-        if proc.returncode != 3 or qa_attempt + 1 >= qa_budget:
-            break
-        print(f"[qa-reroll] {clip_id} attempt {qa_attempt + 2}/{qa_budget}", flush=True)
+    proc, video_path = run_generator(command, args=args, clip_id=clip_id, db=db, attempt_id=attempt_id)
     finished_at = utc_now()
     complete = proc.returncode == 0 and (args.dry_run or existing_file(video_path))
     if args.dry_run and proc.returncode == 0:
@@ -1561,15 +1640,33 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Selected clips: {selected[0]}..{selected[-1]} ({len(selected)})", flush=True)
     print("VRAM isolation: child process per clip; generate_video.py is not imported.", flush=True)
 
-    for clip_id in selected:
-        ok = run_clip(
-            args=args, task_dir=args.task_dir, clip_ids=clip_ids,
-            clip_id=clip_id, progress=progress,
+    # Shared GPU lock (gpu_lock.py): refuse to submit work next to gvd_watcher /
+    # backrooms_watch.  Dry runs submit nothing to the GPU and skip the lock.
+    gpu_lock = None
+    if not args.dry_run:
+        gpu_lock = GpuLock(
+            "master_batch_runner", purpose=f"prompt-pack batch {args.task_dir.name}",
+            lock_path=LOCK_PATH, owner_path=OWNER_PATH,
         )
-        progress = read_json(progress_path)
-        if not ok and not args.continue_on_error:
-            print("Stopping at first failed clip. Fix it, then rerun to resume.", flush=True)
-            return 1
+        try:
+            gpu_lock.acquire()
+        except GpuLockHeld as exc:
+            print(f"GPU render lock held by another runner; refusing to start: {exc.owner or exc}", flush=True)
+            return 3
+
+    try:
+        for clip_id in selected:
+            ok = run_clip(
+                args=args, task_dir=args.task_dir, clip_ids=clip_ids,
+                clip_id=clip_id, progress=progress,
+            )
+            progress = read_json(progress_path)
+            if not ok and not args.continue_on_error:
+                print("Stopping at first failed clip. Fix it, then rerun to resume.", flush=True)
+                return 1
+    finally:
+        if gpu_lock is not None:
+            gpu_lock.release()
 
     print("Batch runner finished selected clip range.", flush=True)
     return 0

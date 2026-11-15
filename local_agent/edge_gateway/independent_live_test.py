@@ -7,7 +7,6 @@ and http://127.0.0.1:8744 for admin inject/revoke. Does not use Termux.
 from __future__ import annotations
 
 import json
-import os
 import ssl
 import sqlite3
 import sys
@@ -86,7 +85,7 @@ def dump_process_environ(pid: int) -> dict[str, str]:
     # Windows PEB walk
     try:
         import ctypes
-        from ctypes import wintypes
+        from ctypes import wintypes  # noqa: F401 (import probe)
 
         PROCESS_QUERY_INFORMATION = 0x0400
         PROCESS_VM_READ = 0x0010

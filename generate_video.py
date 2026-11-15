@@ -24,11 +24,13 @@ except Exception:
     _ggb = None
 
 import argparse
+import os
 import sys
 from pathlib import Path
 from types import SimpleNamespace
 
-ROOT = Path(__file__).resolve().parent
+# GVD_ROOT: repo root override (defaults to this file's directory, i.e. the checkout).
+ROOT = Path(os.environ.get("GVD_ROOT") or Path(__file__).resolve().parent).resolve()
 LOCAL_AGENT = ROOT / "local_agent"
 DEFAULT_COMPILED = (
     ROOT
@@ -60,19 +62,9 @@ except Exception:
         return editorial, h3_generation_frames(editorial)
 
 
-# Accept chat/docs spellings too
-CATEGORY_ALIASES = {
-    "drone_high_kinematics": 'drone_high_kinematics',
-    "drone_high_kinematics": 'drone_high_kinematics',
-    "macro_nature": 'macro_nature',
-    "macro_nature": 'macro_nature',
-    "stylized_2d": 'stylized_2d',
-    "stylized_2d": 'stylized_2d',
-    "backrooms": 'backrooms',
-    "backrooms": 'backrooms',
-}
-for _c in CATEGORIES:
-    CATEGORY_ALIASES[_c] = _c
+# Accept chat/docs spellings too (identity entries for every category; add
+# alternate spellings here as "alias": "category").
+CATEGORY_ALIASES = {_c: _c for _c in CATEGORIES}
 
 if str(LOCAL_AGENT) not in sys.path:
     sys.path.insert(0, str(LOCAL_AGENT))
@@ -327,7 +319,10 @@ def print_plan(pred, hparams: dict) -> None:
     start = str(getattr(pred, "start_prompt", "") or "").strip()
     video = str(getattr(pred, "video_prompt", "") or "").strip()
     neg = str(getattr(pred, "negative_prompt", "") or "").strip()
-    # Honor explicit non-empty negatives; only default-empty when unset/blank.\n    if bool(getattr(pred, 'bypass_director', False) or getattr(pred, 'literal_prompt', False)\n            or getattr(pred, 'bypass_director', False) or getattr(pred, 'literal_prompt', False)):\n        if not neg:\n            neg = ''\n
+    # Explicit non-empty negatives are printed as-is; a blank one prints "(empty)".
+    # (A codemod once landed a literal-mode "default neg to ''" block inside this
+    # comment with literal \n escapes; it was a no-op -- `neg` is already '' when
+    # blank -- and the real defaulting lives in submit_comfy().)
     print("=" * 72)
     print("DIRECTOR PLAN")
     print("=" * 72)
@@ -551,12 +546,7 @@ def submit_comfy(
             raise RuntimeError(f"VRAM admission failed (CLI generate_video): {exc}") from exc
 
     # Keep explicit non-empty negatives (e.g. hardware bans); only default-empty when blank.
-    if bool(
-        getattr(pred, "bypass_director", False)
-        or getattr(pred, "literal_prompt", False)
-        or getattr(pred, "bypass_director", False)
-        or getattr(pred, "literal_prompt", False)
-    ):
+    if bool(getattr(pred, "bypass_director", False) or getattr(pred, "literal_prompt", False)):
         if not str(getattr(pred, "negative_prompt", "") or "").strip():
             try:
                 pred.negative_prompt = ""
@@ -650,8 +640,20 @@ def submit_comfy(
                 print(f"  (/free warning: {exc})")
         try:
             vram_controller.release_after_comfyui(reason="CLI clip saved")
-        except Exception:
-            pass
+        except Exception as exc:
+            # Fail closed (audit 2026-11-02): when nvidia-smi cannot confirm the
+            # headroom, say so loudly and leave the owner marker UNVERIFIED so the
+            # next GPU consumer (Qwen/VLM/Ollama) re-checks instead of assuming idle.
+            print(
+                f"  WARNING: VRAM release/headroom NOT verified after render "
+                f"({type(exc).__name__}: {exc}); GPU state left unverified"
+            )
+            try:
+                vram_controller.set_vram_owner(
+                    "comfyui_unverified", f"release_after_comfyui failed: {exc}"
+                )
+            except Exception:
+                pass
 
     return Path(video_path)
 

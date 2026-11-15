@@ -184,9 +184,12 @@ if app is not None:
         the operator already chose the opposite trust boundary. Findings are
         advisory only -- nothing here writes to memory, Chroma, or any file
         the interactive agent reads."""
-        chat_id = str(envelope.get("chat_id") or "")
+        from . import semantic_judge
+        # Same shape check the semantic pass applies before building a sidecar
+        # path from this id (audit 2026-11-02 #19: chat_id path traversal).
+        chat_id = semantic_judge.validate_chat_id(envelope.get("chat_id"))
         messages = envelope.get("messages") or []
-        if not chat_id or not isinstance(messages, list):
+        if not isinstance(messages, list):
             raise ValueError("judge_transcript envelope needs chat_id and messages")
         mechanical = judge_rubric.summarize(chat_id, messages)
         _maybe_followup_semantic(self, envelope, mechanical)

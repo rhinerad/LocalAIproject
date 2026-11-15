@@ -21,18 +21,28 @@ Use this script only when creating a NEW secondary user, or when you are
 intentionally rotating one and will copy the new generated file to that node.
 --aclfile is still not used, so requirepass / default-user handling stays
 unchanged.
+
+Secrets never travel on a command line: the ACL SETUSER line is piped to
+redis-cli on stdin inside the container and redis-cli authenticates from the
+container's own REDIS_PASSWORD environment (REDISCLI_AUTH), so neither the
+workstation password nor the new node password shows up in `docker exec`
+arguments, the Windows process list, or `ps` inside the container.
+
+Engine: FARM_REDIS_ENGINE=desktop|wsl or -Engine, same as the Restore script.
 #>
 [CmdletBinding()]
 param(
     [string]$Username = 'laptop_worker',
     [string[]]$Queues = @('preprocess', 'research'),
     [string]$TunnelIp = '10.90.90.1',
+    [string]$Engine,
     [switch]$LockdownProbe
 )
 
 $ErrorActionPreference = 'Stop'
 $here = Split-Path -Parent $PSCommandPath
 . (Join-Path $here 'Lock-Phase1SecretFile.ps1')
+. (Join-Path $here 'Resolve-FarmRedisEngine.ps1')
 $envFile = Join-Path $here '.env'
 $containerName = 'local-agent-phase1-redis'
 
@@ -53,7 +63,7 @@ if ($LockdownProbe) {
         if (-not (Test-Phase1SecretFileAcl -LiteralPath $outFile)) {
             throw "LockdownProbe ACL mismatch for $outFile"
         }
-        Write-Output 'PASS: Add-Phase1SecondaryWorkerCredential.ps1 wrote a temp .env.<user>.generated with SYSTEM+rhine (R,W), inheritance disabled'
+        Write-Output "PASS: Add-Phase1SecondaryWorkerCredential.ps1 wrote a temp .env.<user>.generated with SYSTEM+$($script:Phase1SecretAclOwner) (R,W), inheritance disabled"
     }
     finally {
         Remove-Item -LiteralPath $probeDir -Recurse -Force -ErrorAction SilentlyContinue
@@ -87,14 +97,12 @@ if ([string]::IsNullOrWhiteSpace($redisPassword)) {
     throw 'REDIS_PASSWORD not found in .env.'
 }
 
-$dockerCommand = Get-Command docker -ErrorAction SilentlyContinue
-$docker = if ($dockerCommand) { $dockerCommand.Source } else { 'C:\Program Files\Docker\Docker\resources\bin\docker.exe' }
-if (-not (Test-Path -LiteralPath $docker)) {
-    throw 'Docker Desktop is not available.'
-}
-$status = & $docker ps --filter "name=$containerName" --format '{{.Status}}' 2>$null
-if (-not $status -or $status -notmatch '^Up') {
-    throw "Redis container '$containerName' is not running. Start it with START_PHASE1_BROKER.ps1 first."
+$resolvedEngine = Get-FarmRedisEngine -Engine $Engine
+$env:FARM_REDIS_ENGINE = $resolvedEngine
+$spec = Get-FarmDockerSpec -Engine $resolvedEngine -WindowsWorkDir $here
+$psResult = Invoke-FarmDocker -Spec $spec -DockerArgs @('ps', '--filter', "name=$containerName", '--format', '{{.Status}}') -PassThru
+if ($psResult.ExitCode -ne 0 -or $psResult.Text -notmatch '(?m)^Up') {
+    throw "Redis container '$containerName' is not running on engine '$($spec.Engine)'. Start it with START_PHASE1_BROKER.ps1 first."
 }
 
 function New-RandomBase64([int]$Bytes, [switch]$UrlSafe) {
@@ -113,27 +121,45 @@ $laptopPassword = New-RandomBase64 36 -UrlSafe
 
 # Key patterns: ~* (all keys) because Celery/Kombu generates unpredictable
 # internal keys (UUID pidbox, reply queues, unacked mutex, etc.) that cannot
-# be enumerated. The real distill-queue isolation is the credential itself
-# (separate password, separate DB) and the queue-name guard above -- key
-# patterns are redundant when the node has its own dedicated DB.
-# Verified against a real Celery 5.6.3 + redis-py worker session 2026-09-01.
+# be enumerated. The secondary node shares the workstation's logical db 0
+# (SELECT is denied below, so it cannot move elsewhere), which is why the
+# command set -- not the key pattern -- is the isolation boundary. The private
+# `distill` queue (historical exports) also lives on db 0 today; the queue-name
+# guard above keeps a secondary credential off it, but the durable fix is to
+# move `distill` to a Redis instance that is not reachable over the tunnel at
+# all (tracked in the audit notes; not an ACL change).
 $keyPatterns = @('~*')
 
-# Command set: grant all commands then block only truly destructive admin ops.
-# Narrower category-based grants caused whack-a-mole failures against Celery
-# 5.6.3 + redis-py (EVALSHA, SCRIPT LOAD, MULTI/EXEC, BLPOP, pidbox keys, etc.)
-# The real isolation is the scoped credential + dedicated DB; blocking individual
-# Celery internals adds friction without security value.
-# Verified against a real Celery 5.6.3 + redis-py worker session 2026-09-01.
-$aclArgs = @('exec', $containerName, 'redis-cli', '-a', $redisPassword, '--no-auth-warning',
-             'ACL', 'SETUSER', $Username, 'on', ">$laptopPassword") + $keyPatterns + @(
-             '&*', 'nocommands', '+@all',
-             '-flushall', '-flushdb', '-config', '-shutdown', '-acl', '-debug', '-cluster', '-replicaof')
+# Command set: explicit category grants instead of +@all (audit 2026-11-02 #5).
+# Celery/Kombu + redis-py need @read/@write data commands (lists, hashes,
+# strings, sets, sorted sets for unacked_index, streams), pub/sub for the
+# result backend and pidbox, Lua scripting (EVALSHA/SCRIPT LOAD), MULTI/EXEC,
+# and @connection (PING/AUTH/CLIENT SETNAME/HELLO). Everything in @dangerous
+# (KEYS, INFO, CLIENT KILL, MONITOR, SAVE/BGSAVE, SWAPDB, SORT, ...) plus the
+# replication/module/admin verbs are denied explicitly, including the SLAVEOF
+# alias that the old list missed. SELECT is denied so the user is pinned to
+# the db named in its URL (db 0) and cannot browse other logical dbs.
+# Live Celery verification against this narrower grant is still required
+# before trusting it for anything beyond a test worker.
+$aclGrant = @('+@read', '+@write', '+@list', '+@hash', '+@string', '+@set',
+              '+@sortedset', '+@stream', '+@pubsub', '+@scripting',
+              '+@transaction', '+@connection')
+$aclDeny = @('-@dangerous', '-slaveof', '-replicaof', '-module', '-keys', '-select',
+             '-flushall', '-flushdb', '-config', '-shutdown', '-acl', '-debug', '-cluster')
+$aclLine = (@('ACL', 'SETUSER', $Username, 'on', ">$laptopPassword") + $keyPatterns +
+            @('&*', 'nocommands') + $aclGrant + $aclDeny) -join ' '
+
+# The ACL line (which carries the new password) goes to redis-cli on stdin;
+# redis-cli authenticates from the container's REDIS_PASSWORD via REDISCLI_AUTH.
+# No password appears in docker/wsl arguments. tr strips the CR that Windows
+# PowerShell appends when piping into a native process.
+$inContainer = "tr -d '\r' | REDISCLI_AUTH=`$REDIS_PASSWORD redis-cli --no-auth-warning"
+$aclArgs = @('exec', '-i', $containerName, 'sh', '-c', $inContainer)
 
 Write-Host "Applying ACL user '$Username' scoped to queues: $($Queues -join ', ')" -ForegroundColor Cyan
-$result = & $docker @aclArgs 2>&1
-if ($LASTEXITCODE -ne 0 -or $result -notmatch 'OK') {
-    throw "ACL SETUSER did not report OK. Output: $result"
+$aclResult = Invoke-FarmDocker -Spec $spec -DockerArgs $aclArgs -StdinLines @($aclLine) -PassThru
+if ($aclResult.ExitCode -ne 0 -or $aclResult.Text -notmatch 'OK') {
+    throw "ACL SETUSER did not report OK (password not printed). Output: $($aclResult.Text -replace [regex]::Escape($laptopPassword), '<redacted>')"
 }
 Write-Host "ACL user created. Password stored in the generated file; redis-with-acl-restore.sh reapplies it on container start." -ForegroundColor Cyan
 
@@ -145,9 +171,10 @@ $fragment = @(
     "# reads it (via runtime/redis-acl) after every Redis container start."
     "# Requires celery_app.py's loopback check to also accept the tunnel address"
     "# before this URL will actually be accepted -- see the Phase 1.5 plan doc."
-    "# Database 1, not 0: _is_authenticated_loopback_redis_url already allows"
-    "# either, and keeping the secondary node on its own logical db is a free"
-    "# extra separation from the workstation's own db 0 traffic."
+    "# Database 0, shared with the workstation: the ACL user is denied SELECT,"
+    "# so redis-py must not need to switch db after AUTH (it only sends SELECT"
+    "# for a non-zero db). Isolation comes from the scoped command set, not the"
+    "# db index. Do not change /0 here without also lifting -select in the ACL."
     "FARM_BROKER_URL=redis://$Username`:$laptopPassword@$TunnelIp`:6379/0"
     "FARM_RESULT_BACKEND=redis://$Username`:$laptopPassword@$TunnelIp`:6379/0"
     "FARM_QUEUES=$($Queues -join ',')"

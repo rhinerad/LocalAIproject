@@ -7,7 +7,6 @@ reference-contrast margin, plus transcript gates and audio-present flag.
 """
 from __future__ import annotations
 
-import math
 import wave
 from dataclasses import asdict, dataclass, field
 from pathlib import Path

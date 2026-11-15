@@ -4,7 +4,8 @@
 # Default is desktop (Docker Desktop). wsl is Ubuntu-24.04 Docker CE.
 # Does not start, stop, or recreate containers.
 
-$script:FarmWslDistro = 'Ubuntu-24.04'
+# Override with FARM_WSL_DISTRO (doctor.py reads the same variable).
+$script:FarmWslDistro = if ([string]::IsNullOrWhiteSpace($env:FARM_WSL_DISTRO)) { 'Ubuntu-24.04' } else { $env:FARM_WSL_DISTRO.Trim() }
 
 function Get-FarmRedisEngine {
     param([string]$Engine)
@@ -96,13 +97,21 @@ function Invoke-FarmDocker {
     param(
         [Parameter(Mandatory)]$Spec,
         [Parameter(Mandatory)][string[]]$DockerArgs,
-        [switch]$PassThru
+        [switch]$PassThru,
+        # Lines fed to the docker process on stdin (use with `exec -i`). This is
+        # how secrets such as ACL SETUSER passwords reach redis-cli without ever
+        # appearing on a Windows or container command line.
+        [string[]]$StdinLines
     )
     $all = @($Spec.PrefixArgs) + @($DockerArgs)
     $savedEap = $ErrorActionPreference
     $ErrorActionPreference = 'Continue'
     try {
-        $output = & $Spec.FilePath @all 2>&1
+        if ($PSBoundParameters.ContainsKey('StdinLines')) {
+            $output = $StdinLines | & $Spec.FilePath @all 2>&1
+        } else {
+            $output = & $Spec.FilePath @all 2>&1
+        }
         $code = $LASTEXITCODE
     } finally {
         $ErrorActionPreference = $savedEap

@@ -1,11 +1,10 @@
 """Planner: narrative intent → typed ShotManifest. Cannot invent node types."""
 from __future__ import annotations
 
-import json
 import re
 from typing import Any
 
-from .schema import ShotManifest, shot_from_dict
+from .schema import shot_from_dict
 
 _CONTINUOUS = re.compile(r"\b(no cuts?|unbroken|continuous take|one take|one cut)\b", re.I)
 _MORPH = re.compile(r"\b(morph|dream sequence|prompt travel|transform into)\b", re.I)

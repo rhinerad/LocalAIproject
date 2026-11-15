@@ -28,8 +28,18 @@ import creative_still_qa
 from creative_still_qa import empty_pov_prompt_boost, infer_visibility_expectation
 
 COMFY = os.environ.get("COMFY_URL", "http://127.0.0.1:8188").rstrip("/")
-SHARED_INPUT = Path(os.environ.get("COMFY_INPUT", r"A:\Users\rhine\ComfyUI-Shared\input"))
-SHARED_OUTPUT = Path(os.environ.get("COMFY_OUTPUT", r"A:\Users\rhine\ComfyUI-Shared\output"))
+# COMFY_SHARED_INPUT / COMFY_SHARED_OUTPUT are the project-wide names; the older
+# COMFY_INPUT / COMFY_OUTPUT spellings are still honoured.
+SHARED_INPUT = Path(
+    os.environ.get("COMFY_SHARED_INPUT")
+    or os.environ.get("COMFY_INPUT")
+    or r"A:\Users\rhine\ComfyUI-Shared\input"
+)
+SHARED_OUTPUT = Path(
+    os.environ.get("COMFY_SHARED_OUTPUT")
+    or os.environ.get("COMFY_OUTPUT")
+    or r"A:\Users\rhine\ComfyUI-Shared\output"
+)
 POLICY_PATH = ROOT / "live_jobs" / "flux_canvas_qualify_20260918" / "flux_canvas_policy.json"
 COMPILED = ROOT / "outputs_compile" / "clips_compiled.json"
 STILL_ROOT = SHARED_INPUT / "astra_backrooms_stills"

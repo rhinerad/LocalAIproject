@@ -194,15 +194,22 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 payload = collect.build_dashboard_payload()
             except Exception as exc:
                 # Last-resort envelope so the page never fully hard-fails.
+                # The traceback (local paths, env values, broker URLs) goes to
+                # the server log, never to the HTTP client (audit #8).
+                sys.stderr.write(
+                    "FARM_DASHBOARD_PAYLOAD_ERROR "
+                    + collect.redact_secrets(traceback.format_exc()) + "\n"
+                )
+                sys.stderr.flush()
+                summary = collect.redact_secrets(f"{type(exc).__name__}: {exc}")
                 payload = {
                     "generated_at": None,
                     "overall": {
                         "status": "error",
                         "stale": True,
-                        "error": f"{type(exc).__name__}: {exc}",
+                        "error": summary,
                     },
-                    "error": f"{type(exc).__name__}: {exc}",
-                    "traceback": traceback.format_exc()[-800:],
+                    "error": summary,
                 }
             try:
                 emit_alert_if_needed(payload.get("overall") or {})

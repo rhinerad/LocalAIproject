@@ -8,7 +8,6 @@ Network stays off. CPU only. There is no unrestricted fallback.
 from __future__ import annotations
 
 import json
-import os
 import shutil
 import subprocess
 import sys

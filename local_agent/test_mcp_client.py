@@ -6,8 +6,6 @@ script that speaks Content-Length JSON-RPC on stdin/stdout.
 """
 from __future__ import annotations
 
-import json
-import os
 import sys
 import tempfile
 import threading

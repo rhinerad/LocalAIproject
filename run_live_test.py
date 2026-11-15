@@ -20,7 +20,6 @@ sys.path.insert(0, str(ROOT / "local_agent"))
 
 from local_agent.dispatcher import (  # noqa: E402
     DEFAULT_COMFY_URL,
-    PipelineDispatchError,
     PipelineOrchestrator,
 )
 

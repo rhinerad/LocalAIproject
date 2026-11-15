@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from .paths import GvdLayout, HANDOFF_ROOT, HEADROOM_MIB
-from .schema import canonical_json, sha256_json
+from .schema import sha256_json
 
 DEFAULT_COMFY_ROOT = Path(r"A:\Users\rhine\ComfyUI-Installs\Rockernow\ComfyUI")
 DEFAULT_COMFY_URL = "http://127.0.0.1:8188"

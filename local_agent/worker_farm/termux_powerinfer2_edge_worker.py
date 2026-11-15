@@ -373,11 +373,84 @@ def _complete_with_retry(config: EdgeConfig, outcome: dict[str, Any]) -> None:
     raise EdgePolicyError("inference finished; completion was not acknowledged") from last
 
 
+# An outbox file that the gateway keeps rejecting (or that cannot be parsed)
+# must not block every later completion behind it. After this many failed
+# flush attempts the file is moved to outbox/quarantine/ with a .reason file.
+OUTBOX_MAX_FLUSH_FAILURES = 3
+_OUTBOX_FAILURE_SUFFIX = ".failures"
+
+
+def _quarantine_dir() -> Path:
+    root = _outbox_dir() / "quarantine"
+    root.mkdir(parents=True, exist_ok=True)
+    try:
+        os.chmod(root, 0o700)
+    except OSError:
+        pass
+    return root
+
+
+def _quarantine_outbox_file(path: Path, reason: str) -> Path:
+    """Move one outbox file aside with a sidecar reason; never raises."""
+    dest = _quarantine_dir() / f"{path.name}.{int(time.time())}"
+    try:
+        os.replace(path, dest)
+    except OSError:
+        return path
+    try:
+        dest.with_suffix(dest.suffix + ".reason").write_text(
+            f"{time.strftime('%Y-%m-%dT%H:%M:%S%z')} {reason}\n", encoding="utf-8")
+    except OSError:
+        pass
+    counter = path.with_suffix(path.suffix + _OUTBOX_FAILURE_SUFFIX)
+    try:
+        counter.unlink()
+    except OSError:
+        pass
+    print(f"outbox_quarantined file={path.name} reason={reason}", flush=True)
+    return dest
+
+
+def _bump_flush_failures(path: Path) -> int:
+    counter = path.with_suffix(path.suffix + _OUTBOX_FAILURE_SUFFIX)
+    try:
+        count = int(counter.read_text(encoding="utf-8").strip() or "0")
+    except (OSError, ValueError):
+        count = 0
+    count += 1
+    try:
+        counter.write_text(str(count), encoding="utf-8")
+    except OSError:
+        pass
+    return count
+
+
 def _flush_outbox(config: EdgeConfig) -> None:
     for path in sorted(_outbox_dir().glob("*.json")):
-        outcome = json.loads(path.read_text(encoding="utf-8"))
-        _complete_with_retry(config, outcome)
+        try:
+            outcome = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError) as exc:
+            _quarantine_outbox_file(path, f"unparseable: {type(exc).__name__}: {exc}")
+            continue
+        if not isinstance(outcome, dict) or not _JOB_ID_RE.fullmatch(str(outcome.get("id", ""))):
+            _quarantine_outbox_file(path, "malformed outcome envelope")
+            continue
+        try:
+            _complete_with_retry(config, outcome)
+        except EdgePolicyError as exc:
+            failures = _bump_flush_failures(path)
+            if failures >= OUTBOX_MAX_FLUSH_FAILURES:
+                _quarantine_outbox_file(
+                    path, f"rejected {failures} times; last: {exc}")
+            else:
+                print(f"outbox_flush_deferred file={path.name} attempt={failures}", flush=True)
+            continue
         path.unlink()
+        counter = path.with_suffix(path.suffix + _OUTBOX_FAILURE_SUFFIX)
+        try:
+            counter.unlink()
+        except OSError:
+            pass
 
 
 def _remember_outcome(outcome: dict[str, Any]) -> Path:

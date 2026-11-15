@@ -20,7 +20,14 @@ import router
 # Workstation default: llama3.1:8b. A secondary worker (e.g. mac_worker) may
 # set a different quantized model that fits its own RAM/CPU budget.
 MODEL = os.environ.get("FARM_SUMMARIZE_MODEL", "llama3.1:8b")
-MAX_SOURCE_CHARS = 12_000
+# Context budget (audit P2): the old 12,000-char source was ~3,500 tokens at
+# router's chars/3.4 estimate, so system prompt + source + JSON output did not
+# fit num_ctx 4096 and Ollama silently shifted the window (dropping the system
+# prompt).  Source is now capped so source + system + NUM_PREDICT leaves
+# headroom inside NUM_CTX; test_context_compactor checks the arithmetic.
+NUM_CTX = 4096
+NUM_PREDICT = 1024
+MAX_SOURCE_CHARS = 7_000
 SCHEMA = {
     "type": "object",
     "properties": {
@@ -117,8 +124,8 @@ def summarize_old_messages(old_messages: list[dict], *, model: str = MODEL,
             # Compaction is optional. A responsive interactive turn wins over a
             # perfect summary when the CPU helper is busy or unavailable.
             model=model, host=host or router.CPU_HOST, timeout=timeout, keep_alive="0",
-            options={"num_gpu": 0, "num_thread": router.CPU_THREAD_CAP, "num_ctx": 4096,
-                     "temperature": 0}, response_format=SCHEMA,
+            options={"num_gpu": 0, "num_thread": router.CPU_THREAD_CAP, "num_ctx": NUM_CTX,
+                     "num_predict": NUM_PREDICT, "temperature": 0}, response_format=SCHEMA,
         )
         return _valid(json.loads(text))
     except Exception:

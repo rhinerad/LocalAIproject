@@ -1,10 +1,14 @@
 """Local CA + server/device certificates for G2 mTLS. Workstation files only."""
 from __future__ import annotations
 
+import getpass
 import hashlib
 import ipaddress
+import os
 import re
 import shutil
+import subprocess
+import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -20,6 +24,87 @@ _DEVICE_ID_RE = re.compile(r"^[A-Za-z0-9._-]{1,%d}$" % MAX_DEVICE_ID_CHARS)
 
 def _now() -> datetime:
     return datetime.now(timezone.utc)
+
+
+# ── secret-file lockdown ─────────────────────────────────────────────────
+#
+# Same policy as the farm Lock-Phase1SecretFile.ps1 helper: inheritance off,
+# then only NT AUTHORITY\SYSTEM and the account running this process get
+# (R,W). BUILTIN\Administrators is deliberately NOT granted (that group holds
+# other interactive users on this workstation). On POSIX the file is 0600.
+# The user is derived at runtime, never hard-coded.
+
+SECRET_ACL_SYSTEM = "NT AUTHORITY\\SYSTEM"
+SECRET_ACL_RIGHTS = "(R,W)"
+
+
+def current_user_account(platform: str = sys.platform, *, run=subprocess.run) -> str:
+    """DOMAIN\\user on Windows (whoami), the login name elsewhere; '' if unknown."""
+    if platform == "win32":
+        try:
+            who = run(["whoami"], capture_output=True, text=True, check=False, timeout=10)
+            name = (getattr(who, "stdout", "") or "").strip()
+            if name:
+                return name
+        except (OSError, subprocess.SubprocessError):
+            pass
+        user = os.environ.get("USERNAME", "").strip()
+        domain = os.environ.get("USERDOMAIN", "").strip()
+        if user:
+            return f"{domain}\\{user}" if domain else user
+    try:
+        return getpass.getuser()
+    except Exception:
+        return ""
+
+
+def secret_acl_argv(path: Path | str, user: str) -> list[str]:
+    """icacls argv granting SYSTEM + user (R,W) only, inheritance removed."""
+    if not user or "\n" in user or "\r" in user:
+        raise ValueError("a non-empty user account is required for the ACL")
+    return [
+        "icacls", str(path), "/inheritance:r", "/grant:r",
+        f"{SECRET_ACL_SYSTEM}:{SECRET_ACL_RIGHTS}", f"{user}:{SECRET_ACL_RIGHTS}",
+    ]
+
+
+def lock_secret_file(path: Path | str, *, platform: str = sys.platform,
+                     run=subprocess.run, user: str | None = None) -> list[str] | None:
+    """Restrict path to SYSTEM + the current user (Windows) or chmod 0600.
+
+    Returns the icacls argv that was run on Windows (None on POSIX). Raises
+    OSError when the lockdown could not be applied so callers never continue
+    with a world-readable key or token.
+    """
+    path = Path(path)
+    if platform != "win32":
+        os.chmod(path, 0o600)
+        return None
+    account = user if user is not None else current_user_account(platform, run=run)
+    if not account:
+        raise OSError(f"could not determine the current user to lock {path}")
+    argv = secret_acl_argv(path, account)
+    proc = run(argv, check=False, capture_output=True, text=True)
+    if getattr(proc, "returncode", 1) != 0:
+        detail = ((getattr(proc, "stderr", "") or getattr(proc, "stdout", "") or "")).strip()[:300]
+        raise OSError(f"icacls lockdown failed for {path}: {detail}")
+    return argv
+
+
+def write_private_bytes(path: Path, data: bytes) -> None:
+    """Create/overwrite a private key file: 0600 from the first byte, then ACL-locked."""
+    path = Path(path)
+    fd = os.open(str(path), os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    try:
+        with os.fdopen(fd, "wb") as fh:
+            fh.write(data)
+    except Exception:
+        try:
+            os.close(fd)
+        except OSError:
+            pass
+        raise
+    lock_secret_file(path)
 
 
 def _key() -> rsa.RSAPrivateKey:
@@ -85,7 +170,7 @@ class TlsMaterial:
                 )
                 .sign(ca_key, hashes.SHA256())
             )
-            self.ca_key_path.write_bytes(_pem_key(ca_key))
+            write_private_bytes(self.ca_key_path, _pem_key(ca_key))
             self.ca_cert_path.write_bytes(_pem_cert(ca_cert))
         if not self.server_cert_path.is_file():
             ca_key = serialization.load_pem_private_key(
@@ -112,7 +197,7 @@ class TlsMaterial:
                 .add_extension(x509.BasicConstraints(ca=False, path_length=None), True)
                 .sign(ca_key, hashes.SHA256())
             )
-            self.server_key_path.write_bytes(_pem_key(server_key))
+            write_private_bytes(self.server_key_path, _pem_key(server_key))
             self.server_cert_path.write_bytes(_pem_cert(server_cert))
 
     def device_dir(self, device_id: str) -> Path:
@@ -160,5 +245,5 @@ class TlsMaterial:
         key_pem = _pem_key(key)
         dest.mkdir(parents=True, exist_ok=False)
         (dest / "client.cert.pem").write_bytes(cert_pem)
-        (dest / "client.key.pem").write_bytes(key_pem)
+        write_private_bytes(dest / "client.key.pem", key_pem)
         return cert_pem, key_pem, cert_fingerprint_pem(cert_pem)

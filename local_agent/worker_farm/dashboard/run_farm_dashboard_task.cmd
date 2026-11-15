@@ -1,7 +1,9 @@
 @echo off
 setlocal EnableExtensions
 set PYTHONUNBUFFERED=1
-set REPO=A:\Users\rhine\Documents\Codex\2026-08-07\referenced-chatgpt-conversation-this-is-an-2\COMFYUI_STORY_HANDOFF_2026-08-09
+rem Repository root is three levels above this file (dashboard -> worker_farm -> local_agent -> repo).
+rem Derived from the script location so the task works from any checkout path.
+for %%I in ("%~dp0..\..\..") do set "REPO=%%~fI"
 set RUNTIME=%REPO%\local_agent\worker_farm\runtime
 set MARKER=%RUNTIME%\farm_dashboard_task_run.log
 set LOG=%RUNTIME%\farm_dashboard.log
