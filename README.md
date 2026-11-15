@@ -42,7 +42,7 @@ VRAM and thermal guards stay exactly where they are.
 
 The PC does the GPU work. A Mac worker node takes background jobs over
 WireGuard, and an old Dell laptop runs the home SOC (Wazuh) that watches all of
-it.
+it. See [Home-SOC-](https://github.com/rhinerad/Home-SOC-) for how that works.
 
 ## Highlights
 
