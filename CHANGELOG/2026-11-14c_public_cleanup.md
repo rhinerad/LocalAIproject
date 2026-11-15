@@ -17,11 +17,10 @@ home-SOC material that now lives in its own repo
   explicit-content eval set, audit P0 #2, now also in `.gitignore`).
 - **SOC items removed**: the home-lab section of `README.md`, and
   `docs/visuals/home-lab-map.gif` with its HTML source.
-- **Personal names replaced** in 64 files (mostly changelog notes):
-  `Louises-MBP` / `Louises-MacBook-Pro` → `Mac-Worker` / `mac-worker`, the Mac
-  login → `user@`, "Louise's Mac" → "the Mac worker". The dashboard's worker
-  regex is now `(?:MBP|Mac|Worker)` and still matches the live
-  `celery@Louises-MBP` name through `MBP`.
+- **Personal names replaced** in 64 files (mostly changelog notes): the Mac
+  worker's personal hostname → `Mac-Worker` / `mac-worker`, the Mac login →
+  `user@`. The dashboard's worker regex is now `(?:MBP|Mac|Worker)` and still
+  matches the live worker name through `MBP`.
 - Left as is: `local_agent/worker_farm/Lock-Phase1SecretFile.ps1` matches the
   second admin account by name when checking ACLs. Changing it would change what the
   script checks on the workstation.
